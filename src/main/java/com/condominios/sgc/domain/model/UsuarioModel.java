@@ -4,7 +4,7 @@ import com.condominios.sgc.domain.auxiliar.Rol;
 import com.condominios.sgc.domain.exception.UsuarioException;
 
 public class UsuarioModel {
-    private Long id;
+    private String id;
     private String nombres;
     private String apellidos;
     private String correo;
@@ -14,7 +14,7 @@ public class UsuarioModel {
     private Long apartamentoId;
     private Long condominioId;
 
-    public UsuarioModel(Long id, String nombres, String apellidos, String correo, String telefono, Rol rol,
+    public UsuarioModel(String id, String nombres, String apellidos, String correo, String telefono, Rol rol,
             Long condominioId) {
         validarDatos(nombres, apellidos, correo, rol);
         this.id = id;
@@ -27,7 +27,7 @@ public class UsuarioModel {
         this.activo = true;
     }
 
-    public Long getId() { return id; }
+    public String getId() { return id; }
     public String getNombres() { return nombres; }
     public String getApellidos() { return apellidos; }
     public String getCorreo() { return correo; }

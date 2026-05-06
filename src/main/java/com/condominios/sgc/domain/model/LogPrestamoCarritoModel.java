@@ -15,7 +15,7 @@ public class LogPrestamoCarritoModel {
     private Long apartamentoId;
     private Long carritoId;
     private Long inquilinoId;
-    private Long usuarioId;
+    private String usuarioId;
 
     public LogPrestamoCarritoModel(Long id, TipoHabitante solicitante, Long apartamentoId, Long carritoId) {
         validarDatos(solicitante, apartamentoId, carritoId);
@@ -47,9 +47,9 @@ public class LogPrestamoCarritoModel {
     public Long getApartamentoId() { return apartamentoId; }
     public Long getCarritoId() { return carritoId; }
     public Long getInquilinoId() { return inquilinoId; }
-    public Long getUsuarioId() { return usuarioId; }
+    public String getUsuarioId() { return usuarioId; }
 
-    public void asignarUsuarioSolicitante(Long usuarioId) {
+    public void asignarUsuarioSolicitante(String usuarioId) {
         if (usuarioId == null) {
             throw LogPrestamoCarritoException.usuarioIdObligatorio();
         }

@@ -8,7 +8,7 @@ public class VehiculoModel {
     private String color;
     private String modelo;
     private String placa;
-    private Long propietarioUsuarioId;
+    private String propietarioUsuarioId;
     private Long propietarioInquilinoId;
 
     public VehiculoModel(Long id, String marca, String color, String modelo, String placa) {
@@ -40,10 +40,10 @@ public class VehiculoModel {
     public String getColor() { return color; }
     public String getModelo() { return modelo; }
     public String getPlaca() { return placa; }
-    public Long getPropietarioUsuarioId() { return propietarioUsuarioId; }
+    public String getPropietarioUsuarioId() { return propietarioUsuarioId; }
     public Long getPropietarioInquilinoId() { return propietarioInquilinoId; }
 
-    public void asignarAUsuario(Long usuarioId) {
+    public void asignarAUsuario(String usuarioId) {
         if (usuarioId == null) {
             throw VehiculoException.usuarioIdObligatorio();
         }

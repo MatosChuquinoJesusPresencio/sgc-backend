@@ -9,7 +9,7 @@ public final class UsuarioException extends RuntimeException {
         return new UsuarioException("Nombres, correo y rol son obligatorios");
     }
 
-    public static UsuarioException usuarioYaExistePorId(Long id) {
+    public static UsuarioException usuarioYaExistePorId(String id) {
         return new UsuarioException("El usuario con id " + id + " ya existe");
     }
 

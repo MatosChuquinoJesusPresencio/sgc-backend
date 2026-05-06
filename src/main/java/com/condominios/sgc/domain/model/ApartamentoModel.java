@@ -10,7 +10,7 @@ public class ApartamentoModel {
     private Integer numero;
     private Boolean derechoEstacionamiento;
     private BigDecimal metraje;
-    private Long usuarioPropietarioId;
+    private String usuarioPropietarioId;
     private Long pisoId;
 
     public ApartamentoModel(
@@ -41,7 +41,7 @@ public class ApartamentoModel {
         return metraje;
     }
 
-    public Long getUsuarioPropietarioId() {
+    public String getUsuarioPropietarioId() {
         return usuarioPropietarioId;
     }
 
@@ -66,7 +66,7 @@ public class ApartamentoModel {
         this.pisoId = pisoId;
     }
 
-    public void asignarPropietario(Long usuarioId) {
+    public void asignarPropietario(String usuarioId) {
         if (usuarioId == null) {
             throw ApartamentoException.datosObligatorios();
         }
