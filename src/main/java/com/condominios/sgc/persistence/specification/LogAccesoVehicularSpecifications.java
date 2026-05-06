@@ -5,6 +5,8 @@ import com.condominios.sgc.domain.auxiliar.TipoHabitante;
 import com.condominios.sgc.persistence.entity.LogAccesoVehicularEntity;
 import org.springframework.data.jpa.domain.Specification;
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Objects;
 
 public final class LogAccesoVehicularSpecifications {
 
@@ -40,5 +42,24 @@ public final class LogAccesoVehicularSpecifications {
     public static Specification<LogAccesoVehicularEntity> porOcupante(TipoHabitante ocupante) {
         if (ocupante == null) return null;
         return (root, query, cb) -> cb.equal(root.get("ocupante"), ocupante);
+    }
+
+    public static Specification<LogAccesoVehicularEntity> fromFiltros(Map<String, String> filtros) {
+        if (filtros == null || filtros.isEmpty()) return null;
+        return filtros.entrySet().stream()
+            .map(entry -> switch (entry.getKey()) {
+                case "placa" -> porPlaca(entry.getValue());
+                case "metodo" -> porMetodo(MetodoEntrada.valueOf(entry.getValue()));
+                case "ocupante" -> porOcupante(TipoHabitante.valueOf(entry.getValue()));
+                case "sinSalida" -> Boolean.parseBoolean(entry.getValue()) ? porSinSalida() : null;
+                case "fechaEntradaDesde" -> porFechaEntradaEntre(
+                    LocalDateTime.parse(entry.getValue()), null);
+                case "fechaEntradaHasta" -> porFechaEntradaEntre(
+                    null, LocalDateTime.parse(entry.getValue()));
+                default -> null;
+            })
+            .filter(Objects::nonNull)
+            .reduce(Specification::and)
+            .orElse(null);
     }
 }

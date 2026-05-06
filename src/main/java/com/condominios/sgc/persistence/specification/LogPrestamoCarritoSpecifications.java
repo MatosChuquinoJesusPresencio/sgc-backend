@@ -4,6 +4,8 @@ import com.condominios.sgc.domain.auxiliar.TipoHabitante;
 import com.condominios.sgc.persistence.entity.LogPrestamoCarritoEntity;
 import org.springframework.data.jpa.domain.Specification;
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Objects;
 
 public final class LogPrestamoCarritoSpecifications {
 
@@ -39,5 +41,24 @@ public final class LogPrestamoCarritoSpecifications {
     public static Specification<LogPrestamoCarritoEntity> porApartamentoId(Long apartamentoId) {
         if (apartamentoId == null) return null;
         return (root, query, cb) -> cb.equal(root.get("apartamento").get("id"), apartamentoId);
+    }
+
+    public static Specification<LogPrestamoCarritoEntity> fromFiltros(Map<String, String> filtros) {
+        if (filtros == null || filtros.isEmpty()) return null;
+        return filtros.entrySet().stream()
+            .map(entry -> switch (entry.getKey()) {
+                case "solicitante" -> porSolicitante(TipoHabitante.valueOf(entry.getValue()));
+                case "condominioId" -> porCondominioId(Long.valueOf(entry.getValue()));
+                case "apartamentoId" -> porApartamentoId(Long.valueOf(entry.getValue()));
+                case "sinDevolucion" -> Boolean.parseBoolean(entry.getValue()) ? porSinDevolucion() : null;
+                case "fechaPrestamoDesde" -> porFechaPrestamoEntre(
+                    LocalDateTime.parse(entry.getValue()), null);
+                case "fechaPrestamoHasta" -> porFechaPrestamoEntre(
+                    null, LocalDateTime.parse(entry.getValue()));
+                default -> null;
+            })
+            .filter(Objects::nonNull)
+            .reduce(Specification::and)
+            .orElse(null);
     }
 }

@@ -2,6 +2,8 @@ package com.condominios.sgc.persistence.specification;
 
 import com.condominios.sgc.persistence.entity.PisoEntity;
 import org.springframework.data.jpa.domain.Specification;
+import java.util.Map;
+import java.util.Objects;
 
 public final class PisoSpecifications {
 
@@ -20,5 +22,19 @@ public final class PisoSpecifications {
     public static Specification<PisoEntity> porNumero(Integer numero) {
         if (numero == null) return null;
         return (root, query, cb) -> cb.equal(root.get("numero"), numero);
+    }
+
+    public static Specification<PisoEntity> fromFiltros(Map<String, String> filtros) {
+        if (filtros == null || filtros.isEmpty()) return null;
+        return filtros.entrySet().stream()
+            .map(entry -> switch (entry.getKey()) {
+                case "torreId" -> porTorreId(Long.valueOf(entry.getValue()));
+                case "condominioId" -> porCondominioId(Long.valueOf(entry.getValue()));
+                case "numero" -> porNumero(Integer.valueOf(entry.getValue()));
+                default -> null;
+            })
+            .filter(Objects::nonNull)
+            .reduce(Specification::and)
+            .orElse(null);
     }
 }
