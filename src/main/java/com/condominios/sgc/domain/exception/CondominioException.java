@@ -56,4 +56,8 @@ public final class CondominioException extends RuntimeException {
     public static CondominioException configuracionIdObligatorio() {
         return new CondominioException("El id de la configuración es obligatorio");
     }
+
+    public static CondominioException nombreEnUso() {
+        return new CondominioException("El nombre ingresado esta en uso");
+    }
 }

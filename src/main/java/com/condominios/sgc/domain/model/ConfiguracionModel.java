@@ -130,4 +130,16 @@ public class ConfiguracionModel {
             throw ConfiguracionException.inquilinosPorApartamentoExcedidos(maxInquilinosPorApartamento,
                     inquilinosPorApartamento);
     }
+
+    public static ConfiguracionModel obtenerConfiguracionBase() {
+        return new ConfiguracionModel(null,
+                    2,
+                    1,
+                    new BigDecimal("0.50"),
+                    1440,
+                    2,
+                    1,
+                    2,
+                    2);
+    }
 }

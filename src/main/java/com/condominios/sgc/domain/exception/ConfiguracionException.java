@@ -72,4 +72,8 @@ public final class ConfiguracionException extends RuntimeException {
     public static ConfiguracionException maxInquilinosInvalido() {
         return new ConfiguracionException("El numero maximo de inquilinos por apartamento no puede ser nulo o negativo");
     }
+
+    public static ConfiguracionException noEncontrada() {
+        return new ConfiguracionException("La configuracion solicitada no existe");
+    }
 }
