@@ -7,11 +7,11 @@ import com.condominios.sgc.domain.port.ConfiguracionPort;
 import com.condominios.sgc.infrastructure.persistence.mapper.ConfiguracionMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.ConfiguracionRepository;
 
-public class ConfiguracionAdapeter implements ConfiguracionPort {
+public class ConfiguracionAdapter implements ConfiguracionPort {
 
     public final ConfiguracionRepository repository;
 
-    public ConfiguracionAdapeter(ConfiguracionRepository repository) {
+    public ConfiguracionAdapter(ConfiguracionRepository repository) {
         this.repository = repository;
     }
 
@@ -23,7 +23,7 @@ public class ConfiguracionAdapeter implements ConfiguracionPort {
     @Override
     public ConfiguracionModel save(ConfiguracionModel model) {
         var entity = ConfiguracionMapper.toEntity(model);
-        return ConfiguracionMapper.toModel(entity);
+        var saved = repository.save(entity);
+        return ConfiguracionMapper.toModel(saved);
     }
-    
 }

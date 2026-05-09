@@ -8,7 +8,7 @@ import com.condominios.sgc.application.impl.ObtenerConfiguracionUseCaseImpl;
 import com.condominios.sgc.application.usecase.ActualizarConfiguracionUseCase;
 import com.condominios.sgc.application.usecase.ObtenerConfiguracionUseCase;
 import com.condominios.sgc.domain.port.ConfiguracionPort;
-import com.condominios.sgc.infrastructure.adapter.ConfiguracionAdapeter;
+import com.condominios.sgc.infrastructure.adapter.ConfiguracionAdapter;
 import com.condominios.sgc.infrastructure.persistence.repository.ConfiguracionRepository;
 
 @Configuration
@@ -16,7 +16,7 @@ public class ConfiguracionConfig {
     
     @Bean
     public ConfiguracionPort configuracionPort(ConfiguracionRepository repository) {
-        return new ConfiguracionAdapeter(repository);
+        return new ConfiguracionAdapter(repository);
     }
 
     @Bean
