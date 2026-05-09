@@ -2,6 +2,7 @@ package com.condominios.sgc.infrastructure.persistence.mapper;
 
 import com.condominios.sgc.domain.model.CondominioModel;
 import com.condominios.sgc.infrastructure.persistence.entity.CondominioEntity;
+import com.condominios.sgc.infrastructure.persistence.entity.ConfiguracionEntity;
 
 import java.util.ArrayList;
 
@@ -9,7 +10,7 @@ public final class CondominioMapper {
 
     private CondominioMapper() {}
 
-    public static CondominioEntity toEntity(CondominioModel model) {
+    public static CondominioEntity toEntity(CondominioModel model, ConfiguracionEntity configuracion) {
         if (model == null) return null;
         CondominioEntity e = new CondominioEntity();
         e.setId(model.getId());
@@ -18,7 +19,12 @@ public final class CondominioMapper {
         e.setCiudad(model.getCiudad());
         e.setDireccion(model.getDireccion());
         e.setFechaCreacion(model.getFechaCreacion());
+        e.setConfiguracion(configuracion);
         return e;
+    }
+
+    public static CondominioEntity toEntity(CondominioModel model) {
+        return toEntity(model, null);
     }
 
     public static CondominioModel toModel(CondominioEntity e) {
