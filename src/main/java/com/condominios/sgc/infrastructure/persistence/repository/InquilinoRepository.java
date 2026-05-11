@@ -15,4 +15,6 @@ public interface InquilinoRepository extends JpaRepository<InquilinoEntity, Long
     InquilinoEntity findByDni(String dni);
 
     boolean existsByApartamentoIdAndDni(Long apartamentoId, String dni);
+
+    Integer countByApartamentoId(Long apartamentoId);
 }
