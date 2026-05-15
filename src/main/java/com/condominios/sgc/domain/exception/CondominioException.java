@@ -60,4 +60,8 @@ public final class CondominioException extends RuntimeException {
     public static CondominioException nombreEnUso() {
         return new CondominioException("El nombre ingresado esta en uso");
     }
+
+    public static CondominioException noEncontrado() {
+        return new CondominioException("El condominio no fue encontrado");
+    }
 }
