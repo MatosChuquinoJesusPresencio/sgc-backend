@@ -48,12 +48,10 @@ public class ApartamentoModel {
     public Long getPisoId() { return pisoId; }
 
     public void asignarPropietario(String propietarioId) {
-        if (this.propietarioId != null)  throw ApartamentoException.propietarioYaAsignado();
         this.propietarioId = requerirNoNulo(propietarioId, ApartamentoException::propietarioIdObligatorio);
     }
 
     public void removerPropietario() {
-        if (this.propietarioId == null) throw ApartamentoException.apartamentoSinPropietario();
         this.propietarioId = null;
     }
 
