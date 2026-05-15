@@ -61,7 +61,7 @@ public class CarritoModel {
         return false;
     }
 
-    public void actualizarCodigo(String nuevoCodigo) {
+    public void actualizarDatos(String nuevoCodigo) {
         this.codigo = requerirNoVacio(nuevoCodigo, CarritoException::codigoObligatorio);
     }
 }

@@ -60,4 +60,8 @@ public class VehiculoModel {
         this.propietarioId = propietarioId;
         this.inquilinoId = inquilinoId;
     }
+
+    public void actualizarDatos(String color) {
+        this.color = requerirNoVacio(color, VehiculoException::datosObligatorios);
+    }
 }
