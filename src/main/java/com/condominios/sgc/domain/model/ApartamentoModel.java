@@ -1,9 +1,10 @@
 package com.condominios.sgc.domain.model;
 
+import static com.condominios.sgc.domain.util.ValidacionUtil.*;
+
 import java.math.BigDecimal;
 
 import com.condominios.sgc.domain.exception.ApartamentoException;
-import static com.condominios.sgc.domain.exception.ValidationUtil.*;
 
 public class ApartamentoModel {
 

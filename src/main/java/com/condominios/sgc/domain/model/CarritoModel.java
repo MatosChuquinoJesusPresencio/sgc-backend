@@ -1,56 +1,67 @@
 package com.condominios.sgc.domain.model;
 
+import static com.condominios.sgc.domain.util.ValidacionUtil.*;
+
 import com.condominios.sgc.domain.auxiliar.EstadoCarrito;
 import com.condominios.sgc.domain.exception.CarritoException;
 
 public class CarritoModel {
+
     private Long id;
     private String codigo;
     private EstadoCarrito estado;
+    private Long condominioId;
 
-    public CarritoModel(Long id, String codigo, EstadoCarrito estadoInicial) {
+    public CarritoModel(
+        Long id,
+        String codigo,
+        EstadoCarrito estadoInicial,
+        Long condominioId
+    ) {
+        this(codigo, estadoInicial, condominioId);
         this.id = id;
-        validarYAsignarDatos(codigo, estadoInicial);
     }
 
-    private void validarYAsignarDatos(String codigo, EstadoCarrito estadoInicial) {
-        if (codigo == null || codigo.trim().isEmpty()) {
-            throw CarritoException.codigoObligatorio();
-        }
-        this.codigo = codigo;
-        if (estadoInicial == null) {
-            throw CarritoException.estadoObligatorio();
-        }
-        this.estado = estadoInicial;
+    public CarritoModel(
+        String codigo,
+        EstadoCarrito estadoInicial,
+        Long condominioId
+    ) {
+        this.codigo = requerirNoVacio(codigo, CarritoException::codigoObligatorio);
+        this.estado = requerirNoNulo(estadoInicial, CarritoException::estadoObligatorio);
+        this.condominioId = requerirNoNulo(condominioId, CarritoException::condominioIdObligatorio);
     }
 
     public Long getId() { return id; }
     public String getCodigo() { return codigo; }
     public EstadoCarrito getEstado() { return estado; }
+    public Long getCondominioId() { return condominioId; }
 
     public void cambiarEstado(EstadoCarrito nuevoEstado) {
-        if (nuevoEstado == null) {
-            throw CarritoException.estadoNuevoObligatorio();
-        }
+        requerirNoNulo(nuevoEstado, CarritoException::estadoNuevoObligatorio);
         if (!esTransicionValida(this.estado, nuevoEstado)) {
             throw CarritoException.transicionEstadoInvalida(this.estado.name(), nuevoEstado.name());
         }
         this.estado = nuevoEstado;
     }
 
-    private boolean esTransicionValida(EstadoCarrito origen, EstadoCarrito destino) {
-        if (origen == destino) {
+    private boolean esTransicionValida(EstadoCarrito actual, EstadoCarrito nuevo) {
+        if (actual == nuevo) {
             return false;
         }
-        if (origen == EstadoCarrito.DISPONIBLE) {
-            return destino == EstadoCarrito.EN_USO || destino == EstadoCarrito.MANTENIMIENTO;
+        if (actual == EstadoCarrito.DISPONIBLE) {
+            return nuevo == EstadoCarrito.EN_USO || nuevo == EstadoCarrito.MANTENIMIENTO;
         }
-        if (origen == EstadoCarrito.EN_USO) {
-            return destino == EstadoCarrito.DISPONIBLE || destino == EstadoCarrito.MANTENIMIENTO;
+        if (actual == EstadoCarrito.EN_USO) {
+            return nuevo == EstadoCarrito.DISPONIBLE || nuevo == EstadoCarrito.MANTENIMIENTO;
         }
-        if (origen == EstadoCarrito.MANTENIMIENTO) {
-            return destino == EstadoCarrito.DISPONIBLE;
+        if (actual == EstadoCarrito.MANTENIMIENTO) {
+            return nuevo == EstadoCarrito.DISPONIBLE;
         }
         return false;
+    }
+
+    public void actualizarCodigo(String nuevoCodigo) {
+        this.codigo = requerirNoVacio(nuevoCodigo, CarritoException::codigoObligatorio);
     }
 }
