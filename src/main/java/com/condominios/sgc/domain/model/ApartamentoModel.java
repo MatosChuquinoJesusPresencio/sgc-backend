@@ -3,6 +3,7 @@ package com.condominios.sgc.domain.model;
 import java.math.BigDecimal;
 
 import com.condominios.sgc.domain.exception.ApartamentoException;
+import static com.condominios.sgc.domain.exception.ValidationUtil.*;
 
 public class ApartamentoModel {
 
@@ -10,7 +11,7 @@ public class ApartamentoModel {
     private Integer numero;
     private Boolean derechoEstacionamiento;
     private BigDecimal metraje;
-    private String usuarioPropietarioId;
+    private String propietarioId;
     private Long pisoId;
 
     public ApartamentoModel(
@@ -18,62 +19,48 @@ public class ApartamentoModel {
         Integer numero,
         Boolean derechoEstacionamiento,
         BigDecimal metraje,
+        String propietarioId,
         Long pisoId
     ) {
-        validarYAsignarDatos(numero, metraje, pisoId);
+        this(numero, derechoEstacionamiento, metraje, pisoId);
         this.id = id;
-        this.derechoEstacionamiento = derechoEstacionamiento;
+        this.propietarioId = propietarioId;
     }
 
-    public Long getId() {
-        return id;
+    public ApartamentoModel(
+        Integer numero,
+        Boolean derechoEstacionamiento,
+        BigDecimal metraje,
+        Long pisoId
+    ) {
+        this.numero = requerirPositivo(numero, ApartamentoException::numeroInvalido);
+        this.metraje = requerirPositivo(metraje, ApartamentoException::metrajeInvalido);
+        this.derechoEstacionamiento = requerirNoNulo(derechoEstacionamiento, ApartamentoException::derechoEstacionamientoInvalido);
+        this.pisoId = requerirNoNulo(pisoId, ApartamentoException::pisoIdObligatorio);
     }
 
-    public Integer getNumero() {
-        return numero;
-    }
+    public Long getId() { return id; }
+    public Integer getNumero() { return numero; }
+    public Boolean getDerechoEstacionamiento() { return derechoEstacionamiento; }
+    public BigDecimal getMetraje() { return metraje; }
+    public String getPropietarioId() { return propietarioId; }
+    public Long getPisoId() { return pisoId; }
 
-    public Boolean getDerechoEstacionamiento() {
-        return derechoEstacionamiento;
-    }
-
-    public BigDecimal getMetraje() {
-        return metraje;
-    }
-
-    public String getUsuarioPropietarioId() {
-        return usuarioPropietarioId;
-    }
-
-    public Long getPisoId() {
-        return pisoId;
-    }
-
-    private void validarYAsignarDatos(Integer numero, BigDecimal metraje, Long pisoId) {
-        if (numero == null || numero <= 0) {
-            throw ApartamentoException.numeroInvalido();
-        }
-        this.numero = numero;
-
-        if (metraje == null || metraje.compareTo(BigDecimal.ZERO) <= 0) {
-            throw ApartamentoException.metrajeInvalido();
-        }
-        this.metraje = metraje;
-
-        if (pisoId == null) {
-            throw ApartamentoException.pisoIdObligatorio();
-        }
-        this.pisoId = pisoId;
-    }
-
-    public void asignarPropietario(String usuarioId) {
-        if (usuarioId == null) {
-            throw ApartamentoException.datosObligatorios();
-        }
-        this.usuarioPropietarioId = usuarioId;
+    public void asignarPropietario(String propietarioId) {
+        this.propietarioId = requerirNoNulo(propietarioId, ApartamentoException::propietarioIdObligatorio);
     }
 
     public void removerPropietario() {
-        this.usuarioPropietarioId = null;
+        this.propietarioId = null;
+    }
+
+    public void actualizarDatos(
+        Integer numero,
+        BigDecimal metraje,
+        Boolean derechoEstacionamiento
+    ) {
+        this.numero = requerirPositivo(numero, ApartamentoException::numeroInvalido);
+        this.metraje = requerirPositivo(metraje, ApartamentoException::metrajeInvalido);
+        this.derechoEstacionamiento = requerirNoNulo(derechoEstacionamiento, ApartamentoException::derechoEstacionamientoInvalido);
     }
 }
