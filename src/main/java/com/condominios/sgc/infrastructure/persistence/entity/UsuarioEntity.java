@@ -34,10 +34,6 @@ public class UsuarioEntity {
     private Boolean activo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "apartamento_id")
-    private ApartamentoEntity apartamento;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "condominio_id", nullable = false)
+    @JoinColumn(name = "condominio_id")
     private CondominioEntity condominio;
 }

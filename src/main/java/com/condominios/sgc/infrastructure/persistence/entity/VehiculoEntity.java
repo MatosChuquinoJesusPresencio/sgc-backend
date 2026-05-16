@@ -1,5 +1,6 @@
 package com.condominios.sgc.infrastructure.persistence.entity;
 
+import com.condominios.sgc.domain.auxiliar.TipoVehiculo;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,11 +29,19 @@ public class VehiculoEntity {
     @Column(nullable = false, unique = true)
     private String placa;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "propietario_usuario_id")
-    private UsuarioEntity propietarioUsuario;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TipoVehiculo tipo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "propietario_inquilino_id")
-    private InquilinoEntity propietarioInquilino;
+    @JoinColumn(name = "propietario_id")
+    private UsuarioEntity propietario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "inquilino_id")
+    private InquilinoEntity inquilino;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "estacionamiento_id")
+    private EstacionamientoEntity estacionamiento;
 }

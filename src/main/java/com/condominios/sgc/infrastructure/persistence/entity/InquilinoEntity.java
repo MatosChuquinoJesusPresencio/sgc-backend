@@ -22,13 +22,11 @@ public class InquilinoEntity {
     @Column(nullable = false)
     private String apellidos;
 
+    @Column(nullable = false, unique = true)
     private String dni;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "apartamento_id", nullable = false)
     private ApartamentoEntity apartamento;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vehiculo_id")
-    private VehiculoEntity vehiculo;
 }
