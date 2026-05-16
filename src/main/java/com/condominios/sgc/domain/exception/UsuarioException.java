@@ -17,6 +17,10 @@ public final class UsuarioException extends DominioException {
         return new UsuarioException("El correo es obligatorio", TipoError.BAD_REQUEST);
     }
 
+    public static UsuarioException correoInvalido() {
+        return new UsuarioException("El correo no es valido", TipoError.BAD_REQUEST);
+    }
+
     public static UsuarioException telefonoObligatorio() {
         return new UsuarioException("El telefono es obligatorio", TipoError.BAD_REQUEST);
     }
