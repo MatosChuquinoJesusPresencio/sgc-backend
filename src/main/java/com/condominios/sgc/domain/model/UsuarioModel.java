@@ -38,13 +38,13 @@ public class UsuarioModel {
         Rol rol,
         Boolean activo
     ) {
-        validarYAsignarDatos(nombres, apellidos, correo, telefono, rol, activo);
+        validarYAsignarDatos(nombres, apellidos, telefono, rol, activo);
+        this.correo = requerirEmailValido(correo, UsuarioException::correoInvalido);
     }
 
-    private void validarYAsignarDatos(String nombres, String apellidos, String correo, String telefono, Rol rol, Boolean activo) {
+    private void validarYAsignarDatos(String nombres, String apellidos, String telefono, Rol rol, Boolean activo) {
         this.nombres = requerirNoVacio(nombres, UsuarioException::nombresObligatorios);
         this.apellidos = requerirNoVacio(apellidos, UsuarioException::apellidosObligatorios);
-        this.correo = requerirNoVacio(correo, UsuarioException::correoObligatorio);
         this.telefono = requerirNoVacio(telefono, UsuarioException::telefonoObligatorio);
         this.rol = requerirNoNulo(rol, UsuarioException::rolObligatorio);
         this.activo = requerirNoNulo(activo, UsuarioException::activoObligatorio);
@@ -67,14 +67,17 @@ public class UsuarioModel {
         this.condominioId = null;
     }
 
+    public void actualizarEmail(String correo) {
+        this.correo = requerirEmailValido(correo, UsuarioException::correoInvalido);
+    }
+
     public void actualizarDatos(
         String nombres,
         String apellidos,
-        String correo,
         String telefono,
         Rol rol
     ) {
-        validarYAsignarDatos(nombres, apellidos, correo, telefono, rol, this.activo);
+        validarYAsignarDatos(nombres, apellidos, telefono, rol, this.activo);
     }
 
     public void actualizarEstado(Boolean activo) {

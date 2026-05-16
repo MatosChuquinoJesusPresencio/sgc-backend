@@ -30,7 +30,7 @@ public class ApartamentoEntity {
     @JoinColumn(name = "piso_id", nullable = false)
     private PisoEntity piso;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "propietario_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "propietario_id", unique = true)
     private UsuarioEntity propietario;
 }

@@ -17,6 +17,10 @@ public final class UsuarioException extends DominioException {
         return new UsuarioException("El correo es obligatorio", TipoError.BAD_REQUEST);
     }
 
+    public static UsuarioException correoInvalido() {
+        return new UsuarioException("El correo no es valido", TipoError.BAD_REQUEST);
+    }
+
     public static UsuarioException telefonoObligatorio() {
         return new UsuarioException("El telefono es obligatorio", TipoError.BAD_REQUEST);
     }
@@ -31,5 +35,21 @@ public final class UsuarioException extends DominioException {
 
     public static UsuarioException condominioIdObligatorio() {
         return new UsuarioException("El id del condominio es obligatorio", TipoError.BAD_REQUEST);
+    }
+
+    public static UsuarioException noEncontrada() {
+        return new UsuarioException("El usuario solicitado no existe", TipoError.NOT_FOUND);
+    }
+
+    public static UsuarioException correoDuplicado() {
+        return new UsuarioException("El correo ya esta registrado", TipoError.BAD_REQUEST);
+    }
+
+    public static UsuarioException esPropietarioDeApartamento() {
+        return new UsuarioException("No se puede eliminar el usuario porque es propietario de un apartamento", TipoError.BAD_REQUEST);
+    }
+
+    public static UsuarioException tieneVehiculosAsociados() {
+        return new UsuarioException("No se puede eliminar el usuario porque tiene vehiculos asociados", TipoError.BAD_REQUEST);
     }
 }

@@ -3,6 +3,7 @@ package com.condominios.sgc.infrastructure.persistence.mapper;
 import static com.condominios.sgc.domain.util.ValidacionUtil.idDe;
 
 import com.condominios.sgc.domain.model.EstacionamientoModel;
+import com.condominios.sgc.infrastructure.persistence.entity.ApartamentoEntity;
 import com.condominios.sgc.infrastructure.persistence.entity.CondominioEntity;
 import com.condominios.sgc.infrastructure.persistence.entity.EstacionamientoEntity;
 
@@ -24,18 +25,15 @@ public final class EstacionamientoMapper {
 
     public static EstacionamientoModel toModel(EstacionamientoEntity e) {
         if (e == null) return null;
-        EstacionamientoModel m = new EstacionamientoModel(
+       return new EstacionamientoModel(
                 e.getId(), 
                 e.getNumero(),
                 e.getTipoVehiculo(), 
                 e.getCapacidadMaxima(),
                 e.getCantidadActual(), 
                 e.getDisponible(),
-                idDe(e.getCondominio(), CondominioEntity::getId)
+                idDe(e.getCondominio(), CondominioEntity::getId),
+                idDe(e.getApartamento(), ApartamentoEntity::getId)
         );
-        if (e.getApartamento() != null) {
-            m.asignarAApartamento(e.getApartamento().getId());
-        }
-        return m;
     }
 }

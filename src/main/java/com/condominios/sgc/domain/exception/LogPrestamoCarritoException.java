@@ -40,4 +40,12 @@ public final class LogPrestamoCarritoException extends DominioException {
     public static LogPrestamoCarritoException inquilinoIdObligatorio() {
         return new LogPrestamoCarritoException("El id del inquilino es obligatorio", TipoError.BAD_REQUEST);
     }
+
+    public static LogPrestamoCarritoException nombreSolicitanteObligatorio() {
+        return new LogPrestamoCarritoException("El nombre del solicitante es obligatorio", TipoError.BAD_REQUEST);
+    }
+
+    public static LogPrestamoCarritoException dniSolicitanteObligatorio() {
+        return new LogPrestamoCarritoException("El DNI del solicitante es obligatorio", TipoError.BAD_REQUEST);
+    }
 }
