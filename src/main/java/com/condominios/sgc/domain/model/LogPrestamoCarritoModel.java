@@ -28,9 +28,23 @@ public class LogPrestamoCarritoModel {
         this.penalizacion = BigDecimal.ZERO;
     }
 
-    public LogPrestamoCarritoModel(Long id, TipoHabitante solicitante, Long apartamentoId, Long carritoId) {
-        this(solicitante, apartamentoId, carritoId);
+    public LogPrestamoCarritoModel(
+            Long id,
+            TipoHabitante solicitante,
+            Long apartamentoId,
+            Long carritoId,
+            String usuarioId,
+            Long inquilinoId,
+            BigDecimal penalizacion,
+            LocalDateTime fechaPrestamo,
+            LocalDateTime fechaDevolucion) {
+        validarYAsignarDatos(solicitante, apartamentoId, carritoId);
         this.id = id;
+        this.usuarioId = usuarioId;
+        this.inquilinoId = inquilinoId;
+        this.penalizacion = penalizacion;
+        this.fechaPrestamo = fechaPrestamo;
+        this.fechaDevolucion = fechaDevolucion;
     }
 
     private void validarYAsignarDatos(TipoHabitante solicitante, Long apartamentoId, Long carritoId) {
