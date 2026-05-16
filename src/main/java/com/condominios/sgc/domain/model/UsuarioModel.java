@@ -25,12 +25,12 @@ public class UsuarioModel {
         Boolean activo,
         Long condominioId
     ) {
-        this(nombres, apellidos, correo, telefono, rol, activo);
-        this.id = id;
+        this(id, nombres, apellidos, correo, telefono, rol, activo);
         this.condominioId = condominioId;
     }
 
     public UsuarioModel(
+        String id,
         String nombres, 
         String apellidos, 
         String correo, 
@@ -38,6 +38,7 @@ public class UsuarioModel {
         Rol rol,
         Boolean activo
     ) {
+        this.id = requerirNoVacio(id, UsuarioException::idObligatorio);
         validarYAsignarDatos(nombres, apellidos, telefono, rol, activo);
         this.correo = requerirEmailValido(correo, UsuarioException::correoInvalido);
     }
@@ -67,7 +68,7 @@ public class UsuarioModel {
         this.condominioId = null;
     }
 
-    public void actualizarEmail(String correo) {
+    public void actualizarCorreo(String correo) {
         this.correo = requerirEmailValido(correo, UsuarioException::correoInvalido);
     }
 
