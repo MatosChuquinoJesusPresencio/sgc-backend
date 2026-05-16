@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import java.time.LocalDateTime;
 
 @Entity
@@ -39,9 +41,11 @@ public class LogAccesoVehicularEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehiculo_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private VehiculoEntity vehiculo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estacionamiento_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private EstacionamientoEntity estacionamiento;
 }
