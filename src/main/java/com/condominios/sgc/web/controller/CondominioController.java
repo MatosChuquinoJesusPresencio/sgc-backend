@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,18 +53,21 @@ public class CondominioController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
     public ResponseEntity<CondominioResponse> crear(@RequestBody CrearCondominioRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(CondominioResponse.fromModel(crearCondominioUseCase.ejecutar(request)));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<CondominioResponse> obtener(@PathVariable Long id) {
         return ResponseEntity.ok(
             CondominioResponse.fromModel(obtenerCondominioUseCase.ejecutar(id)));
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<PaginacionResponse<CondominioResponse>> listar(
             @RequestParam Map<String, String> params) {
         int pagina = Integer.parseInt(params.getOrDefault("pagina", "0"));
@@ -88,6 +92,7 @@ public class CondominioController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
     public ResponseEntity<CondominioResponse> actualizar(
             @PathVariable Long id,
             @RequestBody ActualizarCondominioRequest request) {
@@ -96,6 +101,7 @@ public class CondominioController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         eliminarCondominioUseCase.ejecutar(id);
         return ResponseEntity.noContent().build();
