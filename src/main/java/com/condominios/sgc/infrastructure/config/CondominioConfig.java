@@ -16,28 +16,14 @@ import com.condominios.sgc.application.usecase.ObtenerCondominioUseCase;
 import com.condominios.sgc.domain.port.CondominioPort;
 import com.condominios.sgc.domain.port.ConfiguracionPort;
 import com.condominios.sgc.infrastructure.adapter.CondominioAdapter;
-import com.condominios.sgc.infrastructure.persistence.repository.CarritoRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.CondominioRepository;
-import com.condominios.sgc.infrastructure.persistence.repository.ConfiguracionRepository;
-import com.condominios.sgc.infrastructure.persistence.repository.EstacionamientoRepository;
-import com.condominios.sgc.infrastructure.persistence.repository.TorreRepository;
 
 @Configuration
 public class CondominioConfig {
 
     @Bean
-    public CondominioPort condominioPort(
-            CondominioRepository condominioRepository,
-            ConfiguracionRepository configuracionRepository,
-            TorreRepository torreRepository,
-            EstacionamientoRepository estacionamientoRepository,
-            CarritoRepository carritoRepository) {
-        return new CondominioAdapter(
-                condominioRepository, 
-                configuracionRepository, 
-                torreRepository, 
-                estacionamientoRepository, 
-                carritoRepository);
+    public CondominioPort condominioPort(CondominioRepository condominioRepository) {
+        return new CondominioAdapter(condominioRepository);
     }
 
     @Bean

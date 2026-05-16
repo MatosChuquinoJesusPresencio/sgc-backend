@@ -1,5 +1,7 @@
 package com.condominios.sgc.domain.model;
 
+import static com.condominios.sgc.domain.util.ValidacionUtil.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -17,9 +19,8 @@ public class LogPrestamoCarritoModel {
     private Long inquilinoId;
     private String usuarioId;
 
-    public LogPrestamoCarritoModel(Long id, TipoHabitante solicitante, Long apartamentoId, Long carritoId) {
-        validarDatos(solicitante, apartamentoId, carritoId);
-        this.id = id;
+    public LogPrestamoCarritoModel(TipoHabitante solicitante, Long apartamentoId, Long carritoId) {
+        validarYAsignarDatos(solicitante, apartamentoId, carritoId);
         this.solicitante = solicitante;
         this.apartamentoId = apartamentoId;
         this.carritoId = carritoId;
@@ -27,16 +28,15 @@ public class LogPrestamoCarritoModel {
         this.penalizacion = BigDecimal.ZERO;
     }
 
-    private void validarDatos(TipoHabitante solicitante, Long apartamentoId, Long carritoId) {
-        if (solicitante == null) {
-            throw LogPrestamoCarritoException.solicitanteObligatorio();
-        }
-        if (apartamentoId == null) {
-            throw LogPrestamoCarritoException.apartamentoIdObligatorio();
-        }
-        if (carritoId == null) {
-            throw LogPrestamoCarritoException.carritoObligatorio();
-        }
+    public LogPrestamoCarritoModel(Long id, TipoHabitante solicitante, Long apartamentoId, Long carritoId) {
+        this(solicitante, apartamentoId, carritoId);
+        this.id = id;
+    }
+
+    private void validarYAsignarDatos(TipoHabitante solicitante, Long apartamentoId, Long carritoId) {
+        this.solicitante = requerirNoNulo(solicitante, LogPrestamoCarritoException::solicitanteObligatorio);
+        this.apartamentoId = requerirNoNulo(apartamentoId, LogPrestamoCarritoException::apartamentoIdObligatorio);
+        this.carritoId = requerirNoNulo(carritoId, LogPrestamoCarritoException::carritoObligatorio);
     }
 
     public Long getId() { return id; }
@@ -50,29 +50,17 @@ public class LogPrestamoCarritoModel {
     public String getUsuarioId() { return usuarioId; }
 
     public void asignarUsuarioSolicitante(String usuarioId) {
-        if (usuarioId == null) {
-            throw LogPrestamoCarritoException.usuarioIdObligatorio();
-        }
-        if (this.inquilinoId != null) {
-            throw LogPrestamoCarritoException.yaTieneSolicitanteInquilino();
-        }
-        this.usuarioId = usuarioId;
+        this.usuarioId = requerirNoNulo(usuarioId, LogPrestamoCarritoException::usuarioIdObligatorio);
+        requerirQue(this.inquilinoId == null, LogPrestamoCarritoException::yaTieneSolicitanteInquilino);
     }
 
     public void asignarInquilinoSolicitante(Long inquilinoId) {
-        if (inquilinoId == null) {
-            throw LogPrestamoCarritoException.inquilinoIdObligatorio();
-        }
-        if (this.usuarioId != null) {
-            throw LogPrestamoCarritoException.yaTieneSolicitanteUsuario();
-        }
-        this.inquilinoId = inquilinoId;
+        this.inquilinoId = requerirNoNulo(inquilinoId, LogPrestamoCarritoException::inquilinoIdObligatorio);
+        requerirQue(this.usuarioId == null, LogPrestamoCarritoException::yaTieneSolicitanteUsuario);
     }
 
     public void registrarDevolucion(BigDecimal penalizacionAplicada) {
-        if (this.fechaDevolucion != null) {
-            throw LogPrestamoCarritoException.devolucionYaRegistrada();
-        }
+        requerirQue(this.fechaDevolucion == null, LogPrestamoCarritoException::devolucionYaRegistrada);
         this.fechaDevolucion = LocalDateTime.now();
         this.penalizacion = penalizacionAplicada != null ? penalizacionAplicada : BigDecimal.ZERO;
     }

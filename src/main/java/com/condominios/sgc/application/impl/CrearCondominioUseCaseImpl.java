@@ -26,22 +26,30 @@ public class CrearCondominioUseCaseImpl implements CrearCondominioUseCase {
             throw CondominioException.nombreEnUso();
         }
 
-        ConfiguracionModel configuracionBase = ConfiguracionModel.obtenerConfiguracionBase();
-        ConfiguracionModel configuracionGuardada = configuracionPort.save(configuracionBase);
-
         CondominioModel condominio = new CondominioModel(
                 null,
                 request.nombre(),
                 request.pais(),
                 request.ciudad(),
                 request.direccion(),
-                LocalDateTime.now(),
-                configuracionGuardada.getId(),
-                null,
-                null,
-                null
+                LocalDateTime.now()
         );
 
-        return condominioPort.save(condominio);
+        CondominioModel condominioGuardado = condominioPort.save(condominio);
+
+        ConfiguracionModel configuracionBase = new ConfiguracionModel(
+                1, // maxAutos
+                1, // maxMotos
+                java.math.BigDecimal.ZERO, // penalizacionPorMin
+                60, // maxTiempoPrestamoMin
+                1, // maxEstacionamientosPorApartamento
+                1, // maxCarritosPorApartamento
+                2, // maxVehiculosPorPropietario
+                5, // maxInquilinosPorApartamento
+                condominioGuardado.getId()
+        );
+        configuracionPort.save(configuracionBase);
+
+        return condominioGuardado;
     }
 }

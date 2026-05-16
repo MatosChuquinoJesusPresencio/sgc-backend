@@ -1,6 +1,11 @@
 package com.condominios.sgc.infrastructure.persistence.mapper;
 
+import static com.condominios.sgc.domain.util.ValidacionUtil.idDe;
+
 import com.condominios.sgc.domain.model.VehiculoModel;
+import com.condominios.sgc.infrastructure.persistence.entity.EstacionamientoEntity;
+import com.condominios.sgc.infrastructure.persistence.entity.InquilinoEntity;
+import com.condominios.sgc.infrastructure.persistence.entity.UsuarioEntity;
 import com.condominios.sgc.infrastructure.persistence.entity.VehiculoEntity;
 
 public final class VehiculoMapper {
@@ -15,19 +20,22 @@ public final class VehiculoMapper {
         e.setColor(model.getColor());
         e.setModelo(model.getModelo());
         e.setPlaca(model.getPlaca());
+        e.setTipo(model.getTipo());
         return e;
     }
 
     public static VehiculoModel toModel(VehiculoEntity e) {
         if (e == null) return null;
-        VehiculoModel m = new VehiculoModel(
-                e.getId(), e.getMarca(), e.getColor(), e.getModelo(), e.getPlaca());
-        if (e.getPropietarioUsuario() != null) {
-            m.asignarAUsuario(e.getPropietarioUsuario().getId());
-        }
-        if (e.getPropietarioInquilino() != null) {
-            m.asignarAInquilino(e.getPropietarioInquilino().getId());
-        }
-        return m;
+        return new VehiculoModel(
+                e.getId(), 
+                e.getMarca(), 
+                e.getColor(), 
+                e.getModelo(), 
+                e.getPlaca(),
+                e.getTipo(),
+                idDe(e.getPropietario(), UsuarioEntity::getId),
+                idDe(e.getInquilino(), InquilinoEntity::getId),
+                idDe(e.getEstacionamiento(), EstacionamientoEntity::getId)
+        );
     }
 }

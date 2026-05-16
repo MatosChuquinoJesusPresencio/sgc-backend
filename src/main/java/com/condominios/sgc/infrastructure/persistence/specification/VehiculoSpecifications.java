@@ -16,14 +16,14 @@ public final class VehiculoSpecifications {
         return (root, query, cb) -> cb.equal(root.get("placa"), placa);
     }
 
-    public static Specification<VehiculoEntity> porPropietarioUsuarioId(String usuarioId) {
+    public static Specification<VehiculoEntity> porPropietarioId(String usuarioId) {
         if (usuarioId == null) return null;
-        return (root, query, cb) -> cb.equal(root.get("propietarioUsuario").get("id"), usuarioId);
+        return (root, query, cb) -> cb.equal(root.get("propietario").get("id"), usuarioId);
     }
 
-    public static Specification<VehiculoEntity> porPropietarioInquilinoId(Long inquilinoId) {
+    public static Specification<VehiculoEntity> porInquilinoId(Long inquilinoId) {
         if (inquilinoId == null) return null;
-        return (root, query, cb) -> cb.equal(root.get("propietarioInquilino").get("id"), inquilinoId);
+        return (root, query, cb) -> cb.equal(root.get("inquilino").get("id"), inquilinoId);
     }
 
     public static Specification<VehiculoEntity> fromFiltros(Map<String, String> filtros) {
@@ -31,8 +31,8 @@ public final class VehiculoSpecifications {
         return filtros.entrySet().stream()
             .map(entry -> switch (entry.getKey()) {
                 case "placa" -> porPlaca(entry.getValue());
-                case "propietarioUsuarioId" -> porPropietarioUsuarioId(entry.getValue());
-                case "propietarioInquilinoId" -> porPropietarioInquilinoId(Long.valueOf(entry.getValue()));
+                case "propietarioId" -> porPropietarioId(entry.getValue());
+                case "inquilinoId" -> porInquilinoId(Long.valueOf(entry.getValue()));
                 default -> null;
             })
             .filter(Objects::nonNull)

@@ -1,7 +1,11 @@
 package com.condominios.sgc.infrastructure.persistence.mapper;
 
+import static com.condominios.sgc.domain.util.ValidacionUtil.idDe;
+
 import com.condominios.sgc.domain.model.LogAccesoVehicularModel;
+import com.condominios.sgc.infrastructure.persistence.entity.EstacionamientoEntity;
 import com.condominios.sgc.infrastructure.persistence.entity.LogAccesoVehicularEntity;
+import com.condominios.sgc.infrastructure.persistence.entity.VehiculoEntity;
 
 public final class LogAccesoVehicularMapper {
 
@@ -23,9 +27,13 @@ public final class LogAccesoVehicularMapper {
     public static LogAccesoVehicularModel toModel(LogAccesoVehicularEntity e) {
         if (e == null) return null;
         return new LogAccesoVehicularModel(
-                e.getId(), e.getPlaca(), e.getOcupante(), e.getDatosInquilino(),
+                e.getId(), 
+                e.getPlaca(), 
+                e.getOcupante(), 
+                e.getDatosInquilino(),
                 e.getMetodo(),
-                e.getVehiculo() != null ? e.getVehiculo().getId() : null,
-                e.getEstacionamiento() != null ? e.getEstacionamiento().getId() : null);
+                idDe(e.getVehiculo(), VehiculoEntity::getId),
+                idDe(e.getEstacionamiento(), EstacionamientoEntity::getId)
+        );
     }
 }

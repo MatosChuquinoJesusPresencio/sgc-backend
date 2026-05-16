@@ -12,7 +12,8 @@ public record ConfiguracionResponse(
     Integer maxEstacionamientosPorApartamento,
     Integer maxCarritosPorApartamento,
     Integer maxVehiculosPorPropietario,
-    Integer maxInquilinosPorApartamento
+    Integer maxInquilinosPorApartamento,
+    Long condominioId
 ) {
     public static ConfiguracionResponse fromModel(ConfiguracionModel model) {
         return new ConfiguracionResponse(
@@ -24,7 +25,8 @@ public record ConfiguracionResponse(
             model.getMaxEstacionamientosPorApartamento(),
             model.getMaxCarritosPorApartamento(),
             model.getMaxVehiculosPorPropietario(),
-            model.getMaxInquilinosPorApartamento()
+            model.getMaxInquilinosPorApartamento(),
+            model.getCondominioId()
         );
     }
 }

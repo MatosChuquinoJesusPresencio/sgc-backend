@@ -1,6 +1,9 @@
 package com.condominios.sgc.infrastructure.persistence.mapper;
 
+import static com.condominios.sgc.domain.util.ValidacionUtil.idDe;
+
 import com.condominios.sgc.domain.model.InquilinoModel;
+import com.condominios.sgc.infrastructure.persistence.entity.ApartamentoEntity;
 import com.condominios.sgc.infrastructure.persistence.entity.InquilinoEntity;
 
 public final class InquilinoMapper {
@@ -19,12 +22,12 @@ public final class InquilinoMapper {
 
     public static InquilinoModel toModel(InquilinoEntity e) {
         if (e == null) return null;
-        InquilinoModel m = new InquilinoModel(
-                e.getId(), e.getNombres(), e.getApellidos(), e.getDni(),
-                e.getApartamento() != null ? e.getApartamento().getId() : null);
-        if (e.getVehiculo() != null) {
-            m.asignarVehiculo(e.getVehiculo().getId());
-        }
-        return m;
+        return new InquilinoModel(
+                e.getId(), 
+                e.getNombres(), 
+                e.getApellidos(), 
+                e.getDni(),
+                idDe(e.getApartamento(), ApartamentoEntity::getId)
+        );
     }
 }

@@ -1,14 +1,13 @@
 package com.condominios.sgc.domain.port;
 
+import java.util.List;
 import java.util.Optional;
 
-import com.condominios.sgc.domain.dto.PageRequestDto;
-import com.condominios.sgc.domain.dto.PageResponseDto;
 import com.condominios.sgc.domain.model.CondominioModel;
 
 public interface CondominioPort {
     Optional<CondominioModel> findById(Long id);
-    PageResponseDto<CondominioModel> findAll(PageRequestDto pageRequestDto);
+    List<CondominioModel> findAll();
     CondominioModel save(CondominioModel model);
     void deleteById(Long id);
     boolean existsByNombre(String nombre);

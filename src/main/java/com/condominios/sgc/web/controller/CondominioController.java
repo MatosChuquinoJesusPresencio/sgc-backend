@@ -1,7 +1,6 @@
 package com.condominios.sgc.web.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +21,6 @@ import com.condominios.sgc.application.usecase.CrearCondominioUseCase;
 import com.condominios.sgc.application.usecase.EliminarCondominioUseCase;
 import com.condominios.sgc.application.usecase.ListarCondominiosUseCase;
 import com.condominios.sgc.application.usecase.ObtenerCondominioUseCase;
-import com.condominios.sgc.domain.dto.PageRequestDto;
-import com.condominios.sgc.domain.dto.PageResponseDto;
 import com.condominios.sgc.web.dto.CondominioResponse;
 
 @RestController
@@ -62,35 +59,12 @@ public class CondominioController {
     }
 
     @GetMapping
-    public ResponseEntity<PageResponseDto<CondominioResponse>> listar(
-            @RequestParam(defaultValue = "0") int pagina,
-            @RequestParam(defaultValue = "10") int tamano,
-            @RequestParam(defaultValue = "id") String ordenar,
-            @RequestParam(defaultValue = "ASC") PageRequestDto.Direccion direccion,
-            @RequestParam(required = false) Map<String, String> params) {
-        
-        params.remove("pagina");
-        params.remove("tamano");
-        params.remove("ordenar");
-        params.remove("direccion");
-
-        PageRequestDto request = new PageRequestDto(pagina, tamano, ordenar, direccion, params);
-        
-        PageResponseDto<com.condominios.sgc.domain.model.CondominioModel> modelPage = listarCondominiosUseCase.ejecutar(request);
-        
-        List<CondominioResponse> content = modelPage.contenido().stream()
+    public ResponseEntity<List<CondominioResponse>> listar() {
+        List<CondominioResponse> content = listarCondominiosUseCase.ejecutar().stream()
             .map(CondominioResponse::fromModel)
             .toList();
             
-        return ResponseEntity.ok(PageResponseDto.of(
-            content,
-            modelPage.paginaActual(),
-            modelPage.tamanoPagina(),
-            modelPage.totalElementos(),
-            modelPage.totalPaginas(),
-            modelPage.primero(),
-            modelPage.ultimo()
-        ));
+        return ResponseEntity.ok(content);
     }
 
     @PutMapping("/{id}")

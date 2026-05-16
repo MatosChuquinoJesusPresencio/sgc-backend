@@ -1,9 +1,10 @@
 package com.condominios.sgc.infrastructure.persistence.mapper;
 
-import com.condominios.sgc.domain.model.TorreModel;
-import com.condominios.sgc.infrastructure.persistence.entity.TorreEntity;
+import static com.condominios.sgc.domain.util.ValidacionUtil.idDe;
 
-import java.util.ArrayList;
+import com.condominios.sgc.domain.model.TorreModel;
+import com.condominios.sgc.infrastructure.persistence.entity.CondominioEntity;
+import com.condominios.sgc.infrastructure.persistence.entity.TorreEntity;
 
 public final class TorreMapper {
 
@@ -19,6 +20,10 @@ public final class TorreMapper {
 
     public static TorreModel toModel(TorreEntity e) {
         if (e == null) return null;
-        return new TorreModel(e.getId(), e.getNombre(), new ArrayList<>());
+        return new TorreModel(
+            e.getId(), 
+            e.getNombre(),
+            idDe(e.getCondominio(), CondominioEntity::getId)
+        );
     }
 }

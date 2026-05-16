@@ -1,6 +1,9 @@
 package com.condominios.sgc.infrastructure.persistence.mapper;
 
+import static com.condominios.sgc.domain.util.ValidacionUtil.idDe;
+
 import com.condominios.sgc.domain.model.EstacionamientoModel;
+import com.condominios.sgc.infrastructure.persistence.entity.CondominioEntity;
 import com.condominios.sgc.infrastructure.persistence.entity.EstacionamientoEntity;
 
 public final class EstacionamientoMapper {
@@ -12,8 +15,9 @@ public final class EstacionamientoMapper {
         EstacionamientoEntity e = new EstacionamientoEntity();
         e.setId(model.getId());
         e.setNumero(model.getNumero());
-        e.setCantidadVehiculosMax(model.getCantidadVehiculosMax());
         e.setTipoVehiculo(model.getTipoVehiculo());
+        e.setCapacidadMaxima(model.getCapacidadMaxima());
+        e.setCantidadActual(model.getCantidadActual());
         e.setDisponible(model.isDisponible());
         return e;
     }
@@ -21,14 +25,16 @@ public final class EstacionamientoMapper {
     public static EstacionamientoModel toModel(EstacionamientoEntity e) {
         if (e == null) return null;
         EstacionamientoModel m = new EstacionamientoModel(
-                e.getId(), e.getNumero(), e.getCantidadVehiculosMax(),
-                e.getTipoVehiculo(),
-                e.getCondominio() != null ? e.getCondominio().getId() : null);
+                e.getId(), 
+                e.getNumero(),
+                e.getTipoVehiculo(), 
+                e.getCapacidadMaxima(),
+                e.getCantidadActual(), 
+                e.getDisponible(),
+                idDe(e.getCondominio(), CondominioEntity::getId)
+        );
         if (e.getApartamento() != null) {
             m.asignarAApartamento(e.getApartamento().getId());
-        }
-        if (e.getVehiculoAsignado() != null && !e.getDisponible()) {
-            m.ocuparConVehiculo(e.getVehiculoAsignado().getId());
         }
         return m;
     }

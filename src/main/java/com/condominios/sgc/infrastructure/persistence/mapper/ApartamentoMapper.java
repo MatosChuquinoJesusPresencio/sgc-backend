@@ -1,7 +1,11 @@
 package com.condominios.sgc.infrastructure.persistence.mapper;
 
+import static com.condominios.sgc.domain.util.ValidacionUtil.idDe;
+
 import com.condominios.sgc.domain.model.ApartamentoModel;
 import com.condominios.sgc.infrastructure.persistence.entity.ApartamentoEntity;
+import com.condominios.sgc.infrastructure.persistence.entity.PisoEntity;
+import com.condominios.sgc.infrastructure.persistence.entity.UsuarioEntity;
 
 public final class ApartamentoMapper {
 
@@ -19,13 +23,13 @@ public final class ApartamentoMapper {
 
     public static ApartamentoModel toModel(ApartamentoEntity e) {
         if (e == null) return null;
-        ApartamentoModel m = new ApartamentoModel(
-                e.getId(), e.getNumero(), e.getDerechoEstacionamiento(),
-                e.getMetraje(),
-                e.getPiso() != null ? e.getPiso().getId() : null);
-        if (e.getPropietario() != null) {
-            m.asignarPropietario(e.getPropietario().getId());
-        }
-        return m;
+        return new ApartamentoModel(
+                e.getId(), 
+                e.getNumero(), 
+                e.getDerechoEstacionamiento(),
+                e.getMetraje(), 
+                idDe(e.getPropietario(), UsuarioEntity::getId),
+                idDe(e.getPiso(), PisoEntity::getId)
+        );
     }
 }

@@ -1,7 +1,6 @@
 package com.condominios.sgc.web.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import com.condominios.sgc.domain.model.CondominioModel;
 
@@ -11,11 +10,7 @@ public record CondominioResponse(
     String pais,
     String ciudad,
     String direccion,
-    LocalDateTime fechaCreacion,
-    Long configuracionId,
-    List<Long> torreIds,
-    List<Long> estacionamientoIds,
-    List<Long> carritoIds
+    LocalDateTime fechaCreacion
 ) {
     public static CondominioResponse fromModel(CondominioModel model) {
         if (model == null) return null;
@@ -25,11 +20,8 @@ public record CondominioResponse(
             model.getPais(),
             model.getCiudad(),
             model.getDireccion(),
-            model.getFechaCreacion(),
-            model.getConfiguracionId(),
-            model.getTorreIds(),
-            model.getEstacionamientoIds(),
-            model.getCarritoIds()
+            model.getFechaCreacion()
         );
     }
 }
+
