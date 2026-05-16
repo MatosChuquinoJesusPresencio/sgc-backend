@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class SupabaseClient {
 
@@ -32,7 +33,8 @@ public class SupabaseClient {
             HttpMethod.POST,
             new HttpEntity<>(body, headers),
             new ParameterizedTypeReference<Map<String, Object>>() {});
-        return response.getBody();
+        return Objects.requireNonNull(response.getBody(),
+            "Respuesta nula del servidor de autenticación");
     }
 
     public void cerrarSesion(String accessToken) {
@@ -59,7 +61,8 @@ public class SupabaseClient {
             HttpMethod.POST,
             new HttpEntity<>(body, headers),
             new ParameterizedTypeReference<Map<String, Object>>() {});
-        return response.getBody();
+        return Objects.requireNonNull(response.getBody(),
+            "Respuesta nula del servidor de autenticación");
     }
 
     public void enviarRecuperacionContrasena(String email) {
@@ -92,7 +95,8 @@ public class SupabaseClient {
             HttpMethod.POST,
             new HttpEntity<>(body, headers),
             new ParameterizedTypeReference<Map<String, Object>>() {});
-        return response.getBody();
+        return Objects.requireNonNull(response.getBody(),
+            "Respuesta nula del servidor de autenticación");
     }
 
     public void actualizarEmailAdmin(String userId, String nuevoEmail) {
@@ -104,6 +108,15 @@ public class SupabaseClient {
             HttpMethod.PUT,
             new HttpEntity<>(body, headers),
             new ParameterizedTypeReference<Map<String, Object>>() {});
+    }
+
+    public void eliminarUsuario(String userId) {
+        var headers = headersConServiceRole();
+        restTemplate.exchange(
+            supabaseUrl + "/auth/v1/admin/users/" + userId,
+            HttpMethod.DELETE,
+            new HttpEntity<>(headers),
+            Void.class);
     }
 
     private HttpHeaders cabecerasConClaveAnonima() {

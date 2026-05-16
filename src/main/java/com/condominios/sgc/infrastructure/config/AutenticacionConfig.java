@@ -3,6 +3,7 @@ package com.condominios.sgc.infrastructure.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.client.RestTemplate;
 
 import com.condominios.sgc.application.impl.ActualizarCorreoAdminUseCaseImpl;
@@ -93,8 +94,9 @@ public class AutenticacionConfig {
     @Bean
     public ActualizarCorreoUseCase actualizarCorreoUseCase(
             UsuarioPort usuarioPort,
-            AutenticacionPort autenticacionPort) {
-        return new ActualizarCorreoUseCaseImpl(usuarioPort, autenticacionPort);
+            AutenticacionPort autenticacionPort,
+            JwtDecoder jwtDecoder) {
+        return new ActualizarCorreoUseCaseImpl(usuarioPort, autenticacionPort, jwtDecoder);
     }
 
     @Bean

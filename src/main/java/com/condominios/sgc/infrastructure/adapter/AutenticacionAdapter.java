@@ -9,6 +9,7 @@ import com.condominios.sgc.domain.port.AutenticacionPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.infrastructure.client.SupabaseClient;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
@@ -28,7 +29,11 @@ public class AutenticacionAdapter implements AutenticacionPort {
             Map<String, Object> response = supabaseClient.iniciarSesion(email, password);
             return construirSesion(response);
         } catch (HttpClientErrorException e) {
-            throw AutenticacionException.credencialesInvalidas();
+            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED || e.getStatusCode() == HttpStatus.FORBIDDEN) {
+                throw AutenticacionException.credencialesInvalidas();
+            }
+            throw AutenticacionException.errorAutenticacion(
+                "Error de autenticación: " + e.getResponseBodyAsString());
         } catch (HttpServerErrorException e) {
             throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
         }
@@ -88,12 +93,12 @@ public class AutenticacionAdapter implements AutenticacionPort {
     }
 
     @Override
-    public void actualizarEmail(String token, String nuevoEmail) {
+    public void actualizarCorreo(String token, String nuevoCorreo) {
         try {
-            supabaseClient.actualizarUsuario(token, Map.<String, Object>of("email", nuevoEmail));
+            supabaseClient.actualizarUsuario(token, Map.<String, Object>of("email", nuevoCorreo));
         } catch (HttpClientErrorException e) {
             throw AutenticacionException.errorAutenticacion(
-                "Error al actualizar email: " + e.getResponseBodyAsString());
+                "Error al actualizar correo: " + e.getResponseBodyAsString());
         } catch (HttpServerErrorException e) {
             throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
         }
@@ -113,12 +118,26 @@ public class AutenticacionAdapter implements AutenticacionPort {
     }
 
     @Override
-    public void actualizarEmailAdmin(String usuarioId, String nuevoEmail) {
+    public void actualizarCorreoAdmin(String usuarioId, String nuevoCorreo) {
         try {
-            supabaseClient.actualizarEmailAdmin(usuarioId, nuevoEmail);
+            supabaseClient.actualizarEmailAdmin(usuarioId, nuevoCorreo);
         } catch (HttpClientErrorException e) {
             throw AutenticacionException.errorAutenticacion(
-                "Error al actualizar email: " + e.getResponseBodyAsString());
+                "Error al actualizar correo: " + e.getResponseBodyAsString());
+        } catch (HttpServerErrorException e) {
+            throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
+        }
+    }
+
+    @Override
+    public void eliminarUsuario(String usuarioId) {
+        try {
+            supabaseClient.eliminarUsuario(usuarioId);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() != 404) {
+                throw AutenticacionException.errorAutenticacion(
+                    "Error al eliminar usuario: " + e.getResponseBodyAsString());
+            }
         } catch (HttpServerErrorException e) {
             throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
         }
