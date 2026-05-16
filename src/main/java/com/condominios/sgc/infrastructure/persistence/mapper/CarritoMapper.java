@@ -1,7 +1,10 @@
 package com.condominios.sgc.infrastructure.persistence.mapper;
 
+import static com.condominios.sgc.domain.util.ValidacionUtil.idDe;
+
 import com.condominios.sgc.domain.model.CarritoModel;
 import com.condominios.sgc.infrastructure.persistence.entity.CarritoEntity;
+import com.condominios.sgc.infrastructure.persistence.entity.CondominioEntity;
 
 public final class CarritoMapper {
 
@@ -18,6 +21,11 @@ public final class CarritoMapper {
 
     public static CarritoModel toModel(CarritoEntity e) {
         if (e == null) return null;
-        return new CarritoModel(e.getId(), e.getCodigo(), e.getEstado());
+        return new CarritoModel(
+            e.getId(), 
+            e.getCodigo(), 
+            e.getEstado(),
+            idDe(e.getCondominio(), CondominioEntity::getId)
+        );
     }
 }

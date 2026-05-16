@@ -1,6 +1,10 @@
 package com.condominios.sgc.infrastructure.persistence.mapper;
 
+import static com.condominios.sgc.domain.util.ValidacionUtil.idDe;
+
 import com.condominios.sgc.domain.model.LogPrestamoCarritoModel;
+import com.condominios.sgc.infrastructure.persistence.entity.ApartamentoEntity;
+import com.condominios.sgc.infrastructure.persistence.entity.CarritoEntity;
 import com.condominios.sgc.infrastructure.persistence.entity.LogPrestamoCarritoEntity;
 
 public final class LogPrestamoCarritoMapper {
@@ -21,9 +25,11 @@ public final class LogPrestamoCarritoMapper {
     public static LogPrestamoCarritoModel toModel(LogPrestamoCarritoEntity e) {
         if (e == null) return null;
         LogPrestamoCarritoModel m = new LogPrestamoCarritoModel(
-                e.getId(), e.getSolicitante(),
-                e.getApartamento() != null ? e.getApartamento().getId() : null,
-                e.getCarrito() != null ? e.getCarrito().getId() : null);
+                e.getId(), 
+                e.getSolicitante(),
+                idDe(e.getApartamento(), ApartamentoEntity::getId),
+                idDe(e.getCarrito(), CarritoEntity::getId)
+        );
         if (e.getUsuario() != null) {
             m.asignarUsuarioSolicitante(e.getUsuario().getId());
         }

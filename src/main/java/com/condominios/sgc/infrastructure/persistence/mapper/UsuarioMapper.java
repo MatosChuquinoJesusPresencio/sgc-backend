@@ -1,6 +1,9 @@
 package com.condominios.sgc.infrastructure.persistence.mapper;
 
+import static com.condominios.sgc.domain.util.ValidacionUtil.idDe;
+
 import com.condominios.sgc.domain.model.UsuarioModel;
+import com.condominios.sgc.infrastructure.persistence.entity.CondominioEntity;
 import com.condominios.sgc.infrastructure.persistence.entity.UsuarioEntity;
 
 public final class UsuarioMapper {
@@ -22,16 +25,15 @@ public final class UsuarioMapper {
 
     public static UsuarioModel toModel(UsuarioEntity e) {
         if (e == null) return null;
-        UsuarioModel m = new UsuarioModel(
-                e.getId(), e.getNombres(), e.getApellidos(), e.getCorreo(),
-                e.getTelefono(), e.getRol(),
-                e.getCondominio() != null ? e.getCondominio().getId() : null);
-        if (!e.getActivo()) {
-            m.desactivar();
-        }
-        if (e.getApartamento() != null) {
-            m.asignarApartamento(e.getApartamento().getId());
-        }
-        return m;
+        return new UsuarioModel(
+                e.getId(), 
+                e.getNombres(), 
+                e.getApellidos(), 
+                e.getCorreo(),
+                e.getTelefono(), 
+                e.getRol(), 
+                e.getActivo(),
+                idDe(e.getCondominio(), CondominioEntity::getId)
+        );
     }
 }

@@ -1,9 +1,10 @@
 package com.condominios.sgc.infrastructure.persistence.mapper;
 
+import static com.condominios.sgc.domain.util.ValidacionUtil.idDe;
+
 import com.condominios.sgc.domain.model.PisoModel;
 import com.condominios.sgc.infrastructure.persistence.entity.PisoEntity;
-
-import java.util.ArrayList;
+import com.condominios.sgc.infrastructure.persistence.entity.TorreEntity;
 
 public final class PisoMapper {
 
@@ -19,6 +20,10 @@ public final class PisoMapper {
 
     public static PisoModel toModel(PisoEntity e) {
         if (e == null) return null;
-        return new PisoModel(e.getId(), e.getNumero(), new ArrayList<>());
+        return new PisoModel(
+            e.getId(), 
+            e.getNumero(),
+            idDe(e.getTorre(), TorreEntity::getId)
+        );
     }
 }
