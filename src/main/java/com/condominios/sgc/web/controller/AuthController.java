@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.condominios.sgc.application.dto.CrearUsuarioRequest;
+import com.condominios.sgc.domain.exception.AutenticacionException;
 import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.application.usecase.ActualizarCorreoAdminUseCase;
 import com.condominios.sgc.application.usecase.ActualizarCorreoUseCase;
@@ -77,7 +78,7 @@ public class AuthController {
             HttpServletResponse response) {
         SesionUsuario sesion = iniciarSesionUseCase.ejecutar(request.email(), request.password());
         var usuario = usuarioPort.findById(sesion.usuario().id())
-            .orElseThrow(com.condominios.sgc.domain.exception.AutenticacionException::usuarioNoRegistrado);
+            .orElseThrow(AutenticacionException::usuarioNoRegistrado);
         response.addHeader("Set-Cookie",
             CookieUtils.crearCookieJwt(sesion.accessToken(), sesion.expiresIn()).toString());
         return ResponseEntity.ok(AuthResponse.fromSesion(sesion, UsuarioResponse.fromModel(usuario)));
@@ -102,10 +103,14 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refresh(@RequestBody RefreshTokenRequest request) {
+    public ResponseEntity<AuthResponse> refresh(
+            @RequestBody RefreshTokenRequest request,
+            HttpServletResponse response) {
         SesionUsuario sesion = refrescarTokenUseCase.ejecutar(request.refreshToken());
         var usuario = usuarioPort.findById(sesion.usuario().id())
-            .orElseThrow(com.condominios.sgc.domain.exception.AutenticacionException::usuarioNoRegistrado);
+            .orElseThrow(AutenticacionException::usuarioNoRegistrado);
+        response.addHeader("Set-Cookie",
+            CookieUtils.crearCookieJwt(sesion.accessToken(), sesion.expiresIn()).toString());
         return ResponseEntity.ok(AuthResponse.fromSesion(sesion, UsuarioResponse.fromModel(usuario)));
     }
 

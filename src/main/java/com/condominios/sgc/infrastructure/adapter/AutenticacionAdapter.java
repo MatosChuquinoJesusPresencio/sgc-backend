@@ -10,6 +10,7 @@ import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.infrastructure.client.SupabaseClient;
 
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 public class AutenticacionAdapter implements AutenticacionPort {
 
@@ -28,6 +29,8 @@ public class AutenticacionAdapter implements AutenticacionPort {
             return construirSesion(response);
         } catch (HttpClientErrorException e) {
             throw AutenticacionException.credencialesInvalidas();
+        } catch (HttpServerErrorException e) {
+            throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
         }
     }
 
@@ -43,6 +46,8 @@ public class AutenticacionAdapter implements AutenticacionPort {
             return (String) response.get("id");
         } catch (HttpClientErrorException e) {
             throw AutenticacionException.errorCreacion(e.getResponseBodyAsString());
+        } catch (HttpServerErrorException e) {
+            throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
         }
     }
 
@@ -53,6 +58,8 @@ public class AutenticacionAdapter implements AutenticacionPort {
         } catch (HttpClientErrorException e) {
             throw AutenticacionException.errorAutenticacion(
                 "Error al enviar recuperación: " + e.getResponseBodyAsString());
+        } catch (HttpServerErrorException e) {
+            throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
         }
     }
 
@@ -63,6 +70,8 @@ public class AutenticacionAdapter implements AutenticacionPort {
         } catch (HttpClientErrorException e) {
             throw AutenticacionException.errorAutenticacion(
                 "Error al restablecer contraseña: " + e.getResponseBodyAsString());
+        } catch (HttpServerErrorException e) {
+            throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
         }
     }
 
@@ -73,6 +82,8 @@ public class AutenticacionAdapter implements AutenticacionPort {
         } catch (HttpClientErrorException e) {
             throw AutenticacionException.errorAutenticacion(
                 "Error al cambiar contraseña: " + e.getResponseBodyAsString());
+        } catch (HttpServerErrorException e) {
+            throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
         }
     }
 
@@ -83,6 +94,8 @@ public class AutenticacionAdapter implements AutenticacionPort {
         } catch (HttpClientErrorException e) {
             throw AutenticacionException.errorAutenticacion(
                 "Error al actualizar email: " + e.getResponseBodyAsString());
+        } catch (HttpServerErrorException e) {
+            throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
         }
     }
 
@@ -94,6 +107,8 @@ public class AutenticacionAdapter implements AutenticacionPort {
         } catch (HttpClientErrorException e) {
             throw AutenticacionException.errorAutenticacion(
                 "Error al refrescar token: " + e.getResponseBodyAsString());
+        } catch (HttpServerErrorException e) {
+            throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
         }
     }
 
@@ -104,22 +119,36 @@ public class AutenticacionAdapter implements AutenticacionPort {
         } catch (HttpClientErrorException e) {
             throw AutenticacionException.errorAutenticacion(
                 "Error al actualizar email: " + e.getResponseBodyAsString());
+        } catch (HttpServerErrorException e) {
+            throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
         }
     }
 
     private SesionUsuario construirSesion(Map<String, Object> response) {
         String accessToken = (String) response.get("access_token");
         String tokenType = (String) response.get("token_type");
-        long expiresIn = ((Number) response.get("expires_in")).longValue();
-        long expiresAt = ((Number) response.get("expires_at")).longValue();
+        Object expiresInObj = response.get("expires_in");
+        Object expiresAtObj = response.get("expires_at");
         String refreshToken = (String) response.get("refresh_token");
         Map<String, Object> userData = (Map<String, Object>) response.get("user");
+
+        if (accessToken == null || tokenType == null || expiresInObj == null
+            || expiresAtObj == null || userData == null) {
+            throw AutenticacionException.errorAutenticacion("Respuesta de autenticación inválida");
+        }
+
+        long expiresIn = ((Number) expiresInObj).longValue();
+        long expiresAt = ((Number) expiresAtObj).longValue();
 
         String userId = (String) userData.get("id");
         String email = (String) userData.get("email");
 
+        if (userId == null) {
+            throw AutenticacionException.errorAutenticacion("ID de usuario no encontrado en respuesta");
+        }
+
         var usuarioLocal = usuarioPort.findById(userId)
-            .orElseThrow(() -> AutenticacionException.usuarioNoRegistrado());
+            .orElseThrow(AutenticacionException::usuarioNoRegistrado);
 
         var usuarioAutenticado = new UsuarioAutenticado(userId, email, usuarioLocal.getRol());
 

@@ -11,6 +11,7 @@ public final class CookieUtils {
     public static ResponseCookie crearCookieJwt(String token, long maxAge) {
         return ResponseCookie.from(JWT_COOKIE_NAME, token)
             .httpOnly(true)
+            .secure(true)
             .path("/")
             .maxAge(maxAge)
             .sameSite("Lax")
