@@ -25,4 +25,11 @@ public final class CondominioException extends DominioException {
         return new CondominioException("La fecha de creación es obligatoria", TipoError.BAD_REQUEST);
     }
 
+    public static CondominioException nombreEnUso() {
+        return new CondominioException("El nombre ingresado esta en uso", TipoError.BAD_REQUEST);
+    }
+
+    public static CondominioException noEncontrado() {
+        return new CondominioException("El condominio no fue encontrado", TipoError.NOT_FOUND);
+    }
 }
