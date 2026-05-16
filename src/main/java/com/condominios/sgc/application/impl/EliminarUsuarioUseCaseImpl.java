@@ -16,6 +16,15 @@ public class EliminarUsuarioUseCaseImpl implements EliminarUsuarioUseCase {
     public void ejecutar(String id) {
         usuarioPort.findById(id)
             .orElseThrow(UsuarioException::noEncontrada);
+
+        if (usuarioPort.esPropietarioDeApartamento(id)) {
+            throw UsuarioException.esPropietarioDeApartamento();
+        }
+
+        if (usuarioPort.tieneVehiculosAsociados(id)) {
+            throw UsuarioException.tieneVehiculosAsociados();
+        }
+
         usuarioPort.deleteById(id);
     }
 }

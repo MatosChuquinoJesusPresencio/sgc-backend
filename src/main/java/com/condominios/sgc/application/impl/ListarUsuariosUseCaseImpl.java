@@ -16,6 +16,6 @@ public class ListarUsuariosUseCaseImpl implements ListarUsuariosUseCase {
 
     @Override
     public PaginacionResponse<UsuarioModel> ejecutar(PaginacionRequest request) {
-        return usuarioPort.search(request);
+        return usuarioPort.buscarPaginado(request);
     }
 }
