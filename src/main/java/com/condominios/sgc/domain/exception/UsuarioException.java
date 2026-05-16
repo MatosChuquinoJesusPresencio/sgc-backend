@@ -36,4 +36,12 @@ public final class UsuarioException extends DominioException {
     public static UsuarioException condominioIdObligatorio() {
         return new UsuarioException("El id del condominio es obligatorio", TipoError.BAD_REQUEST);
     }
+
+    public static UsuarioException noEncontrada() {
+        return new UsuarioException("El usuario solicitado no existe", TipoError.NOT_FOUND);
+    }
+
+    public static UsuarioException correoDuplicado() {
+        return new UsuarioException("El correo ya esta registrado", TipoError.BAD_REQUEST);
+    }
 }

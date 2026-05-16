@@ -18,5 +18,5 @@ public interface UsuarioPort {
 
     void deleteById(String id);
 
-    PaginacionResponse<UsuarioModel> buscarPaginado(PaginacionRequest request);
+    PaginacionResponse<UsuarioModel> search(PaginacionRequest request);
 }
