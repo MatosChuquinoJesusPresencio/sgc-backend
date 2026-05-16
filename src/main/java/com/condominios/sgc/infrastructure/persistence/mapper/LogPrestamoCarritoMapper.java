@@ -18,6 +18,8 @@ public final class LogPrestamoCarritoMapper {
         LogPrestamoCarritoEntity e = new LogPrestamoCarritoEntity();
         e.setId(model.getId());
         e.setSolicitante(model.getSolicitante());
+        e.setNombreSolicitante(model.getNombreSolicitante());
+        e.setDniSolicitante(model.getDniSolicitante());
         e.setPenalizacion(model.getPenalizacion());
         e.setFechaPrestamo(model.getFechaPrestamo());
         e.setFechaDevolucion(model.getFechaDevolucion());
@@ -29,6 +31,8 @@ public final class LogPrestamoCarritoMapper {
         return new LogPrestamoCarritoModel(
                 e.getId(),
                 e.getSolicitante(),
+                e.getNombreSolicitante(),
+                e.getDniSolicitante(),
                 idDe(e.getApartamento(), ApartamentoEntity::getId),
                 idDe(e.getCarrito(), CarritoEntity::getId),
                 idDe(e.getUsuario(), UsuarioEntity::getId),
