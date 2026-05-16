@@ -13,7 +13,6 @@ public record CondominioResponse(
     LocalDateTime fechaCreacion
 ) {
     public static CondominioResponse fromModel(CondominioModel model) {
-        if (model == null) return null;
         return new CondominioResponse(
             model.getId(),
             model.getNombre(),

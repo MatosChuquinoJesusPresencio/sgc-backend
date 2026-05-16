@@ -1,6 +1,8 @@
 package com.condominios.sgc.web.controller;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.condominios.sgc.application.dto.ActualizarCondominioRequest;
@@ -20,6 +23,9 @@ import com.condominios.sgc.application.usecase.CrearCondominioUseCase;
 import com.condominios.sgc.application.usecase.EliminarCondominioUseCase;
 import com.condominios.sgc.application.usecase.ListarCondominiosUseCase;
 import com.condominios.sgc.application.usecase.ObtenerCondominioUseCase;
+import com.condominios.sgc.domain.dto.PaginacionRequest;
+import com.condominios.sgc.domain.dto.PaginacionResponse;
+import com.condominios.sgc.domain.model.CondominioModel;
 import com.condominios.sgc.web.dto.CondominioResponse;
 
 @RestController
@@ -58,12 +64,27 @@ public class CondominioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CondominioResponse>> listar() {
-        List<CondominioResponse> content = listarCondominiosUseCase.ejecutar().stream()
-            .map(CondominioResponse::fromModel)
-            .toList();
-            
-        return ResponseEntity.ok(content);
+    public ResponseEntity<PaginacionResponse<CondominioResponse>> listar(
+            @RequestParam Map<String, String> params) {
+        int pagina = Integer.parseInt(params.getOrDefault("pagina", "0"));
+        int tamanio = Integer.parseInt(params.getOrDefault("tamanio", "10"));
+        String ordenarPor = params.get("ordenarPor");
+        String direccion = params.getOrDefault("direccion", "ASC");
+
+        Map<String, String> filtros = new HashMap<>(params);
+        Set<String> keys = Set.of("pagina", "tamanio", "ordenarPor", "direccion");
+        filtros.keySet().removeAll(keys);
+
+        PaginacionRequest request = new PaginacionRequest(pagina, tamanio, ordenarPor, direccion, filtros);
+        PaginacionResponse<CondominioModel> result = listarCondominiosUseCase.ejecutar(request);
+
+        return ResponseEntity.ok(PaginacionResponse.of(
+            result.contenido().stream().map(CondominioResponse::fromModel).toList(),
+            result.pagina(),
+            result.tamanio(),
+            result.totalElementos(),
+            result.totalPaginas()
+        ));
     }
 
     @PutMapping("/{id}")
