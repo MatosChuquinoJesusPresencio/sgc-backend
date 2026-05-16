@@ -19,11 +19,6 @@ public final class ConfiguracionMapper {
         e.setMaxCarritosPorApartamento(model.getMaxCarritosPorApartamento());
         e.setMaxVehiculosPorPropietario(model.getMaxVehiculosPorPropietario());
         e.setMaxInquilinosPorApartamento(model.getMaxInquilinosPorApartamento());
-        if (model.getCondominioId() != null) {
-            com.condominios.sgc.infrastructure.persistence.entity.CondominioEntity condominio = new com.condominios.sgc.infrastructure.persistence.entity.CondominioEntity();
-            condominio.setId(model.getCondominioId());
-            e.setCondominio(condominio);
-        }
         return e;
     }
 
