@@ -17,4 +17,6 @@ public interface AutenticacionPort {
     void cambiarContrasena(String accessToken, String nuevaContrasena);
 
     void actualizarEmail(String token, String nuevoEmail);
+
+    void actualizarEmailAdmin(String usuarioId, String nuevoEmail);
 }
