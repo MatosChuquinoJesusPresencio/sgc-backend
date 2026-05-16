@@ -44,4 +44,12 @@ public final class UsuarioException extends DominioException {
     public static UsuarioException correoDuplicado() {
         return new UsuarioException("El correo ya esta registrado", TipoError.BAD_REQUEST);
     }
+
+    public static UsuarioException esPropietarioDeApartamento() {
+        return new UsuarioException("No se puede eliminar el usuario porque es propietario de un apartamento", TipoError.BAD_REQUEST);
+    }
+
+    public static UsuarioException tieneVehiculosAsociados() {
+        return new UsuarioException("No se puede eliminar el usuario porque tiene vehiculos asociados", TipoError.BAD_REQUEST);
+    }
 }
