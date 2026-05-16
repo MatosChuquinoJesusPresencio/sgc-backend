@@ -16,9 +16,11 @@ public interface AutenticacionPort {
 
     void cambiarContrasena(String accessToken, String nuevaContrasena);
 
-    void actualizarEmail(String token, String nuevoEmail);
+    void actualizarCorreo(String token, String nuevoCorreo);
 
-    void actualizarEmailAdmin(String usuarioId, String nuevoEmail);
+    void actualizarCorreoAdmin(String usuarioId, String nuevoCorreo);
 
     SesionUsuario refrescarToken(String refreshToken);
+
+    void eliminarUsuario(String usuarioId);
 }
