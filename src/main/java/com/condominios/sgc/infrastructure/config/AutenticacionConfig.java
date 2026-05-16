@@ -12,6 +12,7 @@ import com.condominios.sgc.application.impl.CerrarSesionUseCaseImpl;
 import com.condominios.sgc.application.impl.CrearUsuarioUseCaseImpl;
 import com.condominios.sgc.application.impl.EnviarRecuperacionContrasenaUseCaseImpl;
 import com.condominios.sgc.application.impl.IniciarSesionUseCaseImpl;
+import com.condominios.sgc.application.impl.RefrescarTokenUseCaseImpl;
 import com.condominios.sgc.application.impl.RestablecerContrasenaUseCaseImpl;
 import com.condominios.sgc.application.usecase.ActualizarCorreoAdminUseCase;
 import com.condominios.sgc.application.usecase.ActualizarCorreoUseCase;
@@ -20,6 +21,7 @@ import com.condominios.sgc.application.usecase.CerrarSesionUseCase;
 import com.condominios.sgc.application.usecase.CrearUsuarioUseCase;
 import com.condominios.sgc.application.usecase.EnviarRecuperacionContrasenaUseCase;
 import com.condominios.sgc.application.usecase.IniciarSesionUseCase;
+import com.condominios.sgc.application.usecase.RefrescarTokenUseCase;
 import com.condominios.sgc.application.usecase.RestablecerContrasenaUseCase;
 import com.condominios.sgc.domain.port.AutenticacionPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
@@ -46,6 +48,11 @@ public class AutenticacionConfig {
     @Bean
     public AutenticacionPort autenticacionPort(SupabaseClient supabaseClient, UsuarioPort usuarioPort) {
         return new AutenticacionAdapter(supabaseClient, usuarioPort);
+    }
+
+    @Bean
+    public RefrescarTokenUseCase refrescarTokenUseCase(AutenticacionPort autenticacionPort) {
+        return new RefrescarTokenUseCaseImpl(autenticacionPort);
     }
 
     @Bean

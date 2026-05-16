@@ -87,6 +87,17 @@ public class AutenticacionAdapter implements AutenticacionPort {
     }
 
     @Override
+    public SesionUsuario refrescarToken(String refreshToken) {
+        try {
+            Map<String, Object> response = supabaseClient.refrescarToken(refreshToken);
+            return construirSesion(response);
+        } catch (HttpClientErrorException e) {
+            throw AutenticacionException.errorAutenticacion(
+                "Error al refrescar token: " + e.getResponseBodyAsString());
+        }
+    }
+
+    @Override
     public void actualizarEmailAdmin(String usuarioId, String nuevoEmail) {
         try {
             supabaseClient.actualizarEmailAdmin(usuarioId, nuevoEmail);

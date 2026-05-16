@@ -83,6 +83,18 @@ public class SupabaseClient {
             new ParameterizedTypeReference<Map<String, Object>>() {});
     }
 
+    public Map<String, Object> refrescarToken(String refreshToken) {
+        var headers = cabecerasConClaveAnonima();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        var body = Map.of("refresh_token", refreshToken);
+        var response = restTemplate.exchange(
+            supabaseUrl + "/auth/v1/token?grant_type=refresh_token",
+            HttpMethod.POST,
+            new HttpEntity<>(body, headers),
+            new ParameterizedTypeReference<Map<String, Object>>() {});
+        return response.getBody();
+    }
+
     public void actualizarEmailAdmin(String userId, String nuevoEmail) {
         var headers = headersConServiceRole();
         headers.setContentType(MediaType.APPLICATION_JSON);
