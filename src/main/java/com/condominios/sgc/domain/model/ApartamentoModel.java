@@ -34,6 +34,10 @@ public class ApartamentoModel {
         BigDecimal metraje,
         Long pisoId
     ) {
+        validarYAsignarDatos(numero, derechoEstacionamiento, metraje, pisoId);
+    }
+
+    private void validarYAsignarDatos(Integer numero, Boolean derechoEstacionamiento, BigDecimal metraje, Long pisoId) {
         this.numero = requerirPositivo(numero, ApartamentoException::numeroInvalido);
         this.metraje = requerirPositivo(metraje, ApartamentoException::metrajeInvalido);
         this.derechoEstacionamiento = requerirNoNulo(derechoEstacionamiento, ApartamentoException::derechoEstacionamientoInvalido);
@@ -60,8 +64,6 @@ public class ApartamentoModel {
         BigDecimal metraje,
         Boolean derechoEstacionamiento
     ) {
-        this.numero = requerirPositivo(numero, ApartamentoException::numeroInvalido);
-        this.metraje = requerirPositivo(metraje, ApartamentoException::metrajeInvalido);
-        this.derechoEstacionamiento = requerirNoNulo(derechoEstacionamiento, ApartamentoException::derechoEstacionamientoInvalido);
+        validarYAsignarDatos(numero, derechoEstacionamiento, metraje, this.pisoId);
     }
 }

@@ -41,12 +41,16 @@ public class VehiculoModel {
         Long inquilinoId,
         Long estacionamientoId
     ) {
+        validarYAsignarDatos(marca, color, modelo, placa, tipo, propietarioId, inquilinoId, estacionamientoId);
+    }
+
+    private void validarYAsignarDatos(String marca, String color, String modelo, String placa, TipoVehiculo tipo, String propietarioId, Long inquilinoId, Long estacionamientoId) {
         this.marca = requerirNoVacio(marca, VehiculoException::datosObligatorios);
         this.color = requerirNoVacio(color, VehiculoException::datosObligatorios);
         this.modelo = requerirNoVacio(modelo, VehiculoException::datosObligatorios);
         this.placa = requerirNoVacio(placa, VehiculoException::placaObligatoria);
         this.tipo = requerirNoNulo(tipo, VehiculoException::tipoVehiculoObligatorio);
-        this.estacionamientoId = requerirNoNulo(estacionamientoId, VehiculoException::estacionamientoObligatorio);
+        this.estacionamientoId = estacionamientoId;
         asignarDueno(propietarioId, inquilinoId);
     }
 
@@ -77,6 +81,6 @@ public class VehiculoModel {
     }
 
     public void actualizarDatos(String color) {
-        this.color = requerirNoVacio(color, VehiculoException::datosObligatorios);
+        validarYAsignarDatos(this.marca, color, this.modelo, this.placa, this.tipo, this.propietarioId, this.inquilinoId, this.estacionamientoId);
     }
 }

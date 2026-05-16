@@ -22,6 +22,10 @@ public class TorreModel {
         String nombre,
         Long condominioId
     ) {
+        validarYAsignarDatos(nombre, condominioId);
+    }
+
+    private void validarYAsignarDatos(String nombre, Long condominioId) {
         this.nombre = requerirNoVacio(nombre, TorreException::nombreObligatorio);
         this.condominioId = requerirNoNulo(condominioId, TorreException::condominioIdObligatorio);
     }
@@ -31,6 +35,6 @@ public class TorreModel {
     public Long getCondominioId() { return condominioId; }
 
     public void actualizarDatos(String nombre) {
-        this.nombre = requerirNoVacio(nombre, TorreException::nombreObligatorio);
+        validarYAsignarDatos(nombre, this.condominioId);
     }
 }

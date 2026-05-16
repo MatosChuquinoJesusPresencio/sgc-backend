@@ -1,72 +1,72 @@
 package com.condominios.sgc.domain.model;
 
+import static com.condominios.sgc.domain.util.ValidacionUtil.*;
+
 import com.condominios.sgc.domain.auxiliar.TipoVehiculo;
 import com.condominios.sgc.domain.exception.EstacionamientoException;
 
 public class EstacionamientoModel {
     private Long id;
     private Integer numero;
-    private Integer cantidadVehiculosMax;
     private TipoVehiculo tipoVehiculo;
+    private Integer capacidadMaxima;
+    private Integer cantidadActual;
     private Boolean disponible;
     private Long apartamentoId;
     private Long condominioId;
-    private Long vehiculoAsignadoId;
 
-    public EstacionamientoModel(Long id, Integer numero, Integer cantidadVehiculosMax, TipoVehiculo tipoVehiculo, Long condominioId) {
-        validarYAsignarDatos(numero, cantidadVehiculosMax, tipoVehiculo, condominioId);
-        this.id = id;
+    public EstacionamientoModel(Integer numero, Long condominioId) {
+        validarYAsignarDatos(numero, condominioId);
+        this.cantidadActual = 0;
         this.disponible = true;
     }
 
-    private void validarYAsignarDatos(Integer numero, Integer cantidadVehiculosMax, TipoVehiculo tipoVehiculo, Long condominioId) {
-        if (numero == null) {
-            throw EstacionamientoException.numeroObligatorio();
-        }
+    private void validarYAsignarDatos(Integer numero, Long condominioId) {
+        this.numero = requerirNoNulo(numero, EstacionamientoException::numeroObligatorio);
+        this.condominioId = requerirNoNulo(condominioId, EstacionamientoException::condominioIdObligatorio);
+    }
+
+    public EstacionamientoModel(Long id, Integer numero, TipoVehiculo tipoVehiculo, Integer capacidadMaxima, Integer cantidadActual, Boolean disponible, Long condominioId) {
+        this.id = id;
         this.numero = numero;
-
-        if (cantidadVehiculosMax == null || cantidadVehiculosMax <= 0) {
-            throw EstacionamientoException.cantidadVehiculosInvalida();
-        }
-        this.cantidadVehiculosMax = cantidadVehiculosMax;
-
-        if (tipoVehiculo == null) {
-            throw EstacionamientoException.tipoVehiculoInvalido();
-        }
         this.tipoVehiculo = tipoVehiculo;
-
-        if (condominioId == null) {
-            throw EstacionamientoException.condominioIdObligatorio();
-        }
+        this.capacidadMaxima = capacidadMaxima;
+        this.cantidadActual = cantidadActual;
+        this.disponible = disponible;
         this.condominioId = condominioId;
     }
 
     public Long getId() { return id; }
     public Integer getNumero() { return numero; }
-    public Integer getCantidadVehiculosMax() { return cantidadVehiculosMax; }
     public TipoVehiculo getTipoVehiculo() { return tipoVehiculo; }
+    public Integer getCapacidadMaxima() { return capacidadMaxima; }
+    public Integer getCantidadActual() { return cantidadActual; }
     public Boolean isDisponible() { return disponible; }
     public Long getApartamentoId() { return apartamentoId; }
     public Long getCondominioId() { return condominioId; }
-    public Long getVehiculoAsignadoId() { return vehiculoAsignadoId; }
+
+    public void configurar(TipoVehiculo tipoVehiculo, Integer capacidadMaxima) {
+        this.tipoVehiculo = requerirNoNulo(tipoVehiculo, EstacionamientoException::tipoVehiculoInvalido);
+        this.capacidadMaxima = requerirPositivo(capacidadMaxima, EstacionamientoException::capacidadMaximaInvalida);
+    }
 
     public void asignarAApartamento(Long apartamentoId) {
-        if (apartamentoId == null) {
-            throw EstacionamientoException.apartamentoIdObligatorio();
-        }
-        this.apartamentoId = apartamentoId;
+        this.apartamentoId = requerirNoNulo(apartamentoId, EstacionamientoException::apartamentoIdObligatorio);
     }
 
-    public void ocuparConVehiculo(Long vehiculoId) {
-        if (!this.disponible) {
-            throw EstacionamientoException.estacionamientoOcupado();
+    public void incrementarOcupacion() {
+        this.cantidadActual++;
+        if (capacidadMaxima != null && cantidadActual >= capacidadMaxima) {
+            this.disponible = false;
         }
-        this.vehiculoAsignadoId = vehiculoId;
-        this.disponible = false;
     }
 
-    public void liberar() {
-        this.vehiculoAsignadoId = null;
+    public void decrementarOcupacion() {
+        if (cantidadActual > 0) this.cantidadActual--;
         this.disponible = true;
+    }
+
+    public boolean hayEspacio() {
+        return capacidadMaxima == null || cantidadActual < capacidadMaxima;
     }
 }

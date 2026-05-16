@@ -22,6 +22,10 @@ public class PisoModel {
         Integer numero, 
         Long torreId
     ) {
+        validarYAsignarDatos(numero, torreId);
+    }
+
+    private void validarYAsignarDatos(Integer numero, Long torreId) {
         this.numero = requerirPositivo(numero, PisoException::numeroInvalido);
         this.torreId = requerirNoNulo(torreId, PisoException::torreIdObligatorio);
     }
@@ -31,6 +35,6 @@ public class PisoModel {
     public Long getTorreId() { return torreId; }
 
     public void actualizarDatos(Integer numero) {
-        this.numero = requerirPositivo(numero, PisoException::numeroInvalido);
+        validarYAsignarDatos(numero, this.torreId);
     }
 }

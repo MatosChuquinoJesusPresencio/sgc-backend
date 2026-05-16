@@ -1,5 +1,7 @@
 package com.condominios.sgc.domain.model;
 
+import static com.condominios.sgc.domain.util.ValidacionUtil.*;
+
 import java.time.LocalDateTime;
 
 import com.condominios.sgc.domain.auxiliar.MetodoEntrada;
@@ -17,10 +19,9 @@ public class LogAccesoVehicularModel {
     private Long vehiculoId;
     private Long estacionamientoId;
 
-    public LogAccesoVehicularModel(Long id, String placa, TipoHabitante ocupante, String datosInquilino,
+    public LogAccesoVehicularModel(String placa, TipoHabitante ocupante, String datosInquilino,
             MetodoEntrada metodo, Long vehiculoId, Long estacionamientoId) {
-        validarDatos(placa, ocupante, metodo);
-        this.id = id;
+        validarYAsignarDatos(placa, ocupante, metodo);
         this.placa = placa;
         this.ocupante = ocupante;
         this.datosInquilino = datosInquilino;
@@ -30,16 +31,16 @@ public class LogAccesoVehicularModel {
         this.fechaEntrada = LocalDateTime.now();
     }
 
-    private void validarDatos(String placa, TipoHabitante ocupante, MetodoEntrada metodo) {
-        if (placa == null || placa.trim().isEmpty()) {
-            throw LogAccesoVehicularException.placaObligatoria();
-        }
-        if (ocupante == null) {
-            throw LogAccesoVehicularException.ocupanteObligatorio();
-        }
-        if (metodo == null) {
-            throw LogAccesoVehicularException.metodoObligatorio();
-        }
+    public LogAccesoVehicularModel(Long id, String placa, TipoHabitante ocupante, String datosInquilino,
+            MetodoEntrada metodo, Long vehiculoId, Long estacionamientoId) {
+        this(placa, ocupante, datosInquilino, metodo, vehiculoId, estacionamientoId);
+        this.id = id;
+    }
+
+    private void validarYAsignarDatos(String placa, TipoHabitante ocupante, MetodoEntrada metodo) {
+        this.placa = requerirNoVacio(placa, LogAccesoVehicularException::placaObligatoria);
+        this.ocupante = requerirNoNulo(ocupante, LogAccesoVehicularException::ocupanteObligatorio);
+        this.metodo = requerirNoNulo(metodo, LogAccesoVehicularException::metodoObligatorio);
     }
 
     public Long getId() { return id; }
@@ -53,9 +54,7 @@ public class LogAccesoVehicularModel {
     public Long getEstacionamientoId() { return estacionamientoId; }
 
     public void registrarSalida() {
-        if (this.fechaSalida != null) {
-            throw LogAccesoVehicularException.salidaYaRegistrada();
-        }
+        requerirQue(this.fechaSalida == null, LogAccesoVehicularException::salidaYaRegistrada);
         this.fechaSalida = LocalDateTime.now();
     }
 }

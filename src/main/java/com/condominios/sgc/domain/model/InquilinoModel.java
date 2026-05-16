@@ -28,6 +28,10 @@ public class InquilinoModel {
         String dni, 
         Long apartamentoId
     ) {
+        validarYAsignarDatos(nombres, apellidos, dni, apartamentoId);
+    }
+
+    private void validarYAsignarDatos(String nombres, String apellidos, String dni, Long apartamentoId) {
         this.nombres = requerirNoVacio(nombres, InquilinoException::nombresObligatorios);
         this.apellidos = requerirNoVacio(apellidos, InquilinoException::apellidosObligatorios);
         this.dni = requerirNoVacio(dni, InquilinoException::dniObligatorio);
@@ -45,7 +49,6 @@ public class InquilinoModel {
     }
 
     public void actualizarDatos(String nombres, String apellidos) {
-        this.nombres = requerirNoVacio(nombres, InquilinoException::nombresObligatorios);
-        this.apellidos = requerirNoVacio(apellidos, InquilinoException::apellidosObligatorios);
+        validarYAsignarDatos(nombres, apellidos, this.dni, this.apartamentoId);
     }
 }

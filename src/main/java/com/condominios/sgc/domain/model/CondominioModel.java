@@ -13,7 +13,6 @@ public class CondominioModel {
     private String ciudad;
     private String direccion;
     private LocalDateTime fechaCreacion;
-    private Long configuracionId;
 
     public CondominioModel(
         Long id,
@@ -21,12 +20,10 @@ public class CondominioModel {
         String pais,
         String ciudad,
         String direccion,
-        LocalDateTime fechaCreacion,
-        Long configuracionId
+        LocalDateTime fechaCreacion
     ) {
         this(nombre, pais, ciudad, direccion, fechaCreacion);
         this.id = id;
-        this.configuracionId = configuracionId;
     }
 
     public CondominioModel(
@@ -36,6 +33,10 @@ public class CondominioModel {
         String direccion,
         LocalDateTime fechaCreacion
     ) {
+        validarYAsignarDatos(nombre, pais, ciudad, direccion, fechaCreacion);
+    }
+
+    private void validarYAsignarDatos(String nombre, String pais, String ciudad, String direccion, LocalDateTime fechaCreacion) {
         this.nombre = requerirNoVacio(nombre, CondominioException::nombreObligatorio);
         this.pais = requerirNoVacio(pais, CondominioException::paisObligatorio);
         this.ciudad = requerirNoVacio(ciudad, CondominioException::ciudadObligatoria);
@@ -49,7 +50,6 @@ public class CondominioModel {
     public String getCiudad() { return ciudad; }
     public String getDireccion() { return direccion; }
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
-    public Long getConfiguracionId() { return configuracionId; }
 
     public void actualizarDatos(
         String nombre,
@@ -57,13 +57,6 @@ public class CondominioModel {
         String ciudad,
         String direccion
     ) {
-        this.nombre = requerirNoVacio(nombre, CondominioException::nombreObligatorio);
-        this.pais = requerirNoVacio(pais, CondominioException::paisObligatorio);
-        this.ciudad = requerirNoVacio(ciudad, CondominioException::ciudadObligatoria);
-        this.direccion = requerirNoVacio(direccion, CondominioException::direccionObligatoria);
-    }
-
-    public void asignarConfiguracion(Long configuracionId) {
-        this.configuracionId = requerirNoNulo(configuracionId, CondominioException::configuracionIdObligatorio);
+        validarYAsignarDatos(nombre, pais, ciudad, direccion, this.fechaCreacion);
     }
 }

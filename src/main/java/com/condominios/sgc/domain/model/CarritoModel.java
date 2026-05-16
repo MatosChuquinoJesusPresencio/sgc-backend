@@ -27,8 +27,12 @@ public class CarritoModel {
         EstadoCarrito estadoInicial,
         Long condominioId
     ) {
+        validarYAsignarDatos(codigo, estadoInicial, condominioId);
+    }
+
+    private void validarYAsignarDatos(String codigo, EstadoCarrito estado, Long condominioId) {
         this.codigo = requerirNoVacio(codigo, CarritoException::codigoObligatorio);
-        this.estado = requerirNoNulo(estadoInicial, CarritoException::estadoObligatorio);
+        this.estado = requerirNoNulo(estado, CarritoException::estadoObligatorio);
         this.condominioId = requerirNoNulo(condominioId, CarritoException::condominioIdObligatorio);
     }
 
@@ -62,6 +66,6 @@ public class CarritoModel {
     }
 
     public void actualizarDatos(String nuevoCodigo) {
-        this.codigo = requerirNoVacio(nuevoCodigo, CarritoException::codigoObligatorio);
+        validarYAsignarDatos(nuevoCodigo, this.estado, this.condominioId);
     }
 }
