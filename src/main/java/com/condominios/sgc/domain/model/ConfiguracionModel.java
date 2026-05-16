@@ -1,5 +1,7 @@
 package com.condominios.sgc.domain.model;
 
+import static com.condominios.sgc.domain.util.ValidacionUtil.*;
+
 import java.math.BigDecimal;
 
 import com.condominios.sgc.domain.auxiliar.TipoVehiculo;
@@ -15,15 +17,60 @@ public class ConfiguracionModel {
     private Integer maxCarritosPorApartamento;
     private Integer maxVehiculosPorPropietario;
     private Integer maxInquilinosPorApartamento;
+    private Long condominioId;
 
     public ConfiguracionModel(
-            Long id, Integer maxAutos, Integer maxMotos, BigDecimal penalizacionPorMin,
-            Integer maxTiempoPrestamoMin, Integer maxEstacionamientosPorApartamento, Integer maxCarritosPorApartamento,
-            Integer maxVehiculosPorPropietario, Integer maxInquilinosPorApartamento) {
+            Long id,
+            Integer maxAutos,
+            Integer maxMotos,
+            BigDecimal penalizacionPorMin,
+            Integer maxTiempoPrestamoMin,
+            Integer maxEstacionamientosPorApartamento,
+            Integer maxCarritosPorApartamento,
+            Integer maxVehiculosPorPropietario,
+            Integer maxInquilinosPorApartamento,
+            Long condominioId
+        ) {
+        this(maxAutos,
+                maxMotos,
+                penalizacionPorMin,
+                maxTiempoPrestamoMin,
+                maxEstacionamientosPorApartamento,
+                maxCarritosPorApartamento,
+                maxVehiculosPorPropietario,
+                maxInquilinosPorApartamento,
+                condominioId);
         this.id = id;
+    }
+
+        public ConfiguracionModel(
+            Integer maxAutos,
+            Integer maxMotos,
+            BigDecimal penalizacionPorMin,
+            Integer maxTiempoPrestamoMin,
+            Integer maxEstacionamientosPorApartamento,
+            Integer maxCarritosPorApartamento,
+            Integer maxVehiculosPorPropietario,
+            Integer maxInquilinosPorApartamento,
+            Long condominioId
+        ) {
+        this.condominioId = condominioId;
         validarYAsignarDatos(maxAutos, maxMotos, penalizacionPorMin, maxTiempoPrestamoMin,
                 maxEstacionamientosPorApartamento, maxCarritosPorApartamento, maxVehiculosPorPropietario,
                 maxInquilinosPorApartamento);
+    }
+
+    private void validarYAsignarDatos(Integer maxAutos, Integer maxMotos, BigDecimal penalizacionPorMin,
+            Integer maxTiempoPrestamoMin, Integer maxEstacionamientosPorApartamento,
+            Integer maxCarritosPorApartamento, Integer maxVehiculosPorPropietario, Integer maxInquilinosPorApartamento) {
+        this.maxAutos = requerirNoNegativo(maxAutos, ConfiguracionException::maxAutosInvalido);
+        this.maxMotos = requerirNoNegativo(maxMotos, ConfiguracionException::maxMotosInvalido);
+        this.penalizacionPorMin = requerirNoNegativo(penalizacionPorMin, ConfiguracionException::penalizacionInvalida);
+        this.maxTiempoPrestamoMin = requerirNoNegativo(maxTiempoPrestamoMin, ConfiguracionException::tiempoPrestamoInvalido);
+        this.maxEstacionamientosPorApartamento = requerirNoNegativo(maxEstacionamientosPorApartamento, ConfiguracionException::maxEstacionamientosInvalido);
+        this.maxCarritosPorApartamento = requerirNoNegativo(maxCarritosPorApartamento, ConfiguracionException::maxCarritosInvalido);
+        this.maxVehiculosPorPropietario = requerirNoNegativo(maxVehiculosPorPropietario, ConfiguracionException::maxVehiculosPorPropietarioInvalido);
+        this.maxInquilinosPorApartamento = requerirNoNegativo(maxInquilinosPorApartamento, ConfiguracionException::maxInquilinosInvalido);
     }
 
     public Long getId() { return id; }
@@ -35,51 +82,7 @@ public class ConfiguracionModel {
     public Integer getMaxCarritosPorApartamento() { return maxCarritosPorApartamento; }
     public Integer getMaxVehiculosPorPropietario() { return maxVehiculosPorPropietario; }
     public Integer getMaxInquilinosPorApartamento() { return maxInquilinosPorApartamento; }
-
-    private void validarYAsignarDatos(Integer maxAutos, Integer maxMotos, BigDecimal penalizacionPorMin,
-            Integer maxTiempoPrestamoMin, Integer maxEstacionamientosPorApartamento,
-            Integer maxCarritosPorApartamento, Integer maxVehiculosPorPropietario, Integer maxInquilinosPorApartamento) {
-
-        if (maxAutos == null || maxAutos < 0) {
-            throw ConfiguracionException.maxAutosInvalido();
-        }
-        this.maxAutos = maxAutos;
-
-        if (maxMotos == null || maxMotos < 0) {
-            throw ConfiguracionException.maxMotosInvalido();
-        }
-        this.maxMotos = maxMotos;
-
-        if (penalizacionPorMin == null || penalizacionPorMin.compareTo(BigDecimal.ZERO) < 0) {
-            throw ConfiguracionException.penalizacionInvalida();
-        }
-        this.penalizacionPorMin = penalizacionPorMin;
-
-        if (maxTiempoPrestamoMin == null || maxTiempoPrestamoMin < 0) {
-            throw ConfiguracionException.tiempoPrestamoInvalido();
-        }
-        this.maxTiempoPrestamoMin = maxTiempoPrestamoMin;
-
-        if (maxEstacionamientosPorApartamento == null || maxEstacionamientosPorApartamento < 0) {
-            throw ConfiguracionException.maxEstacionamientosInvalido();
-        }
-        this.maxEstacionamientosPorApartamento = maxEstacionamientosPorApartamento;
-
-        if (maxCarritosPorApartamento == null || maxCarritosPorApartamento < 0) {
-            throw ConfiguracionException.maxCarritosInvalido();
-        }
-        this.maxCarritosPorApartamento = maxCarritosPorApartamento;
-
-        if (maxVehiculosPorPropietario == null || maxVehiculosPorPropietario < 0) {
-            throw ConfiguracionException.maxVehiculosPorPropietarioInvalido();
-        }
-        this.maxVehiculosPorPropietario = maxVehiculosPorPropietario;
-
-        if (maxInquilinosPorApartamento == null || maxInquilinosPorApartamento < 0) {
-            throw ConfiguracionException.maxInquilinosInvalido();
-        }
-        this.maxInquilinosPorApartamento = maxInquilinosPorApartamento;
-    }
+    public Long getCondominioId() { return condominioId; }
 
     public void actualizarDatos(Integer maxAutos, Integer maxMotos, BigDecimal penalizacionPorMin,
             Integer maxTiempoPrestamoMin, Integer maxEstacionamientosPorApartamento, Integer maxCarritosPorApartamento,
@@ -129,17 +132,5 @@ public class ConfiguracionModel {
         if (inquilinosPorApartamento >= maxInquilinosPorApartamento)
             throw ConfiguracionException.inquilinosPorApartamentoExcedidos(maxInquilinosPorApartamento,
                     inquilinosPorApartamento);
-    }
-
-    public static ConfiguracionModel obtenerConfiguracionBase() {
-        return new ConfiguracionModel(null,
-                    2,
-                    1,
-                    new BigDecimal("0.50"),
-                    1440,
-                    2,
-                    1,
-                    2,
-                    2);
     }
 }

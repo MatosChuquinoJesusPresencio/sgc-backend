@@ -1,5 +1,8 @@
 package com.condominios.sgc.domain.model;
 
+import static com.condominios.sgc.domain.util.ValidacionUtil.*;
+
+import com.condominios.sgc.domain.auxiliar.TipoVehiculo;
 import com.condominios.sgc.domain.exception.VehiculoException;
 
 public class VehiculoModel {
@@ -8,31 +11,47 @@ public class VehiculoModel {
     private String color;
     private String modelo;
     private String placa;
-    private String propietarioUsuarioId;
-    private Long propietarioInquilinoId;
+    private TipoVehiculo tipo;
+    private String propietarioId;
+    private Long inquilinoId;
+    private Long estacionamientoId;
 
-    public VehiculoModel(Long id, String marca, String color, String modelo, String placa) {
-        validarPlaca(placa);
-        validarDatos(marca, color, modelo);
+    public VehiculoModel(
+        Long id,
+        String marca,
+        String color,
+        String modelo,
+        String placa,
+        TipoVehiculo tipo,
+        String propietarioId,
+        Long inquilinoId,
+        Long estacionamientoId
+    ) {
+        this(marca, color, modelo, placa, tipo, propietarioId, inquilinoId, estacionamientoId);
         this.id = id;
-        this.marca = marca;
-        this.color = color;
-        this.modelo = modelo;
-        this.placa = placa;
     }
 
-    private void validarPlaca(String placa) {
-        if (placa == null || placa.trim().isEmpty()) {
-            throw VehiculoException.placaObligatoria();
-        }
+    public VehiculoModel(
+        String marca,
+        String color,
+        String modelo,
+        String placa,
+        TipoVehiculo tipo,
+        String propietarioId,
+        Long inquilinoId,
+        Long estacionamientoId
+    ) {
+        validarYAsignarDatos(marca, color, modelo, placa, tipo, propietarioId, inquilinoId, estacionamientoId);
     }
 
-    private void validarDatos(String marca, String color, String modelo) {
-        if (marca == null || marca.trim().isEmpty()
-                || color == null || color.trim().isEmpty()
-                || modelo == null || modelo.trim().isEmpty()) {
-            throw VehiculoException.datosObligatorios();
-        }
+    private void validarYAsignarDatos(String marca, String color, String modelo, String placa, TipoVehiculo tipo, String propietarioId, Long inquilinoId, Long estacionamientoId) {
+        this.marca = requerirNoVacio(marca, VehiculoException::datosObligatorios);
+        this.color = requerirNoVacio(color, VehiculoException::datosObligatorios);
+        this.modelo = requerirNoVacio(modelo, VehiculoException::datosObligatorios);
+        this.placa = requerirNoVacio(placa, VehiculoException::placaObligatoria);
+        this.tipo = requerirNoNulo(tipo, VehiculoException::tipoVehiculoObligatorio);
+        this.estacionamientoId = estacionamientoId;
+        asignarDueno(propietarioId, inquilinoId);
     }
 
     public Long getId() { return id; }
@@ -40,37 +59,28 @@ public class VehiculoModel {
     public String getColor() { return color; }
     public String getModelo() { return modelo; }
     public String getPlaca() { return placa; }
-    public String getPropietarioUsuarioId() { return propietarioUsuarioId; }
-    public Long getPropietarioInquilinoId() { return propietarioInquilinoId; }
+    public TipoVehiculo getTipo() { return tipo; }
+    public String getPropietarioId() { return propietarioId; }
+    public Long getInquilinoId() { return inquilinoId; }
+    public Long getEstacionamientoId() { return estacionamientoId; }
 
-    public void asignarAUsuario(String usuarioId) {
-        if (usuarioId == null) {
-            throw VehiculoException.usuarioIdObligatorio();
+    public void asignarDueno(String propietarioId, Long inquilinoId) {
+        boolean tienePropietario = propietarioId != null;
+        boolean tieneInquilino = inquilinoId != null;
+
+        if (tienePropietario == tieneInquilino) {
+            throw VehiculoException.duenoInvalido();
         }
-        if (tienePropietario()) {
-            throw VehiculoException.propietarioYaAsignado();
-        }
-        this.propietarioUsuarioId = usuarioId;
-        this.propietarioInquilinoId = null;
+
+        this.propietarioId = propietarioId;
+        this.inquilinoId = inquilinoId;
     }
 
-    public void asignarAInquilino(Long inquilinoId) {
-        if (inquilinoId == null) {
-            throw VehiculoException.inquilinoIdObligatorio();
-        }
-        if (tienePropietario()) {
-            throw VehiculoException.propietarioYaAsignado();
-        }
-        this.propietarioInquilinoId = inquilinoId;
-        this.propietarioUsuarioId = null;
+    public void asignarEstacionamiento(Long estacionamientoId) {
+        this.estacionamientoId = requerirNoNulo(estacionamientoId, VehiculoException::estacionamientoObligatorio);
     }
 
-    public void removerPropietario() {
-        this.propietarioUsuarioId = null;
-        this.propietarioInquilinoId = null;
-    }
-
-    private boolean tienePropietario() {
-        return this.propietarioUsuarioId != null || this.propietarioInquilinoId != null;
+    public void actualizarDatos(String color) {
+        validarYAsignarDatos(this.marca, color, this.modelo, this.placa, this.tipo, this.propietarioId, this.inquilinoId, this.estacionamientoId);
     }
 }

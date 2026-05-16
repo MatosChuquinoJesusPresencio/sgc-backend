@@ -17,7 +17,7 @@ public class CondominioEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nombre;
 
     @Column(nullable = false)
@@ -32,7 +32,4 @@ public class CondominioEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "configuracion_id", nullable = false)
-    private ConfiguracionEntity configuracion;
 }

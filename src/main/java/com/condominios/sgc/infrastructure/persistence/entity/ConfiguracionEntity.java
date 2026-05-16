@@ -40,4 +40,8 @@ public class ConfiguracionEntity {
 
     @Column(nullable = false)
     private Integer maxInquilinosPorApartamento;
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "condominio_id", nullable = false, unique = true)
+    private CondominioEntity condominio;
 }

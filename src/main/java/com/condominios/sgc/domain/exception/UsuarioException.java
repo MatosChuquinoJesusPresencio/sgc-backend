@@ -1,27 +1,35 @@
 package com.condominios.sgc.domain.exception;
 
-public final class UsuarioException extends RuntimeException {
-    private UsuarioException(String mensaje) {
-        super(mensaje);
+public final class UsuarioException extends DominioException {
+    private UsuarioException(String mensaje, TipoError type) {
+        super(mensaje, type);
     }
 
-    public static UsuarioException datosObligatorios() {
-        return new UsuarioException("Nombres, correo y rol son obligatorios");
+    public static UsuarioException nombresObligatorios() {
+        return new UsuarioException("Los nombres son obligatorios", TipoError.BAD_REQUEST);
     }
 
-    public static UsuarioException usuarioYaExistePorId(String id) {
-        return new UsuarioException("El usuario con id " + id + " ya existe");
+    public static UsuarioException apellidosObligatorios() {
+        return new UsuarioException("Los apellidos son obligatorios", TipoError.BAD_REQUEST);
     }
 
-    public static UsuarioException usuarioYaExistePorCorreo(String correo) {
-        return new UsuarioException("El usuario con correo " + correo + " ya existe");
+    public static UsuarioException correoObligatorio() {
+        return new UsuarioException("El correo es obligatorio", TipoError.BAD_REQUEST);
     }
 
-    public static UsuarioException correoInvalido() {
-        return new UsuarioException("El formato del correo es invalido");
+    public static UsuarioException telefonoObligatorio() {
+        return new UsuarioException("El telefono es obligatorio", TipoError.BAD_REQUEST);
     }
 
-    public static UsuarioException usuarioInactivo() {
-        return new UsuarioException("El usuario se encuentra inactivo");
+    public static UsuarioException rolObligatorio() {
+        return new UsuarioException("El rol es obligatorio", TipoError.BAD_REQUEST);
+    }
+
+    public static UsuarioException activoObligatorio() {
+        return new UsuarioException("El estado activo es obligatorio", TipoError.BAD_REQUEST);
+    }
+
+    public static UsuarioException condominioIdObligatorio() {
+        return new UsuarioException("El id del condominio es obligatorio", TipoError.BAD_REQUEST);
     }
 }

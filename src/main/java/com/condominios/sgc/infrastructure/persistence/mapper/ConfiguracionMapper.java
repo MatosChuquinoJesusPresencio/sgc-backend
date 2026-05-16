@@ -25,9 +25,16 @@ public final class ConfiguracionMapper {
     public static ConfiguracionModel toModel(ConfiguracionEntity e) {
         if (e == null) return null;
         return new ConfiguracionModel(
-                e.getId(), e.getMaxAutos(), e.getMaxMotos(), e.getPenalizacionPorMin(),
-                e.getMaxTiempoPrestamoMin(), e.getMaxEstacionamientosPorApartamento(),
-                e.getMaxCarritosPorApartamento(), e.getMaxVehiculosPorPropietario(),
-                e.getMaxInquilinosPorApartamento());
+                e.getId(), 
+                e.getMaxAutos(), 
+                e.getMaxMotos(), 
+                e.getPenalizacionPorMin(),
+                e.getMaxTiempoPrestamoMin(), 
+                e.getMaxEstacionamientosPorApartamento(),
+                e.getMaxCarritosPorApartamento(), 
+                e.getMaxVehiculosPorPropietario(),
+                e.getMaxInquilinosPorApartamento(),
+                e.getCondominio().getId()
+        );
     }
 }

@@ -17,6 +17,4 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, String>,
     boolean existsByCorreo(String correo);
 
     List<UsuarioEntity> findByCondominioIdAndRol(Long condominioId, Rol rol);
-
-    List<UsuarioEntity> findByApartamentoId(Long apartamentoId);
 }
