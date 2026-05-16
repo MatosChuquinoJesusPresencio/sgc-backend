@@ -1,7 +1,5 @@
 package com.condominios.sgc.web.controller;
 
-import java.util.Map;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,8 +26,12 @@ import com.condominios.sgc.application.usecase.RestablecerContrasenaUseCase;
 import com.condominios.sgc.domain.auxiliar.SesionUsuario;
 import com.condominios.sgc.infrastructure.util.CookieUtils;
 import com.condominios.sgc.web.dto.AuthResponse;
+import com.condominios.sgc.web.dto.ChangePasswordRequest;
+import com.condominios.sgc.web.dto.ForgotPasswordRequest;
 import com.condominios.sgc.web.dto.LoginRequest;
 import com.condominios.sgc.web.dto.RefreshTokenRequest;
+import com.condominios.sgc.web.dto.ResetPasswordRequest;
+import com.condominios.sgc.web.dto.UpdateEmailRequest;
 import com.condominios.sgc.web.dto.UsuarioResponse;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -115,15 +117,15 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<Void> forgotPassword(@RequestBody Map<String, String> body) {
-        enviarRecuperacionContrasenaUseCase.ejecutar(body.get("email"));
+    public ResponseEntity<Void> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        enviarRecuperacionContrasenaUseCase.ejecutar(request.email());
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<Void> resetPassword(@RequestBody Map<String, String> body) {
+    public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequest request) {
         restablecerContrasenaUseCase.ejecutar(
-            body.get("token"), body.get("password"));
+            request.token(), request.password());
         return ResponseEntity.noContent().build();
     }
 
@@ -131,9 +133,9 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> changePassword(
             @AuthenticationPrincipal Jwt jwt,
-            @RequestBody Map<String, String> body) {
+            @RequestBody ChangePasswordRequest request) {
         cambiarContrasenaUseCase.ejecutar(
-            jwt.getTokenValue(), body.get("password"));
+            jwt.getTokenValue(), request.password());
         return ResponseEntity.noContent().build();
     }
 
@@ -141,20 +143,20 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UsuarioResponse> updateEmail(
             @AuthenticationPrincipal Jwt jwt,
-            @RequestBody Map<String, String> body) {
+            @RequestBody UpdateEmailRequest request) {
         return ResponseEntity.ok(
             UsuarioResponse.fromModel(
                 actualizarCorreoUseCase.ejecutar(
-                    jwt.getSubject(), jwt.getTokenValue(), body.get("email"))));
+                    jwt.getSubject(), jwt.getTokenValue(), request.email())));
     }
 
     @PatchMapping("/admin/{id}/email")
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<UsuarioResponse> updateEmailAdmin(
             @PathVariable String id,
-            @RequestBody Map<String, String> body) {
+            @RequestBody UpdateEmailRequest request) {
         return ResponseEntity.ok(
             UsuarioResponse.fromModel(
-                actualizarCorreoAdminUseCase.ejecutar(id, body.get("email"))));
+                actualizarCorreoAdminUseCase.ejecutar(id, request.email())));
     }
 }
