@@ -6,6 +6,7 @@ import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.infrastructure.persistence.mapper.UsuarioMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.ApartamentoRepository;
+import com.condominios.sgc.infrastructure.persistence.repository.CondominioRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.UsuarioRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.VehiculoRepository;
 import com.condominios.sgc.infrastructure.persistence.specification.UsuarioSpecifications;
@@ -21,14 +22,17 @@ public class UsuarioAdapter implements UsuarioPort {
     private final UsuarioRepository usuarioRepository;
     private final ApartamentoRepository apartamentoRepository;
     private final VehiculoRepository vehiculoRepository;
+    private final CondominioRepository condominioRepository;
 
     public UsuarioAdapter(
             UsuarioRepository usuarioRepository,
             ApartamentoRepository apartamentoRepository,
-            VehiculoRepository vehiculoRepository) {
+            VehiculoRepository vehiculoRepository,
+            CondominioRepository condominioRepository) {
         this.usuarioRepository = usuarioRepository;
         this.apartamentoRepository = apartamentoRepository;
         this.vehiculoRepository = vehiculoRepository;
+        this.condominioRepository = condominioRepository;
     }
 
     @Override
@@ -49,6 +53,9 @@ public class UsuarioAdapter implements UsuarioPort {
     @Override
     public UsuarioModel save(UsuarioModel model) {
         var entity = UsuarioMapper.toEntity(model);
+        if (model.getCondominioId() != null) {
+            entity.setCondominio(condominioRepository.getReferenceById(model.getCondominioId()));
+        }
         var saved = usuarioRepository.save(entity);
         return UsuarioMapper.toModel(saved);
     }
