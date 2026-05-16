@@ -16,6 +16,6 @@ public class ObtenerUsuarioUseCaseImpl implements ObtenerUsuarioUseCase {
     @Override
     public UsuarioModel ejecutar(String id) {
         return usuarioPort.findById(id)
-            .orElseThrow(UsuarioException::noEncontrada);
+            .orElseThrow(UsuarioException::noEncontrado);
     }
 }

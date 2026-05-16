@@ -17,7 +17,7 @@ public class ActualizarUsuarioUseCaseImpl implements ActualizarUsuarioUseCase {
     @Override
     public UsuarioModel ejecutar(String id, ActualizarUsuarioRequest request) {
         UsuarioModel usuario = usuarioPort.findById(id)
-            .orElseThrow(UsuarioException::noEncontrada);
+            .orElseThrow(UsuarioException::noEncontrado);
 
         usuario.actualizarDatos(
             request.nombres(),

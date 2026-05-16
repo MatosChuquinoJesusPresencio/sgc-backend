@@ -26,17 +26,21 @@ public class CrearUsuarioUseCaseImpl implements CrearUsuarioUseCase {
         String supabaseId = autenticacionPort.crearUsuario(
             request.email(), request.password(), request.rol().name());
 
-        var usuario = new UsuarioModel(
-            supabaseId,
-            request.nombres(),
-            request.apellidos(),
-            request.email(),
-            request.telefono(),
-            request.rol(),
-            true,
-            request.condominioId()
-        );
-
-        return usuarioPort.save(usuario);
+        try {
+            var usuario = new UsuarioModel(
+                supabaseId,
+                request.nombres(),
+                request.apellidos(),
+                request.email(),
+                request.telefono(),
+                request.rol(),
+                true,
+                request.condominioId()
+            );
+            return usuarioPort.save(usuario);
+        } catch (Exception e) {
+            autenticacionPort.eliminarUsuario(supabaseId);
+            throw e;
+        }
     }
 }

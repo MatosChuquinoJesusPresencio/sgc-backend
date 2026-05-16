@@ -16,7 +16,7 @@ public class ActualizarEstadoUsuarioUseCaseImpl implements ActualizarEstadoUsuar
     @Override
     public UsuarioModel ejecutar(String id, Boolean activo) {
         UsuarioModel usuario = usuarioPort.findById(id)
-            .orElseThrow(UsuarioException::noEncontrada);
+            .orElseThrow(UsuarioException::noEncontrado);
 
         usuario.actualizarEstado(activo);
 

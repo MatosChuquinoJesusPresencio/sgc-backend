@@ -19,13 +19,13 @@ public class ActualizarCorreoAdminUseCaseImpl implements ActualizarCorreoAdminUs
     @Override
     public UsuarioModel ejecutar(String id, String nuevoCorreo) {
         var usuario = usuarioPort.findById(id)
-            .orElseThrow(() -> UsuarioException.noEncontrada());
+            .orElseThrow(UsuarioException::noEncontrado);
 
         if (usuarioPort.existsByCorreo(nuevoCorreo)) {
             throw UsuarioException.correoYaEnUso();
         }
 
-        autenticacionPort.actualizarEmailAdmin(id, nuevoCorreo);
+        autenticacionPort.actualizarCorreoAdmin(id, nuevoCorreo);
 
         usuario.actualizarCorreo(nuevoCorreo);
 
