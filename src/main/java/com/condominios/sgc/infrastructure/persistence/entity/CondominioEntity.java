@@ -32,4 +32,6 @@ public class CondominioEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 
+    @OneToOne(mappedBy = "condominio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ConfiguracionEntity configuracion;
 }
