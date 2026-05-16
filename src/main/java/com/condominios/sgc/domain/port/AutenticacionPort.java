@@ -19,4 +19,6 @@ public interface AutenticacionPort {
     void actualizarEmail(String token, String nuevoEmail);
 
     void actualizarEmailAdmin(String usuarioId, String nuevoEmail);
+
+    SesionUsuario refrescarToken(String refreshToken);
 }
