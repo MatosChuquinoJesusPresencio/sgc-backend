@@ -65,16 +65,6 @@ public class SupabaseClient {
             "Respuesta nula del servidor de autenticación");
     }
 
-    public void enviarRecuperacionContrasena(String email) {
-        var headers = cabecerasConClaveAnonima();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        var body = Map.of("email", email);
-        restTemplate.postForEntity(
-            supabaseUrl + "/auth/v1/recover",
-            new HttpEntity<>(body, headers),
-            Void.class);
-    }
-
     public void actualizarUsuario(String token, Map<String, Object> attributes) {
         var headers = cabecerasConClaveAnonima();
         headers.setBearerAuth(token);
@@ -124,17 +114,6 @@ public class SupabaseClient {
             HttpMethod.DELETE,
             new HttpEntity<>(headers),
             Void.class);
-    }
-
-    public Map<String, Object> obtenerUsuario(String userId) {
-        var headers = headersConServiceRole();
-        var response = restTemplate.exchange(
-            supabaseUrl + "/auth/v1/admin/users/" + userId,
-            HttpMethod.GET,
-            new HttpEntity<>(headers),
-            new ParameterizedTypeReference<Map<String, Object>>() {});
-        return Objects.requireNonNull(response.getBody(),
-            "Respuesta nula del servidor de autenticación");
     }
 
     private HttpHeaders cabecerasConClaveAnonima() {
