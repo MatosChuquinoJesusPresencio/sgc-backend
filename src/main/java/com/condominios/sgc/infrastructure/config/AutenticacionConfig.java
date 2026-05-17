@@ -3,7 +3,9 @@ package com.condominios.sgc.infrastructure.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.web.client.RestTemplate;
 
 import com.condominios.sgc.application.impl.ActualizarCorreoAdminUseCaseImpl;
@@ -31,6 +33,14 @@ import com.condominios.sgc.infrastructure.client.SupabaseClient;
 
 @Configuration
 public class AutenticacionConfig {
+
+    @Bean
+    public JwtDecoder jwtDecoder(@Value("${supabase.url}") String supabaseUrl) {
+        return NimbusJwtDecoder
+            .withJwkSetUri(supabaseUrl + "/auth/v1/.well-known/jwks.json")
+            .jwsAlgorithm(SignatureAlgorithm.ES256)
+            .build();
+    }
 
     @Bean
     public RestTemplate restTemplate() {

@@ -29,11 +29,13 @@ public class AutenticacionAdapter implements AutenticacionPort {
             Map<String, Object> response = supabaseClient.iniciarSesion(email, password);
             return construirSesion(response);
         } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED || e.getStatusCode() == HttpStatus.FORBIDDEN) {
+            String errorBody = e.getResponseBodyAsString();
+            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED || e.getStatusCode() == HttpStatus.FORBIDDEN || 
+               (e.getStatusCode() == HttpStatus.BAD_REQUEST && (errorBody.contains("invalid_grant") || errorBody.contains("Invalid login credentials")))) {
                 throw AutenticacionException.credencialesInvalidas();
             }
             throw AutenticacionException.errorAutenticacion(
-                "Error de autenticación: " + e.getResponseBodyAsString());
+                "Error de autenticación: " + errorBody);
         } catch (HttpServerErrorException e) {
             throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
         }
