@@ -10,13 +10,7 @@ public interface AutenticacionPort {
 
     String crearUsuario(String email, String password, String rol);
 
-    void enviarRecuperacionContrasena(String email);
-
-    void restablecerContrasena(String token, String nuevaContrasena);
-
     void cambiarContrasena(String accessToken, String nuevaContrasena);
-
-    void actualizarCorreo(String token, String nuevoCorreo);
 
     void actualizarCorreoAdmin(String usuarioId, String nuevoCorreo);
 

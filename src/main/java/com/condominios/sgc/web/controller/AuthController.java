@@ -4,16 +4,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.condominios.sgc.application.dto.CrearUsuarioRequest;
-import com.condominios.sgc.domain.exception.AutenticacionException;
-import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.application.usecase.ActualizarCorreoAdminUseCase;
 import com.condominios.sgc.application.usecase.ActualizarCorreoUseCase;
 import com.condominios.sgc.application.usecase.CambiarContrasenaUseCase;
@@ -24,7 +24,7 @@ import com.condominios.sgc.application.usecase.IniciarSesionUseCase;
 import com.condominios.sgc.application.usecase.RefrescarTokenUseCase;
 import com.condominios.sgc.application.usecase.RestablecerContrasenaAdminUseCase;
 import com.condominios.sgc.application.usecase.RestablecerContrasenaUseCase;
-import com.condominios.sgc.domain.auxiliar.SesionUsuario;
+import com.condominios.sgc.application.usecase.VerificarCorreoUseCase;
 import com.condominios.sgc.infrastructure.util.CookieUtils;
 import com.condominios.sgc.web.dto.AdminResetPasswordRequest;
 import com.condominios.sgc.web.dto.AuthResponse;
@@ -42,9 +42,9 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final UsuarioPort usuarioPort;
     private final IniciarSesionUseCase iniciarSesionUseCase;
     private final CerrarSesionUseCase cerrarSesionUseCase;
+    private final RefrescarTokenUseCase refrescarTokenUseCase;
     private final CrearUsuarioUseCase crearUsuarioUseCase;
     private final EnviarRecuperacionContrasenaUseCase enviarRecuperacionContrasenaUseCase;
     private final RestablecerContrasenaUseCase restablecerContrasenaUseCase;
@@ -52,12 +52,12 @@ public class AuthController {
     private final RestablecerContrasenaAdminUseCase restablecerContrasenaAdminUseCase;
     private final ActualizarCorreoUseCase actualizarCorreoUseCase;
     private final ActualizarCorreoAdminUseCase actualizarCorreoAdminUseCase;
-    private final RefrescarTokenUseCase refrescarTokenUseCase;
+    private final VerificarCorreoUseCase verificarCorreoUseCase;
 
     public AuthController(
-            UsuarioPort usuarioPort,
             IniciarSesionUseCase iniciarSesionUseCase,
             CerrarSesionUseCase cerrarSesionUseCase,
+            RefrescarTokenUseCase refrescarTokenUseCase,
             CrearUsuarioUseCase crearUsuarioUseCase,
             EnviarRecuperacionContrasenaUseCase enviarRecuperacionContrasenaUseCase,
             RestablecerContrasenaUseCase restablecerContrasenaUseCase,
@@ -65,10 +65,10 @@ public class AuthController {
             RestablecerContrasenaAdminUseCase restablecerContrasenaAdminUseCase,
             ActualizarCorreoUseCase actualizarCorreoUseCase,
             ActualizarCorreoAdminUseCase actualizarCorreoAdminUseCase,
-            RefrescarTokenUseCase refrescarTokenUseCase) {
-        this.usuarioPort = usuarioPort;
+            VerificarCorreoUseCase verificarCorreoUseCase) {
         this.iniciarSesionUseCase = iniciarSesionUseCase;
         this.cerrarSesionUseCase = cerrarSesionUseCase;
+        this.refrescarTokenUseCase = refrescarTokenUseCase;
         this.crearUsuarioUseCase = crearUsuarioUseCase;
         this.enviarRecuperacionContrasenaUseCase = enviarRecuperacionContrasenaUseCase;
         this.restablecerContrasenaUseCase = restablecerContrasenaUseCase;
@@ -76,26 +76,17 @@ public class AuthController {
         this.restablecerContrasenaAdminUseCase = restablecerContrasenaAdminUseCase;
         this.actualizarCorreoUseCase = actualizarCorreoUseCase;
         this.actualizarCorreoAdminUseCase = actualizarCorreoAdminUseCase;
-        this.refrescarTokenUseCase = refrescarTokenUseCase;
+        this.verificarCorreoUseCase = verificarCorreoUseCase;
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(
             @RequestBody LoginRequest request,
             HttpServletResponse response) {
-        SesionUsuario sesion = iniciarSesionUseCase.ejecutar(request.email(), request.password());
-        var usuario = usuarioPort.findById(sesion.usuario().id())
-            .orElseThrow(AutenticacionException::usuarioNoRegistrado);
+        var completa = iniciarSesionUseCase.ejecutar(request.email(), request.password());
         response.addHeader("Set-Cookie",
-            CookieUtils.crearCookieJwt(sesion.accessToken(), sesion.expiresIn()).toString());
-        return ResponseEntity.ok(AuthResponse.fromSesion(sesion, UsuarioResponse.fromModel(usuario)));
-    }
-
-    @PostMapping("/register")
-    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
-    public ResponseEntity<UsuarioResponse> register(@RequestBody CrearUsuarioRequest request) {
-        return ResponseEntity.ok(
-            UsuarioResponse.fromModel(crearUsuarioUseCase.ejecutar(request)));
+            CookieUtils.crearCookieJwt(completa.sesion().accessToken(), completa.sesion().expiresIn()).toString());
+        return ResponseEntity.ok(AuthResponse.fromSesion(completa.sesion(), UsuarioResponse.fromModel(completa.usuario())));
     }
 
     @PostMapping("/logout")
@@ -113,12 +104,17 @@ public class AuthController {
     public ResponseEntity<AuthResponse> refresh(
             @RequestBody RefreshTokenRequest request,
             HttpServletResponse response) {
-        SesionUsuario sesion = refrescarTokenUseCase.ejecutar(request.refreshToken());
-        var usuario = usuarioPort.findById(sesion.usuario().id())
-            .orElseThrow(AutenticacionException::usuarioNoRegistrado);
+        var completa = refrescarTokenUseCase.ejecutar(request.refreshToken());
         response.addHeader("Set-Cookie",
-            CookieUtils.crearCookieJwt(sesion.accessToken(), sesion.expiresIn()).toString());
-        return ResponseEntity.ok(AuthResponse.fromSesion(sesion, UsuarioResponse.fromModel(usuario)));
+            CookieUtils.crearCookieJwt(completa.sesion().accessToken(), completa.sesion().expiresIn()).toString());
+        return ResponseEntity.ok(AuthResponse.fromSesion(completa.sesion(), UsuarioResponse.fromModel(completa.usuario())));
+    }
+
+    @PostMapping("/register")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
+    public ResponseEntity<UsuarioResponse> register(@RequestBody CrearUsuarioRequest request) {
+        return ResponseEntity.ok(
+            UsuarioResponse.fromModel(crearUsuarioUseCase.ejecutar(request)));
     }
 
     @PostMapping("/forgot-password")
@@ -173,5 +169,13 @@ public class AuthController {
         return ResponseEntity.ok(
             UsuarioResponse.fromModel(
                 actualizarCorreoAdminUseCase.ejecutar(id, request.email())));
+    }
+
+    @GetMapping("/verificar-email")
+    public ResponseEntity<UsuarioResponse> verificarEmail(
+            @RequestParam String token) {
+        return ResponseEntity.ok(
+            UsuarioResponse.fromModel(
+                verificarCorreoUseCase.ejecutar(token)));
     }
 }

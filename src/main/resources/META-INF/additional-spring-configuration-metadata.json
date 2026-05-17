@@ -18,5 +18,10 @@
     "name": "cors.allowed-origins",
     "type": "java.lang.String",
     "description": "Los origenes permitidos para CORS"
+  },
+  {
+    "name": "app.base-url",
+    "type": "java.lang.String",
+    "description": "La URL base de la aplicacion"
   }
 ]}

@@ -14,6 +14,8 @@ public class UsuarioModel {
     private Rol rol;
     private Boolean activo;
     private Long condominioId;
+    private String correoPendiente;
+    private Boolean correoVerificado = false;
 
     public UsuarioModel(
         String id, 
@@ -41,6 +43,7 @@ public class UsuarioModel {
         this.id = requerirNoVacio(id, UsuarioException::idObligatorio);
         validarYAsignarDatos(nombres, apellidos, telefono, rol, activo);
         this.correo = requerirEmailValido(correo, UsuarioException::correoInvalido);
+        this.correoVerificado = false;
     }
 
     private void validarYAsignarDatos(String nombres, String apellidos, String telefono, Rol rol, Boolean activo) {
@@ -59,6 +62,8 @@ public class UsuarioModel {
     public Rol getRol() { return rol; }
     public Boolean isActivo() { return activo; }
     public Long getCondominioId() { return condominioId; }
+    public String getCorreoPendiente() { return correoPendiente; }
+    public Boolean isCorreoVerificado() { return correoVerificado; }
 
     public void asignarCondominio(Long condominioId) {
         this.condominioId = requerirNoNulo(condominioId, UsuarioException::condominioIdObligatorio);
@@ -70,6 +75,25 @@ public class UsuarioModel {
 
     public void actualizarCorreo(String correo) {
         this.correo = requerirEmailValido(correo, UsuarioException::correoInvalido);
+    }
+
+    public void pendienteVerificarCorreo(String nuevoCorreo) {
+        this.correoPendiente = requerirEmailValido(nuevoCorreo, UsuarioException::correoInvalido);
+        this.correoVerificado = false;
+    }
+
+    public void confirmarCorreo() {
+        this.correo = this.correoPendiente;
+        this.correoPendiente = null;
+        this.correoVerificado = true;
+    }
+
+    public void asignarCorreoVerificado(Boolean verificado) {
+        this.correoVerificado = requerirNoNulo(verificado, UsuarioException::activoObligatorio);
+    }
+
+    public void asignarCorreoPendiente(String correoPendiente) {
+        this.correoPendiente = correoPendiente;
     }
 
     public void actualizarDatos(

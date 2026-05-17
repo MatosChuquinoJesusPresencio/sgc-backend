@@ -28,6 +28,7 @@ public class ActualizarCorreoAdminUseCaseImpl implements ActualizarCorreoAdminUs
         autenticacionPort.actualizarCorreoAdmin(id, nuevoCorreo);
 
         usuario.actualizarCorreo(nuevoCorreo);
+        usuario.asignarCorreoVerificado(true);
 
         return usuarioPort.save(usuario);
     }

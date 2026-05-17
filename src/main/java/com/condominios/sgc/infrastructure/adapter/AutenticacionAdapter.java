@@ -59,48 +59,12 @@ public class AutenticacionAdapter implements AutenticacionPort {
     }
 
     @Override
-    public void enviarRecuperacionContrasena(String email) {
-        try {
-            supabaseClient.enviarRecuperacionContrasena(email);
-        } catch (HttpClientErrorException e) {
-            throw AutenticacionException.errorAutenticacion(
-                "Error al enviar recuperación: " + e.getResponseBodyAsString());
-        } catch (HttpServerErrorException e) {
-            throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
-        }
-    }
-
-    @Override
-    public void restablecerContrasena(String token, String nuevaContrasena) {
-        try {
-            supabaseClient.actualizarUsuario(token, Map.<String, Object>of("password", nuevaContrasena));
-        } catch (HttpClientErrorException e) {
-            throw AutenticacionException.errorAutenticacion(
-                "Error al restablecer contraseña: " + e.getResponseBodyAsString());
-        } catch (HttpServerErrorException e) {
-            throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
-        }
-    }
-
-    @Override
     public void cambiarContrasena(String accessToken, String nuevaContrasena) {
         try {
             supabaseClient.actualizarUsuario(accessToken, Map.<String, Object>of("password", nuevaContrasena));
         } catch (HttpClientErrorException e) {
             throw AutenticacionException.errorAutenticacion(
                 "Error al cambiar contraseña: " + e.getResponseBodyAsString());
-        } catch (HttpServerErrorException e) {
-            throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
-        }
-    }
-
-    @Override
-    public void actualizarCorreo(String token, String nuevoCorreo) {
-        try {
-            supabaseClient.actualizarUsuario(token, Map.<String, Object>of("email", nuevoCorreo));
-        } catch (HttpClientErrorException e) {
-            throw AutenticacionException.errorAutenticacion(
-                "Error al actualizar correo: " + e.getResponseBodyAsString());
         } catch (HttpServerErrorException e) {
             throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
         }

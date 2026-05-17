@@ -16,6 +16,7 @@ import com.condominios.sgc.application.impl.IniciarSesionUseCaseImpl;
 import com.condominios.sgc.application.impl.RefrescarTokenUseCaseImpl;
 import com.condominios.sgc.application.impl.RestablecerContrasenaAdminUseCaseImpl;
 import com.condominios.sgc.application.impl.RestablecerContrasenaUseCaseImpl;
+import com.condominios.sgc.application.impl.VerificarCorreoUseCaseImpl;
 import com.condominios.sgc.application.usecase.ActualizarCorreoAdminUseCase;
 import com.condominios.sgc.application.usecase.ActualizarCorreoUseCase;
 import com.condominios.sgc.application.usecase.CambiarContrasenaUseCase;
@@ -26,10 +27,19 @@ import com.condominios.sgc.application.usecase.IniciarSesionUseCase;
 import com.condominios.sgc.application.usecase.RefrescarTokenUseCase;
 import com.condominios.sgc.application.usecase.RestablecerContrasenaAdminUseCase;
 import com.condominios.sgc.application.usecase.RestablecerContrasenaUseCase;
+import com.condominios.sgc.application.usecase.VerificarCorreoUseCase;
 import com.condominios.sgc.domain.port.AutenticacionPort;
+import com.condominios.sgc.domain.port.CorreoPort;
+import com.condominios.sgc.domain.port.RestablecimientoTokenPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
+import com.condominios.sgc.domain.port.VerificacionTokenPort;
 import com.condominios.sgc.infrastructure.adapter.AutenticacionAdapter;
+import com.condominios.sgc.infrastructure.adapter.RestablecimientoTokenAdapter;
+import com.condominios.sgc.infrastructure.adapter.VerificacionTokenAdapter;
 import com.condominios.sgc.infrastructure.client.SupabaseClient;
+import com.condominios.sgc.infrastructure.persistence.repository.RestablecimientoTokenRepository;
+import com.condominios.sgc.infrastructure.persistence.repository.UsuarioRepository;
+import com.condominios.sgc.infrastructure.persistence.repository.VerificacionTokenRepository;
 
 @Configuration
 public class AutenticacionConfig {
@@ -54,13 +64,24 @@ public class AutenticacionConfig {
     }
 
     @Bean
-    public RefrescarTokenUseCase refrescarTokenUseCase(AutenticacionPort autenticacionPort) {
-        return new RefrescarTokenUseCaseImpl(autenticacionPort);
+    public VerificacionTokenPort verificacionTokenPort(
+            VerificacionTokenRepository repository,
+            UsuarioRepository usuarioRepository) {
+        return new VerificacionTokenAdapter(repository, usuarioRepository);
     }
 
     @Bean
-    public IniciarSesionUseCase iniciarSesionUseCase(AutenticacionPort autenticacionPort) {
-        return new IniciarSesionUseCaseImpl(autenticacionPort);
+    public RestablecimientoTokenPort restablecimientoTokenPort(
+            RestablecimientoTokenRepository repository,
+            UsuarioRepository usuarioRepository) {
+        return new RestablecimientoTokenAdapter(repository, usuarioRepository);
+    }
+
+    @Bean
+    public IniciarSesionUseCase iniciarSesionUseCase(
+            AutenticacionPort autenticacionPort,
+            UsuarioPort usuarioPort) {
+        return new IniciarSesionUseCaseImpl(autenticacionPort, usuarioPort);
     }
 
     @Bean
@@ -69,22 +90,33 @@ public class AutenticacionConfig {
     }
 
     @Bean
-    public CrearUsuarioUseCase crearUsuarioUseCase(
+    public RefrescarTokenUseCase refrescarTokenUseCase(
             AutenticacionPort autenticacionPort,
             UsuarioPort usuarioPort) {
-        return new CrearUsuarioUseCaseImpl(autenticacionPort, usuarioPort);
+        return new RefrescarTokenUseCaseImpl(autenticacionPort, usuarioPort);
+    }
+
+    @Bean
+    public CrearUsuarioUseCase crearUsuarioUseCase(
+            AutenticacionPort autenticacionPort,
+            UsuarioPort usuarioPort,
+            CorreoPort correoPort) {
+        return new CrearUsuarioUseCaseImpl(autenticacionPort, usuarioPort, correoPort);
     }
 
     @Bean
     public EnviarRecuperacionContrasenaUseCase enviarRecuperacionContrasenaUseCase(
-            AutenticacionPort autenticacionPort) {
-        return new EnviarRecuperacionContrasenaUseCaseImpl(autenticacionPort);
+            UsuarioPort usuarioPort,
+            RestablecimientoTokenPort restablecimientoTokenPort,
+            CorreoPort correoPort) {
+        return new EnviarRecuperacionContrasenaUseCaseImpl(usuarioPort, restablecimientoTokenPort, correoPort);
     }
 
     @Bean
     public RestablecerContrasenaUseCase restablecerContrasenaUseCase(
-            AutenticacionPort autenticacionPort) {
-        return new RestablecerContrasenaUseCaseImpl(autenticacionPort);
+            AutenticacionPort autenticacionPort,
+            RestablecimientoTokenPort restablecimientoTokenPort) {
+        return new RestablecerContrasenaUseCaseImpl(autenticacionPort, restablecimientoTokenPort);
     }
 
     @Bean
@@ -96,9 +128,10 @@ public class AutenticacionConfig {
     @Bean
     public ActualizarCorreoUseCase actualizarCorreoUseCase(
             UsuarioPort usuarioPort,
-            AutenticacionPort autenticacionPort,
+            VerificacionTokenPort verificacionTokenPort,
+            CorreoPort correoPort,
             JwtDecoder jwtDecoder) {
-        return new ActualizarCorreoUseCaseImpl(usuarioPort, autenticacionPort, jwtDecoder);
+        return new ActualizarCorreoUseCaseImpl(usuarioPort, verificacionTokenPort, correoPort, jwtDecoder);
     }
 
     @Bean
@@ -112,5 +145,13 @@ public class AutenticacionConfig {
             UsuarioPort usuarioPort,
             AutenticacionPort autenticacionPort) {
         return new ActualizarCorreoAdminUseCaseImpl(usuarioPort, autenticacionPort);
+    }
+
+    @Bean
+    public VerificarCorreoUseCase verificarCorreoUseCase(
+            UsuarioPort usuarioPort,
+            AutenticacionPort autenticacionPort,
+            VerificacionTokenPort verificacionTokenPort) {
+        return new VerificarCorreoUseCaseImpl(usuarioPort, autenticacionPort, verificacionTokenPort);
     }
 }

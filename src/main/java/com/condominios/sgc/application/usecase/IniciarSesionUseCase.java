@@ -1,7 +1,7 @@
 package com.condominios.sgc.application.usecase;
 
-import com.condominios.sgc.domain.auxiliar.SesionUsuario;
+import com.condominios.sgc.application.dto.SesionCompleta;
 
 public interface IniciarSesionUseCase {
-    SesionUsuario ejecutar(String email, String password);
+    SesionCompleta ejecutar(String email, String password);
 }
