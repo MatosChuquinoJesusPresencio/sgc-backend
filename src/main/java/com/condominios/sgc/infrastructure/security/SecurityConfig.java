@@ -36,6 +36,7 @@ public class SecurityConfig {
         http
             .securityMatcher("/api/auth/login", "/api/auth/refresh",
                 "/api/auth/forgot-password", "/api/auth/reset-password",
+                "/api/auth/verificar-email",
                 "/api/health", "/api/health/**")
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
