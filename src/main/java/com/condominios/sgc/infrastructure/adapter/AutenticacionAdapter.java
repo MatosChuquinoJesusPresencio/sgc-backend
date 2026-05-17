@@ -146,6 +146,21 @@ public class AutenticacionAdapter implements AutenticacionPort {
     }
 
     @Override
+    public Map<String, Object> obtenerUsuarioSupabase(String usuarioId) {
+        try {
+            return supabaseClient.obtenerUsuario(usuarioId);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                throw AutenticacionException.errorAutenticacion("Usuario no encontrado en Supabase");
+            }
+            throw AutenticacionException.errorAutenticacion(
+                "Error al obtener usuario de Supabase: " + e.getResponseBodyAsString());
+        } catch (HttpServerErrorException e) {
+            throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
+        }
+    }
+
+    @Override
     public void actualizarPasswordAdmin(String usuarioId, String nuevaPassword) {
         try {
             supabaseClient.actualizarPasswordAdmin(usuarioId, nuevaPassword);

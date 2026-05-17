@@ -16,9 +16,11 @@ import com.condominios.sgc.application.impl.IniciarSesionUseCaseImpl;
 import com.condominios.sgc.application.impl.RefrescarTokenUseCaseImpl;
 import com.condominios.sgc.application.impl.RestablecerContrasenaAdminUseCaseImpl;
 import com.condominios.sgc.application.impl.RestablecerContrasenaUseCaseImpl;
+import com.condominios.sgc.application.impl.VerificarCorreoUseCaseImpl;
 import com.condominios.sgc.application.usecase.ActualizarCorreoAdminUseCase;
 import com.condominios.sgc.application.usecase.ActualizarCorreoUseCase;
 import com.condominios.sgc.application.usecase.CambiarContrasenaUseCase;
+import com.condominios.sgc.application.usecase.VerificarCorreoUseCase;
 import com.condominios.sgc.application.usecase.CerrarSesionUseCase;
 import com.condominios.sgc.application.usecase.CrearUsuarioUseCase;
 import com.condominios.sgc.application.usecase.EnviarRecuperacionContrasenaUseCase;
@@ -112,5 +114,12 @@ public class AutenticacionConfig {
             UsuarioPort usuarioPort,
             AutenticacionPort autenticacionPort) {
         return new ActualizarCorreoAdminUseCaseImpl(usuarioPort, autenticacionPort);
+    }
+
+    @Bean
+    public VerificarCorreoUseCase verificarCorreoUseCase(
+            UsuarioPort usuarioPort,
+            AutenticacionPort autenticacionPort) {
+        return new VerificarCorreoUseCaseImpl(usuarioPort, autenticacionPort);
     }
 }

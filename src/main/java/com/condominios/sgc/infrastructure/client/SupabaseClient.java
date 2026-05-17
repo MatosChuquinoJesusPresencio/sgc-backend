@@ -126,6 +126,17 @@ public class SupabaseClient {
             Void.class);
     }
 
+    public Map<String, Object> obtenerUsuario(String userId) {
+        var headers = headersConServiceRole();
+        var response = restTemplate.exchange(
+            supabaseUrl + "/auth/v1/admin/users/" + userId,
+            HttpMethod.GET,
+            new HttpEntity<>(headers),
+            new ParameterizedTypeReference<Map<String, Object>>() {});
+        return Objects.requireNonNull(response.getBody(),
+            "Respuesta nula del servidor de autenticación");
+    }
+
     private HttpHeaders cabecerasConClaveAnonima() {
         var headers = new HttpHeaders();
         headers.set("apikey", anonKey);

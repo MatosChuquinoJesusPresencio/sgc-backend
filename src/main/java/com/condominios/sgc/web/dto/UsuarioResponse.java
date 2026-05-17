@@ -11,7 +11,9 @@ public record UsuarioResponse(
     String telefono,
     Rol rol,
     Boolean activo,
-    Long condominioId
+    Long condominioId,
+    String correoPendiente,
+    Boolean correoVerificado
 ) {
     public static UsuarioResponse fromModel(UsuarioModel model) {
         return new UsuarioResponse(
@@ -22,7 +24,9 @@ public record UsuarioResponse(
             model.getTelefono(),
             model.getRol(),
             model.isActivo(),
-            model.getCondominioId()
+            model.getCondominioId(),
+            model.getCorreoPendiente(),
+            model.isCorreoVerificado()
         );
     }
 }

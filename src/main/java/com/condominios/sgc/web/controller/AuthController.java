@@ -24,6 +24,7 @@ import com.condominios.sgc.application.usecase.IniciarSesionUseCase;
 import com.condominios.sgc.application.usecase.RefrescarTokenUseCase;
 import com.condominios.sgc.application.usecase.RestablecerContrasenaAdminUseCase;
 import com.condominios.sgc.application.usecase.RestablecerContrasenaUseCase;
+import com.condominios.sgc.application.usecase.VerificarCorreoUseCase;
 import com.condominios.sgc.domain.auxiliar.SesionUsuario;
 import com.condominios.sgc.infrastructure.util.CookieUtils;
 import com.condominios.sgc.web.dto.AdminResetPasswordRequest;
@@ -53,6 +54,7 @@ public class AuthController {
     private final ActualizarCorreoUseCase actualizarCorreoUseCase;
     private final ActualizarCorreoAdminUseCase actualizarCorreoAdminUseCase;
     private final RefrescarTokenUseCase refrescarTokenUseCase;
+    private final VerificarCorreoUseCase verificarCorreoUseCase;
 
     public AuthController(
             UsuarioPort usuarioPort,
@@ -65,7 +67,8 @@ public class AuthController {
             RestablecerContrasenaAdminUseCase restablecerContrasenaAdminUseCase,
             ActualizarCorreoUseCase actualizarCorreoUseCase,
             ActualizarCorreoAdminUseCase actualizarCorreoAdminUseCase,
-            RefrescarTokenUseCase refrescarTokenUseCase) {
+            RefrescarTokenUseCase refrescarTokenUseCase,
+            VerificarCorreoUseCase verificarCorreoUseCase) {
         this.usuarioPort = usuarioPort;
         this.iniciarSesionUseCase = iniciarSesionUseCase;
         this.cerrarSesionUseCase = cerrarSesionUseCase;
@@ -77,6 +80,7 @@ public class AuthController {
         this.actualizarCorreoUseCase = actualizarCorreoUseCase;
         this.actualizarCorreoAdminUseCase = actualizarCorreoAdminUseCase;
         this.refrescarTokenUseCase = refrescarTokenUseCase;
+        this.verificarCorreoUseCase = verificarCorreoUseCase;
     }
 
     @PostMapping("/login")
@@ -173,5 +177,14 @@ public class AuthController {
         return ResponseEntity.ok(
             UsuarioResponse.fromModel(
                 actualizarCorreoAdminUseCase.ejecutar(id, request.email())));
+    }
+
+    @PostMapping("/verificar-email")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UsuarioResponse> verificarEmail(
+            @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(
+            UsuarioResponse.fromModel(
+                verificarCorreoUseCase.ejecutar(jwt.getSubject())));
     }
 }

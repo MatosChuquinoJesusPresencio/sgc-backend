@@ -56,4 +56,12 @@ public final class UsuarioException extends DominioException {
     public static UsuarioException idObligatorio() {
         return new UsuarioException("El id del usuario es obligatorio", TipoError.BAD_REQUEST);
     }
+
+    public static UsuarioException correoPendienteNoEncontrado() {
+        return new UsuarioException("No hay un cambio de correo pendiente de verificación", TipoError.BAD_REQUEST);
+    }
+
+    public static UsuarioException correoNoVerificado() {
+        return new UsuarioException("El correo aún no ha sido confirmado en Supabase", TipoError.BAD_REQUEST);
+    }
 }

@@ -43,7 +43,7 @@ public class ActualizarCorreoUseCaseImpl implements ActualizarCorreoUseCase {
 
         autenticacionPort.actualizarCorreo(accessToken, nuevoCorreo);
 
-        usuario.actualizarCorreo(nuevoCorreo);
+        usuario.pendienteVerificarCorreo(nuevoCorreo);
 
         return usuarioPort.save(usuario);
     }

@@ -37,6 +37,7 @@ public class CrearUsuarioUseCaseImpl implements CrearUsuarioUseCase {
                 true,
                 request.condominioId()
             );
+            usuario.asignarCorreoVerificado(true);
             return usuarioPort.save(usuario);
         } catch (Exception e) {
             autenticacionPort.eliminarUsuario(supabaseId);

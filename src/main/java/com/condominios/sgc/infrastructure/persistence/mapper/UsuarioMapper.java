@@ -20,12 +20,14 @@ public final class UsuarioMapper {
         e.setTelefono(model.getTelefono());
         e.setRol(model.getRol());
         e.setActivo(model.isActivo());
+        e.setCorreoPendiente(model.getCorreoPendiente());
+        e.setCorreoVerificado(model.isCorreoVerificado());
         return e;
     }
 
     public static UsuarioModel toModel(UsuarioEntity e) {
         if (e == null) return null;
-        return new UsuarioModel(
+        var model = new UsuarioModel(
                 e.getId(), 
                 e.getNombres(), 
                 e.getApellidos(), 
@@ -35,5 +37,8 @@ public final class UsuarioMapper {
                 e.getActivo(),
                 idDe(e.getCondominio(), CondominioEntity::getId)
         );
+        model.asignarCorreoPendiente(e.getCorreoPendiente());
+        model.asignarCorreoVerificado(e.getCorreoVerificado());
+        return model;
     }
 }
