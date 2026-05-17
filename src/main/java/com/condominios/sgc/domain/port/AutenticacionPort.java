@@ -1,7 +1,5 @@
 package com.condominios.sgc.domain.port;
 
-import java.util.Map;
-
 import com.condominios.sgc.domain.auxiliar.SesionUsuario;
 
 public interface AutenticacionPort {
@@ -12,13 +10,7 @@ public interface AutenticacionPort {
 
     String crearUsuario(String email, String password, String rol);
 
-    void enviarRecuperacionContrasena(String email);
-
-    void restablecerContrasena(String token, String nuevaContrasena);
-
     void cambiarContrasena(String accessToken, String nuevaContrasena);
-
-    void actualizarCorreo(String token, String nuevoCorreo);
 
     void actualizarCorreoAdmin(String usuarioId, String nuevoCorreo);
 
@@ -27,6 +19,4 @@ public interface AutenticacionPort {
     void eliminarUsuario(String usuarioId);
 
     void actualizarPasswordAdmin(String usuarioId, String nuevaPassword);
-
-    Map<String, Object> obtenerUsuarioSupabase(String usuarioId);
 }
