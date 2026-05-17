@@ -10,6 +10,7 @@ import com.condominios.sgc.application.usecase.ActualizarUsuarioUseCase;
 import com.condominios.sgc.application.usecase.EliminarUsuarioUseCase;
 import com.condominios.sgc.application.usecase.ListarUsuariosUseCase;
 import com.condominios.sgc.application.usecase.ObtenerUsuarioUseCase;
+import com.condominios.sgc.domain.port.AutenticacionPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.infrastructure.adapter.UsuarioAdapter;
 import com.condominios.sgc.infrastructure.persistence.repository.ApartamentoRepository;
@@ -42,8 +43,10 @@ public class UsuarioConfig {
     }
 
     @Bean
-    public EliminarUsuarioUseCase eliminarUsuarioUseCase(UsuarioPort usuarioPort) {
-        return new EliminarUsuarioUseCaseImpl(usuarioPort);
+    public EliminarUsuarioUseCase eliminarUsuarioUseCase(
+            UsuarioPort usuarioPort,
+            AutenticacionPort autenticacionPort) {
+        return new EliminarUsuarioUseCaseImpl(usuarioPort, autenticacionPort);
     }
 
     @Bean

@@ -11,6 +11,7 @@ import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.web.dto.UsuarioResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -49,12 +50,14 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<UsuarioResponse> obtener(@PathVariable String id) {
         return ResponseEntity.ok(
             UsuarioResponse.fromModel(obtenerUsuarioUseCase.ejecutar(id)));
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<PaginacionResponse<UsuarioResponse>> listar(
             @RequestParam Map<String, String> params) {
         int pagina = Integer.parseInt(params.getOrDefault("pagina", "0"));
@@ -79,6 +82,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<UsuarioResponse> actualizar(
             @PathVariable String id,
             @RequestBody ActualizarUsuarioRequest request) {
@@ -87,6 +91,7 @@ public class UsuarioController {
     }
 
     @PatchMapping("/{id}/estado")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<UsuarioResponse> actualizarEstado(
             @PathVariable String id,
             @RequestBody Map<String, Boolean> body) {
@@ -95,6 +100,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<Void> eliminar(@PathVariable String id) {
         eliminarUsuarioUseCase.ejecutar(id);
         return ResponseEntity.noContent().build();

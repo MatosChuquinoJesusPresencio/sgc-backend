@@ -37,12 +37,8 @@ public final class UsuarioException extends DominioException {
         return new UsuarioException("El id del condominio es obligatorio", TipoError.BAD_REQUEST);
     }
 
-    public static UsuarioException noEncontrada() {
+    public static UsuarioException noEncontrado() {
         return new UsuarioException("El usuario solicitado no existe", TipoError.NOT_FOUND);
-    }
-
-    public static UsuarioException correoDuplicado() {
-        return new UsuarioException("El correo ya esta registrado", TipoError.BAD_REQUEST);
     }
 
     public static UsuarioException esPropietarioDeApartamento() {
@@ -51,5 +47,13 @@ public final class UsuarioException extends DominioException {
 
     public static UsuarioException tieneVehiculosAsociados() {
         return new UsuarioException("No se puede eliminar el usuario porque tiene vehiculos asociados", TipoError.BAD_REQUEST);
+    }
+
+    public static UsuarioException correoYaEnUso() {
+        return new UsuarioException("El correo ya esta en uso", TipoError.BAD_REQUEST);
+    }
+
+    public static UsuarioException idObligatorio() {
+        return new UsuarioException("El id del usuario es obligatorio", TipoError.BAD_REQUEST);
     }
 }
