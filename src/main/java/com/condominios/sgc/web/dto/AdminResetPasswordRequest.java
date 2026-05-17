@@ -1,6 +1,5 @@
 package com.condominios.sgc.web.dto;
 
-public record ChangePasswordRequest(
-    String currentPassword,
+public record AdminResetPasswordRequest(
     String newPassword
 ) {}

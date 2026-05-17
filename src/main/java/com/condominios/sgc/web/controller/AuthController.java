@@ -22,9 +22,11 @@ import com.condominios.sgc.application.usecase.CrearUsuarioUseCase;
 import com.condominios.sgc.application.usecase.EnviarRecuperacionContrasenaUseCase;
 import com.condominios.sgc.application.usecase.IniciarSesionUseCase;
 import com.condominios.sgc.application.usecase.RefrescarTokenUseCase;
+import com.condominios.sgc.application.usecase.RestablecerContrasenaAdminUseCase;
 import com.condominios.sgc.application.usecase.RestablecerContrasenaUseCase;
 import com.condominios.sgc.domain.auxiliar.SesionUsuario;
 import com.condominios.sgc.infrastructure.util.CookieUtils;
+import com.condominios.sgc.web.dto.AdminResetPasswordRequest;
 import com.condominios.sgc.web.dto.AuthResponse;
 import com.condominios.sgc.web.dto.ChangePasswordRequest;
 import com.condominios.sgc.web.dto.ForgotPasswordRequest;
@@ -47,6 +49,7 @@ public class AuthController {
     private final EnviarRecuperacionContrasenaUseCase enviarRecuperacionContrasenaUseCase;
     private final RestablecerContrasenaUseCase restablecerContrasenaUseCase;
     private final CambiarContrasenaUseCase cambiarContrasenaUseCase;
+    private final RestablecerContrasenaAdminUseCase restablecerContrasenaAdminUseCase;
     private final ActualizarCorreoUseCase actualizarCorreoUseCase;
     private final ActualizarCorreoAdminUseCase actualizarCorreoAdminUseCase;
     private final RefrescarTokenUseCase refrescarTokenUseCase;
@@ -59,6 +62,7 @@ public class AuthController {
             EnviarRecuperacionContrasenaUseCase enviarRecuperacionContrasenaUseCase,
             RestablecerContrasenaUseCase restablecerContrasenaUseCase,
             CambiarContrasenaUseCase cambiarContrasenaUseCase,
+            RestablecerContrasenaAdminUseCase restablecerContrasenaAdminUseCase,
             ActualizarCorreoUseCase actualizarCorreoUseCase,
             ActualizarCorreoAdminUseCase actualizarCorreoAdminUseCase,
             RefrescarTokenUseCase refrescarTokenUseCase) {
@@ -69,6 +73,7 @@ public class AuthController {
         this.enviarRecuperacionContrasenaUseCase = enviarRecuperacionContrasenaUseCase;
         this.restablecerContrasenaUseCase = restablecerContrasenaUseCase;
         this.cambiarContrasenaUseCase = cambiarContrasenaUseCase;
+        this.restablecerContrasenaAdminUseCase = restablecerContrasenaAdminUseCase;
         this.actualizarCorreoUseCase = actualizarCorreoUseCase;
         this.actualizarCorreoAdminUseCase = actualizarCorreoAdminUseCase;
         this.refrescarTokenUseCase = refrescarTokenUseCase;
@@ -87,7 +92,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<UsuarioResponse> register(@RequestBody CrearUsuarioRequest request) {
         return ResponseEntity.ok(
             UsuarioResponse.fromModel(crearUsuarioUseCase.ejecutar(request)));
@@ -134,8 +139,18 @@ public class AuthController {
     public ResponseEntity<Void> changePassword(
             @AuthenticationPrincipal Jwt jwt,
             @RequestBody ChangePasswordRequest request) {
+        String email = jwt.getClaimAsString("email");
         cambiarContrasenaUseCase.ejecutar(
-            jwt.getTokenValue(), request.password());
+            email, request.currentPassword(), request.newPassword());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/admin/{id}/reset-password")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
+    public ResponseEntity<Void> adminResetPassword(
+            @PathVariable String id,
+            @RequestBody AdminResetPasswordRequest request) {
+        restablecerContrasenaAdminUseCase.ejecutar(id, request.newPassword());
         return ResponseEntity.noContent().build();
     }
 

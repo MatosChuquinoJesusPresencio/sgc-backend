@@ -3,9 +3,7 @@ package com.condominios.sgc.infrastructure.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.web.client.RestTemplate;
 
 import com.condominios.sgc.application.impl.ActualizarCorreoAdminUseCaseImpl;
@@ -16,6 +14,7 @@ import com.condominios.sgc.application.impl.CrearUsuarioUseCaseImpl;
 import com.condominios.sgc.application.impl.EnviarRecuperacionContrasenaUseCaseImpl;
 import com.condominios.sgc.application.impl.IniciarSesionUseCaseImpl;
 import com.condominios.sgc.application.impl.RefrescarTokenUseCaseImpl;
+import com.condominios.sgc.application.impl.RestablecerContrasenaAdminUseCaseImpl;
 import com.condominios.sgc.application.impl.RestablecerContrasenaUseCaseImpl;
 import com.condominios.sgc.application.usecase.ActualizarCorreoAdminUseCase;
 import com.condominios.sgc.application.usecase.ActualizarCorreoUseCase;
@@ -25,6 +24,7 @@ import com.condominios.sgc.application.usecase.CrearUsuarioUseCase;
 import com.condominios.sgc.application.usecase.EnviarRecuperacionContrasenaUseCase;
 import com.condominios.sgc.application.usecase.IniciarSesionUseCase;
 import com.condominios.sgc.application.usecase.RefrescarTokenUseCase;
+import com.condominios.sgc.application.usecase.RestablecerContrasenaAdminUseCase;
 import com.condominios.sgc.application.usecase.RestablecerContrasenaUseCase;
 import com.condominios.sgc.domain.port.AutenticacionPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
@@ -33,14 +33,6 @@ import com.condominios.sgc.infrastructure.client.SupabaseClient;
 
 @Configuration
 public class AutenticacionConfig {
-
-    @Bean
-    public JwtDecoder jwtDecoder(@Value("${supabase.url}") String supabaseUrl) {
-        return NimbusJwtDecoder
-            .withJwkSetUri(supabaseUrl + "/auth/v1/.well-known/jwks.json")
-            .jwsAlgorithm(SignatureAlgorithm.ES256)
-            .build();
-    }
 
     @Bean
     public RestTemplate restTemplate() {
@@ -107,6 +99,12 @@ public class AutenticacionConfig {
             AutenticacionPort autenticacionPort,
             JwtDecoder jwtDecoder) {
         return new ActualizarCorreoUseCaseImpl(usuarioPort, autenticacionPort, jwtDecoder);
+    }
+
+    @Bean
+    public RestablecerContrasenaAdminUseCase restablecerContrasenaAdminUseCase(
+            AutenticacionPort autenticacionPort) {
+        return new RestablecerContrasenaAdminUseCaseImpl(autenticacionPort);
     }
 
     @Bean

@@ -100,13 +100,20 @@ public class SupabaseClient {
     }
 
     public void actualizarEmailAdmin(String userId, String nuevoEmail) {
+        actualizarUsuarioAdmin(userId, Map.of("email", nuevoEmail));
+    }
+
+    public void actualizarPasswordAdmin(String userId, String nuevaPassword) {
+        actualizarUsuarioAdmin(userId, Map.of("password", nuevaPassword));
+    }
+
+    private void actualizarUsuarioAdmin(String userId, Map<String, Object> attributes) {
         var headers = headersConServiceRole();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        var body = Map.of("email", nuevoEmail);
         restTemplate.exchange(
             supabaseUrl + "/auth/v1/admin/users/" + userId,
             HttpMethod.PUT,
-            new HttpEntity<>(body, headers),
+            new HttpEntity<>(attributes, headers),
             new ParameterizedTypeReference<Map<String, Object>>() {});
     }
 

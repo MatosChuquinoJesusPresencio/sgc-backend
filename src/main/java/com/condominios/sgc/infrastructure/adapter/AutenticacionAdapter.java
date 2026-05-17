@@ -145,6 +145,18 @@ public class AutenticacionAdapter implements AutenticacionPort {
         }
     }
 
+    @Override
+    public void actualizarPasswordAdmin(String usuarioId, String nuevaPassword) {
+        try {
+            supabaseClient.actualizarPasswordAdmin(usuarioId, nuevaPassword);
+        } catch (HttpClientErrorException e) {
+            throw AutenticacionException.errorAutenticacion(
+                "Error al restablecer contraseña: " + e.getResponseBodyAsString());
+        } catch (HttpServerErrorException e) {
+            throw AutenticacionException.errorAutenticacion("Error del servidor de autenticación");
+        }
+    }
+
     private SesionUsuario construirSesion(Map<String, Object> response) {
         String accessToken = (String) response.get("access_token");
         String tokenType = (String) response.get("token_type");

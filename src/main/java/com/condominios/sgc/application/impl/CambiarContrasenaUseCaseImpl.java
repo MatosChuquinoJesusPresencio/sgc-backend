@@ -1,6 +1,7 @@
 package com.condominios.sgc.application.impl;
 
 import com.condominios.sgc.application.usecase.CambiarContrasenaUseCase;
+import com.condominios.sgc.domain.auxiliar.SesionUsuario;
 import com.condominios.sgc.domain.port.AutenticacionPort;
 
 public class CambiarContrasenaUseCaseImpl implements CambiarContrasenaUseCase {
@@ -12,7 +13,8 @@ public class CambiarContrasenaUseCaseImpl implements CambiarContrasenaUseCase {
     }
 
     @Override
-    public void ejecutar(String accessToken, String nuevaContrasena) {
-        autenticacionPort.cambiarContrasena(accessToken, nuevaContrasena);
+    public void ejecutar(String email, String currentPassword, String newPassword) {
+        SesionUsuario sesion = autenticacionPort.iniciarSesion(email, currentPassword);
+        autenticacionPort.cambiarContrasena(sesion.accessToken(), newPassword);
     }
 }

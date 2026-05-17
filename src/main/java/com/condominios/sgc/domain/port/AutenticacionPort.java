@@ -23,4 +23,6 @@ public interface AutenticacionPort {
     SesionUsuario refrescarToken(String refreshToken);
 
     void eliminarUsuario(String usuarioId);
+
+    void actualizarPasswordAdmin(String usuarioId, String nuevaPassword);
 }
