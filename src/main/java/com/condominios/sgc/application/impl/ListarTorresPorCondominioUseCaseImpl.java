@@ -1,5 +1,6 @@
 package com.condominios.sgc.application.impl;
 
+import com.condominios.sgc.application.usecase.ListarTorresPorCondominioUseCase;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.exception.CondominioException;
@@ -7,7 +8,7 @@ import com.condominios.sgc.domain.model.TorreModel;
 import com.condominios.sgc.domain.port.CondominioPort;
 import com.condominios.sgc.domain.port.TorrePort;
 
-public class ListarTorresPorCondominioUseCaseImpl {
+public class ListarTorresPorCondominioUseCaseImpl implements ListarTorresPorCondominioUseCase {
     private final TorrePort torrePort;
     private final CondominioPort condominioPort;
 
@@ -18,8 +19,8 @@ public class ListarTorresPorCondominioUseCaseImpl {
 
     @Override
     public PaginacionResponse<TorreModel> ejecutar(Long condominioId, PaginacionRequest request) {
-        if (condominioPort.findById(condominioId) == null) {
-            throw new CondominioException("El condominio especificado no existe.");
+        if (condominioPort.findById(condominioId).orElse(null) == null) {
+            throw CondominioException.noEncontrado();
         }
         return torrePort.findByCondominioId(condominioId, request);
     }

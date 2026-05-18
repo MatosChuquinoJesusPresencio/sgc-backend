@@ -48,12 +48,19 @@ public class TorreController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        PaginacionResponse<TorreModel> pageModel = listarTorresPorCondominioUseCase.ejecutar(
-                condominioId, new PaginacionRequest(page, size));
+        PaginacionRequest req = new PaginacionRequest(page, size, "id", "asc", null);
 
-        List<TorreResponse> content = pageModel.getContent().stream().map(TorreResponse::fromModel).toList();
-        return ResponseEntity.ok(new PaginacionResponse<>(content, pageModel.getPageNumber(),
-                pageModel.getPageSize(), pageModel.getTotalElements(), pageModel.getTotalPages(), pageModel.isLast()));
+        PaginacionResponse<TorreModel> pageModel = listarTorresPorCondominioUseCase.ejecutar(condominioId, req);
+
+        List<TorreResponse> content = pageModel.contenido().stream().map(TorreResponse::fromModel).toList();
+
+        return ResponseEntity.ok(new PaginacionResponse<>(
+                content,
+                pageModel.pagina(),
+                pageModel.tamanio(),
+                pageModel.totalElementos(),
+                pageModel.totalPaginas()
+        ));
     }
 
     @GetMapping("/torres/{id}")

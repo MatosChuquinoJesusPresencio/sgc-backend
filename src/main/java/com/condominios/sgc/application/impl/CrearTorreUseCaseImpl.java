@@ -1,13 +1,14 @@
 package com.condominios.sgc.application.impl;
 
 import com.condominios.sgc.application.dto.CrearTorreRequest;
+import com.condominios.sgc.application.usecase.CrearTorreUseCase;
 import com.condominios.sgc.domain.exception.CondominioException;
 import com.condominios.sgc.domain.model.CondominioModel;
 import com.condominios.sgc.domain.model.TorreModel;
 import com.condominios.sgc.domain.port.CondominioPort;
 import com.condominios.sgc.domain.port.TorrePort;
 
-public class CrearTorreUseCaseImpl {
+public class CrearTorreUseCaseImpl implements CrearTorreUseCase{
 
     private final TorrePort torrePort;
     private final CondominioPort condominioPort;
@@ -17,22 +18,14 @@ public class CrearTorreUseCaseImpl {
         this.condominioPort = condominioPort;
     }
 
-    Override
+    @Override
     public TorreModel ejecutar(CrearTorreRequest request) {
-        CondominioModel condominio = condominioPort.findById(request.condominioId());
+        CondominioModel condominio = condominioPort.findById(request.condominioId()).orElse(null);
         if (condominio == null) {
-            throw new CondominioException("El condominio especificado no existe.");
+            throw CondominioException.noEncontrado();
         }
 
-        TorreModel torre = new TorreModel();
-        torre.setNombre(request.nombre());
-        torre.setCondominioId(condominio.getId());
-
-        // Simulación de condominio.agregarTorre() según regla de negocio
-        if (condominio.getTorresIds() != null) {
-            condominio.getTorresIds().add(torre.getId());
-        }
-
+        TorreModel torre = new TorreModel(request.nombre(), condominio.getId());
         return torrePort.save(torre);
     }
 }
