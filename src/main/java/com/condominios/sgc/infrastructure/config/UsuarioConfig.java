@@ -2,11 +2,13 @@ package com.condominios.sgc.infrastructure.config;
 
 import com.condominios.sgc.application.impl.ActualizarEstadoUsuarioUseCaseImpl;
 import com.condominios.sgc.application.impl.ActualizarUsuarioUseCaseImpl;
+import com.condominios.sgc.application.impl.AsignarCondominioUseCaseImpl;
 import com.condominios.sgc.application.impl.EliminarUsuarioUseCaseImpl;
 import com.condominios.sgc.application.impl.ListarUsuariosUseCaseImpl;
 import com.condominios.sgc.application.impl.ObtenerUsuarioUseCaseImpl;
 import com.condominios.sgc.application.usecase.ActualizarEstadoUsuarioUseCase;
 import com.condominios.sgc.application.usecase.ActualizarUsuarioUseCase;
+import com.condominios.sgc.application.usecase.AsignarCondominioUseCase;
 import com.condominios.sgc.application.usecase.EliminarUsuarioUseCase;
 import com.condominios.sgc.application.usecase.ListarUsuariosUseCase;
 import com.condominios.sgc.application.usecase.ObtenerUsuarioUseCase;
@@ -57,5 +59,10 @@ public class UsuarioConfig {
     @Bean
     public ActualizarEstadoUsuarioUseCase actualizarEstadoUsuarioUseCase(UsuarioPort usuarioPort) {
         return new ActualizarEstadoUsuarioUseCaseImpl(usuarioPort);
+    }
+
+    @Bean
+    public AsignarCondominioUseCase asignarCondominioUseCase(UsuarioPort usuarioPort) {
+        return new AsignarCondominioUseCaseImpl(usuarioPort);
     }
 }

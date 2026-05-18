@@ -64,4 +64,8 @@ public final class UsuarioException extends DominioException {
     public static UsuarioException correoNoVerificado() {
         return new UsuarioException("El correo aún no ha sido confirmado en Supabase", TipoError.BAD_REQUEST);
     }
+
+    public static UsuarioException noPermisoParaAsignarRol() {
+        return new UsuarioException("No tienes permiso para asignar ese rol", TipoError.FORBIDDEN);
+    }
 }

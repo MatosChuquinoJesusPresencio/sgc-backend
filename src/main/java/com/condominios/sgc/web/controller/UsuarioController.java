@@ -1,8 +1,10 @@
 package com.condominios.sgc.web.controller;
 
 import com.condominios.sgc.application.dto.ActualizarUsuarioRequest;
+import com.condominios.sgc.application.dto.AsignarCondominioRequest;
 import com.condominios.sgc.application.usecase.ActualizarEstadoUsuarioUseCase;
 import com.condominios.sgc.application.usecase.ActualizarUsuarioUseCase;
+import com.condominios.sgc.application.usecase.AsignarCondominioUseCase;
 import com.condominios.sgc.application.usecase.EliminarUsuarioUseCase;
 import com.condominios.sgc.application.usecase.ListarUsuariosUseCase;
 import com.condominios.sgc.application.usecase.ObtenerUsuarioUseCase;
@@ -12,6 +14,7 @@ import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.web.dto.UsuarioResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import com.condominios.sgc.infrastructure.util.SecurityUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -35,18 +38,21 @@ public class UsuarioController {
     private final EliminarUsuarioUseCase eliminarUsuarioUseCase;
     private final ListarUsuariosUseCase listarUsuariosUseCase;
     private final ActualizarEstadoUsuarioUseCase actualizarEstadoUsuarioUseCase;
+    private final AsignarCondominioUseCase asignarCondominioUseCase;
 
     public UsuarioController(
             ObtenerUsuarioUseCase obtenerUsuarioUseCase,
             ActualizarUsuarioUseCase actualizarUsuarioUseCase,
             EliminarUsuarioUseCase eliminarUsuarioUseCase,
             ListarUsuariosUseCase listarUsuariosUseCase,
-            ActualizarEstadoUsuarioUseCase actualizarEstadoUsuarioUseCase) {
+            ActualizarEstadoUsuarioUseCase actualizarEstadoUsuarioUseCase,
+            AsignarCondominioUseCase asignarCondominioUseCase) {
         this.obtenerUsuarioUseCase = obtenerUsuarioUseCase;
         this.actualizarUsuarioUseCase = actualizarUsuarioUseCase;
         this.eliminarUsuarioUseCase = eliminarUsuarioUseCase;
         this.listarUsuariosUseCase = listarUsuariosUseCase;
         this.actualizarEstadoUsuarioUseCase = actualizarEstadoUsuarioUseCase;
+        this.asignarCondominioUseCase = asignarCondominioUseCase;
     }
 
     @GetMapping("/{id}")
@@ -87,7 +93,16 @@ public class UsuarioController {
             @PathVariable String id,
             @RequestBody ActualizarUsuarioRequest request) {
         return ResponseEntity.ok(
-            UsuarioResponse.fromModel(actualizarUsuarioUseCase.ejecutar(id, request)));
+            UsuarioResponse.fromModel(actualizarUsuarioUseCase.ejecutar(id, request, SecurityUtils.obtenerRolAutenticado())));
+    }
+
+    @PatchMapping("/{id}/condominio")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
+    public ResponseEntity<UsuarioResponse> asignarCondominio(
+            @PathVariable String id,
+            @RequestBody AsignarCondominioRequest request) {
+        return ResponseEntity.ok(
+            UsuarioResponse.fromModel(asignarCondominioUseCase.ejecutar(id, request.condominioId())));
     }
 
     @PatchMapping("/{id}/estado")
@@ -105,4 +120,5 @@ public class UsuarioController {
         eliminarUsuarioUseCase.ejecutar(id);
         return ResponseEntity.noContent().build();
     }
+
 }

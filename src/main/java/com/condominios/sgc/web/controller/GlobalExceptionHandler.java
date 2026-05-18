@@ -17,6 +17,8 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponse.notFound(e.getMessage()));
             case BAD_REQUEST -> ResponseEntity.badRequest()
                 .body(ErrorResponse.badRequest(e.getMessage()));
+            case FORBIDDEN -> ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorResponse.of(403, e.getMessage(), null));
         };
     }
 

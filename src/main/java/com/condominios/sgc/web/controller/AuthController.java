@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.condominios.sgc.application.dto.CrearUsuarioRequest;
 import com.condominios.sgc.application.usecase.ActualizarCorreoAdminUseCase;
 import com.condominios.sgc.application.usecase.ActualizarCorreoUseCase;
+import com.condominios.sgc.infrastructure.util.SecurityUtils;
 import com.condominios.sgc.application.usecase.CambiarContrasenaUseCase;
 import com.condominios.sgc.application.usecase.CerrarSesionUseCase;
 import com.condominios.sgc.application.usecase.CrearUsuarioUseCase;
@@ -114,7 +115,7 @@ public class AuthController {
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<UsuarioResponse> register(@RequestBody CrearUsuarioRequest request) {
         return ResponseEntity.ok(
-            UsuarioResponse.fromModel(crearUsuarioUseCase.ejecutar(request)));
+            UsuarioResponse.fromModel(crearUsuarioUseCase.ejecutar(request, SecurityUtils.obtenerRolAutenticado())));
     }
 
     @PostMapping("/forgot-password")
@@ -178,4 +179,5 @@ public class AuthController {
             UsuarioResponse.fromModel(
                 verificarCorreoUseCase.ejecutar(token)));
     }
+
 }

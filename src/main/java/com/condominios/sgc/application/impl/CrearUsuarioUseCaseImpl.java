@@ -2,6 +2,7 @@ package com.condominios.sgc.application.impl;
 
 import com.condominios.sgc.application.dto.CrearUsuarioRequest;
 import com.condominios.sgc.application.usecase.CrearUsuarioUseCase;
+import com.condominios.sgc.domain.auxiliar.Rol;
 import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.port.AutenticacionPort;
@@ -21,7 +22,11 @@ public class CrearUsuarioUseCaseImpl implements CrearUsuarioUseCase {
     }
 
     @Override
-    public UsuarioModel ejecutar(CrearUsuarioRequest request) {
+    public UsuarioModel ejecutar(CrearUsuarioRequest request, Rol rolAutenticado) {
+        if (!rolAutenticado.puedeAsignar(request.rol())) {
+            throw UsuarioException.noPermisoParaAsignarRol();
+        }
+
         if (usuarioPort.existsByCorreo(request.email())) {
             throw UsuarioException.correoYaEnUso();
         }
