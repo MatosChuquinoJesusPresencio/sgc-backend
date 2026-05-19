@@ -37,7 +37,9 @@ public class SecurityConfig {
             .securityMatcher("/api/auth/login", "/api/auth/refresh",
                 "/api/auth/forgot-password", "/api/auth/reset-password",
                 "/api/auth/verificar-email",
-                "/api/health", "/api/health/**")
+                "/api/health", "/api/health/**",
+                "/v3/api-docs", "/v3/api-docs/**",
+                "/swagger-ui/**", "/swagger-ui.html")
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
