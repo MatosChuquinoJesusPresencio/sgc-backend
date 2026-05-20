@@ -24,12 +24,14 @@ public class CrearApartamentoUseCaseImpl implements CrearApartamentoUseCase {
             throw PisoException.noEncontrado(request.pisoId());
         }
 
-        ApartamentoModel apartamento = new ApartamentoModel();
-        apartamento.setNumero(request.numero());
-        apartamento.setDerechoEstacionamiento(request.derechoEstacionamiento());
-        apartamento.setMetraje(request.metraje());
-        apartamento.setPisoId(piso.getId());
-        apartamento.setPropietarioId(request.propietarioId());
+        ApartamentoModel apartamento = new ApartamentoModel(
+                null,
+                request.numero(),
+                request.derechoEstacionamiento(),
+                request.metraje(),
+                request.propietarioId(),
+                piso.getId()
+        );
 
         return apartamentoPort.save(apartamento);
     }
