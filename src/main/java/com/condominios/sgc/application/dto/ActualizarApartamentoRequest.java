@@ -1,9 +1,9 @@
 package com.condominios.sgc.application.dto;
-public record ActualizarApartamentoRequest(
 
+import java.math.BigDecimal;
+
+public record ActualizarApartamentoRequest(
         Integer numero,
         Boolean derechoEstacionamiento,
-        Double metraje,
-        String propietarioId)
-
+        BigDecimal metraje)
 {}
