@@ -1,9 +1,11 @@
 package com.condominios.sgc.application.dto;
 
+import java.math.BigDecimal;
+
 public record CrearApartamentoRequest(
         Integer numero,
         Boolean derechoEstacionamiento,
-        Double metraje,
+        BigDecimal metraje,
         Long pisoId,
         String propietarioId)
 
