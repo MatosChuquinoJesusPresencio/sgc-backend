@@ -10,7 +10,8 @@ public class ActualizarApartamentoUseCaseImpl implements ActualizarApartamentoUs
     private final ApartamentoPort apartamentoPort;
     private final ObtenerApartamentoUseCase obtenerApartamentoUseCase;
 
-    public ActualizarApartamentoUseCaseImpl(ApartamentoPort apartamentoPort, ObtenerApartamentoUseCase obtenerApartamentoUseCase) {
+    public ActualizarApartamentoUseCaseImpl(ApartamentoPort apartamentoPort,
+                                            ObtenerApartamentoUseCase obtenerApartamentoUseCase) {
         this.apartamentoPort = apartamentoPort;
         this.obtenerApartamentoUseCase = obtenerApartamentoUseCase;
     }
@@ -19,7 +20,9 @@ public class ActualizarApartamentoUseCaseImpl implements ActualizarApartamentoUs
     public ApartamentoModel ejecutar(Long id, ActualizarApartamentoRequest request) {
         ApartamentoModel apartamento = obtenerApartamentoUseCase.ejecutar(id);
 
-        apartamento.actualizarDatos(request.numero(), request.derechoEstacionamiento(), request.metraje(), request.propietarioId());
+        apartamento.actualizarDatos(request.numero(),
+                request.metraje(),
+                request.derechoEstacionamiento());
 
         return apartamentoPort.save(apartamento);
     }
