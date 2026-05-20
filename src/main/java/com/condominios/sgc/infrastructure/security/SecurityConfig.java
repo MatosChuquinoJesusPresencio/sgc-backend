@@ -46,6 +46,22 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
         return http.build();
     }
+/*
+    para probar cosas rapidas xd
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable()) // Desactivar CSRF para poder usar Postman
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll() // ¡ESTA ES LA MAGIA! Permite todas las peticiones sin token
+                )
+                // Si tienes configurado oauth2ResourceServer, puedes comentarlo o dejarlo,
+                // pero el permitAll() superior hará que no te exija token.
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        return http.build();
+    }
+    */
 
     @Bean
     @Order(2)

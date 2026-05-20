@@ -24,4 +24,8 @@ public final class ApartamentoException extends DominioException {
     public static ApartamentoException propietarioIdObligatorio() {
         return new ApartamentoException("El id del propietario es obligatorio", TipoError.BAD_REQUEST);
     }
+
+    public static ApartamentoException noEncontrado(Long id) {
+        return new ApartamentoException("Apartamento no encontrado con ID: " + id, TipoError.NOT_FOUND);
+    }
 }

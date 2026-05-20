@@ -1,5 +1,7 @@
 package com.condominios.sgc.infrastructure.persistence.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -15,4 +17,6 @@ public interface TorreRepository extends JpaRepository<TorreEntity, Long>,
     TorreEntity findByCondominioIdAndNombre(Long condominioId, String nombre);
 
     boolean existsByCondominioIdAndNombre(Long condominioId, String nombre);
+
+    Page<TorreEntity> findByCondominioId(Long condominioId, Pageable pageable);
 }

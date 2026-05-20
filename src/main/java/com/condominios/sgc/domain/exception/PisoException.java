@@ -12,4 +12,8 @@ public final class PisoException extends DominioException {
     public static PisoException torreIdObligatorio() {
         return new PisoException("El id de la torre es obligatorio", TipoError.BAD_REQUEST);
     }
+
+    public static PisoException noEncontrado(Long id) {
+        return new PisoException("Piso no encontrado con ID: " + id, TipoError.NOT_FOUND);
+    }
 }
