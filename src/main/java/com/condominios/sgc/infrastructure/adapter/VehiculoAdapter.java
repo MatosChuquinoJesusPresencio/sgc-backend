@@ -21,7 +21,8 @@ public class VehiculoAdapter implements VehiculoPort {
     private final UsuarioRepository usuarioRepository;
     private final InquilinoRepository inquilinoRepository;
 
-    public VehiculoAdapter(VehiculoRepository vehiculoRepository, UsuarioRepository usuarioRepository, InquilinoRepository inquilinoRepository) {
+    public VehiculoAdapter(VehiculoRepository vehiculoRepository, UsuarioRepository usuarioRepository,
+            InquilinoRepository inquilinoRepository) {
         this.vehiculoRepository = vehiculoRepository;
         this.usuarioRepository = usuarioRepository;
         this.inquilinoRepository = inquilinoRepository;
@@ -41,14 +42,14 @@ public class VehiculoAdapter implements VehiculoPort {
 
     @Override
     public List<VehiculoModel> findByPropietarioInquilinoId(Long inquilinoId) {
-        return vehiculoRepository.findByPropietarioInquilinoId(inquilinoId).stream()
+        return vehiculoRepository.findByInquilinoId(inquilinoId).stream()
                 .map(VehiculoMapper::toModel)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<VehiculoModel> findByPropietarioUsuarioId(String usuarioId) {
-        return vehiculoRepository.findByPropietarioUsuarioId(usuarioId).stream()
+        return vehiculoRepository.findByPropietarioId(usuarioId).stream()
                 .map(VehiculoMapper::toModel)
                 .collect(Collectors.toList());
     }
@@ -57,16 +58,16 @@ public class VehiculoAdapter implements VehiculoPort {
     public VehiculoModel save(VehiculoModel vehiculo) {
         VehiculoEntity entity = VehiculoMapper.toEntity(vehiculo);
 
-        if (vehiculo.getPropietarioUsuarioId() != null) {
-            entity.setPropietarioUsuario(usuarioRepository.getReferenceById(vehiculo.getPropietarioUsuarioId()));
+        if (vehiculo.getPropietarioId() != null) {
+            entity.setPropietario(usuarioRepository.getReferenceById(vehiculo.getPropietarioId()));
         } else {
-            entity.setPropietarioUsuario(null);
+            entity.setPropietario(null);
         }
-        
-        if (vehiculo.getPropietarioInquilinoId() != null) {
-            entity.setPropietarioInquilino(inquilinoRepository.getReferenceById(vehiculo.getPropietarioInquilinoId()));
+
+        if (vehiculo.getInquilinoId() != null) {
+            entity.setInquilino(inquilinoRepository.getReferenceById(vehiculo.getInquilinoId()));
         } else {
-            entity.setPropietarioInquilino(null);
+            entity.setInquilino(null);
         }
 
         VehiculoEntity saved = vehiculoRepository.save(entity);

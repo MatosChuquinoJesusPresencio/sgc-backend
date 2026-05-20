@@ -8,19 +8,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.condominios.sgc.application.dto.CrearInquilinoRequest;
 import com.condominios.sgc.application.dto.InquilinoResponse;
-import com.condominios.sgc.application.usecase.AsignarVehiculoAInquilinoUseCase;
 import com.condominios.sgc.application.usecase.CrearInquilinoUseCase;
 import com.condominios.sgc.application.usecase.EliminarInquilinoUseCase;
 import com.condominios.sgc.application.usecase.ListarInquilinosPorApartamentoUseCase;
 import com.condominios.sgc.application.usecase.ObtenerInquilinoUseCase;
-import com.condominios.sgc.application.usecase.RemoverVehiculoDeInquilinoUseCase;
 
 @RestController
 @RequestMapping("/api")
@@ -29,22 +26,16 @@ public class InquilinoController {
     private final CrearInquilinoUseCase crearUseCase;
     private final ObtenerInquilinoUseCase obtenerUseCase;
     private final ListarInquilinosPorApartamentoUseCase listarUseCase;
-    private final AsignarVehiculoAInquilinoUseCase asignarVehiculoUseCase;
-    private final RemoverVehiculoDeInquilinoUseCase removerVehiculoUseCase;
     private final EliminarInquilinoUseCase eliminarUseCase;
 
     public InquilinoController(
             CrearInquilinoUseCase crearUseCase,
             ObtenerInquilinoUseCase obtenerUseCase,
             ListarInquilinosPorApartamentoUseCase listarUseCase,
-            AsignarVehiculoAInquilinoUseCase asignarVehiculoUseCase,
-            RemoverVehiculoDeInquilinoUseCase removerVehiculoUseCase,
             EliminarInquilinoUseCase eliminarUseCase) {
         this.crearUseCase = crearUseCase;
         this.obtenerUseCase = obtenerUseCase;
         this.listarUseCase = listarUseCase;
-        this.asignarVehiculoUseCase = asignarVehiculoUseCase;
-        this.removerVehiculoUseCase = removerVehiculoUseCase;
         this.eliminarUseCase = eliminarUseCase;
     }
 
@@ -65,18 +56,6 @@ public class InquilinoController {
     @GetMapping("/inquilinos/{id}")
     public ResponseEntity<InquilinoResponse> obtenerInquilino(@PathVariable Long id) {
         return ResponseEntity.ok(obtenerUseCase.obtenerPorId(id));
-    }
-
-    @PutMapping("/inquilinos/{id}/vehiculos/{vehiculoId}")
-    public ResponseEntity<Void> asignarVehiculo(@PathVariable Long id, @PathVariable Long vehiculoId) {
-        asignarVehiculoUseCase.asignarVehiculo(id, vehiculoId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/inquilinos/{id}/vehiculos")
-    public ResponseEntity<Void> removerVehiculo(@PathVariable Long id) {
-        removerVehiculoUseCase.removerVehiculo(id);
-        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/inquilinos/{id}")

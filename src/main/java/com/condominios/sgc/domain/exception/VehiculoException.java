@@ -22,7 +22,8 @@ public final class VehiculoException extends DominioException {
     }
 
     public static VehiculoException duenoInvalido() {
-        return new VehiculoException("El vehiculo debe tener un propietario o un inquilino, pero no ambos ni ninguno", TipoError.BAD_REQUEST);
+        return new VehiculoException("El vehiculo debe tener un propietario o un inquilino, pero no ambos ni ninguno",
+                TipoError.BAD_REQUEST);
     }
 
     public static VehiculoException tipoVehiculoObligatorio() {
@@ -31,5 +32,9 @@ public final class VehiculoException extends DominioException {
 
     public static VehiculoException estacionamientoObligatorio() {
         return new VehiculoException("El estacionamiento es obligatorio", TipoError.BAD_REQUEST);
+    }
+
+    public static VehiculoException vehiculoNoExistePorId(Long id) {
+        return new VehiculoException("No existe un vehiculo con el id " + id, TipoError.NOT_FOUND);
     }
 }

@@ -4,12 +4,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.condominios.sgc.application.impl.InquilinoUseCaseImpl;
-import com.condominios.sgc.application.usecase.AsignarVehiculoAInquilinoUseCase;
 import com.condominios.sgc.application.usecase.CrearInquilinoUseCase;
 import com.condominios.sgc.application.usecase.EliminarInquilinoUseCase;
 import com.condominios.sgc.application.usecase.ListarInquilinosPorApartamentoUseCase;
 import com.condominios.sgc.application.usecase.ObtenerInquilinoUseCase;
-import com.condominios.sgc.application.usecase.RemoverVehiculoDeInquilinoUseCase;
 import com.condominios.sgc.domain.port.ConfiguracionPort;
 import com.condominios.sgc.domain.port.InquilinoPort;
 
@@ -33,16 +31,6 @@ public class InquilinoConfig {
 
     @Bean
     public ListarInquilinosPorApartamentoUseCase listarInquilinosPorApartamentoUseCase(InquilinoUseCaseImpl impl) {
-        return impl;
-    }
-
-    @Bean
-    public AsignarVehiculoAInquilinoUseCase asignarVehiculoAInquilinoUseCase(InquilinoUseCaseImpl impl) {
-        return impl;
-    }
-
-    @Bean
-    public RemoverVehiculoDeInquilinoUseCase removerVehiculoDeInquilinoUseCase(InquilinoUseCaseImpl impl) {
         return impl;
     }
 

@@ -25,12 +25,14 @@ public class VehiculoUseCaseImpl implements CrearVehiculoUseCase, ObtenerVehicul
     @Override
     public VehiculoResponse crear(CrearVehiculoRequest request) {
         VehiculoModel modelo = new VehiculoModel(
+                request.marca(),
+                request.color(),
+                request.modelo(),
+                request.placa(),
+                request.tipo(),
                 null,
-                request.getMarca(),
-                request.getColor(),
-                request.getModelo(),
-                request.getPlaca()
-        );
+                null,
+                null);
 
         VehiculoModel guardado = vehiculoPort.save(modelo);
         return mapearAResponse(guardado);
@@ -53,7 +55,7 @@ public class VehiculoUseCaseImpl implements CrearVehiculoUseCase, ObtenerVehicul
 
     @Override
     public void eliminar(Long id) {
-        VehiculoModel modelo = vehiculoPort.findById(id)
+        vehiculoPort.findById(id)
                 .orElseThrow(() -> VehiculoException.vehiculoNoExistePorId(id));
         vehiculoPort.deleteById(id);
     }
@@ -65,8 +67,7 @@ public class VehiculoUseCaseImpl implements CrearVehiculoUseCase, ObtenerVehicul
                 modelo.getColor(),
                 modelo.getModelo(),
                 modelo.getPlaca(),
-                modelo.getPropietarioUsuarioId(),
-                modelo.getPropietarioInquilinoId()
-        );
+                modelo.getPropietarioId(),
+                modelo.getInquilinoId());
     }
 }

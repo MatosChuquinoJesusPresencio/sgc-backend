@@ -12,19 +12,16 @@ import com.condominios.sgc.infrastructure.persistence.entity.InquilinoEntity;
 import com.condominios.sgc.infrastructure.persistence.mapper.InquilinoMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.ApartamentoRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.InquilinoRepository;
-import com.condominios.sgc.infrastructure.persistence.repository.VehiculoRepository;
 
 @Component
 public class InquilinoAdapter implements InquilinoPort {
 
     private final InquilinoRepository inquilinoRepository;
     private final ApartamentoRepository apartamentoRepository;
-    private final VehiculoRepository vehiculoRepository;
 
-    public InquilinoAdapter(InquilinoRepository inquilinoRepository, ApartamentoRepository apartamentoRepository, VehiculoRepository vehiculoRepository) {
+    public InquilinoAdapter(InquilinoRepository inquilinoRepository, ApartamentoRepository apartamentoRepository) {
         this.inquilinoRepository = inquilinoRepository;
         this.apartamentoRepository = apartamentoRepository;
-        this.vehiculoRepository = vehiculoRepository;
     }
 
     @Override
@@ -45,9 +42,6 @@ public class InquilinoAdapter implements InquilinoPort {
         
         if (inquilino.getApartamentoId() != null) {
             entity.setApartamento(apartamentoRepository.getReferenceById(inquilino.getApartamentoId()));
-        }
-        if (inquilino.getVehiculoId() != null) {
-            entity.setVehiculo(vehiculoRepository.getReferenceById(inquilino.getVehiculoId()));
         }
 
         InquilinoEntity saved = inquilinoRepository.save(entity);
