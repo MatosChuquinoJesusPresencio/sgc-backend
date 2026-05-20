@@ -1,0 +1,109 @@
+package com.condominios.sgc.web.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.condominios.sgc.application.dto.ActualizarCondominioRequest;
+import com.condominios.sgc.application.dto.CrearCondominioRequest;
+import com.condominios.sgc.application.usecase.ActualizarCondominioUseCase;
+import com.condominios.sgc.application.usecase.CrearCondominioUseCase;
+import com.condominios.sgc.application.usecase.EliminarCondominioUseCase;
+import com.condominios.sgc.application.usecase.ListarCondominiosUseCase;
+import com.condominios.sgc.application.usecase.ObtenerCondominioUseCase;
+import com.condominios.sgc.domain.dto.PaginacionRequest;
+import com.condominios.sgc.domain.dto.PaginacionResponse;
+import com.condominios.sgc.domain.model.CondominioModel;
+import com.condominios.sgc.web.dto.CondominioResponse;
+
+@RestController
+@RequestMapping("/api/condominios")
+public class CondominioController {
+
+    private final CrearCondominioUseCase crearCondominioUseCase;
+    private final ObtenerCondominioUseCase obtenerCondominioUseCase;
+    private final ListarCondominiosUseCase listarCondominiosUseCase;
+    private final ActualizarCondominioUseCase actualizarCondominioUseCase;
+    private final EliminarCondominioUseCase eliminarCondominioUseCase;
+
+    public CondominioController(
+            CrearCondominioUseCase crearCondominioUseCase,
+            ObtenerCondominioUseCase obtenerCondominioUseCase,
+            ListarCondominiosUseCase listarCondominiosUseCase,
+            ActualizarCondominioUseCase actualizarCondominioUseCase,
+            EliminarCondominioUseCase eliminarCondominioUseCase) {
+        this.crearCondominioUseCase = crearCondominioUseCase;
+        this.obtenerCondominioUseCase = obtenerCondominioUseCase;
+        this.listarCondominiosUseCase = listarCondominiosUseCase;
+        this.actualizarCondominioUseCase = actualizarCondominioUseCase;
+        this.eliminarCondominioUseCase = eliminarCondominioUseCase;
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
+    public ResponseEntity<CondominioResponse> crear(@RequestBody CrearCondominioRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(CondominioResponse.fromModel(crearCondominioUseCase.ejecutar(request)));
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<CondominioResponse> obtener(@PathVariable Long id) {
+        return ResponseEntity.ok(
+            CondominioResponse.fromModel(obtenerCondominioUseCase.ejecutar(id)));
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
+    public ResponseEntity<PaginacionResponse<CondominioResponse>> listar(
+            @RequestParam Map<String, String> params) {
+        int pagina = Integer.parseInt(params.getOrDefault("pagina", "0"));
+        int tamanio = Integer.parseInt(params.getOrDefault("tamanio", "10"));
+        String ordenarPor = params.get("ordenarPor");
+        String direccion = params.getOrDefault("direccion", "ASC");
+
+        Map<String, String> filtros = new HashMap<>(params);
+        Set<String> keys = Set.of("pagina", "tamanio", "ordenarPor", "direccion");
+        filtros.keySet().removeAll(keys);
+
+        PaginacionRequest request = new PaginacionRequest(pagina, tamanio, ordenarPor, direccion, filtros);
+        PaginacionResponse<CondominioModel> result = listarCondominiosUseCase.ejecutar(request);
+
+        return ResponseEntity.ok(PaginacionResponse.of(
+            result.contenido().stream().map(CondominioResponse::fromModel).toList(),
+            result.pagina(),
+            result.tamanio(),
+            result.totalElementos(),
+            result.totalPaginas()
+        ));
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
+    public ResponseEntity<CondominioResponse> actualizar(
+            @PathVariable Long id,
+            @RequestBody ActualizarCondominioRequest request) {
+        return ResponseEntity.ok(
+            CondominioResponse.fromModel(actualizarCondominioUseCase.ejecutar(id, request)));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        eliminarCondominioUseCase.ejecutar(id);
+        return ResponseEntity.noContent().build();
+    }
+}

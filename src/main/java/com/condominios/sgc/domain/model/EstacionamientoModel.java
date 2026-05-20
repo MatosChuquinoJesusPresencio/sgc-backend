@@ -15,25 +15,38 @@ public class EstacionamientoModel {
     private Long apartamentoId;
     private Long condominioId;
 
-    public EstacionamientoModel(Integer numero, Long condominioId) {
-        validarYAsignarDatos(numero, condominioId);
-        this.cantidadActual = 0;
-        this.disponible = true;
-    }
-
-    private void validarYAsignarDatos(Integer numero, Long condominioId) {
-        this.numero = requerirNoNulo(numero, EstacionamientoException::numeroObligatorio);
-        this.condominioId = requerirNoNulo(condominioId, EstacionamientoException::condominioIdObligatorio);
-    }
-
-    public EstacionamientoModel(Long id, Integer numero, TipoVehiculo tipoVehiculo, Integer capacidadMaxima, Integer cantidadActual, Boolean disponible, Long condominioId) {
+    public EstacionamientoModel(
+        Long id,
+        Integer numero,
+        TipoVehiculo tipoVehiculo,
+        Integer capacidadMaxima,
+        Integer cantidadActual,
+        Boolean disponible,
+        Long condominioId,
+        Long apartamentoId
+    ) {
+        this(numero, capacidadMaxima, cantidadActual, disponible, condominioId);
         this.id = id;
-        this.numero = numero;
+        this.apartamentoId = apartamentoId;
         this.tipoVehiculo = tipoVehiculo;
-        this.capacidadMaxima = capacidadMaxima;
-        this.cantidadActual = cantidadActual;
-        this.disponible = disponible;
-        this.condominioId = condominioId;
+    }
+
+    public EstacionamientoModel(
+        Integer numero, 
+        Integer capacidadMaxima, 
+        Integer cantidadActual, 
+        Boolean disponible, 
+        Long condominioId
+    ) {
+        validarYAsignarDatos(numero, capacidadMaxima, cantidadActual, disponible, condominioId);
+    }
+
+    private void validarYAsignarDatos(Integer numero, Integer capacidadMaxima, Integer cantidadActual, Boolean disponible, Long condominioId) {
+        this.numero = requerirNoNulo(numero, EstacionamientoException::numeroObligatorio);
+        this.capacidadMaxima = requerirPositivo(capacidadMaxima, EstacionamientoException::capacidadMaximaInvalida);
+        this.cantidadActual = requerirPositivo(cantidadActual, EstacionamientoException::cantidadActualInvalida);
+        this.disponible = requerirNoNulo(disponible, EstacionamientoException::disponibleObligatorio);
+        this.condominioId = requerirNoNulo(condominioId, EstacionamientoException::condominioIdObligatorio);
     }
 
     public Long getId() { return id; }
@@ -68,5 +81,9 @@ public class EstacionamientoModel {
 
     public boolean hayEspacio() {
         return capacidadMaxima == null || cantidadActual < capacidadMaxima;
+    }
+
+    public void actualizarDatos(Integer numero) {
+        validarYAsignarDatos(numero, this.capacidadMaxima, this.cantidadActual, this.disponible, this.condominioId);
     }
 }

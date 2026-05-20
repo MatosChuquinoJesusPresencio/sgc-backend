@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -22,6 +24,12 @@ public class LogPrestamoCarritoEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TipoHabitante solicitante;
+
+    @Column(nullable = false)
+    private String nombreSolicitante;
+
+    @Column(nullable = false)
+    private String dniSolicitante;
 
     @Column(nullable = false)
     private BigDecimal penalizacion;
@@ -45,5 +53,6 @@ public class LogPrestamoCarritoEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private UsuarioEntity usuario;
 }

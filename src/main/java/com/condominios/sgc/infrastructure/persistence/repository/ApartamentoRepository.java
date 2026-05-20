@@ -6,13 +6,14 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import com.condominios.sgc.infrastructure.persistence.entity.ApartamentoEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ApartamentoRepository extends JpaRepository<ApartamentoEntity, Long>,
         JpaSpecificationExecutor<ApartamentoEntity> {
 
     List<ApartamentoEntity> findByPisoId(Long pisoId);
 
-    List<ApartamentoEntity> findByPropietarioId(String usuarioId);
+    Optional<ApartamentoEntity> findByPropietarioId(String usuarioId);
 
     boolean existsByPisoIdAndNumero(Long pisoId, Integer numero);
 }

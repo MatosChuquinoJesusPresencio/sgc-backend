@@ -14,6 +14,8 @@ public class UsuarioModel {
     private Rol rol;
     private Boolean activo;
     private Long condominioId;
+    private String correoPendiente;
+    private Boolean correoVerificado = false;
 
     public UsuarioModel(
         String id, 
@@ -25,12 +27,12 @@ public class UsuarioModel {
         Boolean activo,
         Long condominioId
     ) {
-        this(nombres, apellidos, correo, telefono, rol, activo);
-        this.id = id;
+        this(id, nombres, apellidos, correo, telefono, rol, activo);
         this.condominioId = condominioId;
     }
 
     public UsuarioModel(
+        String id,
         String nombres, 
         String apellidos, 
         String correo, 
@@ -38,13 +40,15 @@ public class UsuarioModel {
         Rol rol,
         Boolean activo
     ) {
-        validarYAsignarDatos(nombres, apellidos, correo, telefono, rol, activo);
+        this.id = requerirNoVacio(id, UsuarioException::idObligatorio);
+        validarYAsignarDatos(nombres, apellidos, telefono, rol, activo);
+        this.correo = requerirEmailValido(correo, UsuarioException::correoInvalido);
+        this.correoVerificado = false;
     }
 
-    private void validarYAsignarDatos(String nombres, String apellidos, String correo, String telefono, Rol rol, Boolean activo) {
+    private void validarYAsignarDatos(String nombres, String apellidos, String telefono, Rol rol, Boolean activo) {
         this.nombres = requerirNoVacio(nombres, UsuarioException::nombresObligatorios);
         this.apellidos = requerirNoVacio(apellidos, UsuarioException::apellidosObligatorios);
-        this.correo = requerirNoVacio(correo, UsuarioException::correoObligatorio);
         this.telefono = requerirNoVacio(telefono, UsuarioException::telefonoObligatorio);
         this.rol = requerirNoNulo(rol, UsuarioException::rolObligatorio);
         this.activo = requerirNoNulo(activo, UsuarioException::activoObligatorio);
@@ -58,6 +62,8 @@ public class UsuarioModel {
     public Rol getRol() { return rol; }
     public Boolean isActivo() { return activo; }
     public Long getCondominioId() { return condominioId; }
+    public String getCorreoPendiente() { return correoPendiente; }
+    public Boolean isCorreoVerificado() { return correoVerificado; }
 
     public void asignarCondominio(Long condominioId) {
         this.condominioId = requerirNoNulo(condominioId, UsuarioException::condominioIdObligatorio);
@@ -67,14 +73,36 @@ public class UsuarioModel {
         this.condominioId = null;
     }
 
+    public void actualizarCorreo(String correo) {
+        this.correo = requerirEmailValido(correo, UsuarioException::correoInvalido);
+    }
+
+    public void pendienteVerificarCorreo(String nuevoCorreo) {
+        this.correoPendiente = requerirEmailValido(nuevoCorreo, UsuarioException::correoInvalido);
+        this.correoVerificado = false;
+    }
+
+    public void confirmarCorreo() {
+        this.correo = this.correoPendiente;
+        this.correoPendiente = null;
+        this.correoVerificado = true;
+    }
+
+    public void asignarCorreoVerificado(Boolean verificado) {
+        this.correoVerificado = requerirNoNulo(verificado, UsuarioException::activoObligatorio);
+    }
+
+    public void asignarCorreoPendiente(String correoPendiente) {
+        this.correoPendiente = correoPendiente;
+    }
+
     public void actualizarDatos(
         String nombres,
         String apellidos,
-        String correo,
         String telefono,
         Rol rol
     ) {
-        validarYAsignarDatos(nombres, apellidos, correo, telefono, rol, this.activo);
+        validarYAsignarDatos(nombres, apellidos, telefono, rol, this.activo);
     }
 
     public void actualizarEstado(Boolean activo) {

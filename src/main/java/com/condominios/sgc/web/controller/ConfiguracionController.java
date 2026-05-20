@@ -5,6 +5,7 @@ import com.condominios.sgc.application.usecase.ActualizarConfiguracionUseCase;
 import com.condominios.sgc.application.usecase.ObtenerConfiguracionUseCase;
 import com.condominios.sgc.web.dto.ConfiguracionResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,12 +28,14 @@ public class ConfiguracionController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ConfiguracionResponse> obtener(@PathVariable Long id) {
         return ResponseEntity.ok(
             ConfiguracionResponse.fromModel(obtenerConfiguracionUseCase.ejecutar(id)));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<ConfiguracionResponse> actualizar(
             @PathVariable Long id,
             @RequestBody ActualizarConfiguracionRequest request) {

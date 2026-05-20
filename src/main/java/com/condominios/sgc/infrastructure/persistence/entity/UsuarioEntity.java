@@ -33,6 +33,11 @@ public class UsuarioEntity {
     @Column(nullable = false)
     private Boolean activo;
 
+    private String correoPendiente;
+
+    @Column(nullable = false)
+    private Boolean correoVerificado = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "condominio_id")
     private CondominioEntity condominio;

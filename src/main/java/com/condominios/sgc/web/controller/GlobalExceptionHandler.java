@@ -17,12 +17,14 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponse.notFound(e.getMessage()));
             case BAD_REQUEST -> ResponseEntity.badRequest()
                 .body(ErrorResponse.badRequest(e.getMessage()));
+            case FORBIDDEN -> ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorResponse.of(403, e.getMessage(), null));
         };
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(ErrorResponse.of(500, "Internal Server Error", e.getMessage()));
+            .body(ErrorResponse.of(500, "Error interno del servidor", null));
     }
 }

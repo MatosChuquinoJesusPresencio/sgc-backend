@@ -5,7 +5,9 @@ import static com.condominios.sgc.domain.util.ValidacionUtil.idDe;
 import com.condominios.sgc.domain.model.LogPrestamoCarritoModel;
 import com.condominios.sgc.infrastructure.persistence.entity.ApartamentoEntity;
 import com.condominios.sgc.infrastructure.persistence.entity.CarritoEntity;
+import com.condominios.sgc.infrastructure.persistence.entity.InquilinoEntity;
 import com.condominios.sgc.infrastructure.persistence.entity.LogPrestamoCarritoEntity;
+import com.condominios.sgc.infrastructure.persistence.entity.UsuarioEntity;
 
 public final class LogPrestamoCarritoMapper {
 
@@ -16,6 +18,8 @@ public final class LogPrestamoCarritoMapper {
         LogPrestamoCarritoEntity e = new LogPrestamoCarritoEntity();
         e.setId(model.getId());
         e.setSolicitante(model.getSolicitante());
+        e.setNombreSolicitante(model.getNombreSolicitante());
+        e.setDniSolicitante(model.getDniSolicitante());
         e.setPenalizacion(model.getPenalizacion());
         e.setFechaPrestamo(model.getFechaPrestamo());
         e.setFechaDevolucion(model.getFechaDevolucion());
@@ -24,18 +28,18 @@ public final class LogPrestamoCarritoMapper {
 
     public static LogPrestamoCarritoModel toModel(LogPrestamoCarritoEntity e) {
         if (e == null) return null;
-        LogPrestamoCarritoModel m = new LogPrestamoCarritoModel(
-                e.getId(), 
+        return new LogPrestamoCarritoModel(
+                e.getId(),
                 e.getSolicitante(),
+                e.getNombreSolicitante(),
+                e.getDniSolicitante(),
                 idDe(e.getApartamento(), ApartamentoEntity::getId),
-                idDe(e.getCarrito(), CarritoEntity::getId)
+                idDe(e.getCarrito(), CarritoEntity::getId),
+                idDe(e.getUsuario(), UsuarioEntity::getId),
+                idDe(e.getInquilino(), InquilinoEntity::getId),
+                e.getPenalizacion(),
+                e.getFechaPrestamo(),
+                e.getFechaDevolucion()
         );
-        if (e.getUsuario() != null) {
-            m.asignarUsuarioSolicitante(e.getUsuario().getId());
-        }
-        if (e.getInquilino() != null) {
-            m.asignarInquilinoSolicitante(e.getInquilino().getId());
-        }
-        return m;
     }
 }

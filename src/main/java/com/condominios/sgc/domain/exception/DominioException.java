@@ -6,7 +6,8 @@ public abstract class DominioException extends RuntimeException {
 
     public enum TipoError {
         NOT_FOUND,
-        BAD_REQUEST
+        BAD_REQUEST,
+        FORBIDDEN
     }
 
     protected DominioException(String mensaje, TipoError tipo) {

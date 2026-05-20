@@ -3,10 +3,14 @@ package com.condominios.sgc.domain.util;
 import java.math.BigDecimal;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 import com.condominios.sgc.domain.exception.DominioException;
 
 public final class ValidacionUtil {
+
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(
+        "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
 
     private ValidacionUtil() {}
 
@@ -42,7 +46,7 @@ public final class ValidacionUtil {
 
     public static String requerirEmailValido(String email, Supplier<DominioException> supplier) {
         requerirNoVacio(email, supplier);
-        if (!email.contains("@")) throw supplier.get();
+        if (!EMAIL_PATTERN.matcher(email).matches()) throw supplier.get();
         return email;
     }
 

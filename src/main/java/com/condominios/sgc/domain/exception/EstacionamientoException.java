@@ -21,14 +21,6 @@ public final class EstacionamientoException extends DominioException {
         return new EstacionamientoException("El estacionamiento con id " + id + " ya existe", TipoError.BAD_REQUEST);
     }
 
-    public static EstacionamientoException estacionamientoNoExistePorNumero(Integer numero) {
-        return new EstacionamientoException("El estacionamiento con numero " + numero + " no existe", TipoError.NOT_FOUND);
-    }
-
-    public static EstacionamientoException estacionamientoYaExistePorNumero(Integer numero) {
-        return new EstacionamientoException("El estacionamiento con numero " + numero + " ya existe", TipoError.BAD_REQUEST);
-    }
-
     public static EstacionamientoException numeroObligatorio() {
         return new EstacionamientoException("El numero de estacionamiento es obligatorio", TipoError.BAD_REQUEST);
     }
@@ -43,5 +35,13 @@ public final class EstacionamientoException extends DominioException {
 
     public static EstacionamientoException apartamentoIdObligatorio() {
         return new EstacionamientoException("El id del apartamento es obligatorio", TipoError.BAD_REQUEST);
+    }
+
+    public static EstacionamientoException cantidadActualInvalida() {
+        return new EstacionamientoException("La cantidad actual de vehiculos debe ser mayor o igual a 0", TipoError.BAD_REQUEST);
+    }
+
+    public static EstacionamientoException disponibleObligatorio() {
+        return new EstacionamientoException("El estado disponible es obligatorio", TipoError.BAD_REQUEST);
     }
 }
