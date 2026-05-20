@@ -36,7 +36,13 @@ public class ApartamentoController {
     public ResponseEntity<ApartamentoResponse> crearApartamento(
             @PathVariable Long pisoId,
             @RequestBody CrearApartamentoRequest request) {
-        CrearApartamentoRequest reqCompleto = new CrearApartamentoRequest(request.numero(), request.derechoEstacionamiento(), request.metraje(), pisoId, request.propietarioId());
+        CrearApartamentoRequest reqCompleto = new CrearApartamentoRequest(
+                request.numero(),
+                request.derechoEstacionamiento(),
+                request.metraje(),
+                pisoId,
+                request.propietarioId()
+        );
         ApartamentoModel apartamento = crearApartamentoUseCase.ejecutar(reqCompleto);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApartamentoResponse.fromModel(apartamento));
     }
