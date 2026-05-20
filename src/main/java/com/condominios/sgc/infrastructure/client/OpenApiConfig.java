@@ -1,4 +1,4 @@
-package com.condominios.sgc.infrastructure.config;
+package com.condominios.sgc.infrastructure.client;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -17,7 +17,7 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Sistema de Gestión de Condominios API")
                         .version("1.0")
-                        .description("API para la gestión de condominios, apartamentos, usuarios y pagos."))
+                        .description("API para la gestión de condominios, apartamentos, usuarios y activos."))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth",
