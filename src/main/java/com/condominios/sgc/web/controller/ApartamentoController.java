@@ -9,6 +9,7 @@ import com.condominios.sgc.domain.model.ApartamentoModel;
 import com.condominios.sgc.web.dto.ApartamentoResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class ApartamentoController {
     }
 
     @PostMapping("/pisos/{pisoId}/apartamentos")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<ApartamentoResponse> crearApartamento(
             @PathVariable Long pisoId,
             @RequestBody CrearApartamentoRequest request) {
@@ -48,6 +50,7 @@ public class ApartamentoController {
     }
 
     @GetMapping("/pisos/{pisoId}/apartamentos")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PaginacionResponse<ApartamentoResponse>> listarApartamentosPorPiso(
             @PathVariable Long pisoId,
             @RequestParam(defaultValue = "0") int page,
@@ -68,11 +71,13 @@ public class ApartamentoController {
     }
 
     @GetMapping("/apartamentos/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApartamentoResponse> obtenerApartamento(@PathVariable Long id) {
         return ResponseEntity.ok(ApartamentoResponse.fromModel(obtenerApartamentoUseCase.ejecutar(id)));
     }
 
     @PutMapping("/apartamentos/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<ApartamentoResponse> actualizarApartamento(
             @PathVariable Long id,
             @RequestBody ActualizarApartamentoRequest request) {
@@ -80,6 +85,7 @@ public class ApartamentoController {
     }
 
     @DeleteMapping("/apartamentos/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<Void> eliminarApartamento(@PathVariable Long id) {
         eliminarApartamentoUseCase.ejecutar(id);
         return ResponseEntity.noContent().build();

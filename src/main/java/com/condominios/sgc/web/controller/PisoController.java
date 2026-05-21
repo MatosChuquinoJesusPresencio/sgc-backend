@@ -9,6 +9,7 @@ import com.condominios.sgc.domain.model.PisoModel;
 import com.condominios.sgc.web.dto.PisoResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class PisoController {
     }
 
     @PostMapping("/torres/{torreId}/pisos")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<PisoResponse> crearPiso(
             @PathVariable Long torreId,
             @RequestBody CrearPisoRequest request) {
@@ -42,6 +44,7 @@ public class PisoController {
     }
 
     @GetMapping("/torres/{torreId}/pisos")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PaginacionResponse<PisoResponse>> listarPisosPorTorre(
             @PathVariable Long torreId,
             @RequestParam(defaultValue = "0") int page,
@@ -62,11 +65,13 @@ public class PisoController {
     }
 
     @GetMapping("/pisos/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PisoResponse> obtenerPiso(@PathVariable Long id) {
         return ResponseEntity.ok(PisoResponse.fromModel(obtenerPisoUseCase.ejecutar(id)));
     }
 
     @PutMapping("/pisos/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<PisoResponse> actualizarPiso(
             @PathVariable Long id,
             @RequestBody ActualizarPisoRequest request) {
@@ -74,6 +79,7 @@ public class PisoController {
     }
 
     @DeleteMapping("/pisos/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<Void> eliminarPiso(@PathVariable Long id) {
         eliminarPisoUseCase.ejecutar(id);
         return ResponseEntity.noContent().build();

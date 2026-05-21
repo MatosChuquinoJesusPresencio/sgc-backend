@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "condominio")
@@ -34,4 +36,7 @@ public class CondominioEntity {
 
     @OneToOne(mappedBy = "condominio", cascade = CascadeType.ALL, orphanRemoval = true)
     private ConfiguracionEntity configuracion;
+
+    @OneToMany(mappedBy = "condominio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TorreEntity> torres = new ArrayList<>();
 }

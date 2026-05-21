@@ -10,6 +10,7 @@ import com.condominios.sgc.domain.model.TorreModel;
 import com.condominios.sgc.web.dto.TorreResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class TorreController {
     }
 
     @PostMapping("/condominios/{condominioId}/torres")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<TorreResponse> crearTorre(
             @PathVariable Long condominioId,
             @RequestBody CrearTorreRequest request) {
@@ -43,6 +45,7 @@ public class TorreController {
     }
 
     @GetMapping("/condominios/{condominioId}/torres")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PaginacionResponse<TorreResponse>> listarTorresPorCondominio(
             @PathVariable Long condominioId,
             @RequestParam(defaultValue = "0") int page,
@@ -64,11 +67,13 @@ public class TorreController {
     }
 
     @GetMapping("/torres/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<TorreResponse> obtenerTorre(@PathVariable Long id) {
         return ResponseEntity.ok(TorreResponse.fromModel(obtenerTorreUseCase.ejecutar(id)));
     }
 
     @PutMapping("/torres/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<TorreResponse> actualizarTorre(
             @PathVariable Long id,
             @RequestBody ActualizarTorreRequest request) {
@@ -76,6 +81,7 @@ public class TorreController {
     }
 
     @DeleteMapping("/torres/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<Void> eliminarTorre(@PathVariable Long id) {
         eliminarTorreUseCase.ejecutar(id);
         return ResponseEntity.noContent().build();
