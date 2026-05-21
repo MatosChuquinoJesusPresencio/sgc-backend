@@ -15,10 +15,8 @@ import com.condominios.sgc.application.usecase.ObtenerUsuarioUseCase;
 import com.condominios.sgc.domain.port.AutenticacionPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.infrastructure.adapter.UsuarioAdapter;
-import com.condominios.sgc.infrastructure.persistence.repository.ApartamentoRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.CondominioRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.UsuarioRepository;
-import com.condominios.sgc.infrastructure.persistence.repository.VehiculoRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,10 +26,8 @@ public class UsuarioConfig {
     @Bean
     public UsuarioPort usuarioPort(
             UsuarioRepository usuarioRepository,
-            ApartamentoRepository apartamentoRepository,
-            VehiculoRepository vehiculoRepository,
             CondominioRepository condominioRepository) {
-        return new UsuarioAdapter(usuarioRepository, apartamentoRepository, vehiculoRepository, condominioRepository);
+        return new UsuarioAdapter(usuarioRepository, condominioRepository);
     }
 
     @Bean

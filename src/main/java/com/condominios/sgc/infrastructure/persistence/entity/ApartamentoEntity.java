@@ -4,7 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "apartamento")
@@ -33,4 +37,15 @@ public class ApartamentoEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "propietario_id", unique = true)
     private UsuarioEntity propietario;
+
+    @OneToMany(mappedBy = "apartamento", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<InquilinoEntity> inquilinos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "apartamento")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    private List<LogPrestamoCarritoEntity> logsPrestamoCarrito = new ArrayList<>();
+
+    @OneToMany(mappedBy = "apartamento")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    private List<EstacionamientoEntity> estacionamientos = new ArrayList<>();
 }

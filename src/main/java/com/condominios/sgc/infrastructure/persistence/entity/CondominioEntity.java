@@ -39,4 +39,13 @@ public class CondominioEntity {
 
     @OneToMany(mappedBy = "condominio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TorreEntity> torres = new ArrayList<>();
+
+    @OneToMany(mappedBy = "condominio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UsuarioEntity> usuarios = new ArrayList<>();
+
+    @OneToMany(mappedBy = "condominio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CarritoEntity> carritos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "condominio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EstacionamientoEntity> estacionamientos = new ArrayList<>();
 }
