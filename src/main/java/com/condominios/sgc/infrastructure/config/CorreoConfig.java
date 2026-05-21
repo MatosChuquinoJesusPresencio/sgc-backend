@@ -13,8 +13,9 @@ import com.condominios.sgc.infrastructure.client.SmtpClient;
 public class CorreoConfig {
 
     @Bean
-    public SmtpClient smtpClient(JavaMailSender mailSender) {
-        return new SmtpClient(mailSender);
+    public SmtpClient smtpClient(JavaMailSender mailSender,
+                                 @Value("${spring.mail.from}") String from) {
+        return new SmtpClient(mailSender, from);
     }
 
     @Bean

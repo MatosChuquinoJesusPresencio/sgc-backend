@@ -23,5 +23,10 @@
     "name": "app.base-url",
     "type": "java.lang.String",
     "description": "La URL base de la aplicacion"
+  },
+  {
+    "name": "spring.mail.from",
+    "type": "java.lang.String",
+    "description": "La direccion de correo electronico remitente"
   }
 ]}
