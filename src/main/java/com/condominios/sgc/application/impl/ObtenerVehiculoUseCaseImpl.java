@@ -24,6 +24,7 @@ public class ObtenerVehiculoUseCaseImpl implements ObtenerVehiculoUseCase {
                 modelo.getColor(),
                 modelo.getModelo(),
                 modelo.getPlaca(),
+                modelo.getTipo(),
                 modelo.getPropietarioId(),
                 modelo.getInquilinoId());
     }

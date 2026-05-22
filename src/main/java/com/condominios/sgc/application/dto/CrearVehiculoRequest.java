@@ -7,6 +7,9 @@ public record CrearVehiculoRequest(
         String color,
         String modelo,
         String placa,
-        TipoVehiculo tipo) {
+        TipoVehiculo tipo,
+        String propietarioId,
+        Long inquilinoId,
+        Long estacionamientoId) {
 
 }

@@ -31,6 +31,7 @@ public class ListarVehiculosUseCaseImpl implements ListarVehiculosUseCase {
                 modelo.getColor(),
                 modelo.getModelo(),
                 modelo.getPlaca(),
+                modelo.getTipo(),
                 modelo.getPropietarioId(),
                 modelo.getInquilinoId());
     }

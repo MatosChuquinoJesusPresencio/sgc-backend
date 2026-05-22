@@ -3,10 +3,12 @@ package com.condominios.sgc.infrastructure.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.condominios.sgc.application.impl.ActualizarVehiculoUseCaseImpl;
 import com.condominios.sgc.application.impl.CrearVehiculoUseCaseImpl;
 import com.condominios.sgc.application.impl.EliminarVehiculoUseCaseImpl;
 import com.condominios.sgc.application.impl.ListarVehiculosUseCaseImpl;
 import com.condominios.sgc.application.impl.ObtenerVehiculoUseCaseImpl;
+import com.condominios.sgc.application.usecase.ActualizarVehiculoUseCase;
 import com.condominios.sgc.application.usecase.CrearVehiculoUseCase;
 import com.condominios.sgc.application.usecase.EliminarVehiculoUseCase;
 import com.condominios.sgc.application.usecase.ListarVehiculosUseCase;
@@ -34,5 +36,10 @@ public class VehiculoConfig {
     @Bean
     public EliminarVehiculoUseCase eliminarVehiculoUseCase(VehiculoPort vehiculoPort) {
         return new EliminarVehiculoUseCaseImpl(vehiculoPort);
+    }
+
+    @Bean
+    public ActualizarVehiculoUseCase actualizarVehiculoUseCase(VehiculoPort vehiculoPort) {
+        return new ActualizarVehiculoUseCaseImpl(vehiculoPort);
     }
 }

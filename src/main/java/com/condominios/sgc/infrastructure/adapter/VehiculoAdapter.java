@@ -10,6 +10,7 @@ import com.condominios.sgc.domain.model.VehiculoModel;
 import com.condominios.sgc.domain.port.VehiculoPort;
 import com.condominios.sgc.infrastructure.persistence.entity.VehiculoEntity;
 import com.condominios.sgc.infrastructure.persistence.mapper.VehiculoMapper;
+import com.condominios.sgc.infrastructure.persistence.repository.EstacionamientoRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.InquilinoRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.UsuarioRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.VehiculoRepository;
@@ -20,12 +21,14 @@ public class VehiculoAdapter implements VehiculoPort {
     private final VehiculoRepository vehiculoRepository;
     private final UsuarioRepository usuarioRepository;
     private final InquilinoRepository inquilinoRepository;
+    private final EstacionamientoRepository estacionamientoRepository;
 
     public VehiculoAdapter(VehiculoRepository vehiculoRepository, UsuarioRepository usuarioRepository,
-            InquilinoRepository inquilinoRepository) {
+            InquilinoRepository inquilinoRepository, EstacionamientoRepository estacionamientoRepository) {
         this.vehiculoRepository = vehiculoRepository;
         this.usuarioRepository = usuarioRepository;
         this.inquilinoRepository = inquilinoRepository;
+        this.estacionamientoRepository = estacionamientoRepository;
     }
 
     @Override
@@ -68,6 +71,12 @@ public class VehiculoAdapter implements VehiculoPort {
             entity.setInquilino(inquilinoRepository.getReferenceById(vehiculo.getInquilinoId()));
         } else {
             entity.setInquilino(null);
+        }
+
+        if (vehiculo.getEstacionamientoId() != null) {
+            entity.setEstacionamiento(estacionamientoRepository.getReferenceById(vehiculo.getEstacionamientoId()));
+        } else {
+            entity.setEstacionamiento(null);
         }
 
         VehiculoEntity saved = vehiculoRepository.save(entity);
