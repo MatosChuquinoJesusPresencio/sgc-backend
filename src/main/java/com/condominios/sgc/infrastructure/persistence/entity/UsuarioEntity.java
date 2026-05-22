@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "usuario")
@@ -41,4 +43,13 @@ public class UsuarioEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "condominio_id")
     private CondominioEntity condominio;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VerificacionTokenEntity> verificacionTokens = new ArrayList<>();
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RestablecimientoTokenEntity> restablecimientoTokens = new ArrayList<>();
+
+    @OneToMany(mappedBy = "propietario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VehiculoEntity> vehiculos = new ArrayList<>();
 }

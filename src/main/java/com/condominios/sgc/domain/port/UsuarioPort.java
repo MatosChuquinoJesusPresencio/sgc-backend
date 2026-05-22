@@ -19,8 +19,4 @@ public interface UsuarioPort {
     void deleteById(String id);
 
     PaginacionResponse<UsuarioModel> buscarPaginado(PaginacionRequest request);
-
-    boolean esPropietarioDeApartamento(String usuarioId);
-
-    boolean tieneVehiculosAsociados(String usuarioId);
 }

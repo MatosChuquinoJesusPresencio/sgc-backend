@@ -5,10 +5,8 @@ import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.infrastructure.persistence.mapper.UsuarioMapper;
-import com.condominios.sgc.infrastructure.persistence.repository.ApartamentoRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.CondominioRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.UsuarioRepository;
-import com.condominios.sgc.infrastructure.persistence.repository.VehiculoRepository;
 import com.condominios.sgc.infrastructure.persistence.specification.UsuarioSpecifications;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,18 +18,12 @@ import java.util.Optional;
 public class UsuarioAdapter implements UsuarioPort {
 
     private final UsuarioRepository usuarioRepository;
-    private final ApartamentoRepository apartamentoRepository;
-    private final VehiculoRepository vehiculoRepository;
     private final CondominioRepository condominioRepository;
 
     public UsuarioAdapter(
             UsuarioRepository usuarioRepository,
-            ApartamentoRepository apartamentoRepository,
-            VehiculoRepository vehiculoRepository,
             CondominioRepository condominioRepository) {
         this.usuarioRepository = usuarioRepository;
-        this.apartamentoRepository = apartamentoRepository;
-        this.vehiculoRepository = vehiculoRepository;
         this.condominioRepository = condominioRepository;
     }
 
@@ -82,15 +74,5 @@ public class UsuarioAdapter implements UsuarioPort {
                 page.getTotalElements(),
                 page.getTotalPages()
         );
-    }
-
-    @Override
-    public boolean esPropietarioDeApartamento(String usuarioId) {
-        return apartamentoRepository.findByPropietarioId(usuarioId).isPresent();
-    }
-
-    @Override
-    public boolean tieneVehiculosAsociados(String usuarioId) {
-        return !vehiculoRepository.findByPropietarioId(usuarioId).isEmpty();
     }
 }

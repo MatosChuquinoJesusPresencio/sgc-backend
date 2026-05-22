@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "estacionamiento")
@@ -38,4 +42,8 @@ public class EstacionamientoEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apartamento_id")
     private ApartamentoEntity apartamento;
+
+    @OneToMany(mappedBy = "estacionamiento")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    private List<VehiculoEntity> vehiculos = new ArrayList<>();
 }

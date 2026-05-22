@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "carrito")
@@ -27,4 +31,8 @@ public class CarritoEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "condominio_id", nullable = false)
     private CondominioEntity condominio;
+
+    @OneToMany(mappedBy = "carrito")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    private List<LogPrestamoCarritoEntity> logsPrestamo = new ArrayList<>();
 }

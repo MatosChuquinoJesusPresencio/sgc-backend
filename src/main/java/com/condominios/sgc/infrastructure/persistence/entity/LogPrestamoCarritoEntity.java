@@ -39,12 +39,12 @@ public class LogPrestamoCarritoEntity {
 
     private LocalDateTime fechaDevolucion;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "apartamento_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "apartamento_id", nullable = true)
     private ApartamentoEntity apartamento;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "carrito_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "carrito_id", nullable = true)
     private CarritoEntity carrito;
 
     @ManyToOne(fetch = FetchType.LAZY)

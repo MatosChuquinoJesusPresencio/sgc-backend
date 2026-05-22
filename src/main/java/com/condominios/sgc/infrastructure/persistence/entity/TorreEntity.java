@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "torre")
@@ -22,4 +24,7 @@ public class TorreEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "condominio_id", nullable = false)
     private CondominioEntity condominio;
+
+    @OneToMany(mappedBy = "torre", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PisoEntity> pisos = new ArrayList<>();
 }

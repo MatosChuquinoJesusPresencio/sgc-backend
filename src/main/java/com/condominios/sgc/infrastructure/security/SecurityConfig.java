@@ -37,13 +37,31 @@ public class SecurityConfig {
             .securityMatcher("/api/auth/login", "/api/auth/refresh",
                 "/api/auth/forgot-password", "/api/auth/reset-password",
                 "/api/auth/verificar-email",
-                "/api/health", "/api/health/**")
+                "/api/health", "/api/health/**",
+                "/v3/api-docs", "/v3/api-docs/**",
+                "/swagger-ui/**", "/swagger-ui.html")
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
         return http.build();
     }
+/*
+    para probar cosas rapidas xd
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable()) // Desactivar CSRF para poder usar Postman
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll() // ¡ESTA ES LA MAGIA! Permite todas las peticiones sin token
+                )
+                // Si tienes configurado oauth2ResourceServer, puedes comentarlo o dejarlo,
+                // pero el permitAll() superior hará que no te exija token.
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        return http.build();
+    }
+    */
 
     @Bean
     @Order(2)
