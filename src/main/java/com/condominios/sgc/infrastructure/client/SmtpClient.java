@@ -2,6 +2,7 @@ package com.condominios.sgc.infrastructure.client;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 
 public class SmtpClient {
 
@@ -13,6 +14,7 @@ public class SmtpClient {
         this.from = from;
     }
 
+    @Async
     public void enviar(String destinatario, String asunto, String cuerpo) {
         var mensaje = new SimpleMailMessage();
         mensaje.setFrom(from);
