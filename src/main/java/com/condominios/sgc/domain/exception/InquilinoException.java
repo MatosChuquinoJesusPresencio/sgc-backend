@@ -21,7 +21,7 @@ public final class InquilinoException extends DominioException {
         return new InquilinoException("El DNI es obligatorio", TipoError.BAD_REQUEST);
     }
 
-    public static InquilinoException vehiculoIdObligatorio() {
-        return new InquilinoException("El id del vehiculo es obligatorio", TipoError.BAD_REQUEST);
+    public static InquilinoException inquilinoNoExistePorId(Long id) {
+        return new InquilinoException("El inquilino con id " + id + " no existe", TipoError.BAD_REQUEST);
     }
 }
