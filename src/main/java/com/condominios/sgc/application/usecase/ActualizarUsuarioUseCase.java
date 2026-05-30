@@ -5,5 +5,5 @@ import com.condominios.sgc.domain.auxiliar.Rol;
 import com.condominios.sgc.domain.model.UsuarioModel;
 
 public interface ActualizarUsuarioUseCase {
-    UsuarioModel ejecutar(String id, ActualizarUsuarioRequest request, Rol rolAutenticado);
+    UsuarioModel ejecutar(Long id, ActualizarUsuarioRequest request, Rol rolAutenticado);
 }

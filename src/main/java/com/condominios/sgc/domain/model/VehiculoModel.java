@@ -12,7 +12,7 @@ public class VehiculoModel {
     private String modelo;
     private String placa;
     private TipoVehiculo tipo;
-    private String propietarioId;
+    private Long propietarioId;
     private Long inquilinoId;
     private Long estacionamientoId;
 
@@ -23,7 +23,7 @@ public class VehiculoModel {
         String modelo,
         String placa,
         TipoVehiculo tipo,
-        String propietarioId,
+        Long propietarioId,
         Long inquilinoId,
         Long estacionamientoId
     ) {
@@ -37,14 +37,14 @@ public class VehiculoModel {
         String modelo,
         String placa,
         TipoVehiculo tipo,
-        String propietarioId,
+        Long propietarioId,
         Long inquilinoId,
         Long estacionamientoId
     ) {
         validarYAsignarDatos(marca, color, modelo, placa, tipo, propietarioId, inquilinoId, estacionamientoId);
     }
 
-    private void validarYAsignarDatos(String marca, String color, String modelo, String placa, TipoVehiculo tipo, String propietarioId, Long inquilinoId, Long estacionamientoId) {
+    private void validarYAsignarDatos(String marca, String color, String modelo, String placa, TipoVehiculo tipo, Long propietarioId, Long inquilinoId, Long estacionamientoId) {
         this.marca = requerirNoVacio(marca, VehiculoException::datosObligatorios);
         this.color = requerirNoVacio(color, VehiculoException::datosObligatorios);
         this.modelo = requerirNoVacio(modelo, VehiculoException::datosObligatorios);
@@ -60,11 +60,11 @@ public class VehiculoModel {
     public String getModelo() { return modelo; }
     public String getPlaca() { return placa; }
     public TipoVehiculo getTipo() { return tipo; }
-    public String getPropietarioId() { return propietarioId; }
+    public Long getPropietarioId() { return propietarioId; }
     public Long getInquilinoId() { return inquilinoId; }
     public Long getEstacionamientoId() { return estacionamientoId; }
 
-    public void asignarDueno(String propietarioId, Long inquilinoId) {
+    public void asignarDueno(Long propietarioId, Long inquilinoId) {
         boolean tienePropietario = propietarioId != null;
         boolean tieneInquilino = inquilinoId != null;
 

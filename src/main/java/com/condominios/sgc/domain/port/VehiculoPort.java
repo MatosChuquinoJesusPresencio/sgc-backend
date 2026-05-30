@@ -10,7 +10,7 @@ public interface VehiculoPort {
     Optional<VehiculoModel> findById(Long id);
     PaginacionResponse<VehiculoModel> findAll(PaginacionRequest request);
     PaginacionResponse<VehiculoModel> findByInquilinoId(Long inquilinoId, PaginacionRequest request);
-    PaginacionResponse<VehiculoModel> findByPropietarioId(String propietarioId, PaginacionRequest request);
+    PaginacionResponse<VehiculoModel> findByPropietarioId(Long propietarioId, PaginacionRequest request);
     VehiculoModel save(VehiculoModel vehiculo);
     void deleteById(Long id);
 }

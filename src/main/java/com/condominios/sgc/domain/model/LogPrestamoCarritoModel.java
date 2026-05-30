@@ -19,7 +19,7 @@ public class LogPrestamoCarritoModel {
     private Long apartamentoId;
     private Long carritoId;
     private Long inquilinoId;
-    private String usuarioId;
+    private Long propietarioId;
 
     public LogPrestamoCarritoModel(TipoHabitante solicitante, String nombreSolicitante, String dniSolicitante, Long apartamentoId, Long carritoId) {
         validarYAsignarDatos(solicitante, nombreSolicitante, dniSolicitante, apartamentoId, carritoId);
@@ -39,14 +39,14 @@ public class LogPrestamoCarritoModel {
             String dniSolicitante,
             Long apartamentoId,
             Long carritoId,
-            String usuarioId,
+            Long propietarioId,
             Long inquilinoId,
             BigDecimal penalizacion,
             LocalDateTime fechaPrestamo,
             LocalDateTime fechaDevolucion) {
         validarYAsignarDatos(solicitante, nombreSolicitante, dniSolicitante, apartamentoId, carritoId);
         this.id = id;
-        this.usuarioId = usuarioId;
+        this.propietarioId = propietarioId;
         this.inquilinoId = inquilinoId;
         this.penalizacion = penalizacion;
         this.fechaPrestamo = fechaPrestamo;
@@ -71,16 +71,16 @@ public class LogPrestamoCarritoModel {
     public Long getApartamentoId() { return apartamentoId; }
     public Long getCarritoId() { return carritoId; }
     public Long getInquilinoId() { return inquilinoId; }
-    public String getUsuarioId() { return usuarioId; }
+    public Long getUsuarioId() { return propietarioId; }
 
-    public void asignarUsuarioSolicitante(String usuarioId) {
-        this.usuarioId = requerirNoNulo(usuarioId, LogPrestamoCarritoException::usuarioIdObligatorio);
+    public void asignarPropietarioSolicitante(Long propietarioId) {
+        this.propietarioId = requerirNoNulo(propietarioId, LogPrestamoCarritoException::usuarioIdObligatorio);
         requerirQue(this.inquilinoId == null, LogPrestamoCarritoException::yaTieneSolicitanteInquilino);
     }
 
     public void asignarInquilinoSolicitante(Long inquilinoId) {
         this.inquilinoId = requerirNoNulo(inquilinoId, LogPrestamoCarritoException::inquilinoIdObligatorio);
-        requerirQue(this.usuarioId == null, LogPrestamoCarritoException::yaTieneSolicitanteUsuario);
+        requerirQue(this.propietarioId == null, LogPrestamoCarritoException::yaTieneSolicitanteUsuario);
     }
 
     public void registrarDevolucion(BigDecimal penalizacionAplicada) {

@@ -6,8 +6,8 @@ public interface AutenticacionPort {
     SesionUsuario login(String email, String password);
     void logout(String accessToken);
     String createUser(String email, String password, String rol);
-    void changePassword(String userId, String newPassword);
-    void updateEmail(String userId, String newEmail);
+    void changePassword(Long userId, String newPassword);
+    void updateEmail(Long userId, String newEmail);
     SesionUsuario refreshToken(String refreshToken);
-    void deleteUser(String userId);
+    void deleteUser(Long userId);
 }

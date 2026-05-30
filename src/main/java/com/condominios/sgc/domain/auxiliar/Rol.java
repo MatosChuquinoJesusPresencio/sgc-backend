@@ -13,4 +13,8 @@ public enum Rol {
             case PROPIETARIO, AGENTE_SEGURIDAD -> false;
         };
     }
+
+    public boolean puedeModificarEstado() {
+        return this == SUPER_ADMINISTRADOR || this == ADMINISTRADOR_CONDOMINIO;
+    }
 }

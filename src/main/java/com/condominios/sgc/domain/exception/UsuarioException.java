@@ -65,4 +65,8 @@ public final class UsuarioException extends DominioException {
         return new UsuarioException("No tienes permiso para asignar ese rol", TipoError.FORBIDDEN);
     }
 
+    public static UsuarioException noPermisoParaModificarEstado() {
+        return new UsuarioException("No tienes permiso para modificar el estado del usuario", TipoError.FORBIDDEN);
+    }
+
 }

@@ -12,7 +12,7 @@ public class ApartamentoModel {
     private Integer numero;
     private Boolean derechoEstacionamiento;
     private BigDecimal metraje;
-    private String propietarioId;
+    private Long propietarioId;
     private Long pisoId;
 
     public ApartamentoModel(
@@ -20,7 +20,7 @@ public class ApartamentoModel {
         Integer numero,
         Boolean derechoEstacionamiento,
         BigDecimal metraje,
-        String propietarioId,
+        Long propietarioId,
         Long pisoId
     ) {
         this(numero, derechoEstacionamiento, metraje, pisoId);
@@ -48,10 +48,10 @@ public class ApartamentoModel {
     public Integer getNumero() { return numero; }
     public Boolean getDerechoEstacionamiento() { return derechoEstacionamiento; }
     public BigDecimal getMetraje() { return metraje; }
-    public String getPropietarioId() { return propietarioId; }
+    public Long getPropietarioId() { return propietarioId; }
     public Long getPisoId() { return pisoId; }
 
-    public void asignarPropietario(String propietarioId) {
+    public void asignarPropietario(Long propietarioId) {
         this.propietarioId = requerirNoNulo(propietarioId, ApartamentoException::propietarioIdObligatorio);
     }
 

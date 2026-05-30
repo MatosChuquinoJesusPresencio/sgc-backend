@@ -5,12 +5,12 @@ import java.time.Instant;
 public class RestablecimientoTokenModel {
 
     private String id;
-    private String usuarioId;
+    private Long usuarioId;
     private String token;
     private Instant expiracion;
     private Boolean usado = false;
 
-    public RestablecimientoTokenModel(String id, String usuarioId, String token, Instant expiracion) {
+    public RestablecimientoTokenModel(String id, Long usuarioId, String token, Instant expiracion) {
         this.id = id;
         this.usuarioId = usuarioId;
         this.token = token;
@@ -18,7 +18,7 @@ public class RestablecimientoTokenModel {
     }
 
     public String getId() { return id; }
-    public String getUsuarioId() { return usuarioId; }
+    public Long getUsuarioId() { return usuarioId; }
     public String getToken() { return token; }
     public Instant getExpiracion() { return expiracion; }
     public Boolean isUsado() { return usado; }
