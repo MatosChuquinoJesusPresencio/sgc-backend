@@ -5,20 +5,20 @@ import com.condominios.sgc.application.usecase.CrearUsuarioUseCase;
 import com.condominios.sgc.domain.auxiliar.Rol;
 import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.model.UsuarioModel;
+import com.condominios.sgc.application.usecase.EnviarCorreoBienvenidaUseCase;
 import com.condominios.sgc.domain.port.AutenticacionPort;
-import com.condominios.sgc.domain.port.CorreoPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
 
 public class CrearUsuarioUseCaseImpl implements CrearUsuarioUseCase {
 
     private final AutenticacionPort autenticacionPort;
     private final UsuarioPort usuarioPort;
-    private final CorreoPort correoPort;
+    private final EnviarCorreoBienvenidaUseCase enviarCorreoBienvenidaUseCase;
 
-    public CrearUsuarioUseCaseImpl(AutenticacionPort autenticacionPort, UsuarioPort usuarioPort, CorreoPort correoPort) {
+    public CrearUsuarioUseCaseImpl(AutenticacionPort autenticacionPort, UsuarioPort usuarioPort, EnviarCorreoBienvenidaUseCase enviarCorreoBienvenidaUseCase) {
         this.autenticacionPort = autenticacionPort;
         this.usuarioPort = usuarioPort;
-        this.correoPort = correoPort;
+        this.enviarCorreoBienvenidaUseCase = enviarCorreoBienvenidaUseCase;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class CrearUsuarioUseCaseImpl implements CrearUsuarioUseCase {
 
         var saved = usuarioPort.save(usuario);
 
-        correoPort.sendWelcomeEmail(request.correo(), request.nombres(), request.contrasena());
+        enviarCorreoBienvenidaUseCase.ejecutar(request.correo(), request.nombres(), request.contrasena());
 
         return saved;
     }

@@ -4,10 +4,10 @@ import java.time.Instant;
 import java.util.UUID;
 
 import com.condominios.sgc.application.usecase.ActualizarCorreoUseCase;
+import com.condominios.sgc.application.usecase.EnviarCorreoVerificacionUseCase;
 import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.model.VerificacionTokenModel;
-import com.condominios.sgc.domain.port.CorreoPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.domain.port.VerificacionTokenPort;
 
@@ -15,15 +15,15 @@ public class ActualizarCorreoUseCaseImpl implements ActualizarCorreoUseCase {
 
     private final UsuarioPort usuarioPort;
     private final VerificacionTokenPort verificacionTokenPort;
-    private final CorreoPort correoPort;
+    private final EnviarCorreoVerificacionUseCase enviarCorreoVerificacionUseCase;
 
     public ActualizarCorreoUseCaseImpl(
             UsuarioPort usuarioPort,
             VerificacionTokenPort verificacionTokenPort,
-            CorreoPort correoPort) {
+            EnviarCorreoVerificacionUseCase enviarCorreoVerificacionUseCase) {
         this.usuarioPort = usuarioPort;
         this.verificacionTokenPort = verificacionTokenPort;
-        this.correoPort = correoPort;
+        this.enviarCorreoVerificacionUseCase = enviarCorreoVerificacionUseCase;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ActualizarCorreoUseCaseImpl implements ActualizarCorreoUseCase {
         );
         verificacionTokenPort.save(tokenModel);
 
-        correoPort.sendVerificationEmail(nuevoCorreo, verificationToken);
+        enviarCorreoVerificacionUseCase.ejecutar(nuevoCorreo, verificationToken);
 
         usuario.cambiarCorreo(nuevoCorreo);
 
