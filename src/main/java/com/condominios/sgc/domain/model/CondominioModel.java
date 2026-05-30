@@ -22,26 +22,18 @@ public class CondominioModel {
         String direccion,
         LocalDateTime fechaCreacion
     ) {
-        this(nombre, pais, ciudad, direccion, fechaCreacion);
         this.id = id;
+        asignarDatos(nombre, pais, ciudad, direccion);
+        this.fechaCreacion = requerirNoNulo(fechaCreacion, CondominioException::fechaCreacionObligatoria);
     }
 
     public CondominioModel(
         String nombre,
         String pais,
         String ciudad,
-        String direccion,
-        LocalDateTime fechaCreacion
+        String direccion
     ) {
-        validarYAsignarDatos(nombre, pais, ciudad, direccion, fechaCreacion);
-    }
-
-    private void validarYAsignarDatos(String nombre, String pais, String ciudad, String direccion, LocalDateTime fechaCreacion) {
-        this.nombre = requerirNoVacio(nombre, CondominioException::nombreObligatorio);
-        this.pais = requerirNoVacio(pais, CondominioException::paisObligatorio);
-        this.ciudad = requerirNoVacio(ciudad, CondominioException::ciudadObligatoria);
-        this.direccion = requerirNoVacio(direccion, CondominioException::direccionObligatoria);
-        this.fechaCreacion = requerirNoNulo(fechaCreacion, CondominioException::fechaCreacionObligatoria);
+        this(null, nombre, pais, ciudad, direccion, LocalDateTime.now());
     }
 
     public Long getId() { return id; }
@@ -51,12 +43,19 @@ public class CondominioModel {
     public String getDireccion() { return direccion; }
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
 
-    public void actualizarDatos(
-        String nombre,
-        String pais,
-        String ciudad,
-        String direccion
+    public void actualizar(
+        String nuevoNombre,
+        String nuevoPais,
+        String nuevaCiudad,
+        String nuevaDireccion
     ) {
-        validarYAsignarDatos(nombre, pais, ciudad, direccion, this.fechaCreacion);
+        asignarDatos(nuevoNombre, nuevoPais, nuevaCiudad, nuevaDireccion);
+    }
+
+    private void asignarDatos(String nombre, String pais, String ciudad, String direccion) {
+        this.nombre = requerirNoVacio(nombre, CondominioException::nombreObligatorio);
+        this.pais = requerirNoVacio(pais, CondominioException::paisObligatorio);
+        this.ciudad = requerirNoVacio(ciudad, CondominioException::ciudadObligatoria);
+        this.direccion = requerirNoVacio(direccion, CondominioException::direccionObligatoria);
     }
 }

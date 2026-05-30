@@ -1,4 +1,4 @@
-package com.condominios.sgc.domain.exception;
+package com.condominios.sgc.domain.auxiliar;
 
 public abstract class DominioException extends RuntimeException {
 

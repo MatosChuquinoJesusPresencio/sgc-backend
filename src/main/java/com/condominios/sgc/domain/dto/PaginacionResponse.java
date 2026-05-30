@@ -9,7 +9,7 @@ public record PaginacionResponse<T>(
     long totalElementos,
     int totalPaginas
 ) {
-    public static <T> PaginacionResponse<T> of(
+    public static <T> PaginacionResponse<T> de(
         List<T> contenido, 
         int pagina, 
         int tamanio, 

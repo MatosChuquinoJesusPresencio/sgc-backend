@@ -1,5 +1,7 @@
 package com.condominios.sgc.domain.exception;
 
+import com.condominios.sgc.domain.auxiliar.DominioException;
+
 public final class PisoException extends DominioException {
     private PisoException(String mensaje, TipoError type) {
         super(mensaje, type);
@@ -11,9 +13,5 @@ public final class PisoException extends DominioException {
 
     public static PisoException torreIdObligatorio() {
         return new PisoException("El id de la torre es obligatorio", TipoError.BAD_REQUEST);
-    }
-
-    public static PisoException noEncontrado(Long id) {
-        return new PisoException("Piso no encontrado con ID: " + id, TipoError.NOT_FOUND);
     }
 }

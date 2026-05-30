@@ -31,16 +31,11 @@ public class ConfiguracionModel {
             Integer maxInquilinosPorApartamento,
             Long condominioId
         ) {
-        this(maxAutos,
-                maxMotos,
-                penalizacionPorMin,
-                maxTiempoPrestamoMin,
-                maxEstacionamientosPorApartamento,
-                maxCarritosPorApartamento,
-                maxVehiculosPorPropietario,
-                maxInquilinosPorApartamento,
-                condominioId);
         this.id = id;
+        this.condominioId = requerirNoNulo(condominioId, ConfiguracionException::condominioIdObligatorio);
+        asignarDatos(maxAutos, maxMotos, penalizacionPorMin, maxTiempoPrestamoMin,
+                maxEstacionamientosPorApartamento, maxCarritosPorApartamento, maxVehiculosPorPropietario,
+                maxInquilinosPorApartamento);
     }
 
         public ConfiguracionModel(
@@ -54,13 +49,12 @@ public class ConfiguracionModel {
             Integer maxInquilinosPorApartamento,
             Long condominioId
         ) {
-        this.condominioId = condominioId;
-        validarYAsignarDatos(maxAutos, maxMotos, penalizacionPorMin, maxTiempoPrestamoMin,
+        this(null, maxAutos, maxMotos, penalizacionPorMin, maxTiempoPrestamoMin,
                 maxEstacionamientosPorApartamento, maxCarritosPorApartamento, maxVehiculosPorPropietario,
-                maxInquilinosPorApartamento);
+                maxInquilinosPorApartamento, condominioId);
     }
 
-    private void validarYAsignarDatos(Integer maxAutos, Integer maxMotos, BigDecimal penalizacionPorMin,
+    private void asignarDatos(Integer maxAutos, Integer maxMotos, BigDecimal penalizacionPorMin,
             Integer maxTiempoPrestamoMin, Integer maxEstacionamientosPorApartamento,
             Integer maxCarritosPorApartamento, Integer maxVehiculosPorPropietario, Integer maxInquilinosPorApartamento) {
         this.maxAutos = requerirNoNegativo(maxAutos, ConfiguracionException::maxAutosInvalido);
@@ -84,11 +78,11 @@ public class ConfiguracionModel {
     public Integer getMaxInquilinosPorApartamento() { return maxInquilinosPorApartamento; }
     public Long getCondominioId() { return condominioId; }
 
-    public void actualizarDatos(Integer maxAutos, Integer maxMotos, BigDecimal penalizacionPorMin,
+    public void actualizar(Integer maxAutos, Integer maxMotos, BigDecimal penalizacionPorMin,
             Integer maxTiempoPrestamoMin, Integer maxEstacionamientosPorApartamento, Integer maxCarritosPorApartamento,
-            Integer maxVehiculosPorPropietario, Integer maxInquilinosPorApartamento) {
-
-        validarYAsignarDatos(maxAutos, maxMotos, penalizacionPorMin, maxTiempoPrestamoMin,
+            Integer maxVehiculosPorPropietario, Integer maxInquilinosPorApartamento, Long condominioId) {
+        this.condominioId = requerirNoNulo(condominioId, ConfiguracionException::condominioIdObligatorio);
+        asignarDatos(maxAutos, maxMotos, penalizacionPorMin, maxTiempoPrestamoMin,
                 maxEstacionamientosPorApartamento, maxCarritosPorApartamento, maxVehiculosPorPropietario,
                 maxInquilinosPorApartamento);
     }

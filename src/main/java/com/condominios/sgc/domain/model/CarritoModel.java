@@ -18,8 +18,8 @@ public class CarritoModel {
         EstadoCarrito estadoInicial,
         Long condominioId
     ) {
-        this(codigo, estadoInicial, condominioId);
         this.id = id;
+        asignarDatos(codigo, estadoInicial, condominioId);
     }
 
     public CarritoModel(
@@ -27,10 +27,10 @@ public class CarritoModel {
         EstadoCarrito estadoInicial,
         Long condominioId
     ) {
-        validarYAsignarDatos(codigo, estadoInicial, condominioId);
+        this(null, codigo, estadoInicial, condominioId);
     }
 
-    private void validarYAsignarDatos(String codigo, EstadoCarrito estado, Long condominioId) {
+    private void asignarDatos(String codigo, EstadoCarrito estado, Long condominioId) {
         this.codigo = requerirNoVacio(codigo, CarritoException::codigoObligatorio);
         this.estado = requerirNoNulo(estado, CarritoException::estadoObligatorio);
         this.condominioId = requerirNoNulo(condominioId, CarritoException::condominioIdObligatorio);
@@ -65,7 +65,7 @@ public class CarritoModel {
         return false;
     }
 
-    public void actualizarDatos(String nuevoCodigo) {
-        validarYAsignarDatos(nuevoCodigo, this.estado, this.condominioId);
+    public void actualizar(String codigo, EstadoCarrito estado, Long condominioId) {
+        asignarDatos(codigo, estado, condominioId);
     }
 }

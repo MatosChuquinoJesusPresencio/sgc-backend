@@ -1,5 +1,7 @@
 package com.condominios.sgc.domain.exception;
 
+import com.condominios.sgc.domain.auxiliar.DominioException;
+
 public final class ApartamentoException extends DominioException {
     private ApartamentoException(String mensaje, TipoError tipo) {
         super(mensaje, tipo);
@@ -25,7 +27,4 @@ public final class ApartamentoException extends DominioException {
         return new ApartamentoException("El id del propietario es obligatorio", TipoError.BAD_REQUEST);
     }
 
-    public static ApartamentoException noEncontrado(Long id) {
-        return new ApartamentoException("Apartamento no encontrado con ID: " + id, TipoError.NOT_FOUND);
-    }
 }

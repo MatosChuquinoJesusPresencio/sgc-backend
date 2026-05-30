@@ -6,7 +6,7 @@ import com.condominios.sgc.domain.auxiliar.Rol;
 import com.condominios.sgc.domain.exception.UsuarioException;
 
 public class UsuarioModel {
-    private Long id;
+    private String id;
     private String nombres;
     private String apellidos;
     private String correo;
@@ -19,7 +19,7 @@ public class UsuarioModel {
     private String contrasena;
 
     public UsuarioModel(
-        Long id,
+        String id,
         String nombres,
         String apellidos,
         String correo,
@@ -49,19 +49,27 @@ public class UsuarioModel {
         Long condominioId,
         String contrasena
     ) {
-        this(null, 
-            nombres,
-            apellidos,
-            correo, telefono,
-            rol, true, 
-            condominioId,
-            null,
-            true,
-            contrasena
-        );
+        this(null, nombres, apellidos, correo, telefono, rol, true, condominioId, null, true, contrasena);
     }
 
-    public Long getId() { return id; }
+    public UsuarioModel(
+        String id,
+        String nombres,
+        String apellidos,
+        String correo,
+        String telefono,
+        Rol rol,
+        Boolean activo,
+        Long condominioId
+    ) {
+        this.id = id;
+        asignarDatos(nombres, apellidos, telefono, rol, condominioId);
+        this.correo = requerirCorreoElectronicoValido(correo, UsuarioException::correoInvalido);
+        this.activo = requerirNoNulo(activo, UsuarioException::activoObligatorio);
+        this.contrasena = null;
+    }
+
+    public String getId() { return id; }
     public String getNombres() { return nombres; }
     public String getApellidos() { return apellidos; }
     public String getCorreo() { return correo; }
@@ -72,9 +80,14 @@ public class UsuarioModel {
     public String getCorreoPendiente() { return correoPendiente; }
     public Boolean isCorreoVerificado() { return correoVerificado; }
     public String getContrasena() { return contrasena; }
+    public String getPasswordHash() { return contrasena; }
+
+    public void asignarCorreoPendiente(String correoPendiente) { this.correoPendiente = correoPendiente; }
+    public void asignarCorreoVerificado(Boolean correoVerificado) { this.correoVerificado = correoVerificado; }
+    public void asignarPasswordHash(String hash) { this.contrasena = hash; }
 
     public void cambiarCorreo(String nuevoCorreo) {
-        this.correoPendiente = nuevoCorreo;
+        this.correoPendiente = requerirCorreoElectronicoValido(nuevoCorreo, UsuarioException::correoInvalido);
         this.correoVerificado = false;
     }
 

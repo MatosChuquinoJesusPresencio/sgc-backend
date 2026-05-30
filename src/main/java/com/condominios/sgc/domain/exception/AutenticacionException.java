@@ -1,5 +1,7 @@
 package com.condominios.sgc.domain.exception;
 
+import com.condominios.sgc.domain.auxiliar.DominioException;
+
 public final class AutenticacionException extends DominioException {
     private AutenticacionException(String mensaje, TipoError type) {
         super(mensaje, type);
@@ -14,7 +16,7 @@ public final class AutenticacionException extends DominioException {
     }
 
     public static AutenticacionException errorCreacion(String detalle) {
-        return new AutenticacionException("Error al crear usuario en Supabase: " + detalle, TipoError.BAD_REQUEST);
+        return new AutenticacionException("Error al crear usuario: " + detalle, TipoError.BAD_REQUEST);
     }
 
     public static AutenticacionException errorAutenticacion(String mensaje) {

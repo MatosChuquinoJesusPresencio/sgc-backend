@@ -9,7 +9,7 @@ public class VerificacionTokenModel {
     private String nuevoCorreo;
     private String token;
     private Instant expiracion;
-    private Boolean usado = false;
+    private Boolean usado;
 
     public VerificacionTokenModel(String id, String usuarioId, String nuevoCorreo, String token, Instant expiracion) {
         this.id = id;
@@ -17,6 +17,7 @@ public class VerificacionTokenModel {
         this.nuevoCorreo = nuevoCorreo;
         this.token = token;
         this.expiracion = expiracion;
+        this.usado = false;
     }
 
     public String getId() { return id; }
@@ -25,5 +26,6 @@ public class VerificacionTokenModel {
     public String getToken() { return token; }
     public Instant getExpiracion() { return expiracion; }
     public Boolean isUsado() { return usado; }
-    public void setUsado(Boolean usado) { this.usado = usado; }
+
+    public void cambiarUsado(Boolean usado) { this.usado = usado; }
 }

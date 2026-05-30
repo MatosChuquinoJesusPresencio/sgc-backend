@@ -27,8 +27,8 @@ public class VehiculoModel {
         Long inquilinoId,
         Long estacionamientoId
     ) {
-        this(marca, color, modelo, placa, tipo, propietarioId, inquilinoId, estacionamientoId);
         this.id = id;
+        asignarDatos(marca, color, modelo, placa, tipo, propietarioId, inquilinoId, estacionamientoId);
     }
 
     public VehiculoModel(
@@ -41,10 +41,10 @@ public class VehiculoModel {
         Long inquilinoId,
         Long estacionamientoId
     ) {
-        validarYAsignarDatos(marca, color, modelo, placa, tipo, propietarioId, inquilinoId, estacionamientoId);
+        this(null, marca, color, modelo, placa, tipo, propietarioId, inquilinoId, estacionamientoId);
     }
 
-    private void validarYAsignarDatos(String marca, String color, String modelo, String placa, TipoVehiculo tipo, String propietarioId, Long inquilinoId, Long estacionamientoId) {
+    private void asignarDatos(String marca, String color, String modelo, String placa, TipoVehiculo tipo, String propietarioId, Long inquilinoId, Long estacionamientoId) {
         this.marca = requerirNoVacio(marca, VehiculoException::datosObligatorios);
         this.color = requerirNoVacio(color, VehiculoException::datosObligatorios);
         this.modelo = requerirNoVacio(modelo, VehiculoException::datosObligatorios);
@@ -80,7 +80,7 @@ public class VehiculoModel {
         this.estacionamientoId = requerirNoNulo(estacionamientoId, VehiculoException::estacionamientoObligatorio);
     }
 
-    public void actualizarDatos(String color) {
-        validarYAsignarDatos(this.marca, color, this.modelo, this.placa, this.tipo, this.propietarioId, this.inquilinoId, this.estacionamientoId);
+    public void actualizar(String marca, String color, String modelo, String placa, TipoVehiculo tipo, String propietarioId, Long inquilinoId, Long estacionamientoId) {
+        asignarDatos(marca, color, modelo, placa, tipo, propietarioId, inquilinoId, estacionamientoId);
     }
 }

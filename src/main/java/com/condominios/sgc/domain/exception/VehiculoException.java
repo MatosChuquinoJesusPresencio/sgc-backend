@@ -1,5 +1,7 @@
 package com.condominios.sgc.domain.exception;
 
+import com.condominios.sgc.domain.auxiliar.DominioException;
+
 public final class VehiculoException extends DominioException {
     private VehiculoException(String mensaje, TipoError type) {
         super(mensaje, type);

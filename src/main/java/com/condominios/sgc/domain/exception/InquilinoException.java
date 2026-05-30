@@ -1,5 +1,7 @@
 package com.condominios.sgc.domain.exception;
 
+import com.condominios.sgc.domain.auxiliar.DominioException;
+
 public final class InquilinoException extends DominioException {
     private InquilinoException(String mensaje, TipoError type) {
         super(mensaje, type);

@@ -25,10 +25,10 @@ public class EstacionamientoModel {
         Long condominioId,
         Long apartamentoId
     ) {
-        this(numero, capacidadMaxima, cantidadActual, disponible, condominioId);
         this.id = id;
-        this.apartamentoId = apartamentoId;
+        asignarDatos(numero, capacidadMaxima, cantidadActual, disponible, condominioId);
         this.tipoVehiculo = tipoVehiculo;
+        this.apartamentoId = apartamentoId;
     }
 
     public EstacionamientoModel(
@@ -38,13 +38,13 @@ public class EstacionamientoModel {
         Boolean disponible, 
         Long condominioId
     ) {
-        validarYAsignarDatos(numero, capacidadMaxima, cantidadActual, disponible, condominioId);
+        this(null, numero, null, capacidadMaxima, cantidadActual, disponible, condominioId, null);
     }
 
-    private void validarYAsignarDatos(Integer numero, Integer capacidadMaxima, Integer cantidadActual, Boolean disponible, Long condominioId) {
+    private void asignarDatos(Integer numero, Integer capacidadMaxima, Integer cantidadActual, Boolean disponible, Long condominioId) {
         this.numero = requerirNoNulo(numero, EstacionamientoException::numeroObligatorio);
         this.capacidadMaxima = requerirPositivo(capacidadMaxima, EstacionamientoException::capacidadMaximaInvalida);
-        this.cantidadActual = requerirPositivo(cantidadActual, EstacionamientoException::cantidadActualInvalida);
+        this.cantidadActual = requerirNoNegativo(cantidadActual, EstacionamientoException::cantidadActualInvalida);
         this.disponible = requerirNoNulo(disponible, EstacionamientoException::disponibleObligatorio);
         this.condominioId = requerirNoNulo(condominioId, EstacionamientoException::condominioIdObligatorio);
     }
@@ -83,7 +83,7 @@ public class EstacionamientoModel {
         return capacidadMaxima == null || cantidadActual < capacidadMaxima;
     }
 
-    public void actualizarDatos(Integer numero) {
-        validarYAsignarDatos(numero, this.capacidadMaxima, this.cantidadActual, this.disponible, this.condominioId);
+    public void actualizar(Integer numero, Integer capacidadMaxima, Integer cantidadActual, Boolean disponible, Long condominioId) {
+        asignarDatos(numero, capacidadMaxima, cantidadActual, disponible, condominioId);
     }
 }

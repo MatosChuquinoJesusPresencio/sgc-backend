@@ -18,8 +18,8 @@ public class InquilinoModel {
         String dni, 
         Long apartamentoId
     ) {
-        this(nombres, apellidos, dni, apartamentoId);
         this.id = id;
+        asignarDatos(nombres, apellidos, dni, apartamentoId);
     }
 
     public InquilinoModel(
@@ -28,10 +28,10 @@ public class InquilinoModel {
         String dni, 
         Long apartamentoId
     ) {
-        validarYAsignarDatos(nombres, apellidos, dni, apartamentoId);
+        this(null, nombres, apellidos, dni, apartamentoId);
     }
 
-    private void validarYAsignarDatos(String nombres, String apellidos, String dni, Long apartamentoId) {
+    private void asignarDatos(String nombres, String apellidos, String dni, Long apartamentoId) {
         this.nombres = requerirNoVacio(nombres, InquilinoException::nombresObligatorios);
         this.apellidos = requerirNoVacio(apellidos, InquilinoException::apellidosObligatorios);
         this.dni = requerirNoVacio(dni, InquilinoException::dniObligatorio);
@@ -44,11 +44,11 @@ public class InquilinoModel {
     public String getDni() { return dni; }
     public Long getApartamentoId() { return apartamentoId; }
 
-    public void actualizarApartamento(Long apartamentoId) {
+    public void asignarApartamento(Long apartamentoId) {
         this.apartamentoId = requerirNoNulo(apartamentoId, InquilinoException::apartamentoIdObligatorio);
     }
 
-    public void actualizarDatos(String nombres, String apellidos) {
-        validarYAsignarDatos(nombres, apellidos, this.dni, this.apartamentoId);
+    public void actualizar(String nombres, String apellidos, String dni, Long apartamentoId) {
+        asignarDatos(nombres, apellidos, dni, apartamentoId);
     }
 }

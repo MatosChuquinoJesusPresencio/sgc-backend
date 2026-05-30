@@ -14,18 +14,18 @@ public class PisoModel {
         Integer numero, 
         Long torreId
     ) {
-        this(numero, torreId);
         this.id = id;
+        asignarDatos(numero, torreId);
     }
 
     public PisoModel(
         Integer numero, 
         Long torreId
     ) {
-        validarYAsignarDatos(numero, torreId);
+        this(null, numero, torreId);
     }
 
-    private void validarYAsignarDatos(Integer numero, Long torreId) {
+    private void asignarDatos(Integer numero, Long torreId) {
         this.numero = requerirPositivo(numero, PisoException::numeroInvalido);
         this.torreId = requerirNoNulo(torreId, PisoException::torreIdObligatorio);
     }
@@ -34,7 +34,7 @@ public class PisoModel {
     public Integer getNumero() { return numero; }
     public Long getTorreId() { return torreId; }
 
-    public void actualizarDatos(Integer numero) {
-        validarYAsignarDatos(numero, this.torreId);
+    public void actualizar(Integer numero, Long torreId) {
+        asignarDatos(numero, torreId);
     }
 }

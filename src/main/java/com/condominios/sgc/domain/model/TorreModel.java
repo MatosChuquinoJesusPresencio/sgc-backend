@@ -14,18 +14,18 @@ public class TorreModel {
         String nombre,
         Long condominioId
     ) {
-        this(nombre, condominioId);
         this.id = id;
+        asignarDatos(nombre, condominioId);
     }
 
     public TorreModel(
         String nombre,
         Long condominioId
     ) {
-        validarYAsignarDatos(nombre, condominioId);
+        this(null, nombre, condominioId);
     }
 
-    private void validarYAsignarDatos(String nombre, Long condominioId) {
+    private void asignarDatos(String nombre, Long condominioId) {
         this.nombre = requerirNoVacio(nombre, TorreException::nombreObligatorio);
         this.condominioId = requerirNoNulo(condominioId, TorreException::condominioIdObligatorio);
     }
@@ -34,19 +34,7 @@ public class TorreModel {
     public String getNombre() { return nombre; }
     public Long getCondominioId() { return condominioId; }
 
-    public void setCondominioId(Long condominioId) {
-        this.condominioId = condominioId;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void actualizarDatos(String nombre) {
-        validarYAsignarDatos(nombre, this.condominioId);
+    public void actualizar(String nombre, Long condominioId) {
+        asignarDatos(nombre, condominioId);
     }
 }

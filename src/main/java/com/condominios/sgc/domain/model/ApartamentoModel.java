@@ -23,8 +23,8 @@ public class ApartamentoModel {
         String propietarioId,
         Long pisoId
     ) {
-        this(numero, derechoEstacionamiento, metraje, pisoId);
         this.id = id;
+        asignarDatos(numero, derechoEstacionamiento, metraje, pisoId);
         this.propietarioId = propietarioId;
     }
 
@@ -34,10 +34,10 @@ public class ApartamentoModel {
         BigDecimal metraje,
         Long pisoId
     ) {
-        validarYAsignarDatos(numero, derechoEstacionamiento, metraje, pisoId);
+        this(null, numero, derechoEstacionamiento, metraje, null, pisoId);
     }
 
-    private void validarYAsignarDatos(Integer numero, Boolean derechoEstacionamiento, BigDecimal metraje, Long pisoId) {
+    private void asignarDatos(Integer numero, Boolean derechoEstacionamiento, BigDecimal metraje, Long pisoId) {
         this.numero = requerirPositivo(numero, ApartamentoException::numeroInvalido);
         this.metraje = requerirPositivo(metraje, ApartamentoException::metrajeInvalido);
         this.derechoEstacionamiento = requerirNoNulo(derechoEstacionamiento, ApartamentoException::derechoEstacionamientoInvalido);
@@ -59,11 +59,12 @@ public class ApartamentoModel {
         this.propietarioId = null;
     }
 
-    public void actualizarDatos(
+    public void actualizar(
         Integer numero,
         BigDecimal metraje,
-        Boolean derechoEstacionamiento
+        Boolean derechoEstacionamiento,
+        Long pisoId
     ) {
-        validarYAsignarDatos(numero, derechoEstacionamiento, metraje, this.pisoId);
+        asignarDatos(numero, derechoEstacionamiento, metraje, pisoId);
     }
 }

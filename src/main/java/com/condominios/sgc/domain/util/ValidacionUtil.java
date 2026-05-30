@@ -5,7 +5,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
-import com.condominios.sgc.domain.exception.DominioException;
+import com.condominios.sgc.domain.auxiliar.DominioException;
 
 public final class ValidacionUtil {
 

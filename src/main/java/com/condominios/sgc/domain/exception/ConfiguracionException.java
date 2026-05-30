@@ -1,5 +1,7 @@
 package com.condominios.sgc.domain.exception;
 
+import com.condominios.sgc.domain.auxiliar.DominioException;
+
 public final class ConfiguracionException extends DominioException {
     private ConfiguracionException(String mensaje, TipoError tipo) {
         super(mensaje, tipo);
@@ -67,5 +69,9 @@ public final class ConfiguracionException extends DominioException {
 
     public static ConfiguracionException noEncontrada() {
         return new ConfiguracionException("La configuracion solicitada no existe", TipoError.NOT_FOUND);
+    }
+
+    public static ConfiguracionException condominioIdObligatorio() {
+        return new ConfiguracionException("El id del condominio es obligatorio", TipoError.BAD_REQUEST);
     }
 }

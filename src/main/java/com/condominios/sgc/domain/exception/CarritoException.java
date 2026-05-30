@@ -1,5 +1,7 @@
 package com.condominios.sgc.domain.exception;
 
+import com.condominios.sgc.domain.auxiliar.DominioException;
+
 public final class CarritoException extends DominioException {
     private CarritoException(String mensaje, TipoError tipo) {
         super(mensaje, tipo);

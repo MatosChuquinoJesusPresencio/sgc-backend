@@ -19,25 +19,22 @@ public class LogAccesoVehicularModel {
     private Long vehiculoId;
     private Long estacionamientoId;
 
-    public LogAccesoVehicularModel(String placa, TipoHabitante ocupante, String datosInquilino,
+    public LogAccesoVehicularModel(Long id, String placa, TipoHabitante ocupante, String datosInquilino,
             MetodoEntrada metodo, Long vehiculoId, Long estacionamientoId) {
-        validarYAsignarDatos(placa, ocupante, metodo);
-        this.placa = placa;
-        this.ocupante = ocupante;
+        this.id = id;
+        asignarDatos(placa, ocupante, metodo);
         this.datosInquilino = datosInquilino;
-        this.metodo = metodo;
         this.vehiculoId = vehiculoId;
         this.estacionamientoId = estacionamientoId;
         this.fechaEntrada = LocalDateTime.now();
     }
 
-    public LogAccesoVehicularModel(Long id, String placa, TipoHabitante ocupante, String datosInquilino,
+    public LogAccesoVehicularModel(String placa, TipoHabitante ocupante, String datosInquilino,
             MetodoEntrada metodo, Long vehiculoId, Long estacionamientoId) {
-        this(placa, ocupante, datosInquilino, metodo, vehiculoId, estacionamientoId);
-        this.id = id;
+        this(null, placa, ocupante, datosInquilino, metodo, vehiculoId, estacionamientoId);
     }
 
-    private void validarYAsignarDatos(String placa, TipoHabitante ocupante, MetodoEntrada metodo) {
+    private void asignarDatos(String placa, TipoHabitante ocupante, MetodoEntrada metodo) {
         this.placa = requerirNoVacio(placa, LogAccesoVehicularException::placaObligatoria);
         this.ocupante = requerirNoNulo(ocupante, LogAccesoVehicularException::ocupanteObligatorio);
         this.metodo = requerirNoNulo(metodo, LogAccesoVehicularException::metodoObligatorio);
