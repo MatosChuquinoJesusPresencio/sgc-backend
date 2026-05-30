@@ -17,6 +17,10 @@ public final class CarritoException extends DominioException {
         return new CarritoException("El id del condominio es obligatorio", TipoError.BAD_REQUEST);
     }
 
+    public static CarritoException estadoNuevoObligatorio() {
+        return new CarritoException("El nuevo estado del carrito es obligatorio", TipoError.BAD_REQUEST);
+    }
+
     public static CarritoException transicionEstadoInvalida(String origen, String destino) {
         return new CarritoException("Transición de estado inválida de " + origen + " a " + destino, TipoError.BAD_REQUEST);
     }
