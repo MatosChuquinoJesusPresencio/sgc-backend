@@ -34,18 +34,6 @@ public class TorreModel {
     public String getNombre() { return nombre; }
     public Long getCondominioId() { return condominioId; }
 
-    public void setCondominioId(Long condominioId) {
-        this.condominioId = condominioId;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void actualizarDatos(String nombre) {
         validarYAsignarDatos(nombre, this.condominioId);
     }

@@ -22,10 +22,7 @@ public class LogAccesoVehicularModel {
     public LogAccesoVehicularModel(String placa, TipoHabitante ocupante, String datosInquilino,
             MetodoEntrada metodo, Long vehiculoId, Long estacionamientoId) {
         validarYAsignarDatos(placa, ocupante, metodo);
-        this.placa = placa;
-        this.ocupante = ocupante;
         this.datosInquilino = datosInquilino;
-        this.metodo = metodo;
         this.vehiculoId = vehiculoId;
         this.estacionamientoId = estacionamientoId;
         this.fechaEntrada = LocalDateTime.now();

@@ -23,11 +23,6 @@ public class LogPrestamoCarritoModel {
 
     public LogPrestamoCarritoModel(TipoHabitante solicitante, String nombreSolicitante, String dniSolicitante, Long apartamentoId, Long carritoId) {
         validarYAsignarDatos(solicitante, nombreSolicitante, dniSolicitante, apartamentoId, carritoId);
-        this.solicitante = solicitante;
-        this.nombreSolicitante = nombreSolicitante;
-        this.dniSolicitante = dniSolicitante;
-        this.apartamentoId = apartamentoId;
-        this.carritoId = carritoId;
         this.fechaPrestamo = LocalDateTime.now();
         this.penalizacion = BigDecimal.ZERO;
     }
@@ -71,7 +66,7 @@ public class LogPrestamoCarritoModel {
     public Long getApartamentoId() { return apartamentoId; }
     public Long getCarritoId() { return carritoId; }
     public Long getInquilinoId() { return inquilinoId; }
-    public Long getUsuarioId() { return propietarioId; }
+    public Long getPropietarioId() { return propietarioId; }
 
     public void asignarPropietarioSolicitante(Long propietarioId) {
         this.propietarioId = requerirNoNulo(propietarioId, LogPrestamoCarritoException::usuarioIdObligatorio);

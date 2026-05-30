@@ -7,15 +7,15 @@ import com.condominios.sgc.domain.port.ConfiguracionPort;
 
 public class ObtenerConfiguracionUseCaseImpl implements ObtenerConfiguracionUseCase {
     
-    private final ConfiguracionPort repository;
+    private final ConfiguracionPort configuracionPort;
 
-    public ObtenerConfiguracionUseCaseImpl(ConfiguracionPort repository) {
-        this.repository = repository;
+    public ObtenerConfiguracionUseCaseImpl(ConfiguracionPort configuracionPort) {
+        this.configuracionPort = configuracionPort;
     }
 
     @Override
     public ConfiguracionModel ejecutar(Long id) {
-        return repository.findById(id)
+        return configuracionPort.findById(id)
             .orElseThrow(ConfiguracionException::noEncontrada);
     }
 }

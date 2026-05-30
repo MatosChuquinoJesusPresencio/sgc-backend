@@ -1,21 +1,20 @@
 package com.condominios.sgc.application.impl;
 
 import com.condominios.sgc.application.usecase.EliminarPisoUseCase;
-import com.condominios.sgc.application.usecase.ObtenerPisoUseCase;
+import com.condominios.sgc.domain.exception.PisoException;
 import com.condominios.sgc.domain.port.PisoPort;
 
 public class EliminarPisoUseCaseImpl implements EliminarPisoUseCase {
     private final PisoPort pisoPort;
-    private final ObtenerPisoUseCase obtenerPisoUseCase;
 
-    public EliminarPisoUseCaseImpl(PisoPort pisoPort, ObtenerPisoUseCase obtenerPisoUseCase) {
+    public EliminarPisoUseCaseImpl(PisoPort pisoPort) {
         this.pisoPort = pisoPort;
-        this.obtenerPisoUseCase = obtenerPisoUseCase;
     }
 
     @Override
     public void ejecutar(Long id) {
-        obtenerPisoUseCase.ejecutar(id);
+        pisoPort.findById(id)
+                .orElseThrow(() -> PisoException.noEncontrado(id));
         pisoPort.deleteById(id);
     }
 }

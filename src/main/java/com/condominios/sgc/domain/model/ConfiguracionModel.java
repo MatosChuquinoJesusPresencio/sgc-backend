@@ -54,15 +54,15 @@ public class ConfiguracionModel {
             Integer maxInquilinosPorApartamento,
             Long condominioId
         ) {
-        this.condominioId = condominioId;
         validarYAsignarDatos(maxAutos, maxMotos, penalizacionPorMin, maxTiempoPrestamoMin,
                 maxEstacionamientosPorApartamento, maxCarritosPorApartamento, maxVehiculosPorPropietario,
-                maxInquilinosPorApartamento);
+                maxInquilinosPorApartamento, condominioId);
     }
 
     private void validarYAsignarDatos(Integer maxAutos, Integer maxMotos, BigDecimal penalizacionPorMin,
             Integer maxTiempoPrestamoMin, Integer maxEstacionamientosPorApartamento,
-            Integer maxCarritosPorApartamento, Integer maxVehiculosPorPropietario, Integer maxInquilinosPorApartamento) {
+            Integer maxCarritosPorApartamento, Integer maxVehiculosPorPropietario, Integer maxInquilinosPorApartamento,
+            Long condominioId) {
         this.maxAutos = requerirNoNegativo(maxAutos, ConfiguracionException::maximoAutosInvalido);
         this.maxMotos = requerirNoNegativo(maxMotos, ConfiguracionException::maximoMotosInvalido);
         this.penalizacionPorMin = requerirNoNegativo(penalizacionPorMin, ConfiguracionException::penalizacionInvalida);
@@ -71,6 +71,7 @@ public class ConfiguracionModel {
         this.maxCarritosPorApartamento = requerirNoNegativo(maxCarritosPorApartamento, ConfiguracionException::maximoCarritosInvalido);
         this.maxVehiculosPorPropietario = requerirNoNegativo(maxVehiculosPorPropietario, ConfiguracionException::maximoVehiculosPorPropietarioInvalido);
         this.maxInquilinosPorApartamento = requerirNoNegativo(maxInquilinosPorApartamento, ConfiguracionException::maximoInquilinosInvalido);
+        this.condominioId = requerirNoNulo(condominioId, ConfiguracionException::condominioIdObligatorio);
     }
 
     public Long getId() { return id; }
@@ -90,7 +91,7 @@ public class ConfiguracionModel {
 
         validarYAsignarDatos(maxAutos, maxMotos, penalizacionPorMin, maxTiempoPrestamoMin,
                 maxEstacionamientosPorApartamento, maxCarritosPorApartamento, maxVehiculosPorPropietario,
-                maxInquilinosPorApartamento);
+                maxInquilinosPorApartamento, this.condominioId);
     }
 
     public void puedoEstacionarVehiculo(TipoVehiculo tipoVehiculo, Integer vehiculosPorTipo){

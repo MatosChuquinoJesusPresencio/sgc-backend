@@ -8,15 +8,15 @@ import com.condominios.sgc.domain.port.ConfiguracionPort;
 
 public class ActualizarConfiguracionUseCaseImpl implements ActualizarConfiguracionUseCase {
     
-    private final ConfiguracionPort repository;
+    private final ConfiguracionPort configuracionPort;
 
-    public ActualizarConfiguracionUseCaseImpl(ConfiguracionPort repository) {
-        this.repository = repository;
+    public ActualizarConfiguracionUseCaseImpl(ConfiguracionPort configuracionPort) {
+        this.configuracionPort = configuracionPort;
     }
 
     @Override
     public ConfiguracionModel ejecutar(Long id, ActualizarConfiguracionRequest request) {
-        ConfiguracionModel configuracion = repository.findById(id)
+        ConfiguracionModel configuracion = configuracionPort.findById(id)
             .orElseThrow(ConfiguracionException::noEncontrada);
 
         configuracion.actualizarDatos(
@@ -26,6 +26,6 @@ public class ActualizarConfiguracionUseCaseImpl implements ActualizarConfiguraci
             request.maxInquilinosPorApartamento()
         );
 
-        return repository.save(configuracion);
+        return configuracionPort.save(configuracion);
     } 
 }

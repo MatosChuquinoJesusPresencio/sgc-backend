@@ -61,8 +61,8 @@ public class ApartamentoModel {
 
     public void actualizarDatos(
         Integer numero,
-        BigDecimal metraje,
-        Boolean derechoEstacionamiento
+        Boolean derechoEstacionamiento,
+        BigDecimal metraje
     ) {
         validarYAsignarDatos(numero, derechoEstacionamiento, metraje, this.pisoId);
     }

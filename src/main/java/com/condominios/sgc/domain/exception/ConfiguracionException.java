@@ -65,6 +65,10 @@ public final class ConfiguracionException extends DominioException {
         return new ConfiguracionException("El número máximo de inquilinos por apartamento no puede ser nulo o negativo", TipoError.BAD_REQUEST);
     }
 
+    public static ConfiguracionException condominioIdObligatorio() {
+        return new ConfiguracionException("El id del condominio es obligatorio", TipoError.BAD_REQUEST);
+    }
+
     public static ConfiguracionException noEncontrada() {
         return new ConfiguracionException("La configuración solicitada no existe", TipoError.NOT_FOUND);
     }

@@ -27,8 +27,8 @@ public class EstacionamientoModel {
     ) {
         this(numero, capacidadMaxima, cantidadActual, disponible, condominioId);
         this.id = id;
-        this.apartamentoId = apartamentoId;
-        this.tipoVehiculo = tipoVehiculo;
+        this.apartamentoId = requerirNoNulo(apartamentoId, EstacionamientoException::apartamentoIdObligatorio);
+        this.tipoVehiculo = requerirNoNulo(tipoVehiculo, EstacionamientoException::tipoVehiculoInvalido);
     }
 
     public EstacionamientoModel(
