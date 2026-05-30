@@ -53,7 +53,7 @@ public final class UsuarioException extends DominioException {
         return new UsuarioException("El id del usuario es obligatorio", TipoError.BAD_REQUEST);
     }
 
-    public static UsuarioException correoPendienteNoEncontrado() {
+    public static UsuarioException cambioCorreoPendienteNoEncontrado() {
         return new UsuarioException("No hay un cambio de correo pendiente de verificación", TipoError.BAD_REQUEST);
     }
 

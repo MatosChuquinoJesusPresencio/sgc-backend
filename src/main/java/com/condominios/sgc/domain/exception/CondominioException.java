@@ -21,10 +21,6 @@ public final class CondominioException extends DominioException {
         return new CondominioException("La dirección es obligatoria", TipoError.BAD_REQUEST);
     }
 
-    public static CondominioException fechaCreacionObligatoria() {
-        return new CondominioException("La fecha de creación es obligatoria", TipoError.BAD_REQUEST);
-    }
-
     public static CondominioException nombreEnUso() {
         return new CondominioException("El nombre ingresado está en uso", TipoError.BAD_REQUEST);
     }

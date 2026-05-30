@@ -13,8 +13,8 @@ public final class ApartamentoException extends DominioException {
         return new ApartamentoException("El metraje debe ser mayor a 0", TipoError.BAD_REQUEST);
     }
 
-    public static ApartamentoException derechoEstacionamientoInvalido() {
-        return new ApartamentoException("El derecho de estacionamiento debe ser verdadero o falso", TipoError.BAD_REQUEST);
+    public static ApartamentoException derechoEstacionamientoObligatorio() {
+        return new ApartamentoException("El derecho de estacionamiento es obligatorio", TipoError.BAD_REQUEST);
     }
 
     public static ApartamentoException pisoIdObligatorio() {

@@ -33,11 +33,11 @@ public final class ConfiguracionException extends DominioException {
         return new ConfiguracionException("Límite de inquilinos por apartamento excedido. Máx: " + max + ", Actual: " + actual, TipoError.BAD_REQUEST);
     }
 
-    public static ConfiguracionException maxAutosInvalido() {
+    public static ConfiguracionException maximoAutosInvalido() {
         return new ConfiguracionException("El número máximo de autos no puede ser nulo o negativo", TipoError.BAD_REQUEST);
     }
 
-    public static ConfiguracionException maxMotosInvalido() {
+    public static ConfiguracionException maximoMotosInvalido() {
         return new ConfiguracionException("El número máximo de motos no puede ser nulo o negativo", TipoError.BAD_REQUEST);
     }
 
@@ -45,23 +45,23 @@ public final class ConfiguracionException extends DominioException {
         return new ConfiguracionException("La penalización por minuto no puede ser nula o negativa", TipoError.BAD_REQUEST);
     }
 
-    public static ConfiguracionException tiempoPrestamoInvalido() {
+    public static ConfiguracionException maximoTiempoPrestamoInvalido() {
         return new ConfiguracionException("El tiempo máximo de préstamo no puede ser nulo o negativo", TipoError.BAD_REQUEST);
     }
 
-    public static ConfiguracionException maxEstacionamientosInvalido() {
+    public static ConfiguracionException maximoEstacionamientosInvalido() {
         return new ConfiguracionException("El número máximo de estacionamientos por apartamento no puede ser nulo o negativo", TipoError.BAD_REQUEST);
     }
 
-    public static ConfiguracionException maxCarritosInvalido() {
+    public static ConfiguracionException maximoCarritosInvalido() {
         return new ConfiguracionException("El número máximo de carritos por apartamento no puede ser nulo o negativo", TipoError.BAD_REQUEST);
     }
 
-    public static ConfiguracionException maxVehiculosPorPropietarioInvalido() {
+    public static ConfiguracionException maximoVehiculosPorPropietarioInvalido() {
         return new ConfiguracionException("El número máximo de vehículos por propietario no puede ser nulo o negativo", TipoError.BAD_REQUEST);
     }
 
-    public static ConfiguracionException maxInquilinosInvalido() {
+    public static ConfiguracionException maximoInquilinosInvalido() {
         return new ConfiguracionException("El número máximo de inquilinos por apartamento no puede ser nulo o negativo", TipoError.BAD_REQUEST);
     }
 

@@ -36,7 +36,7 @@ public final class EstacionamientoException extends DominioException {
         return new EstacionamientoException("La cantidad actual de vehículos debe ser mayor o igual a 0", TipoError.BAD_REQUEST);
     }
 
-    public static EstacionamientoException disponibleObligatorio() {
+    public static EstacionamientoException estadoDisponibleObligatorio() {
         return new EstacionamientoException("El estado disponible es obligatorio", TipoError.BAD_REQUEST);
     }
 }
