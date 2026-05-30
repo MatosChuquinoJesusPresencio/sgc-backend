@@ -10,17 +10,17 @@ public record PaginacionResponse<T>(
     int totalPaginas
 ) {
     public static <T> PaginacionResponse<T> de(
-        List<T> contenido, 
-        int pagina, 
-        int tamanio, 
-        long totalElementos, 
+        List<T> contenido,
+        int pagina,
+        int tamanio,
+        long totalElementos,
         int totalPaginas
     ) {
         return new PaginacionResponse<>(
-            contenido, 
-            pagina, 
-            tamanio, 
-            totalElementos, 
+            contenido,
+            pagina,
+            tamanio,
+            totalElementos,
             totalPaginas
         );
     }
