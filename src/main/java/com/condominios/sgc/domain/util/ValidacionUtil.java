@@ -9,52 +9,52 @@ import com.condominios.sgc.domain.exception.DominioException;
 
 public final class ValidacionUtil {
 
-    private static final Pattern EMAIL_PATTERN = Pattern.compile(
+    private static final Pattern PATRON_CORREO_ELECTRONICO = Pattern.compile(
         "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
 
     private ValidacionUtil() {}
 
-    public static <T> T requerirNoNulo(T obj, Supplier<DominioException> supplier) {
-        if (obj == null) throw supplier.get();
-        return obj;
+    public static <T> T requerirNoNulo(T objeto, Supplier<DominioException> proveedor) {
+        if (objeto == null) throw proveedor.get();
+        return objeto;
     }
 
-    public static String requerirNoVacio(String str, Supplier<DominioException> supplier) {
-        if (str == null || str.trim().isEmpty()) throw supplier.get();
-        return str;
+    public static String requerirNoVacio(String cadena, Supplier<DominioException> proveedor) {
+        if (cadena == null || cadena.trim().isEmpty()) throw proveedor.get();
+        return cadena;
     }
 
-    public static int requerirPositivo(Integer value, Supplier<DominioException> supplier) {
-        if (value == null || value <= 0) throw supplier.get();
-        return value;
+    public static int requerirPositivo(Integer valor, Supplier<DominioException> proveedor) {
+        if (valor == null || valor <= 0) throw proveedor.get();
+        return valor;
     }
 
-    public static int requerirNoNegativo(Integer value, Supplier<DominioException> supplier) {
-        if (value == null || value < 0) throw supplier.get();
-        return value;
+    public static int requerirNoNegativo(Integer valor, Supplier<DominioException> proveedor) {
+        if (valor == null || valor < 0) throw proveedor.get();
+        return valor;
     }
 
-    public static BigDecimal requerirPositivo(BigDecimal value, Supplier<DominioException> supplier) {
-        if (value == null || value.compareTo(BigDecimal.ZERO) <= 0) throw supplier.get();
-        return value;
+    public static BigDecimal requerirPositivo(BigDecimal valor, Supplier<DominioException> proveedor) {
+        if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) throw proveedor.get();
+        return valor;
     }
 
-    public static BigDecimal requerirNoNegativo(BigDecimal value, Supplier<DominioException> supplier) {
-        if (value == null || value.compareTo(BigDecimal.ZERO) < 0) throw supplier.get();
-        return value;
+    public static BigDecimal requerirNoNegativo(BigDecimal valor, Supplier<DominioException> proveedor) {
+        if (valor == null || valor.compareTo(BigDecimal.ZERO) < 0) throw proveedor.get();
+        return valor;
     }
 
-    public static String requerirEmailValido(String email, Supplier<DominioException> supplier) {
-        requerirNoVacio(email, supplier);
-        if (!EMAIL_PATTERN.matcher(email).matches()) throw supplier.get();
-        return email;
+    public static String requerirCorreoElectronicoValido(String correo, Supplier<DominioException> proveedor) {
+        requerirNoVacio(correo, proveedor);
+        if (!PATRON_CORREO_ELECTRONICO.matcher(correo).matches()) throw proveedor.get();
+        return correo;
     }
 
-    public static void requerirQue(boolean condition, Supplier<DominioException> supplier) {
-        if (!condition) throw supplier.get();
+    public static void requerirQue(boolean condicion, Supplier<DominioException> proveedor) {
+        if (!condicion) throw proveedor.get();
     }
 
-    public static <T, R> R idDe(T entity, Function<T, R> extractor) {
-        return entity != null ? extractor.apply(entity) : null;
+    public static <T, R> R idDe(T entidad, Function<T, R> extractor) {
+        return entidad != null ? extractor.apply(entidad) : null;
     }
 }
