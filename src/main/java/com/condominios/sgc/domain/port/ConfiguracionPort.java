@@ -5,10 +5,7 @@ import java.util.Optional;
 import com.condominios.sgc.domain.model.ConfiguracionModel;
 
 public interface ConfiguracionPort {
-
     Optional<ConfiguracionModel> findById(Long id);
-
     Optional<ConfiguracionModel> findByCondominioId(Long condominioId);
-
     ConfiguracionModel save(ConfiguracionModel model);
 }
