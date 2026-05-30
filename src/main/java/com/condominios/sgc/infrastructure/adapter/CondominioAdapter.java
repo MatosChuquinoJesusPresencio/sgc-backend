@@ -37,7 +37,7 @@ public class CondominioAdapter implements CondominioPort {
                 : PageRequest.of(request.pagina(), request.tamanio());
         var spec = CondominioSpecifications.fromFiltros(request.filtros());
         Page<CondominioEntity> page = condominioRepository.findAll(spec, pageable);
-        return PaginacionResponse.of(
+        return PaginacionResponse.de(
                 page.getContent().stream().map(CondominioMapper::toModel).toList(),
                 page.getNumber(),
                 page.getSize(),

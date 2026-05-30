@@ -27,4 +27,7 @@ public final class ApartamentoException extends DominioException {
         return new ApartamentoException("El id del propietario es obligatorio", TipoError.BAD_REQUEST);
     }
 
+    public static ApartamentoException noEncontrado() {
+        return new ApartamentoException("El apartamento solicitado no se encuentra", TipoError.NOT_FOUND);
+    }
 }

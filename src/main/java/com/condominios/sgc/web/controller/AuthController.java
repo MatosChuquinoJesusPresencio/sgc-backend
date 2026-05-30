@@ -159,7 +159,7 @@ public class AuthController {
         return ResponseEntity.ok(
             UsuarioResponse.fromModel(
                 actualizarCorreoUseCase.ejecutar(
-                    jwt.getSubject(), jwt.getTokenValue(), request.email())));
+                    jwt.getSubject(), request.email())));
     }
 
     @PatchMapping("/admin/{id}/email")

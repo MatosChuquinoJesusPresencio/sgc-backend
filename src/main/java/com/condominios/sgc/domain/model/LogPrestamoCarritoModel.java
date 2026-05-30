@@ -19,7 +19,7 @@ public class LogPrestamoCarritoModel {
     private Long apartamentoId;
     private Long carritoId;
     private Long inquilinoId;
-    private Long propietarioId;
+    private String propietarioId;
 
     public LogPrestamoCarritoModel(
             Long id,
@@ -28,7 +28,7 @@ public class LogPrestamoCarritoModel {
             String dniSolicitante,
             Long apartamentoId,
             Long carritoId,
-            Long propietarioId,
+            String propietarioId,
             Long inquilinoId,
             BigDecimal penalizacion,
             LocalDateTime fechaPrestamo,
@@ -64,9 +64,9 @@ public class LogPrestamoCarritoModel {
     public Long getApartamentoId() { return apartamentoId; }
     public Long getCarritoId() { return carritoId; }
     public Long getInquilinoId() { return inquilinoId; }
-    public Long getPropietarioId() { return propietarioId; }
+    public String getPropietarioId() { return propietarioId; }
 
-    public void asignarUsuarioSolicitante(Long propietarioId) {
+    public void asignarUsuarioSolicitante(String propietarioId) {
         this.propietarioId = requerirNoNulo(propietarioId, LogPrestamoCarritoException::usuarioIdObligatorio);
         requerirQue(this.inquilinoId == null, LogPrestamoCarritoException::yaTieneSolicitanteInquilino);
     }

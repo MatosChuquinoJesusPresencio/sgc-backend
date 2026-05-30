@@ -26,8 +26,8 @@ public class ApartamentoConfig {
     }
 
     @Bean
-    public ActualizarApartamentoUseCase actualizarApartamentoUseCase(ApartamentoPort apartamentoPort, ObtenerApartamentoUseCase obtenerApartamentoUseCase) {
-        return new ActualizarApartamentoUseCaseImpl(apartamentoPort, obtenerApartamentoUseCase);
+    public ActualizarApartamentoUseCase actualizarApartamentoUseCase(ApartamentoPort apartamentoPort) {
+        return new ActualizarApartamentoUseCaseImpl(apartamentoPort);
     }
 
     @Bean

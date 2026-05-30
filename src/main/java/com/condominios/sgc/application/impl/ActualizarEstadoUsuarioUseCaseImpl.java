@@ -18,7 +18,7 @@ public class ActualizarEstadoUsuarioUseCaseImpl implements ActualizarEstadoUsuar
         UsuarioModel usuario = usuarioPort.findById(id)
             .orElseThrow(UsuarioException::noEncontrado);
 
-        usuario.actualizarEstado(activo);
+        usuario.cambiarActivo(activo);
 
         return usuarioPort.save(usuario);
     }

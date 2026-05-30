@@ -23,7 +23,7 @@ public class ActualizarCondominioUseCaseImpl implements ActualizarCondominioUseC
             throw CondominioException.nombreEnUso();
         }
 
-        condominio.actualizarDatos(
+        condominio.actualizar(
                 request.nombre(),
                 request.pais(),
                 request.ciudad(),

@@ -8,8 +8,8 @@ import com.condominios.sgc.domain.model.VehiculoModel;
 public interface VehiculoPort {
     Optional<VehiculoModel> findById(Long id);
     List<VehiculoModel> findAll();
-    List<VehiculoModel> findByPropietarioInquilinoId(Long inquilinoId);
-    List<VehiculoModel> findByPropietarioUsuarioId(String usuarioId);
+    List<VehiculoModel> findByInquilinoId(Long inquilinoId);
+    List<VehiculoModel> findByPropietarioId(String usuarioId);
     VehiculoModel save(VehiculoModel vehiculo);
     void deleteById(Long id);
 }

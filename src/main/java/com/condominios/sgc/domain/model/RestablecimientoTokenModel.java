@@ -1,6 +1,7 @@
 package com.condominios.sgc.domain.model;
 
 import java.time.Instant;
+import java.util.UUID;
 
 public class RestablecimientoTokenModel {
 
@@ -16,6 +17,15 @@ public class RestablecimientoTokenModel {
         this.token = token;
         this.expiracion = expiracion;
         this.usado = false;
+    }
+
+    public static RestablecimientoTokenModel crear(String usuarioId) {
+        return new RestablecimientoTokenModel(
+            UUID.randomUUID().toString(),
+            usuarioId,
+            UUID.randomUUID().toString(),
+            Instant.now().plusSeconds(3600)
+        );
     }
 
     public String getId() { return id; }

@@ -44,14 +44,14 @@ public class VehiculoAdapter implements VehiculoPort {
     }
 
     @Override
-    public List<VehiculoModel> findByPropietarioInquilinoId(Long inquilinoId) {
+    public List<VehiculoModel> findByInquilinoId(Long inquilinoId) {
         return vehiculoRepository.findByInquilinoId(inquilinoId).stream()
                 .map(VehiculoMapper::toModel)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<VehiculoModel> findByPropietarioUsuarioId(String usuarioId) {
+    public List<VehiculoModel> findByPropietarioId(String usuarioId) {
         return vehiculoRepository.findByPropietarioId(usuarioId).stream()
                 .map(VehiculoMapper::toModel)
                 .collect(Collectors.toList());

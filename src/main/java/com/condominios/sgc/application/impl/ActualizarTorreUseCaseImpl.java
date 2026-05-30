@@ -18,7 +18,7 @@ public class ActualizarTorreUseCaseImpl implements ActualizarTorreUseCase{
     @Override
     public TorreModel ejecutar(Long id, ActualizarTorreRequest request) {
         TorreModel torre = obtenerTorreUseCase.ejecutar(id);
-        torre.actualizarDatos(request.nombre());
+        torre.actualizar(request.nombre(), torre.getCondominioId());
         return torrePort.save(torre);
     }
 

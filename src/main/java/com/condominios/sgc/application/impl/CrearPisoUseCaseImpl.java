@@ -20,7 +20,7 @@ public class CrearPisoUseCaseImpl implements CrearPisoUseCase {
 
     @Override
     public PisoModel ejecutar(CrearPisoRequest request) {
-        TorreModel torre = torrePort.findById(request.torreId());
+        TorreModel torre = torrePort.findById(request.torreId()).orElse(null);
         if (torre == null) {
             throw TorreException.noEncontrada(request.torreId());
         }

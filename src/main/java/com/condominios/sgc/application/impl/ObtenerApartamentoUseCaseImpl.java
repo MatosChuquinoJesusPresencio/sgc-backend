@@ -14,10 +14,7 @@ public class ObtenerApartamentoUseCaseImpl implements ObtenerApartamentoUseCase 
 
     @Override
     public ApartamentoModel ejecutar(Long id) {
-        ApartamentoModel apartamento = apartamentoPort.findById(id);
-        if (apartamento == null) {
-            throw ApartamentoException.noEncontrado(id);
-        }
-        return apartamento;
+        return apartamentoPort.findById(id)
+            .orElseThrow(ApartamentoException::noEncontrado);
     }
 }

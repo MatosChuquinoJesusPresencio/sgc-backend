@@ -19,11 +19,11 @@ public class ActualizarConfiguracionUseCaseImpl implements ActualizarConfiguraci
         ConfiguracionModel configuracion = repository.findById(id)
             .orElseThrow(ConfiguracionException::noEncontrada);
 
-        configuracion.actualizarDatos(
+        configuracion.actualizar(
             request.maxAutos(), request.maxMotos(), request.penalizacionPorMin(),
             request.maxTiempoPrestamoMin(), request.maxEstacionamientosPorApartamento(),
             request.maxCarritosPorApartamento(), request.maxVehiculosPorPropietario(),
-            request.maxInquilinosPorApartamento()
+            request.maxInquilinosPorApartamento(), configuracion.getCondominioId()
         );
 
         return repository.save(configuracion);

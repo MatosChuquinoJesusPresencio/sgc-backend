@@ -42,4 +42,24 @@ public final class UsuarioException extends DominioException {
     public static UsuarioException contrasenaObligatoria() {
         return new UsuarioException("La contraseña es obligatoria", TipoError.BAD_REQUEST);
     }
+
+    public static UsuarioException noEncontrado() {
+        return new UsuarioException("El usuario solicitado no existe", TipoError.NOT_FOUND);
+    }
+
+    public static UsuarioException correoYaEnUso() {
+        return new UsuarioException("El correo electrónico ya está en uso", TipoError.BAD_REQUEST);
+    }
+
+    public static UsuarioException noPermisoParaAsignarRol() {
+        return new UsuarioException("No tienes permiso para asignar este rol", TipoError.BAD_REQUEST);
+    }
+
+    public static UsuarioException correoPendienteNoEncontrado() {
+        return new UsuarioException("No se encontró una verificación de correo pendiente", TipoError.NOT_FOUND);
+    }
+
+    public static UsuarioException correoNoVerificado() {
+        return new UsuarioException("El correo no ha sido verificado", TipoError.BAD_REQUEST);
+    }
 }

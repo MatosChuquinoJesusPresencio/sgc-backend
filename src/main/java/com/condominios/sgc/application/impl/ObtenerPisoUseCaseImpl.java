@@ -14,10 +14,7 @@ public class ObtenerPisoUseCaseImpl implements ObtenerPisoUseCase {
 
     @Override
     public PisoModel ejecutar(Long id) {
-        PisoModel piso = pisoPort.findById(id);
-        if (piso == null) {
-            throw PisoException.noEncontrado(id);
-        }
-        return piso;
+        return pisoPort.findById(id)
+            .orElseThrow(() -> PisoException.noEncontrado(id));
     }
 }

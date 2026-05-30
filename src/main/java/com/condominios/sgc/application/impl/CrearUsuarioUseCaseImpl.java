@@ -33,25 +33,25 @@ public class CrearUsuarioUseCaseImpl implements CrearUsuarioUseCase {
 
         correoPort.enviarBienvenida(request.email(), request.nombres(), request.password());
 
-        String supabaseId = autenticacionPort.crearUsuario(
+        String userId = autenticacionPort.crearUsuario(
             request.email(), request.password(), request.rol().name());
 
-        try {
-            var usuario = new UsuarioModel(
-                supabaseId,
-                request.nombres(),
-                request.apellidos(),
-                request.email(),
-                request.telefono(),
-                request.rol(),
-                true,
-                request.condominioId()
-            );
-            usuario.asignarCorreoVerificado(true);
-            return usuarioPort.save(usuario);
-        } catch (Exception e) {
-            autenticacionPort.eliminarUsuario(supabaseId);
-            throw e;
-        }
+        var usuario = new UsuarioModel(
+            userId,
+            request.nombres(),
+            request.apellidos(),
+            request.email(),
+            request.telefono(),
+            request.rol(),
+            true,
+            request.condominioId()
+        );
+        usuario.asignarCorreoVerificado(true);
+
+        var saved = usuarioPort.save(usuario);
+
+        autenticacionPort.actualizarPasswordAdmin(userId, request.password());
+
+        return saved;
     }
 }

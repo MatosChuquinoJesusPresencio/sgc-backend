@@ -38,11 +38,11 @@ public class VerificarCorreoUseCaseImpl implements VerificarCorreoUseCase {
 
         autenticacionPort.actualizarCorreoAdmin(tokenModel.getUsuarioId(), tokenModel.getNuevoCorreo());
 
-        usuario.confirmarCorreo();
+        usuario.confirmarCambioCorreo();
 
         var saved = usuarioPort.save(usuario);
 
-        tokenModel.setUsado(true);
+        tokenModel.cambiarUsado(true);
         verificacionTokenPort.save(tokenModel);
 
         return saved;

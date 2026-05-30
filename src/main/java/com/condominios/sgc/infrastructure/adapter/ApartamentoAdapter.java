@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ApartamentoAdapter implements ApartamentoPort {
@@ -24,8 +25,8 @@ public class ApartamentoAdapter implements ApartamentoPort {
     }
 
     @Override
-    public ApartamentoModel findById(Long id) {
-        return apartamentoRepository.findById(id).map(ApartamentoMapper::toModel).orElse(null);
+    public Optional<ApartamentoModel> findById(Long id) {
+        return apartamentoRepository.findById(id).map(ApartamentoMapper::toModel);
     }
 
     @Override
@@ -63,7 +64,7 @@ public class ApartamentoAdapter implements ApartamentoPort {
     }
 
     @Override
-    public ApartamentoModel findByPropietarioId(String propietarioId) {
-        return apartamentoRepository.findByPropietarioId(propietarioId).map(ApartamentoMapper::toModel).orElse(null);
+    public Optional<ApartamentoModel> findByPropietarioId(String propietarioId) {
+        return apartamentoRepository.findByPropietarioId(propietarioId).map(ApartamentoMapper::toModel);
     }
 }

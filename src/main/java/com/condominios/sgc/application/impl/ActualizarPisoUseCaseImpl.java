@@ -19,7 +19,7 @@ public class ActualizarPisoUseCaseImpl implements ActualizarPisoUseCase {
     public PisoModel ejecutar(Long id, ActualizarPisoRequest request) {
         PisoModel piso = obtenerPisoUseCase.ejecutar(id);
 
-        piso.actualizarDatos(request.numero());
+        piso.actualizar(request.numero(), piso.getTorreId());
 
         return pisoPort.save(piso);
     }

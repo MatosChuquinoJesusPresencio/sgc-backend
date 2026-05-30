@@ -1,6 +1,6 @@
 package com.condominios.sgc.web.controller;
 
-import com.condominios.sgc.domain.exception.DominioException;
+import com.condominios.sgc.domain.auxiliar.DominioException;
 import com.condominios.sgc.web.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

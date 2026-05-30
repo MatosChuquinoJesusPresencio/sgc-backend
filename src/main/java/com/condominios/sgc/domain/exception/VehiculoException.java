@@ -37,6 +37,6 @@ public final class VehiculoException extends DominioException {
     }
 
     public static VehiculoException vehiculoNoExistePorId(Long id) {
-        return new VehiculoException("No existe un vehiculo con el id " + id, TipoError.NOT_FOUND);
+        return new VehiculoException("El vehiculo con id " + id + " no existe", TipoError.NOT_FOUND);
     }
 }

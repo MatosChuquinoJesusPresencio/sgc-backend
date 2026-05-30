@@ -67,7 +67,7 @@ public class UsuarioAdapter implements UsuarioPort {
         var spec = UsuarioSpecifications.fromFiltros(request.filtros());
         Page<com.condominios.sgc.infrastructure.persistence.entity.UsuarioEntity> page =
                 usuarioRepository.findAll(spec, pageable);
-        return PaginacionResponse.of(
+        return PaginacionResponse.de(
                 page.getContent().stream().map(UsuarioMapper::toModel).toList(),
                 page.getNumber(),
                 page.getSize(),

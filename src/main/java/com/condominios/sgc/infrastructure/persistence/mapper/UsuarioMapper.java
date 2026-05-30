@@ -22,6 +22,7 @@ public final class UsuarioMapper {
         e.setActivo(model.isActivo());
         e.setCorreoPendiente(model.getCorreoPendiente());
         e.setCorreoVerificado(model.isCorreoVerificado());
+        e.setPasswordHash(model.getPasswordHash());
         return e;
     }
 
@@ -39,6 +40,7 @@ public final class UsuarioMapper {
         );
         model.asignarCorreoPendiente(e.getCorreoPendiente());
         model.asignarCorreoVerificado(e.getCorreoVerificado());
+        model.asignarPasswordHash(e.getPasswordHash());
         return model;
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class PisoAdapter implements PisoPort {
@@ -23,8 +24,8 @@ public class PisoAdapter implements PisoPort {
     }
 
     @Override
-    public PisoModel findById(Long id) {
-        return pisoRepository.findById(id).map(PisoMapper::toModel).orElse(null);
+    public Optional<PisoModel> findById(Long id) {
+        return pisoRepository.findById(id).map(PisoMapper::toModel);
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class TorreAdapter implements TorrePort {
@@ -23,8 +24,8 @@ public class TorreAdapter implements TorrePort {
     }
 
     @Override
-    public TorreModel findById(Long id) {
-        return torreRepository.findById(id).map(TorreMapper::toModel).orElse(null);
+    public Optional<TorreModel> findById(Long id) {
+        return torreRepository.findById(id).map(TorreMapper::toModel);
     }
 
     @Override

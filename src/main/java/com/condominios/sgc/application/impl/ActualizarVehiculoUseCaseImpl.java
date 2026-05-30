@@ -19,7 +19,7 @@ public class ActualizarVehiculoUseCaseImpl implements ActualizarVehiculoUseCase 
     public VehiculoResponse ejecutar(Long id, ActualizarVehiculoRequest request) {
         VehiculoModel modelo = vehiculoPort.findById(id)
                 .orElseThrow(() -> VehiculoException.vehiculoNoExistePorId(id));
-        modelo.actualizarDatos(request.color());
+        modelo.actualizar(modelo.getMarca(), request.color(), modelo.getModelo(), modelo.getPlaca(), modelo.getTipo(), modelo.getPropietarioId(), modelo.getInquilinoId(), modelo.getEstacionamientoId());
         VehiculoModel guardado = vehiculoPort.save(modelo);
         return new VehiculoResponse(
                 guardado.getId(),

@@ -30,7 +30,7 @@ public class RestablecerContrasenaUseCaseImpl implements RestablecerContrasenaUs
 
         autenticacionPort.actualizarPasswordAdmin(tokenModel.getUsuarioId(), nuevaContrasena);
 
-        tokenModel.setUsado(true);
+        tokenModel.cambiarUso(true);
         restablecimientoTokenPort.save(tokenModel);
     }
 }

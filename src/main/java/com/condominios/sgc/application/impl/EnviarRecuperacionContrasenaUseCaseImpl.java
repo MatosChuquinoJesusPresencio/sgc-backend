@@ -1,8 +1,5 @@
 package com.condominios.sgc.application.impl;
 
-import java.time.Instant;
-import java.util.UUID;
-
 import com.condominios.sgc.application.usecase.EnviarRecuperacionContrasenaUseCase;
 import com.condominios.sgc.domain.model.RestablecimientoTokenModel;
 import com.condominios.sgc.domain.port.CorreoPort;
@@ -30,16 +27,10 @@ public class EnviarRecuperacionContrasenaUseCaseImpl implements EnviarRecuperaci
         if (usuarioOpt.isEmpty()) return;
 
         var usuario = usuarioOpt.get();
-        String resetToken = UUID.randomUUID().toString();
 
-        var tokenModel = new RestablecimientoTokenModel(
-            UUID.randomUUID().toString(),
-            usuario.getId(),
-            resetToken,
-            Instant.now().plusSeconds(3600)
-        );
+        var tokenModel = RestablecimientoTokenModel.crear(usuario.getId());
         restablecimientoTokenPort.save(tokenModel);
 
-        correoPort.enviarRestablecimientoContrasena(email, resetToken);
+        correoPort.enviarRestablecimientoContrasena(email, tokenModel.getToken());
     }
 }

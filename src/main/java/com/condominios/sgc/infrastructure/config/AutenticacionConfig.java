@@ -3,8 +3,8 @@ package com.condominios.sgc.infrastructure.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.condominios.sgc.application.impl.ActualizarCorreoAdminUseCaseImpl;
 import com.condominios.sgc.application.impl.ActualizarCorreoUseCaseImpl;
@@ -33,13 +33,14 @@ import com.condominios.sgc.domain.port.CorreoPort;
 import com.condominios.sgc.domain.port.RestablecimientoTokenPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.domain.port.VerificacionTokenPort;
-import com.condominios.sgc.infrastructure.adapter.AutenticacionAdapter;
+import com.condominios.sgc.infrastructure.adapter.AutenticacionLocalAdapter;
 import com.condominios.sgc.infrastructure.adapter.RestablecimientoTokenAdapter;
 import com.condominios.sgc.infrastructure.adapter.VerificacionTokenAdapter;
-import com.condominios.sgc.infrastructure.client.SupabaseClient;
 import com.condominios.sgc.infrastructure.persistence.repository.RestablecimientoTokenRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.UsuarioRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.VerificacionTokenRepository;
+import com.condominios.sgc.infrastructure.security.JwtUtil;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class AutenticacionConfig {
@@ -50,17 +51,21 @@ public class AutenticacionConfig {
     }
 
     @Bean
-    public SupabaseClient supabaseClient(
-            RestTemplate restTemplate,
-            @Value("${supabase.url}") String supabaseUrl,
-            @Value("${supabase.anon-key}") String anonKey,
-            @Value("${supabase.service-role-key}") String serviceRoleKey) {
-        return new SupabaseClient(restTemplate, supabaseUrl, anonKey, serviceRoleKey);
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AutenticacionPort autenticacionPort(SupabaseClient supabaseClient, UsuarioPort usuarioPort) {
-        return new AutenticacionAdapter(supabaseClient, usuarioPort);
+    public JwtUtil jwtUtil(
+            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.access-token-expiration}") long accessTokenExpiration,
+            @Value("${jwt.refresh-token-expiration}") long refreshTokenExpiration) {
+        return new JwtUtil(secret, accessTokenExpiration, refreshTokenExpiration);
+    }
+
+    @Bean
+    public AutenticacionPort autenticacionPort(UsuarioPort usuarioPort, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
+        return new AutenticacionLocalAdapter(usuarioPort, jwtUtil, passwordEncoder);
     }
 
     @Bean
@@ -129,9 +134,8 @@ public class AutenticacionConfig {
     public ActualizarCorreoUseCase actualizarCorreoUseCase(
             UsuarioPort usuarioPort,
             VerificacionTokenPort verificacionTokenPort,
-            CorreoPort correoPort,
-            JwtDecoder jwtDecoder) {
-        return new ActualizarCorreoUseCaseImpl(usuarioPort, verificacionTokenPort, correoPort, jwtDecoder);
+            CorreoPort correoPort) {
+        return new ActualizarCorreoUseCaseImpl(usuarioPort, verificacionTokenPort, correoPort);
     }
 
     @Bean

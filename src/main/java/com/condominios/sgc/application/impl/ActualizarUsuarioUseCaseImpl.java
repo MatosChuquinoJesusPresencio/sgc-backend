@@ -24,11 +24,12 @@ public class ActualizarUsuarioUseCaseImpl implements ActualizarUsuarioUseCase {
         UsuarioModel usuario = usuarioPort.findById(id)
             .orElseThrow(UsuarioException::noEncontrado);
 
-        usuario.actualizarDatos(
+        usuario.actualizar(
             request.nombres(),
             request.apellidos(),
             request.telefono(),
-            request.rol()
+            request.rol(),
+            usuario.getCondominioId()
         );
 
         return usuarioPort.save(usuario);

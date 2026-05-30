@@ -24,6 +24,6 @@ public final class InquilinoException extends DominioException {
     }
 
     public static InquilinoException inquilinoNoExistePorId(Long id) {
-        return new InquilinoException("El inquilino con id " + id + " no existe", TipoError.BAD_REQUEST);
+        return new InquilinoException("El inquilino con id " + id + " no existe", TipoError.NOT_FOUND);
     }
 }

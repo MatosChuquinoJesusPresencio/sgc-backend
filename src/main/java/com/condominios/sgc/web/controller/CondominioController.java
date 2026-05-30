@@ -82,7 +82,7 @@ public class CondominioController {
         PaginacionRequest request = new PaginacionRequest(pagina, tamanio, ordenarPor, direccion, filtros);
         PaginacionResponse<CondominioModel> result = listarCondominiosUseCase.ejecutar(request);
 
-        return ResponseEntity.ok(PaginacionResponse.of(
+        return ResponseEntity.ok(PaginacionResponse.de(
             result.contenido().stream().map(CondominioResponse::fromModel).toList(),
             result.pagina(),
             result.tamanio(),

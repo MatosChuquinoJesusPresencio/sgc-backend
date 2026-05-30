@@ -35,6 +35,8 @@ public class UsuarioEntity {
     @Column(nullable = false)
     private Boolean activo;
 
+    private String passwordHash;
+
     private String correoPendiente;
 
     @Column(nullable = false)

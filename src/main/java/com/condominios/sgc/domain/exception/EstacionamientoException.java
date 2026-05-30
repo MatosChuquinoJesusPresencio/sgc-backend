@@ -15,14 +15,6 @@ public final class EstacionamientoException extends DominioException {
         return new EstacionamientoException("El estacionamiento ya esta ocupado", TipoError.BAD_REQUEST);
     }
 
-    public static EstacionamientoException estacionamientoNoExistePorId(Long id) {
-        return new EstacionamientoException("El estacionamiento con id " + id + " no existe", TipoError.NOT_FOUND);
-    }
-
-    public static EstacionamientoException estacionamientoYaExistePorId(Long id) {
-        return new EstacionamientoException("El estacionamiento con id " + id + " ya existe", TipoError.BAD_REQUEST);
-    }
-
     public static EstacionamientoException numeroObligatorio() {
         return new EstacionamientoException("El numero de estacionamiento es obligatorio", TipoError.BAD_REQUEST);
     }

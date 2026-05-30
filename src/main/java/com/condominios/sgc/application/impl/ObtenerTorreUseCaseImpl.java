@@ -15,10 +15,7 @@ public class ObtenerTorreUseCaseImpl implements ObtenerTorreUseCase {
 
     @Override
     public TorreModel ejecutar(Long id) {
-        TorreModel torre = torrePort.findById(id);
-        if (torre == null) {
-            throw TorreException.noEncontrada(id);
-        }
-        return torre;
+        return torrePort.findById(id)
+            .orElseThrow(() -> TorreException.noEncontrada(id));
     }
 }

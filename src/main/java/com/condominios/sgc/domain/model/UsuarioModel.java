@@ -122,4 +122,12 @@ public class UsuarioModel {
     public void cambiarActivo(boolean nuevoActivo) {
         this.activo = nuevoActivo;
     }
+
+    public void asignarCondominio(Long condominioId) {
+        this.condominioId = requerirNoNulo(condominioId, UsuarioException::condominioIdObligatorio);
+    }
+
+    public void desasignarCondominio() {
+        this.condominioId = null;
+    }
 }

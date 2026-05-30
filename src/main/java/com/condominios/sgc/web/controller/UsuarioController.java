@@ -78,7 +78,7 @@ public class UsuarioController {
         PaginacionRequest request = new PaginacionRequest(pagina, tamanio, ordenarPor, direccion, filtros);
         PaginacionResponse<UsuarioModel> result = listarUsuariosUseCase.ejecutar(request);
 
-        return ResponseEntity.ok(PaginacionResponse.of(
+        return ResponseEntity.ok(PaginacionResponse.de(
             result.contenido().stream().map(UsuarioResponse::fromModel).toList(),
             result.pagina(),
             result.tamanio(),

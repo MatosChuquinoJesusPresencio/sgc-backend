@@ -19,7 +19,8 @@ public class ActualizarInquilinoUseCaseImpl implements ActualizarInquilinoUseCas
     public InquilinoResponse ejecutar(Long id, ActualizarInquilinoRequest request) {
         InquilinoModel modelo = inquilinoPort.findById(id)
                 .orElseThrow(() -> InquilinoException.inquilinoNoExistePorId(id));
-        modelo.actualizarDatos(request.nombres(), request.apellidos());
+
+        modelo.actualizar(request.nombres(), request.apellidos(), modelo.getDni(), modelo.getApartamentoId());
         InquilinoModel guardado = inquilinoPort.save(modelo);
         return new InquilinoResponse(
                 guardado.getId(),

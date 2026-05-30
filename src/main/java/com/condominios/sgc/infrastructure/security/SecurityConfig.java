@@ -1,9 +1,11 @@
 package com.condominios.sgc.infrastructure.security;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
 import org.springframework.core.annotation.Order;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.GrantedAuthority;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -14,12 +16,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.port.UsuarioPort;
 
 @Configuration
@@ -46,26 +52,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
         return http.build();
     }
-/*
-    para probar cosas rapidas xd
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable()) // Desactivar CSRF para poder usar Postman
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // ¡ESTA ES LA MAGIA! Permite todas las peticiones sin token
-                )
-                // Si tienes configurado oauth2ResourceServer, puedes comentarlo o dejarlo,
-                // pero el permitAll() superior hará que no te exija token.
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        return http.build();
-    }
-    */
 
     @Bean
     @Order(2)
-    public SecurityFilterChain protectedEndpoints(HttpSecurity http, UsuarioPort usuarioPort) throws Exception {
+    public SecurityFilterChain protectedEndpoints(HttpSecurity http, UsuarioPort usuarioPort, JwtDecoder jwtDecoder) throws Exception {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
@@ -74,10 +64,32 @@ public class SecurityConfig {
             .oauth2ResourceServer(oauth2 -> oauth2
                 .bearerTokenResolver(cookieBearerTokenResolver())
                 .jwt(jwt -> jwt
+                    .decoder(jwtDecoder)
                     .jwtAuthenticationConverter(jwtAuthenticationConverter(usuarioPort))
                 )
             );
         return http.build();
+    }
+
+    @Bean
+    public JwtDecoder jwtDecoder(JwtUtil jwtUtil) {
+        return token -> {
+            try {
+                var claims = jwtUtil.validateToken(token);
+                return Jwt.withTokenValue(token)
+                    .subject(claims.getSubject())
+                    .claim("email", claims.get("email"))
+                    .claim("rol", claims.get("rol"))
+                    .issuedAt(claims.getIssuedAt() != null
+                        ? claims.getIssuedAt().toInstant() : Instant.now())
+                    .expiresAt(claims.getExpiration() != null
+                        ? claims.getExpiration().toInstant() : Instant.now())
+                    .header("alg", "HS256")
+                    .build();
+            } catch (JwtException e) {
+                throw new JwtException("Token invalido: " + e.getMessage());
+            }
+        };
     }
 
     private JwtAuthenticationConverter jwtAuthenticationConverter(UsuarioPort usuarioPort) {
@@ -85,8 +97,10 @@ public class SecurityConfig {
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
             String userId = jwt.getSubject();
             return usuarioPort.findById(userId)
-                .<Collection<GrantedAuthority>>map(usuario -> List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().name())))
-                .orElseGet(List::of);
+                .filter(UsuarioModel::isActivo)
+                .<Collection<GrantedAuthority>>map(usuario ->
+                    List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().name())))
+                .orElseThrow(() -> new AccessDeniedException("Usuario inactivo o no encontrado"));
         });
         return converter;
     }

@@ -19,7 +19,7 @@ public class CrearApartamentoUseCaseImpl implements CrearApartamentoUseCase {
 
     @Override
     public ApartamentoModel ejecutar(CrearApartamentoRequest request) {
-        PisoModel piso = pisoPort.findById(request.pisoId());
+        PisoModel piso = pisoPort.findById(request.pisoId()).orElse(null);
         if (piso == null) {
             throw PisoException.noEncontrado(request.pisoId());
         }
