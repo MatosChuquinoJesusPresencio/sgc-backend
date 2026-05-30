@@ -1,4 +1,4 @@
-package com.condominios.sgc.domain.auxiliar;
+package com.condominios.sgc.domain.dto;
 
 public record SesionUsuario(
     String accessToken,
