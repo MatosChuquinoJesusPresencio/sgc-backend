@@ -1,6 +1,6 @@
 package com.condominios.sgc.domain.port;
 
-import com.condominios.sgc.domain.dto.SesionUsuario;
+import com.condominios.sgc.domain.auxiliar.SesionUsuario;
 
 public interface AutenticacionPort {
     SesionUsuario login(String email, String password);
