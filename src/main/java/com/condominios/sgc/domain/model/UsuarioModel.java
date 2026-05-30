@@ -6,7 +6,7 @@ import com.condominios.sgc.domain.auxiliar.Rol;
 import com.condominios.sgc.domain.exception.UsuarioException;
 
 public class UsuarioModel {
-    private String id;
+    private Long id;
     private String nombres;
     private String apellidos;
     private String correo;
@@ -15,46 +15,53 @@ public class UsuarioModel {
     private Boolean activo;
     private Long condominioId;
     private String correoPendiente;
-    private Boolean correoVerificado = false;
+    private Boolean correoVerificado;
+    private String contrasena;
 
     public UsuarioModel(
-        String id, 
-        String nombres, 
-        String apellidos, 
-        String correo, 
-        String telefono, 
+        Long id,
+        String nombres,
+        String apellidos,
+        String correo,
+        String telefono,
         Rol rol,
         Boolean activo,
-        Long condominioId
+        Long condominioId,
+        String correoPendiente,
+        Boolean correoVerificado, 
+        String contrasena
     ) {
-        this(id, nombres, apellidos, correo, telefono, rol, activo);
-        this.condominioId = condominioId;
+        this.id = id;
+        asignarDatos(nombres, apellidos, telefono, rol, condominioId);
+        this.correo = requerirCorreoElectronicoValido(correo, UsuarioException::correoInvalido);
+        this.activo = requerirNoNulo(activo, UsuarioException::activoObligatorio);
+        this.correoPendiente = correoPendiente;
+        this.correoVerificado = correoVerificado;
+        this.contrasena = requerirNoVacio(contrasena, UsuarioException::contrasenaObligatoria);
     }
 
     public UsuarioModel(
-        String id,
-        String nombres, 
-        String apellidos, 
-        String correo, 
-        String telefono, 
+        String nombres,
+        String apellidos,
+        String correo,
+        String telefono,
         Rol rol,
-        Boolean activo
+        Long condominioId,
+        String contrasena
     ) {
-        this.id = requerirNoVacio(id, UsuarioException::idObligatorio);
-        validarYAsignarDatos(nombres, apellidos, telefono, rol, activo);
-        this.correo = requerirEmailValido(correo, UsuarioException::correoInvalido);
-        this.correoVerificado = false;
+        this(null, 
+            nombres,
+            apellidos,
+            correo, telefono,
+            rol, true, 
+            condominioId,
+            null,
+            true,
+            contrasena
+        );
     }
 
-    private void validarYAsignarDatos(String nombres, String apellidos, String telefono, Rol rol, Boolean activo) {
-        this.nombres = requerirNoVacio(nombres, UsuarioException::nombresObligatorios);
-        this.apellidos = requerirNoVacio(apellidos, UsuarioException::apellidosObligatorios);
-        this.telefono = requerirNoVacio(telefono, UsuarioException::telefonoObligatorio);
-        this.rol = requerirNoNulo(rol, UsuarioException::rolObligatorio);
-        this.activo = requerirNoNulo(activo, UsuarioException::activoObligatorio);
-    }
-
-    public String getId() { return id; }
+    public Long getId() { return id; }
     public String getNombres() { return nombres; }
     public String getApellidos() { return apellidos; }
     public String getCorreo() { return correo; }
@@ -64,48 +71,42 @@ public class UsuarioModel {
     public Long getCondominioId() { return condominioId; }
     public String getCorreoPendiente() { return correoPendiente; }
     public Boolean isCorreoVerificado() { return correoVerificado; }
+    public String getContrasena() { return contrasena; }
 
-    public void asignarCondominio(Long condominioId) {
-        this.condominioId = requerirNoNulo(condominioId, UsuarioException::condominioIdObligatorio);
-    }
-
-    public void desasignarCondominio() {
-        this.condominioId = null;
-    }
-
-    public void actualizarCorreo(String correo) {
-        this.correo = requerirEmailValido(correo, UsuarioException::correoInvalido);
-    }
-
-    public void pendienteVerificarCorreo(String nuevoCorreo) {
-        this.correoPendiente = requerirEmailValido(nuevoCorreo, UsuarioException::correoInvalido);
+    public void cambiarCorreo(String nuevoCorreo) {
+        this.correoPendiente = nuevoCorreo;
         this.correoVerificado = false;
     }
 
-    public void confirmarCorreo() {
+    public void confirmarCambioCorreo() {
         this.correo = this.correoPendiente;
         this.correoPendiente = null;
         this.correoVerificado = true;
     }
 
-    public void asignarCorreoVerificado(Boolean verificado) {
-        this.correoVerificado = requerirNoNulo(verificado, UsuarioException::activoObligatorio);
+    public void actualizarContrasena(String nuevaContrasena) {
+        this.contrasena = nuevaContrasena;
     }
 
-    public void asignarCorreoPendiente(String correoPendiente) {
-        this.correoPendiente = correoPendiente;
-    }
-
-    public void actualizarDatos(
-        String nombres,
-        String apellidos,
-        String telefono,
-        Rol rol
+    public void actualizar(
+        String nuevoNombres,
+        String nuevoApellidos,
+        String nuevoTelefono,
+        Rol nuevoRol,
+        Long condominioId
     ) {
-        validarYAsignarDatos(nombres, apellidos, telefono, rol, this.activo);
+        asignarDatos(nuevoNombres, nuevoApellidos, nuevoTelefono, nuevoRol, condominioId);
     }
 
-    public void actualizarEstado(Boolean activo) {
-        this.activo = requerirNoNulo(activo, UsuarioException::activoObligatorio);
+    private void asignarDatos(String nombres, String apellidos, String telefono, Rol rol, Long condominioId) {
+        this.nombres = requerirNoVacio(nombres, UsuarioException::nombresObligatorios);
+        this.apellidos = requerirNoVacio(apellidos, UsuarioException::apellidosObligatorios);
+        this.telefono = requerirNoVacio(telefono, UsuarioException::telefonoObligatorio);
+        this.rol = requerirNoNulo(rol, UsuarioException::rolObligatorio);
+        this.condominioId = requerirNoNulo(condominioId, UsuarioException::condominioIdObligatorio);
+    }
+
+    public void cambiarActivo(boolean nuevoActivo) {
+        this.activo = nuevoActivo;
     }
 }

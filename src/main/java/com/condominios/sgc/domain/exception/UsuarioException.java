@@ -1,8 +1,8 @@
 package com.condominios.sgc.domain.exception;
 
 public final class UsuarioException extends DominioException {
-    private UsuarioException(String mensaje, TipoError type) {
-        super(mensaje, type);
+    private UsuarioException(String mensaje, TipoError tipo) {
+        super(mensaje, tipo);
     }
 
     public static UsuarioException nombresObligatorios() {
@@ -36,36 +36,8 @@ public final class UsuarioException extends DominioException {
     public static UsuarioException condominioIdObligatorio() {
         return new UsuarioException("El id del condominio es obligatorio", TipoError.BAD_REQUEST);
     }
-
-    public static UsuarioException noEncontrado() {
-        return new UsuarioException("El usuario solicitado no existe", TipoError.NOT_FOUND);
-    }
-
-    public static UsuarioException esPropietarioDeApartamento() {
-        return new UsuarioException("No se puede eliminar el usuario porque es propietario de un apartamento", TipoError.BAD_REQUEST);
-    }
-
-    public static UsuarioException tieneVehiculosAsociados() {
-        return new UsuarioException("No se puede eliminar el usuario porque tiene vehiculos asociados", TipoError.BAD_REQUEST);
-    }
-
-    public static UsuarioException correoYaEnUso() {
-        return new UsuarioException("El correo ya esta en uso", TipoError.BAD_REQUEST);
-    }
-
-    public static UsuarioException idObligatorio() {
-        return new UsuarioException("El id del usuario es obligatorio", TipoError.BAD_REQUEST);
-    }
-
-    public static UsuarioException correoPendienteNoEncontrado() {
-        return new UsuarioException("No hay un cambio de correo pendiente de verificación", TipoError.BAD_REQUEST);
-    }
-
-    public static UsuarioException correoNoVerificado() {
-        return new UsuarioException("El correo aún no ha sido confirmado en Supabase", TipoError.BAD_REQUEST);
-    }
-
-    public static UsuarioException noPermisoParaAsignarRol() {
-        return new UsuarioException("No tienes permiso para asignar ese rol", TipoError.FORBIDDEN);
+    
+    public static UsuarioException contrasenaObligatoria() {
+        return new UsuarioException("La contraseña es obligatoria", TipoError.BAD_REQUEST);
     }
 }
