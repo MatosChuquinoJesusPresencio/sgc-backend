@@ -27,9 +27,6 @@ public class InquilinoEntity {
     @Column(nullable = false, unique = true)
     private String dni;
 
-    @Column(name = "usuario_id", nullable = false, unique = true)
-    private Long usuarioId;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "apartamento_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
