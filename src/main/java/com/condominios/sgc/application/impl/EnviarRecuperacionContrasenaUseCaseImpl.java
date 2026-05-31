@@ -1,9 +1,9 @@
 package com.condominios.sgc.application.impl;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
-import com.condominios.sgc.application.usecase.EnviarCorreoRecuperacionUseCase;
 import com.condominios.sgc.application.usecase.EnviarRecuperacionContrasenaUseCase;
 import com.condominios.sgc.domain.model.RestablecimientoTokenModel;
 import com.condominios.sgc.domain.port.RestablecimientoTokenPort;
@@ -13,24 +13,20 @@ public class EnviarRecuperacionContrasenaUseCaseImpl implements EnviarRecuperaci
 
     private final UsuarioPort usuarioPort;
     private final RestablecimientoTokenPort restablecimientoTokenPort;
-    private final EnviarCorreoRecuperacionUseCase enviarCorreoRecuperacionUseCase;
 
     public EnviarRecuperacionContrasenaUseCaseImpl(
             UsuarioPort usuarioPort,
-            RestablecimientoTokenPort restablecimientoTokenPort,
-            EnviarCorreoRecuperacionUseCase enviarCorreoRecuperacionUseCase) {
+            RestablecimientoTokenPort restablecimientoTokenPort) {
         this.usuarioPort = usuarioPort;
         this.restablecimientoTokenPort = restablecimientoTokenPort;
-        this.enviarCorreoRecuperacionUseCase = enviarCorreoRecuperacionUseCase;
     }
 
     @Override
-    public void ejecutar(String email) {
+    public Optional<String> ejecutar(String email, String resetToken) {
         var usuarioOpt = usuarioPort.findByCorreo(email);
-        if (usuarioOpt.isEmpty()) return;
+        if (usuarioOpt.isEmpty()) return Optional.empty();
 
         var usuario = usuarioOpt.get();
-        String resetToken = UUID.randomUUID().toString();
 
         var tokenModel = new RestablecimientoTokenModel(
             UUID.randomUUID().toString(),
@@ -40,6 +36,6 @@ public class EnviarRecuperacionContrasenaUseCaseImpl implements EnviarRecuperaci
         );
         restablecimientoTokenPort.save(tokenModel);
 
-        enviarCorreoRecuperacionUseCase.ejecutar(email, resetToken);
+        return Optional.of(resetToken);
     }
 }

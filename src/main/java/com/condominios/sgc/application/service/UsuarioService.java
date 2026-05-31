@@ -18,7 +18,10 @@ import com.condominios.sgc.application.usecase.VerificarCorreoUseCase;
 import com.condominios.sgc.domain.auxiliar.Rol;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
+
 import com.condominios.sgc.domain.model.UsuarioModel;
+
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -88,16 +91,16 @@ public class UsuarioService {
         return asignarCondominioUseCase.ejecutar(usuarioId, condominioId);
     }
 
-    public UsuarioModel actualizarCorreo(Long id, String nuevoCorreo) {
-        return actualizarCorreoUseCase.ejecutar(id, nuevoCorreo);
+    public UsuarioModel actualizarCorreo(Long id, String nuevoCorreo, String token) {
+        return actualizarCorreoUseCase.ejecutar(id, nuevoCorreo, token);
     }
 
     public UsuarioModel verificarCorreo(String token) {
         return verificarCorreoUseCase.ejecutar(token);
     }
 
-    public void enviarRecuperacionContrasena(String email) {
-        enviarRecuperacionContrasenaUseCase.ejecutar(email);
+    public Optional<String> enviarRecuperacionContrasena(String email, String token) {
+        return enviarRecuperacionContrasenaUseCase.ejecutar(email, token);
     }
 
     public void restablecerContrasena(String token, String nuevaContrasena) {

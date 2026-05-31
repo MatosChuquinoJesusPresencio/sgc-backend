@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.util.UUID;
 
 import com.condominios.sgc.application.usecase.ActualizarCorreoUseCase;
-import com.condominios.sgc.application.usecase.EnviarCorreoVerificacionUseCase;
 import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.model.VerificacionTokenModel;
@@ -15,27 +14,22 @@ public class ActualizarCorreoUseCaseImpl implements ActualizarCorreoUseCase {
 
     private final UsuarioPort usuarioPort;
     private final VerificacionTokenPort verificacionTokenPort;
-    private final EnviarCorreoVerificacionUseCase enviarCorreoVerificacionUseCase;
 
     public ActualizarCorreoUseCaseImpl(
             UsuarioPort usuarioPort,
-            VerificacionTokenPort verificacionTokenPort,
-            EnviarCorreoVerificacionUseCase enviarCorreoVerificacionUseCase) {
+            VerificacionTokenPort verificacionTokenPort) {
         this.usuarioPort = usuarioPort;
         this.verificacionTokenPort = verificacionTokenPort;
-        this.enviarCorreoVerificacionUseCase = enviarCorreoVerificacionUseCase;
     }
 
     @Override
-    public UsuarioModel ejecutar(Long id, String nuevoCorreo) {
+    public UsuarioModel ejecutar(Long id, String nuevoCorreo, String verificationToken) {
         var usuario = usuarioPort.findById(id)
             .orElseThrow(UsuarioException::noEncontrado);
 
         if (usuarioPort.existsByCorreo(nuevoCorreo)) {
             throw UsuarioException.correoYaEnUso();
         }
-
-        String verificationToken = UUID.randomUUID().toString();
 
         var tokenModel = new VerificacionTokenModel(
             UUID.randomUUID().toString(),
@@ -45,8 +39,6 @@ public class ActualizarCorreoUseCaseImpl implements ActualizarCorreoUseCase {
             Instant.now().plusSeconds(3600)
         );
         verificacionTokenPort.save(tokenModel);
-
-        enviarCorreoVerificacionUseCase.ejecutar(nuevoCorreo, verificationToken);
 
         usuario.cambiarCorreo(nuevoCorreo);
 

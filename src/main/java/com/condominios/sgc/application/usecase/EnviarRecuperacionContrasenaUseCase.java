@@ -1,5 +1,7 @@
 package com.condominios.sgc.application.usecase;
 
+import java.util.Optional;
+
 public interface EnviarRecuperacionContrasenaUseCase {
-    void ejecutar(String email);
+    Optional<String> ejecutar(String email, String token);
 }
