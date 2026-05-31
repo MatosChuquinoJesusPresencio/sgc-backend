@@ -103,7 +103,7 @@ public class UsuarioModel {
         this.apellidos = requerirNoVacio(apellidos, UsuarioException::apellidosObligatorios);
         this.telefono = requerirNoVacio(telefono, UsuarioException::telefonoObligatorio);
         this.rol = requerirNoNulo(rol, UsuarioException::rolObligatorio);
-        this.condominioId = requerirNoNulo(condominioId, UsuarioException::condominioIdObligatorio);
+        this.condominioId = condominioId;
     }
 
     public void cambiarActivo(boolean nuevoActivo) {
