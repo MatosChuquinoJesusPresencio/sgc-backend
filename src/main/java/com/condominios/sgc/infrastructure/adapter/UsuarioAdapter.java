@@ -3,6 +3,7 @@ package com.condominios.sgc.infrastructure.adapter;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.UsuarioModel;
+import com.condominios.sgc.domain.exception.CondominioException;
 import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.infrastructure.persistence.mapper.UsuarioMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.CondominioRepository;
@@ -44,7 +45,7 @@ public class UsuarioAdapter implements UsuarioPort {
         var entity = UsuarioMapper.toEntity(model);
         if (model.getCondominioId() != null) {
             entity.setCondominio(condominioRepository.findById(model.getCondominioId())
-                .orElseThrow(() -> new RuntimeException("Condominio no encontrado: " + model.getCondominioId())));
+                .orElseThrow(() -> CondominioException.noEncontrado(model.getCondominioId())));
         }
         var saved = usuarioRepository.save(entity);
         return UsuarioMapper.toModel(saved);

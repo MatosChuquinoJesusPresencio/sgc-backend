@@ -3,9 +3,11 @@ package com.condominios.sgc.infrastructure.adapter;
 import com.condominios.sgc.domain.auxiliar.Rol;
 import com.condominios.sgc.domain.auxiliar.SesionUsuario;
 import com.condominios.sgc.domain.auxiliar.UsuarioAutenticado;
+import com.condominios.sgc.domain.exception.AutenticacionException;
+import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.port.AutenticacionPort;
-import com.condominios.sgc.infrastructure.persistence.repository.UsuarioRepository;
 import com.condominios.sgc.infrastructure.util.JwtUtil;
+import com.condominios.sgc.infrastructure.persistence.repository.UsuarioRepository;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,10 +31,10 @@ public class AutenticacionAdapter implements AutenticacionPort {
     @Override
     public SesionUsuario login(String email, String password) {
         var usuario = usuarioRepository.findByCorreo(email)
-            .orElseThrow(() -> new RuntimeException("Credenciales invalidas"));
+            .orElseThrow(AutenticacionException::credencialesInvalidas);
 
         if (!passwordEncoder.matches(password, usuario.getPasswordHash())) {
-            throw new RuntimeException("Credenciales invalidas");
+            throw AutenticacionException.credencialesInvalidas();
         }
 
         var userId = String.valueOf(usuario.getId());
@@ -69,7 +71,7 @@ public class AutenticacionAdapter implements AutenticacionPort {
     @Override
     public void changePassword(Long userId, String newPassword) {
         var usuario = usuarioRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + userId));
+            .orElseThrow(UsuarioException::noEncontrado);
         usuario.setPasswordHash(passwordEncoder.encode(newPassword));
         usuarioRepository.save(usuario);
     }
@@ -77,7 +79,7 @@ public class AutenticacionAdapter implements AutenticacionPort {
     @Override
     public void updateEmail(Long userId, String newEmail) {
         var usuario = usuarioRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + userId));
+            .orElseThrow(UsuarioException::noEncontrado);
         usuario.setCorreoPendiente(newEmail);
         usuarioRepository.save(usuario);
     }
@@ -87,7 +89,7 @@ public class AutenticacionAdapter implements AutenticacionPort {
         Claims claims = jwtUtil.validateToken(refreshToken);
         var userId = Long.valueOf(claims.getSubject());
         var usuario = usuarioRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + userId));
+            .orElseThrow(UsuarioException::noEncontrado);
 
         var newAccessToken = jwtUtil.generateAccessToken(
             String.valueOf(usuario.getId()), usuario.getCorreo(), usuario.getRol().name());
@@ -107,7 +109,7 @@ public class AutenticacionAdapter implements AutenticacionPort {
     @Override
     public void deleteUser(Long userId) {
         var usuario = usuarioRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + userId));
+            .orElseThrow(UsuarioException::noEncontrado);
         usuarioRepository.delete(usuario);
     }
 }

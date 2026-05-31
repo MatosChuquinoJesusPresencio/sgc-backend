@@ -3,6 +3,7 @@ package com.condominios.sgc.infrastructure.adapter;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.TorreModel;
+import com.condominios.sgc.domain.exception.CondominioException;
 import com.condominios.sgc.domain.port.TorrePort;
 import com.condominios.sgc.infrastructure.persistence.mapper.TorreMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.CondominioRepository;
@@ -39,7 +40,7 @@ public class TorreAdapter implements TorrePort {
     public TorreModel save(TorreModel model) {
         var entity = TorreMapper.toEntity(model);
         entity.setCondominio(condominioRepository.findById(model.getCondominioId())
-            .orElseThrow(() -> new RuntimeException("Condominio no encontrado: " + model.getCondominioId())));
+            .orElseThrow(() -> CondominioException.noEncontrado(model.getCondominioId())));
         var saved = torreRepository.save(entity);
         return TorreMapper.toModel(saved);
     }

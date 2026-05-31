@@ -3,6 +3,8 @@ package com.condominios.sgc.infrastructure.adapter;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.LogAccesoVehicularModel;
+import com.condominios.sgc.domain.exception.EstacionamientoException;
+import com.condominios.sgc.domain.exception.VehiculoException;
 import com.condominios.sgc.domain.port.LogAccesoVehicularPort;
 import com.condominios.sgc.infrastructure.persistence.mapper.LogAccesoVehicularMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.EstacionamientoRepository;
@@ -51,11 +53,11 @@ public class LogAccesoVehicularAdapter implements LogAccesoVehicularPort {
         var entity = LogAccesoVehicularMapper.toEntity(model);
         if (model.getVehiculoId() != null) {
             entity.setVehiculo(vehiculoRepository.findById(model.getVehiculoId())
-                .orElseThrow(() -> new RuntimeException("Vehiculo no encontrado: " + model.getVehiculoId())));
+                .orElseThrow(() -> VehiculoException.noEncontrado(model.getVehiculoId())));
         }
         if (model.getEstacionamientoId() != null) {
             entity.setEstacionamiento(estacionamientoRepository.findById(model.getEstacionamientoId())
-                .orElseThrow(() -> new RuntimeException("Estacionamiento no encontrado: " + model.getEstacionamientoId())));
+                .orElseThrow(() -> EstacionamientoException.noEncontrado(model.getEstacionamientoId())));
         }
         var saved = logAccesoVehicularRepository.save(entity);
         return LogAccesoVehicularMapper.toModel(saved);

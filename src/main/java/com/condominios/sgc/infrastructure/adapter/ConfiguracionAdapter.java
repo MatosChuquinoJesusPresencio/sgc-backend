@@ -1,6 +1,7 @@
 package com.condominios.sgc.infrastructure.adapter;
 
 import com.condominios.sgc.domain.model.ConfiguracionModel;
+import com.condominios.sgc.domain.exception.CondominioException;
 import com.condominios.sgc.domain.port.ConfiguracionPort;
 import com.condominios.sgc.infrastructure.persistence.entity.ApartamentoEntity;
 import com.condominios.sgc.infrastructure.persistence.mapper.ConfiguracionMapper;
@@ -49,7 +50,7 @@ public class ConfiguracionAdapter implements ConfiguracionPort {
     public ConfiguracionModel save(ConfiguracionModel model) {
         var entity = ConfiguracionMapper.toEntity(model);
         entity.setCondominio(condominioRepository.findById(model.getCondominioId())
-            .orElseThrow(() -> new RuntimeException("Condominio no encontrado: " + model.getCondominioId())));
+            .orElseThrow(() -> CondominioException.noEncontrado(model.getCondominioId())));
         var saved = configuracionRepository.save(entity);
         return ConfiguracionMapper.toModel(saved);
     }

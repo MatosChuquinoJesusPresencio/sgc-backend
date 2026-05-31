@@ -3,6 +3,7 @@ package com.condominios.sgc.infrastructure.adapter;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.PisoModel;
+import com.condominios.sgc.domain.exception.TorreException;
 import com.condominios.sgc.domain.port.PisoPort;
 import com.condominios.sgc.infrastructure.persistence.mapper.PisoMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.PisoRepository;
@@ -39,7 +40,7 @@ public class PisoAdapter implements PisoPort {
     public PisoModel save(PisoModel model) {
         var entity = PisoMapper.toEntity(model);
         entity.setTorre(torreRepository.findById(model.getTorreId())
-            .orElseThrow(() -> new RuntimeException("Torre no encontrada: " + model.getTorreId())));
+            .orElseThrow(() -> TorreException.noEncontrada(model.getTorreId())));
         var saved = pisoRepository.save(entity);
         return PisoMapper.toModel(saved);
     }

@@ -3,6 +3,9 @@ package com.condominios.sgc.infrastructure.adapter;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.VehiculoModel;
+import com.condominios.sgc.domain.exception.EstacionamientoException;
+import com.condominios.sgc.domain.exception.InquilinoException;
+import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.port.VehiculoPort;
 import com.condominios.sgc.infrastructure.persistence.mapper.VehiculoMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.EstacionamientoRepository;
@@ -64,15 +67,15 @@ public class VehiculoAdapter implements VehiculoPort {
         var entity = VehiculoMapper.toEntity(model);
         if (model.getPropietarioId() != null) {
             entity.setPropietario(usuarioRepository.findById(model.getPropietarioId())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + model.getPropietarioId())));
+                .orElseThrow(() -> UsuarioException.noEncontrado()));
         }
         if (model.getInquilinoId() != null) {
             entity.setInquilino(inquilinoRepository.findById(model.getInquilinoId())
-                .orElseThrow(() -> new RuntimeException("Inquilino no encontrado: " + model.getInquilinoId())));
+                .orElseThrow(() -> InquilinoException.noEncontrado(model.getInquilinoId())));
         }
         if (model.getEstacionamientoId() != null) {
             entity.setEstacionamiento(estacionamientoRepository.findById(model.getEstacionamientoId())
-                .orElseThrow(() -> new RuntimeException("Estacionamiento no encontrado: " + model.getEstacionamientoId())));
+                .orElseThrow(() -> EstacionamientoException.noEncontrado(model.getEstacionamientoId())));
         }
         var saved = vehiculoRepository.save(entity);
         return VehiculoMapper.toModel(saved);

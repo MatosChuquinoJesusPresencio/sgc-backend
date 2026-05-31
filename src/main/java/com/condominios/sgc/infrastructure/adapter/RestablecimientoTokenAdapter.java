@@ -1,6 +1,7 @@
 package com.condominios.sgc.infrastructure.adapter;
 
 import com.condominios.sgc.domain.model.RestablecimientoTokenModel;
+import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.port.RestablecimientoTokenPort;
 import com.condominios.sgc.infrastructure.persistence.mapper.RestablecimientoTokenMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.RestablecimientoTokenRepository;
@@ -29,7 +30,7 @@ public class RestablecimientoTokenAdapter implements RestablecimientoTokenPort {
     @Override
     public RestablecimientoTokenModel save(RestablecimientoTokenModel model) {
         var usuario = usuarioRepository.findById(model.getUsuarioId())
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + model.getUsuarioId()));
+            .orElseThrow(() -> UsuarioException.noEncontrado());
         var entity = RestablecimientoTokenMapper.toEntity(model, usuario);
         var saved = restablecimientoTokenRepository.save(entity);
         return RestablecimientoTokenMapper.toModel(saved);

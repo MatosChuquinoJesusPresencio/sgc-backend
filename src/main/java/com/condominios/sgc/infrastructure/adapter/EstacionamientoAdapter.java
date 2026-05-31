@@ -3,6 +3,8 @@ package com.condominios.sgc.infrastructure.adapter;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.EstacionamientoModel;
+import com.condominios.sgc.domain.exception.ApartamentoException;
+import com.condominios.sgc.domain.exception.CondominioException;
 import com.condominios.sgc.domain.port.EstacionamientoPort;
 import com.condominios.sgc.infrastructure.persistence.mapper.EstacionamientoMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.ApartamentoRepository;
@@ -53,10 +55,10 @@ public class EstacionamientoAdapter implements EstacionamientoPort {
     public EstacionamientoModel save(EstacionamientoModel model) {
         var entity = EstacionamientoMapper.toEntity(model);
         entity.setCondominio(condominioRepository.findById(model.getCondominioId())
-            .orElseThrow(() -> new RuntimeException("Condominio no encontrado: " + model.getCondominioId())));
+            .orElseThrow(() -> CondominioException.noEncontrado(model.getCondominioId())));
         if (model.getApartamentoId() != null) {
             entity.setApartamento(apartamentoRepository.findById(model.getApartamentoId())
-                .orElseThrow(() -> new RuntimeException("Apartamento no encontrado: " + model.getApartamentoId())));
+                .orElseThrow(() -> ApartamentoException.noEncontrado(model.getApartamentoId())));
         }
         var saved = estacionamientoRepository.save(entity);
         return EstacionamientoMapper.toModel(saved);

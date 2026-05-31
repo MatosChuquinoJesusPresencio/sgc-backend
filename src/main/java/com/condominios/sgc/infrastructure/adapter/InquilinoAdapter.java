@@ -3,6 +3,7 @@ package com.condominios.sgc.infrastructure.adapter;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.InquilinoModel;
+import com.condominios.sgc.domain.exception.ApartamentoException;
 import com.condominios.sgc.domain.port.InquilinoPort;
 import com.condominios.sgc.infrastructure.persistence.mapper.InquilinoMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.ApartamentoRepository;
@@ -44,7 +45,7 @@ public class InquilinoAdapter implements InquilinoPort {
     public InquilinoModel save(InquilinoModel model) {
         var entity = InquilinoMapper.toEntity(model);
         entity.setApartamento(apartamentoRepository.findById(model.getApartamentoId())
-            .orElseThrow(() -> new RuntimeException("Apartamento no encontrado: " + model.getApartamentoId())));
+            .orElseThrow(() -> ApartamentoException.noEncontrado(model.getApartamentoId())));
         var saved = inquilinoRepository.save(entity);
         return InquilinoMapper.toModel(saved);
     }

@@ -3,6 +3,8 @@ package com.condominios.sgc.infrastructure.adapter;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.ApartamentoModel;
+import com.condominios.sgc.domain.exception.PisoException;
+import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.port.ApartamentoPort;
 import com.condominios.sgc.infrastructure.persistence.mapper.ApartamentoMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.ApartamentoRepository;
@@ -44,10 +46,10 @@ public class ApartamentoAdapter implements ApartamentoPort {
     public ApartamentoModel save(ApartamentoModel model) {
         var entity = ApartamentoMapper.toEntity(model);
         entity.setPiso(pisoRepository.findById(model.getPisoId())
-            .orElseThrow(() -> new RuntimeException("Piso no encontrado: " + model.getPisoId())));
+            .orElseThrow(() -> PisoException.noEncontrado(model.getPisoId())));
         if (model.getPropietarioId() != null) {
             entity.setPropietario(usuarioRepository.findById(model.getPropietarioId())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + model.getPropietarioId())));
+                .orElseThrow(() -> UsuarioException.noEncontrado()));
         }
         var saved = apartamentoRepository.save(entity);
         return ApartamentoMapper.toModel(saved);

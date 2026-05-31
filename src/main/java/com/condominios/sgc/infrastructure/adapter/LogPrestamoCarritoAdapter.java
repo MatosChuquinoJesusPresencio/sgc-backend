@@ -3,6 +3,10 @@ package com.condominios.sgc.infrastructure.adapter;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.LogPrestamoCarritoModel;
+import com.condominios.sgc.domain.exception.ApartamentoException;
+import com.condominios.sgc.domain.exception.CarritoException;
+import com.condominios.sgc.domain.exception.InquilinoException;
+import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.port.LogPrestamoCarritoPort;
 import com.condominios.sgc.infrastructure.persistence.mapper.LogPrestamoCarritoMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.ApartamentoRepository;
@@ -62,19 +66,19 @@ public class LogPrestamoCarritoAdapter implements LogPrestamoCarritoPort {
         var entity = LogPrestamoCarritoMapper.toEntity(model);
         if (model.getApartamentoId() != null) {
             entity.setApartamento(apartamentoRepository.findById(model.getApartamentoId())
-                .orElseThrow(() -> new RuntimeException("Apartamento no encontrado: " + model.getApartamentoId())));
+                .orElseThrow(() -> ApartamentoException.noEncontrado(model.getApartamentoId())));
         }
         if (model.getCarritoId() != null) {
             entity.setCarrito(carritoRepository.findById(model.getCarritoId())
-                .orElseThrow(() -> new RuntimeException("Carrito no encontrado: " + model.getCarritoId())));
+                .orElseThrow(() -> CarritoException.noEncontrado(model.getCarritoId())));
         }
         if (model.getInquilinoId() != null) {
             entity.setInquilino(inquilinoRepository.findById(model.getInquilinoId())
-                .orElseThrow(() -> new RuntimeException("Inquilino no encontrado: " + model.getInquilinoId())));
+                .orElseThrow(() -> InquilinoException.noEncontrado(model.getInquilinoId())));
         }
         if (model.getPropietarioId() != null) {
             entity.setPropietario(usuarioRepository.findById(model.getPropietarioId())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + model.getPropietarioId())));
+                .orElseThrow(() -> UsuarioException.noEncontrado()));
         }
         var saved = logPrestamoCarritoRepository.save(entity);
         return LogPrestamoCarritoMapper.toModel(saved);
