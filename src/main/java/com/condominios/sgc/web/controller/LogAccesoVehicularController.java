@@ -57,7 +57,7 @@ public class LogAccesoVehicularController {
     }
 
     @PostMapping("/entrada")
-    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO','SEGURIDAD')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO','AGENTE_SEGURIDAD')")
     public ResponseEntity<LogAccesoVehicularResponse> registrarEntrada(
             @Valid @RequestBody RegistrarEntradaRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -65,7 +65,7 @@ public class LogAccesoVehicularController {
     }
 
     @PostMapping("/{id}/salida")
-    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO','SEGURIDAD')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO','AGENTE_SEGURIDAD')")
     public ResponseEntity<LogAccesoVehicularResponse> registrarSalida(@PathVariable Long id) {
         return ResponseEntity.ok(LogAccesoVehicularResponse.fromModel(logAccesoService.registrarSalida(id)));
     }
