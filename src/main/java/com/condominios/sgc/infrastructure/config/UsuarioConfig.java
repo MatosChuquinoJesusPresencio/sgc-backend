@@ -7,7 +7,6 @@ import com.condominios.sgc.application.impl.ActualizarCorreoUseCaseImpl;
 import com.condominios.sgc.application.impl.ActualizarEstadoUsuarioUseCaseImpl;
 import com.condominios.sgc.application.impl.ActualizarUsuarioUseCaseImpl;
 import com.condominios.sgc.application.impl.CambiarContrasenaUseCaseImpl;
-import com.condominios.sgc.application.impl.CrearInquilinoUseCaseImpl;
 import com.condominios.sgc.application.impl.CrearUsuarioUseCaseImpl;
 import com.condominios.sgc.application.impl.EliminarUsuarioUseCaseImpl;
 import com.condominios.sgc.application.impl.ListarUsuariosUseCaseImpl;
@@ -17,15 +16,12 @@ import com.condominios.sgc.application.usecase.ActualizarCorreoUseCase;
 import com.condominios.sgc.application.usecase.ActualizarEstadoUsuarioUseCase;
 import com.condominios.sgc.application.usecase.ActualizarUsuarioUseCase;
 import com.condominios.sgc.application.usecase.CambiarContrasenaUseCase;
-import com.condominios.sgc.application.usecase.CrearInquilinoUseCase;
 import com.condominios.sgc.application.usecase.CrearUsuarioUseCase;
 import com.condominios.sgc.application.usecase.EliminarUsuarioUseCase;
 import com.condominios.sgc.application.usecase.ListarUsuariosUseCase;
 import com.condominios.sgc.application.usecase.ObtenerUsuarioUseCase;
 import com.condominios.sgc.application.usecase.VerificarCorreoUseCase;
 import com.condominios.sgc.domain.port.AutenticacionPort;
-import com.condominios.sgc.domain.port.ConfiguracionPort;
-import com.condominios.sgc.domain.port.InquilinoPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.domain.port.VerificacionTokenPort;
 
@@ -75,10 +71,5 @@ public class UsuarioConfig {
     @Bean
     public VerificarCorreoUseCase verificarCorreoUseCase(UsuarioPort usuarioPort, AutenticacionPort autenticacionPort, VerificacionTokenPort verificacionTokenPort) {
         return new VerificarCorreoUseCaseImpl(usuarioPort, autenticacionPort, verificacionTokenPort);
-    }
-
-    @Bean
-    public CrearInquilinoUseCase crearInquilinoUseCase(InquilinoPort inquilinoPort, ConfiguracionPort configuracionPort) {
-        return new CrearInquilinoUseCaseImpl(inquilinoPort, configuracionPort);
     }
 }
