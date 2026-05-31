@@ -13,7 +13,7 @@ public class CookieBearerTokenResolver implements BearerTokenResolver {
     public String resolve(HttpServletRequest request) {
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
-                if ("jwt".equals(cookie.getName())) {
+                if ("access_token".equals(cookie.getName())) {
                     String value = cookie.getValue();
                     if (value != null && !value.isBlank()) {
                         return value;

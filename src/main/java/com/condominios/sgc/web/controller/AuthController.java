@@ -26,6 +26,8 @@ import com.condominios.sgc.web.dto.ResetPasswordRequest;
 import com.condominios.sgc.web.dto.UpdateEmailRequest;
 import com.condominios.sgc.web.dto.UsuarioResponse;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -46,7 +48,9 @@ public class AuthController {
             HttpServletResponse response) {
         var completa = autenticacionService.iniciarSesion(request.email(), request.password());
         response.addHeader("Set-Cookie",
-            CookieUtils.crearCookieJwt(completa.sesion().accessToken(), completa.sesion().expiresIn()).toString());
+            CookieUtils.crearCookieAccessToken(completa.sesion().accessToken(), completa.sesion().expiresIn()).toString());
+        response.addHeader("Set-Cookie",
+            CookieUtils.crearCookieRefreshToken(completa.sesion().refreshToken(), 604800000L).toString());
         return ResponseEntity.ok(AuthResponse.fromSesion(completa.sesion(), UsuarioResponse.fromModel(completa.usuario())));
     }
 
@@ -64,17 +68,34 @@ public class AuthController {
             HttpServletResponse response) {
         autenticacionService.cerrarSesion(jwt.getTokenValue());
         response.addHeader("Set-Cookie",
-            CookieUtils.limpiarCookieJwt().toString());
+            CookieUtils.limpiarCookieAccessToken().toString());
+        response.addHeader("Set-Cookie",
+            CookieUtils.limpiarCookieRefreshToken().toString());
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(
-            @RequestBody RefreshTokenRequest request,
+            @RequestBody(required = false) RefreshTokenRequest body,
+            HttpServletRequest request,
             HttpServletResponse response) {
-        var completa = autenticacionService.refrescarToken(request.refreshToken());
+        String refreshToken = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("refresh_token".equals(cookie.getName())) {
+                    refreshToken = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        if (refreshToken == null && body != null) {
+            refreshToken = body.refreshToken();
+        }
+        var completa = autenticacionService.refrescarToken(refreshToken);
         response.addHeader("Set-Cookie",
-            CookieUtils.crearCookieJwt(completa.sesion().accessToken(), completa.sesion().expiresIn()).toString());
+            CookieUtils.crearCookieAccessToken(completa.sesion().accessToken(), completa.sesion().expiresIn()).toString());
+        response.addHeader("Set-Cookie",
+            CookieUtils.crearCookieRefreshToken(completa.sesion().refreshToken(), 604800000L).toString());
         return ResponseEntity.ok(AuthResponse.fromSesion(completa.sesion(), UsuarioResponse.fromModel(completa.usuario())));
     }
 
