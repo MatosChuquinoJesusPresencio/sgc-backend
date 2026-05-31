@@ -1,6 +1,8 @@
 package com.condominios.sgc.application.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 public record CrearPisoRequest(
-    Integer numero,
-    Long torreId
+    @NotNull Integer numero,
+    @NotNull Long torreId
 ) {}

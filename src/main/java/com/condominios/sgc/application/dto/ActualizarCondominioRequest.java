@@ -1,8 +1,10 @@
 package com.condominios.sgc.application.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public record ActualizarCondominioRequest(
-    String nombre,
-    String pais,
-    String ciudad,
-    String direccion
+    @NotBlank String nombre,
+    @NotBlank String pais,
+    @NotBlank String ciudad,
+    @NotBlank String direccion
 ) {}

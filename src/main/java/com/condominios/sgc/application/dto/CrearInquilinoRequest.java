@@ -1,8 +1,11 @@
 package com.condominios.sgc.application.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public record CrearInquilinoRequest(
-    String nombres,
-    String apellidos,
-    String dni,
-    Long apartamentoId
+    @NotBlank String nombres,
+    @NotBlank String apellidos,
+    @NotBlank String dni,
+    @NotNull Long apartamentoId
 ) {}

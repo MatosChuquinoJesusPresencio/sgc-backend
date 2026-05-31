@@ -1,13 +1,16 @@
 package com.condominios.sgc.application.dto;
 
 import com.condominios.sgc.domain.auxiliar.Rol;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record CrearUsuarioRequest(
-    String nombres,
-    String apellidos,
-    String correo,
-    String telefono,
-    Rol rol,
-    Long condominioId,
-    String contrasena
+    @NotBlank String nombres,
+    @NotBlank String apellidos,
+    @NotBlank @Email String correo,
+    @NotBlank String telefono,
+    @NotNull Rol rol,
+    @NotNull Long condominioId,
+    @NotBlank String contrasena
 ) {}
