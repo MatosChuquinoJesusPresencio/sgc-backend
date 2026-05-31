@@ -1,4 +1,6 @@
 package com.condominios.sgc.web.dto;
 
-public record ResetPasswordRequest(String token, String password) {
+import jakarta.validation.constraints.NotBlank;
+
+public record ResetPasswordRequest(@NotBlank String token, @NotBlank String password) {
 }
