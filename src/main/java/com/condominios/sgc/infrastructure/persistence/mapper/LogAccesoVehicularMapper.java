@@ -27,11 +27,13 @@ public final class LogAccesoVehicularMapper {
     public static LogAccesoVehicularModel toModel(LogAccesoVehicularEntity e) {
         if (e == null) return null;
         return new LogAccesoVehicularModel(
-                e.getId(), 
-                e.getPlaca(), 
-                e.getOcupante(), 
+                e.getId(),
+                e.getPlaca(),
+                e.getOcupante(),
                 e.getDatosInquilino(),
                 e.getMetodo(),
+                e.getFechaEntrada(),
+                e.getFechaSalida(),
                 idDe(e.getVehiculo(), VehiculoEntity::getId),
                 idDe(e.getEstacionamiento(), EstacionamientoEntity::getId)
         );

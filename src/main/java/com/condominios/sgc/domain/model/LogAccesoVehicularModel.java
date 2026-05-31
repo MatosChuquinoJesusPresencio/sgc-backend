@@ -34,6 +34,20 @@ public class LogAccesoVehicularModel {
         this.id = id;
     }
 
+    public LogAccesoVehicularModel(Long id, String placa, TipoHabitante ocupante, String datosInquilino,
+            MetodoEntrada metodo, LocalDateTime fechaEntrada, LocalDateTime fechaSalida,
+            Long vehiculoId, Long estacionamientoId) {
+        this.id = id;
+        this.placa = placa;
+        this.ocupante = ocupante;
+        this.datosInquilino = datosInquilino;
+        this.metodo = metodo;
+        this.fechaEntrada = fechaEntrada;
+        this.fechaSalida = fechaSalida;
+        this.vehiculoId = vehiculoId;
+        this.estacionamientoId = estacionamientoId;
+    }
+
     private void validarYAsignarDatos(String placa, TipoHabitante ocupante, MetodoEntrada metodo) {
         this.placa = requerirNoVacio(placa, LogAccesoVehicularException::placaObligatoria);
         this.ocupante = requerirNoNulo(ocupante, LogAccesoVehicularException::ocupanteObligatorio);
