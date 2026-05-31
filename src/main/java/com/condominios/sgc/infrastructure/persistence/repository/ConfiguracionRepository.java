@@ -2,6 +2,8 @@ package com.condominios.sgc.infrastructure.persistence.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.condominios.sgc.infrastructure.persistence.entity.ConfiguracionEntity;
@@ -13,4 +15,9 @@ public interface ConfiguracionRepository extends JpaRepository<ConfiguracionEnti
         JpaSpecificationExecutor<ConfiguracionEntity> {
 
     Optional<ConfiguracionEntity> findByCondominioId(Long condominioId);
+
+    @Query("SELECT c FROM ConfiguracionEntity c " +
+           "WHERE c.condominio.id = " +
+           "(SELECT a.piso.torre.condominio.id FROM ApartamentoEntity a WHERE a.id = :apartamentoId)")
+    Optional<ConfiguracionEntity> findByApartamentoId(@Param("apartamentoId") Long apartamentoId);
 }

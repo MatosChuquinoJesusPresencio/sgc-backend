@@ -3,9 +3,7 @@ package com.condominios.sgc.infrastructure.adapter;
 import com.condominios.sgc.domain.model.ConfiguracionModel;
 import com.condominios.sgc.domain.exception.CondominioException;
 import com.condominios.sgc.domain.port.ConfiguracionPort;
-import com.condominios.sgc.infrastructure.persistence.entity.ApartamentoEntity;
 import com.condominios.sgc.infrastructure.persistence.mapper.ConfiguracionMapper;
-import com.condominios.sgc.infrastructure.persistence.repository.ApartamentoRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.CondominioRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.ConfiguracionRepository;
 import org.springframework.stereotype.Component;
@@ -17,14 +15,11 @@ public class ConfiguracionAdapter implements ConfiguracionPort {
 
     private final ConfiguracionRepository configuracionRepository;
     private final CondominioRepository condominioRepository;
-    private final ApartamentoRepository apartamentoRepository;
 
     public ConfiguracionAdapter(ConfiguracionRepository configuracionRepository,
-                                CondominioRepository condominioRepository,
-                                ApartamentoRepository apartamentoRepository) {
+                                CondominioRepository condominioRepository) {
         this.configuracionRepository = configuracionRepository;
         this.condominioRepository = condominioRepository;
-        this.apartamentoRepository = apartamentoRepository;
     }
 
     @Override
@@ -39,10 +34,7 @@ public class ConfiguracionAdapter implements ConfiguracionPort {
 
     @Override
     public Optional<ConfiguracionModel> findByApartamentoId(Long apartamentoId) {
-        return apartamentoRepository.findById(apartamentoId)
-            .map(ApartamentoEntity::getPiso)
-            .map(piso -> piso.getTorre().getCondominio())
-            .map(condominio -> condominio.getConfiguracion())
+        return configuracionRepository.findByApartamentoId(apartamentoId)
             .map(ConfiguracionMapper::toModel);
     }
 
