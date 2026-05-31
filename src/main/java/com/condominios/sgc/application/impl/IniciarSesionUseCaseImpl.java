@@ -1,7 +1,7 @@
 package com.condominios.sgc.application.impl;
 
 import com.condominios.sgc.application.usecase.IniciarSesionUseCase;
-import com.condominios.sgc.domain.auxiliar.SesionUsuario;
+import com.condominios.sgc.domain.auxiliar.LoginCompleta;
 import com.condominios.sgc.domain.port.AutenticacionPort;
 
 public class IniciarSesionUseCaseImpl implements IniciarSesionUseCase {
@@ -13,7 +13,7 @@ public class IniciarSesionUseCaseImpl implements IniciarSesionUseCase {
     }
 
     @Override
-    public SesionUsuario ejecutar(String email, String password) {
+    public LoginCompleta ejecutar(String email, String password) {
         return autenticacionPort.login(email, password);
     }
 }

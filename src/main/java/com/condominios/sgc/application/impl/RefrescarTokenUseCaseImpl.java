@@ -1,7 +1,7 @@
 package com.condominios.sgc.application.impl;
 
 import com.condominios.sgc.application.usecase.RefrescarTokenUseCase;
-import com.condominios.sgc.domain.auxiliar.SesionUsuario;
+import com.condominios.sgc.domain.auxiliar.LoginCompleta;
 import com.condominios.sgc.domain.port.AutenticacionPort;
 
 public class RefrescarTokenUseCaseImpl implements RefrescarTokenUseCase {
@@ -13,7 +13,7 @@ public class RefrescarTokenUseCaseImpl implements RefrescarTokenUseCase {
     }
 
     @Override
-    public SesionUsuario ejecutar(String refreshToken) {
+    public LoginCompleta ejecutar(String refreshToken) {
         return autenticacionPort.refreshToken(refreshToken);
     }
 }

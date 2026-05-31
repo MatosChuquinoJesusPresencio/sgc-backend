@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import com.condominios.sgc.application.impl.ActualizarCorreoUseCaseImpl;
 import com.condominios.sgc.application.impl.ActualizarEstadoUsuarioUseCaseImpl;
 import com.condominios.sgc.application.impl.ActualizarUsuarioUseCaseImpl;
-import com.condominios.sgc.application.impl.AsignarCondominioUseCaseImpl;
 import com.condominios.sgc.application.impl.CambiarContrasenaUseCaseImpl;
 import com.condominios.sgc.application.impl.CrearInquilinoUseCaseImpl;
 import com.condominios.sgc.application.impl.CrearUsuarioUseCaseImpl;
@@ -17,7 +16,6 @@ import com.condominios.sgc.application.impl.VerificarCorreoUseCaseImpl;
 import com.condominios.sgc.application.usecase.ActualizarCorreoUseCase;
 import com.condominios.sgc.application.usecase.ActualizarEstadoUsuarioUseCase;
 import com.condominios.sgc.application.usecase.ActualizarUsuarioUseCase;
-import com.condominios.sgc.application.usecase.AsignarCondominioUseCase;
 import com.condominios.sgc.application.usecase.CambiarContrasenaUseCase;
 import com.condominios.sgc.application.usecase.CrearInquilinoUseCase;
 import com.condominios.sgc.application.usecase.CrearUsuarioUseCase;
@@ -67,11 +65,6 @@ public class UsuarioConfig {
     @Bean
     public CambiarContrasenaUseCase cambiarContrasenaUseCase(AutenticacionPort autenticacionPort, UsuarioPort usuarioPort) {
         return new CambiarContrasenaUseCaseImpl(autenticacionPort, usuarioPort);
-    }
-
-    @Bean
-    public AsignarCondominioUseCase asignarCondominioUseCase(UsuarioPort usuarioPort) {
-        return new AsignarCondominioUseCaseImpl(usuarioPort);
     }
 
     @Bean

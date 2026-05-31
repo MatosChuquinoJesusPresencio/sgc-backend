@@ -1,7 +1,7 @@
 package com.condominios.sgc.application.usecase;
 
-import com.condominios.sgc.domain.auxiliar.SesionUsuario;
+import com.condominios.sgc.domain.auxiliar.LoginCompleta;
 
 public interface RefrescarTokenUseCase {
-    SesionUsuario ejecutar(String refreshToken);
+    LoginCompleta ejecutar(String refreshToken);
 }

@@ -1,11 +1,13 @@
 package com.condominios.sgc.infrastructure.adapter;
 
+import com.condominios.sgc.domain.auxiliar.LoginCompleta;
 import com.condominios.sgc.domain.auxiliar.Rol;
 import com.condominios.sgc.domain.auxiliar.SesionUsuario;
 import com.condominios.sgc.domain.auxiliar.UsuarioAutenticado;
 import com.condominios.sgc.domain.exception.AutenticacionException;
 import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.port.AutenticacionPort;
+import com.condominios.sgc.infrastructure.persistence.mapper.UsuarioMapper;
 import com.condominios.sgc.infrastructure.util.JwtUtil;
 import com.condominios.sgc.infrastructure.persistence.repository.UsuarioRepository;
 
@@ -29,7 +31,7 @@ public class AutenticacionAdapter implements AutenticacionPort {
     }
 
     @Override
-    public SesionUsuario login(String email, String password) {
+    public LoginCompleta login(String email, String password) {
         var usuario = usuarioRepository.findByCorreo(email)
             .orElseThrow(AutenticacionException::credencialesInvalidas);
 
@@ -42,7 +44,7 @@ public class AutenticacionAdapter implements AutenticacionPort {
         var refreshToken = jwtUtil.generateRefreshToken(userId);
 
         long now = System.currentTimeMillis();
-        return new SesionUsuario(
+        var sesion = new SesionUsuario(
             accessToken,
             refreshToken,
             "Bearer",
@@ -50,6 +52,7 @@ public class AutenticacionAdapter implements AutenticacionPort {
             now + jwtUtil.getAccessTokenExpiration(),
             new UsuarioAutenticado(userId, usuario.getCorreo(), usuario.getRol())
         );
+        return new LoginCompleta(sesion, UsuarioMapper.toModel(usuario));
     }
 
     @Override
@@ -85,7 +88,7 @@ public class AutenticacionAdapter implements AutenticacionPort {
     }
 
     @Override
-    public SesionUsuario refreshToken(String refreshToken) {
+    public LoginCompleta refreshToken(String refreshToken) {
         Claims claims = jwtUtil.validateToken(refreshToken);
         var userId = Long.valueOf(claims.getSubject());
         var usuario = usuarioRepository.findById(userId)
@@ -96,7 +99,7 @@ public class AutenticacionAdapter implements AutenticacionPort {
         var newRefreshToken = jwtUtil.generateRefreshToken(String.valueOf(usuario.getId()));
 
         long now = System.currentTimeMillis();
-        return new SesionUsuario(
+        var sesion = new SesionUsuario(
             newAccessToken,
             newRefreshToken,
             "Bearer",
@@ -104,6 +107,7 @@ public class AutenticacionAdapter implements AutenticacionPort {
             now + jwtUtil.getAccessTokenExpiration(),
             new UsuarioAutenticado(String.valueOf(usuario.getId()), usuario.getCorreo(), usuario.getRol())
         );
+        return new LoginCompleta(sesion, UsuarioMapper.toModel(usuario));
     }
 
     @Override

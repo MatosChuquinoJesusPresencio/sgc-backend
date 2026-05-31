@@ -1,7 +1,6 @@
 package com.condominios.sgc.infrastructure.adapter;
 
 import com.condominios.sgc.domain.model.VerificacionTokenModel;
-import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.port.VerificacionTokenPort;
 import com.condominios.sgc.infrastructure.persistence.mapper.VerificacionTokenMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.UsuarioRepository;

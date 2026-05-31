@@ -7,7 +7,6 @@ import com.condominios.sgc.application.dto.CrearUsuarioRequest;
 import com.condominios.sgc.application.usecase.ActualizarCorreoUseCase;
 import com.condominios.sgc.application.usecase.ActualizarEstadoUsuarioUseCase;
 import com.condominios.sgc.application.usecase.ActualizarUsuarioUseCase;
-import com.condominios.sgc.application.usecase.AsignarCondominioUseCase;
 import com.condominios.sgc.application.usecase.CrearUsuarioUseCase;
 import com.condominios.sgc.application.usecase.EliminarUsuarioUseCase;
 import com.condominios.sgc.application.usecase.EnviarRecuperacionContrasenaUseCase;
@@ -32,7 +31,6 @@ public class UsuarioService {
     private final EliminarUsuarioUseCase eliminarUsuarioUseCase;
     private final ListarUsuariosUseCase listarUsuariosUseCase;
     private final ActualizarEstadoUsuarioUseCase actualizarEstadoUsuarioUseCase;
-    private final AsignarCondominioUseCase asignarCondominioUseCase;
     private final ActualizarCorreoUseCase actualizarCorreoUseCase;
     private final VerificarCorreoUseCase verificarCorreoUseCase;
     private final EnviarRecuperacionContrasenaUseCase enviarRecuperacionContrasenaUseCase;
@@ -45,7 +43,6 @@ public class UsuarioService {
             EliminarUsuarioUseCase eliminarUsuarioUseCase,
             ListarUsuariosUseCase listarUsuariosUseCase,
             ActualizarEstadoUsuarioUseCase actualizarEstadoUsuarioUseCase,
-            AsignarCondominioUseCase asignarCondominioUseCase,
             ActualizarCorreoUseCase actualizarCorreoUseCase,
             VerificarCorreoUseCase verificarCorreoUseCase,
             EnviarRecuperacionContrasenaUseCase enviarRecuperacionContrasenaUseCase,
@@ -56,7 +53,6 @@ public class UsuarioService {
         this.eliminarUsuarioUseCase = eliminarUsuarioUseCase;
         this.listarUsuariosUseCase = listarUsuariosUseCase;
         this.actualizarEstadoUsuarioUseCase = actualizarEstadoUsuarioUseCase;
-        this.asignarCondominioUseCase = asignarCondominioUseCase;
         this.actualizarCorreoUseCase = actualizarCorreoUseCase;
         this.verificarCorreoUseCase = verificarCorreoUseCase;
         this.enviarRecuperacionContrasenaUseCase = enviarRecuperacionContrasenaUseCase;
@@ -85,10 +81,6 @@ public class UsuarioService {
 
     public UsuarioModel actualizarEstado(Long id, Boolean activo, Rol rolAutenticado) {
         return actualizarEstadoUsuarioUseCase.ejecutar(id, activo, rolAutenticado);
-    }
-
-    public UsuarioModel asignarCondominio(Long usuarioId, Long condominioId) {
-        return asignarCondominioUseCase.ejecutar(usuarioId, condominioId);
     }
 
     public UsuarioModel actualizarCorreo(Long id, String nuevoCorreo, String token) {

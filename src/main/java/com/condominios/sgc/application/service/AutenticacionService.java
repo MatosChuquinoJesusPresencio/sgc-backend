@@ -6,7 +6,7 @@ import com.condominios.sgc.application.usecase.CambiarContrasenaUseCase;
 import com.condominios.sgc.application.usecase.CerrarSesionUseCase;
 import com.condominios.sgc.application.usecase.IniciarSesionUseCase;
 import com.condominios.sgc.application.usecase.RefrescarTokenUseCase;
-import com.condominios.sgc.domain.auxiliar.SesionUsuario;
+import com.condominios.sgc.domain.auxiliar.LoginCompleta;
 
 @Service
 public class AutenticacionService {
@@ -27,7 +27,7 @@ public class AutenticacionService {
         this.cambiarContrasenaUseCase = cambiarContrasenaUseCase;
     }
 
-    public SesionUsuario iniciarSesion(String correo, String contrasena) {
+    public LoginCompleta iniciarSesion(String correo, String contrasena) {
         return iniciarSesionUseCase.ejecutar(correo, contrasena);
     }
 
@@ -35,7 +35,7 @@ public class AutenticacionService {
         cerrarSesionUseCase.ejecutar(accessToken);
     }
 
-    public SesionUsuario refrescarToken(String refreshToken) {
+    public LoginCompleta refrescarToken(String refreshToken) {
         return refrescarTokenUseCase.ejecutar(refreshToken);
     }
 
