@@ -50,6 +50,13 @@ public class AuthController {
         return ResponseEntity.ok(AuthResponse.fromSesion(completa.sesion(), UsuarioResponse.fromModel(completa.usuario())));
     }
 
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UsuarioResponse> me() {
+        Long id = SecurityUtils.obtenerIdUsuario();
+        return ResponseEntity.ok(UsuarioResponse.fromModel(usuarioService.obtener(id)));
+    }
+
     @PostMapping("/logout")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> logout(
