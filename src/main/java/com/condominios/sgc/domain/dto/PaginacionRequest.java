@@ -13,8 +13,15 @@ public record PaginacionRequest(
 ) {
 
     public static PaginacionRequest desdeParams(Map<String, String> params) {
-        int pagina = Integer.parseInt(params.getOrDefault("pagina", "0"));
-        int tamanio = Integer.parseInt(params.getOrDefault("tamanio", "10"));
+        int pagina;
+        int tamanio;
+        try {
+            pagina = Integer.parseInt(params.getOrDefault("pagina", "0"));
+            tamanio = Integer.parseInt(params.getOrDefault("tamanio", "10"));
+        } catch (NumberFormatException e) {
+            pagina = 0;
+            tamanio = 10;
+        }
         String ordenarPor = params.get("ordenarPor");
         String direccion = params.getOrDefault("direccion", "ASC");
 

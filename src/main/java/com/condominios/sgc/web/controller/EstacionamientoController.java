@@ -86,7 +86,9 @@ public class EstacionamientoController {
     public ResponseEntity<EstacionamientoResponse> configurar(
             @PathVariable Long id,
             @RequestBody Map<String, Object> body) {
-        var tipoVehiculo = TipoVehiculo.valueOf((String) body.get("tipoVehiculo"));
+        var tipoVehiculoStr = (String) body.get("tipoVehiculo");
+        if (tipoVehiculoStr == null) return ResponseEntity.badRequest().build();
+        var tipoVehiculo = TipoVehiculo.valueOf(tipoVehiculoStr);
         var capacidadMaxima = (Integer) body.get("capacidadMaxima");
         return ResponseEntity.ok(EstacionamientoResponse.fromModel(
             estacionamientoService.configurar(id, tipoVehiculo, capacidadMaxima)));

@@ -44,8 +44,9 @@ public class InquilinoController {
     public ResponseEntity<PaginacionResponse<InquilinoResponse>> listar(
             @RequestParam Map<String, String> params) {
         var req = PaginacionRequest.desdeParams(params);
-        Long apartamentoId = req.filtros() != null ? Long.valueOf(req.filtros().get("apartamentoId")) : null;
-        if (apartamentoId == null) return ResponseEntity.badRequest().build();
+        var filtros = req.filtros();
+        if (filtros == null || !filtros.containsKey("apartamentoId")) return ResponseEntity.badRequest().build();
+        Long apartamentoId = Long.valueOf(filtros.get("apartamentoId"));
         PaginacionResponse<InquilinoResponse> content = inquilinoService.listarPorApartamento(apartamentoId, req)
                 .map(InquilinoResponse::fromModel);
         return ResponseEntity.ok(content);

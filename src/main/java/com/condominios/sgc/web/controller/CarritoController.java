@@ -52,8 +52,9 @@ public class CarritoController {
     public ResponseEntity<PaginacionResponse<CarritoResponse>> listar(
             @RequestParam Map<String, String> params) {
         var req = PaginacionRequest.desdeParams(params);
-        Long condominioId = req.filtros() != null ? Long.valueOf(req.filtros().get("condominioId")) : null;
-        if (condominioId == null) return ResponseEntity.badRequest().build();
+        var filtros = req.filtros();
+        if (filtros == null || !filtros.containsKey("condominioId")) return ResponseEntity.badRequest().build();
+        Long condominioId = Long.valueOf(filtros.get("condominioId"));
         PaginacionResponse<CarritoResponse> content = carritoService.listarPorCondominio(condominioId, req)
                 .map(CarritoResponse::fromModel);
         return ResponseEntity.ok(content);
@@ -85,7 +86,9 @@ public class CarritoController {
     public ResponseEntity<CarritoResponse> cambiarEstado(
             @PathVariable Long id,
             @RequestBody Map<String, String> body) {
-        var nuevoEstado = EstadoCarrito.valueOf(body.get("estado"));
+        var estadoStr = body.get("estado");
+        if (estadoStr == null) return ResponseEntity.badRequest().build();
+        var nuevoEstado = EstadoCarrito.valueOf(estadoStr);
         return ResponseEntity.ok(CarritoResponse.fromModel(carritoService.cambiarEstado(id, nuevoEstado)));
     }
 
