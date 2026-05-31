@@ -43,7 +43,7 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain publicEndpoints(HttpSecurity http) throws Exception {
         http
-            .securityMatcher("/api/auth/login", "/api/auth/refresh",
+            .securityMatcher("/", "/api/auth/login", "/api/auth/refresh",
                 "/api/auth/forgot-password", "/api/auth/reset-password",
                 "/api/auth/verificar-email",
                 "/api/health", "/api/health/**",
