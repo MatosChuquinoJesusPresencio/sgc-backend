@@ -15,6 +15,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -27,7 +29,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.port.UsuarioPort;
-import com.condominios.sgc.infrastructure.jwt.JwtUtil;
+import com.condominios.sgc.infrastructure.util.JwtUtil;
 
 @Configuration
 @EnableWebSecurity
@@ -109,6 +111,11 @@ public class SecurityConfig {
     @Bean
     public CookieBearerTokenResolver cookieBearerTokenResolver() {
         return new CookieBearerTokenResolver();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
