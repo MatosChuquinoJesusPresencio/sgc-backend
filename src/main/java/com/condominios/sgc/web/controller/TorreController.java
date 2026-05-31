@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/torres")
 public class TorreController {
@@ -25,7 +27,7 @@ public class TorreController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
-    public ResponseEntity<TorreResponse> crear(@RequestBody CrearTorreRequest request) {
+    public ResponseEntity<TorreResponse> crear(@Valid @RequestBody CrearTorreRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(TorreResponse.fromModel(torreService.crear(request)));
     }
 
@@ -52,7 +54,7 @@ public class TorreController {
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<TorreResponse> actualizar(
             @PathVariable Long id,
-            @RequestBody ActualizarTorreRequest request) {
+            @Valid @RequestBody ActualizarTorreRequest request) {
         return ResponseEntity.ok(TorreResponse.fromModel(torreService.actualizar(id, request)));
     }
 

@@ -1,6 +1,7 @@
 package com.condominios.sgc.application.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.condominios.sgc.application.dto.RegistrarEntradaRequest;
 import com.condominios.sgc.application.usecase.ListarLogsAccesoPorApartamentoUseCase;
@@ -13,6 +14,7 @@ import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.LogAccesoVehicularModel;
 
 @Service
+@Transactional
 public class LogAccesoVehicularService {
 
     private final RegistrarEntradaVehiculoUseCase registrarEntradaVehiculoUseCase;

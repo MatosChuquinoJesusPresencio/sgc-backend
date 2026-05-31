@@ -7,6 +7,7 @@ import com.condominios.sgc.application.usecase.ActualizarCorreoUseCase;
 import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.model.VerificacionTokenModel;
+import com.condominios.sgc.domain.port.CorreoPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.domain.port.VerificacionTokenPort;
 
@@ -14,12 +15,15 @@ public class ActualizarCorreoUseCaseImpl implements ActualizarCorreoUseCase {
 
     private final UsuarioPort usuarioPort;
     private final VerificacionTokenPort verificacionTokenPort;
+    private final CorreoPort correoPort;
 
     public ActualizarCorreoUseCaseImpl(
             UsuarioPort usuarioPort,
-            VerificacionTokenPort verificacionTokenPort) {
+            VerificacionTokenPort verificacionTokenPort,
+            CorreoPort correoPort) {
         this.usuarioPort = usuarioPort;
         this.verificacionTokenPort = verificacionTokenPort;
+        this.correoPort = correoPort;
     }
 
     @Override
@@ -39,6 +43,8 @@ public class ActualizarCorreoUseCaseImpl implements ActualizarCorreoUseCase {
             Instant.now().plusSeconds(3600)
         );
         verificacionTokenPort.save(tokenModel);
+
+        correoPort.sendVerificationEmail(nuevoCorreo, tokenModel.getToken());
 
         usuario.cambiarCorreo(nuevoCorreo);
 

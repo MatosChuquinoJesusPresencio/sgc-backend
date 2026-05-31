@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.condominios.sgc.application.usecase.EnviarRecuperacionContrasenaUseCase;
 import com.condominios.sgc.domain.model.RestablecimientoTokenModel;
+import com.condominios.sgc.domain.port.CorreoPort;
 import com.condominios.sgc.domain.port.RestablecimientoTokenPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
 
@@ -13,12 +14,15 @@ public class EnviarRecuperacionContrasenaUseCaseImpl implements EnviarRecuperaci
 
     private final UsuarioPort usuarioPort;
     private final RestablecimientoTokenPort restablecimientoTokenPort;
+    private final CorreoPort correoPort;
 
     public EnviarRecuperacionContrasenaUseCaseImpl(
             UsuarioPort usuarioPort,
-            RestablecimientoTokenPort restablecimientoTokenPort) {
+            RestablecimientoTokenPort restablecimientoTokenPort,
+            CorreoPort correoPort) {
         this.usuarioPort = usuarioPort;
         this.restablecimientoTokenPort = restablecimientoTokenPort;
+        this.correoPort = correoPort;
     }
 
     @Override
@@ -35,6 +39,8 @@ public class EnviarRecuperacionContrasenaUseCaseImpl implements EnviarRecuperaci
             Instant.now().plusSeconds(3600)
         );
         restablecimientoTokenPort.save(tokenModel);
+
+        correoPort.sendPasswordResetEmail(email, resetToken);
 
         return Optional.of(resetToken);
     }

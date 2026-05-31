@@ -1,6 +1,7 @@
 package com.condominios.sgc.application.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.condominios.sgc.application.dto.ActualizarConfiguracionRequest;
 import com.condominios.sgc.application.usecase.ActualizarConfiguracionUseCase;
@@ -8,6 +9,7 @@ import com.condominios.sgc.application.usecase.ObtenerConfiguracionUseCase;
 import com.condominios.sgc.domain.model.ConfiguracionModel;
 
 @Service
+@Transactional
 public class ConfiguracionService {
 
     private final ObtenerConfiguracionUseCase obtenerConfiguracionUseCase;

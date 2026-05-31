@@ -3,6 +3,7 @@ package com.condominios.sgc.application.service;
 import java.math.BigDecimal;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.condominios.sgc.application.dto.IniciarPrestamoRequest;
 import com.condominios.sgc.application.usecase.FinalizarPrestamoCarritoUseCase;
@@ -15,6 +16,7 @@ import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.LogPrestamoCarritoModel;
 
 @Service
+@Transactional
 public class LogPrestamoCarritoService {
 
     private final IniciarPrestamoCarritoUseCase iniciarPrestamoCarritoUseCase;

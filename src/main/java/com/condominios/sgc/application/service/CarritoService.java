@@ -1,6 +1,7 @@
 package com.condominios.sgc.application.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.condominios.sgc.application.dto.ActualizarCarritoRequest;
 import com.condominios.sgc.application.dto.CrearCarritoRequest;
@@ -16,6 +17,7 @@ import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.CarritoModel;
 
 @Service
+@Transactional
 public class CarritoService {
 
     private final CrearCarritoUseCase crearCarritoUseCase;

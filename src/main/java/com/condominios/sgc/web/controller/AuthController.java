@@ -29,6 +29,10 @@ import com.condominios.sgc.web.dto.UsuarioResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -44,7 +48,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(
-            @RequestBody LoginRequest request,
+            @Valid @RequestBody LoginRequest request,
             HttpServletResponse response) {
         var completa = autenticacionService.iniciarSesion(request.email(), request.password());
         response.addHeader("Set-Cookie",
@@ -76,7 +80,7 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(
-            @RequestBody(required = false) RefreshTokenRequest body,
+            @Valid @RequestBody(required = false) RefreshTokenRequest body,
             HttpServletRequest request,
             HttpServletResponse response) {
         String refreshToken = null;
@@ -101,19 +105,20 @@ public class AuthController {
 
     @PostMapping("/register")
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
-    public ResponseEntity<UsuarioResponse> register(@RequestBody CrearUsuarioRequest request) {
+    public ResponseEntity<UsuarioResponse> register(@Valid @RequestBody CrearUsuarioRequest request) {
         return ResponseEntity.ok(
             UsuarioResponse.fromModel(usuarioService.crear(request, SecurityUtils.obtenerRolAutenticado())));
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<Void> forgotPassword(@RequestBody ForgotPasswordRequest request) {
-        usuarioService.enviarRecuperacionContrasena(request.email(), "");
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        String token = UUID.randomUUID().toString();
+        usuarioService.enviarRecuperacionContrasena(request.email(), token);
+        return ResponseEntity.ok(Map.of("token", token));
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequest request) {
+    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         usuarioService.restablecerContrasena(request.token(), request.password());
         return ResponseEntity.noContent().build();
     }
@@ -122,7 +127,7 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> changePassword(
             @AuthenticationPrincipal Jwt jwt,
-            @RequestBody ChangePasswordRequest request) {
+            @Valid @RequestBody ChangePasswordRequest request) {
         autenticacionService.cambiarContrasena(
             SecurityUtils.obtenerIdUsuario(), request.currentPassword(), request.newPassword());
         return ResponseEntity.noContent().build();
@@ -132,7 +137,7 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UsuarioResponse> updateEmail(
             @AuthenticationPrincipal Jwt jwt,
-            @RequestBody UpdateEmailRequest request) {
+            @Valid @RequestBody UpdateEmailRequest request) {
         return ResponseEntity.ok(
             UsuarioResponse.fromModel(
                 usuarioService.actualizarCorreo(

@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/apartamentos")
 public class ApartamentoController {
@@ -25,7 +27,7 @@ public class ApartamentoController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
-    public ResponseEntity<ApartamentoResponse> crear(@RequestBody CrearApartamentoRequest request) {
+    public ResponseEntity<ApartamentoResponse> crear(@Valid @RequestBody CrearApartamentoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(ApartamentoResponse.fromModel(apartamentoService.crear(request)));
     }
@@ -53,7 +55,7 @@ public class ApartamentoController {
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<ApartamentoResponse> actualizar(
             @PathVariable Long id,
-            @RequestBody ActualizarApartamentoRequest request) {
+            @Valid @RequestBody ActualizarApartamentoRequest request) {
         return ResponseEntity.ok(ApartamentoResponse.fromModel(apartamentoService.actualizar(id, request)));
     }
 

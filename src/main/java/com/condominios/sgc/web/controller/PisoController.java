@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/pisos")
 public class PisoController {
@@ -25,7 +27,7 @@ public class PisoController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
-    public ResponseEntity<PisoResponse> crear(@RequestBody CrearPisoRequest request) {
+    public ResponseEntity<PisoResponse> crear(@Valid @RequestBody CrearPisoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(PisoResponse.fromModel(pisoService.crear(request)));
     }
 
@@ -52,7 +54,7 @@ public class PisoController {
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<PisoResponse> actualizar(
             @PathVariable Long id,
-            @RequestBody ActualizarPisoRequest request) {
+            @Valid @RequestBody ActualizarPisoRequest request) {
         return ResponseEntity.ok(PisoResponse.fromModel(pisoService.actualizar(id, request)));
     }
 

@@ -22,6 +22,7 @@ import com.condominios.sgc.application.usecase.ListarUsuariosUseCase;
 import com.condominios.sgc.application.usecase.ObtenerUsuarioUseCase;
 import com.condominios.sgc.application.usecase.VerificarCorreoUseCase;
 import com.condominios.sgc.domain.port.AutenticacionPort;
+import com.condominios.sgc.domain.port.CorreoPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.domain.port.VerificacionTokenPort;
 
@@ -64,8 +65,8 @@ public class UsuarioConfig {
     }
 
     @Bean
-    public ActualizarCorreoUseCase actualizarCorreoUseCase(UsuarioPort usuarioPort, VerificacionTokenPort verificacionTokenPort) {
-        return new ActualizarCorreoUseCaseImpl(usuarioPort, verificacionTokenPort);
+    public ActualizarCorreoUseCase actualizarCorreoUseCase(UsuarioPort usuarioPort, VerificacionTokenPort verificacionTokenPort, CorreoPort correoPort) {
+        return new ActualizarCorreoUseCaseImpl(usuarioPort, verificacionTokenPort, correoPort);
     }
 
     @Bean

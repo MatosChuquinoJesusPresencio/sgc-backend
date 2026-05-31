@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/configuracion")
 public class ConfiguracionController {
@@ -33,7 +35,7 @@ public class ConfiguracionController {
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<ConfiguracionResponse> actualizar(
             @PathVariable Long id,
-            @RequestBody ActualizarConfiguracionRequest request) {
+            @Valid @RequestBody ActualizarConfiguracionRequest request) {
         return ResponseEntity.ok(
             ConfiguracionResponse.fromModel(configuracionService.actualizar(id, request)));
     }

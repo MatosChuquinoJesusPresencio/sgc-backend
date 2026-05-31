@@ -22,6 +22,8 @@ import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.web.dto.InquilinoResponse;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/inquilinos")
 public class InquilinoController {
@@ -34,7 +36,7 @@ public class InquilinoController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
-    public ResponseEntity<InquilinoResponse> crear(@RequestBody CrearInquilinoRequest request) {
+    public ResponseEntity<InquilinoResponse> crear(@Valid @RequestBody CrearInquilinoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(InquilinoResponse.fromModel(inquilinoService.crear(request)));
     }
@@ -62,7 +64,7 @@ public class InquilinoController {
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<InquilinoResponse> actualizar(
             @PathVariable Long id,
-            @RequestBody ActualizarInquilinoRequest request) {
+            @Valid @RequestBody ActualizarInquilinoRequest request) {
         return ResponseEntity.ok(InquilinoResponse.fromModel(inquilinoService.actualizar(id, request)));
     }
 

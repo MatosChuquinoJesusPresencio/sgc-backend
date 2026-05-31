@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
@@ -51,7 +53,7 @@ public class UsuarioController {
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<UsuarioResponse> actualizar(
             @PathVariable Long id,
-            @RequestBody ActualizarUsuarioRequest request) {
+            @Valid @RequestBody ActualizarUsuarioRequest request) {
         return ResponseEntity.ok(
             UsuarioResponse.fromModel(usuarioService.actualizar(id, request, SecurityUtils.obtenerRolAutenticado())));
     }
@@ -61,8 +63,10 @@ public class UsuarioController {
     public ResponseEntity<UsuarioResponse> actualizarEstado(
             @PathVariable Long id,
             @RequestBody Map<String, Boolean> body) {
+        Boolean activo = body.get("activo");
+        if (activo == null) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(
-            UsuarioResponse.fromModel(usuarioService.actualizarEstado(id, body.get("activo"), SecurityUtils.obtenerRolAutenticado())));
+            UsuarioResponse.fromModel(usuarioService.actualizarEstado(id, activo, SecurityUtils.obtenerRolAutenticado())));
     }
 
     @DeleteMapping("/{id}")

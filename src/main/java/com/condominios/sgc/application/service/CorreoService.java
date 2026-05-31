@@ -1,12 +1,14 @@
 package com.condominios.sgc.application.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.condominios.sgc.application.usecase.EnviarCorreoBienvenidaUseCase;
 import com.condominios.sgc.application.usecase.EnviarCorreoRecuperacionUseCase;
 import com.condominios.sgc.application.usecase.EnviarCorreoVerificacionUseCase;
 
 @Service
+@Transactional
 public class CorreoService {
 
     private final EnviarCorreoBienvenidaUseCase enviarCorreoBienvenidaUseCase;

@@ -19,6 +19,8 @@ import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.web.dto.LogAccesoVehicularResponse;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/logs-acceso")
 public class LogAccesoVehicularController {
@@ -57,7 +59,7 @@ public class LogAccesoVehicularController {
     @PostMapping("/entrada")
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO','SEGURIDAD')")
     public ResponseEntity<LogAccesoVehicularResponse> registrarEntrada(
-            @RequestBody RegistrarEntradaRequest request) {
+            @Valid @RequestBody RegistrarEntradaRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(LogAccesoVehicularResponse.fromModel(logAccesoService.registrarEntrada(request)));
     }

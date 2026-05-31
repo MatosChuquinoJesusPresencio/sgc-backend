@@ -1,6 +1,7 @@
 package com.condominios.sgc.application.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.condominios.sgc.application.dto.ActualizarUsuarioRequest;
 import com.condominios.sgc.application.dto.CrearUsuarioRequest;
@@ -23,6 +24,7 @@ import com.condominios.sgc.domain.model.UsuarioModel;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UsuarioService {
 
     private final CrearUsuarioUseCase crearUsuarioUseCase;

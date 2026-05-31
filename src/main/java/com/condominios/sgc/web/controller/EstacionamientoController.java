@@ -24,6 +24,8 @@ import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.web.dto.EstacionamientoResponse;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/estacionamientos")
 public class EstacionamientoController {
@@ -36,7 +38,7 @@ public class EstacionamientoController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
-    public ResponseEntity<EstacionamientoResponse> crear(@RequestBody CrearEstacionamientoRequest request) {
+    public ResponseEntity<EstacionamientoResponse> crear(@Valid @RequestBody CrearEstacionamientoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(EstacionamientoResponse.fromModel(estacionamientoService.crear(request)));
     }
@@ -70,7 +72,7 @@ public class EstacionamientoController {
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<EstacionamientoResponse> actualizar(
             @PathVariable Long id,
-            @RequestBody ActualizarEstacionamientoRequest request) {
+            @Valid @RequestBody ActualizarEstacionamientoRequest request) {
         return ResponseEntity.ok(EstacionamientoResponse.fromModel(estacionamientoService.actualizar(id, request)));
     }
 
@@ -89,7 +91,9 @@ public class EstacionamientoController {
         var tipoVehiculoStr = (String) body.get("tipoVehiculo");
         if (tipoVehiculoStr == null) return ResponseEntity.badRequest().build();
         var tipoVehiculo = TipoVehiculo.valueOf(tipoVehiculoStr);
-        var capacidadMaxima = (Integer) body.get("capacidadMaxima");
+        var capacidadMaximaObj = body.get("capacidadMaxima");
+        if (capacidadMaximaObj == null || !(capacidadMaximaObj instanceof Integer)) return ResponseEntity.badRequest().build();
+        var capacidadMaxima = (Integer) capacidadMaximaObj;
         return ResponseEntity.ok(EstacionamientoResponse.fromModel(
             estacionamientoService.configurar(id, tipoVehiculo, capacidadMaxima)));
     }

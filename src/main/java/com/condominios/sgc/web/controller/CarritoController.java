@@ -28,6 +28,8 @@ import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.web.dto.CarritoResponse;
 import com.condominios.sgc.web.dto.LogPrestamoCarritoResponse;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/carritos")
 public class CarritoController {
@@ -42,7 +44,7 @@ public class CarritoController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
-    public ResponseEntity<CarritoResponse> crear(@RequestBody CrearCarritoRequest request) {
+    public ResponseEntity<CarritoResponse> crear(@Valid @RequestBody CrearCarritoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(CarritoResponse.fromModel(carritoService.crear(request)));
     }
@@ -70,7 +72,7 @@ public class CarritoController {
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<CarritoResponse> actualizar(
             @PathVariable Long id,
-            @RequestBody ActualizarCarritoRequest request) {
+            @Valid @RequestBody ActualizarCarritoRequest request) {
         return ResponseEntity.ok(CarritoResponse.fromModel(carritoService.actualizar(id, request)));
     }
 
@@ -96,7 +98,7 @@ public class CarritoController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<LogPrestamoCarritoResponse> iniciarPrestamo(
             @PathVariable Long carritoId,
-            @RequestBody IniciarPrestamoRequest request) {
+            @Valid @RequestBody IniciarPrestamoRequest request) {
         var reqCompleto = new IniciarPrestamoRequest(
             request.solicitante(), request.nombreSolicitante(),
             request.dniSolicitante(), request.apartamentoId(), carritoId);
@@ -109,7 +111,8 @@ public class CarritoController {
     public ResponseEntity<LogPrestamoCarritoResponse> finalizarPrestamo(
             @PathVariable Long logId,
             @RequestBody Map<String, BigDecimal> body) {
+        BigDecimal penalizacion = body.get("penalizacion");
         return ResponseEntity.ok(LogPrestamoCarritoResponse.fromModel(
-            logPrestamoService.finalizar(logId, body.get("penalizacion"))));
+            logPrestamoService.finalizar(logId, penalizacion)));
     }
 }

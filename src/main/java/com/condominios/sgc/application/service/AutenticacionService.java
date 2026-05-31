@@ -1,6 +1,7 @@
 package com.condominios.sgc.application.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.condominios.sgc.application.usecase.CambiarContrasenaUseCase;
 import com.condominios.sgc.application.usecase.CerrarSesionUseCase;
@@ -9,6 +10,7 @@ import com.condominios.sgc.application.usecase.RefrescarTokenUseCase;
 import com.condominios.sgc.domain.auxiliar.LoginCompleta;
 
 @Service
+@Transactional
 public class AutenticacionService {
 
     private final IniciarSesionUseCase iniciarSesionUseCase;

@@ -1,6 +1,7 @@
 package com.condominios.sgc.application.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.condominios.sgc.application.dto.ActualizarVehiculoRequest;
 import com.condominios.sgc.application.dto.CrearVehiculoRequest;
@@ -14,6 +15,7 @@ import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.VehiculoModel;
 
 @Service
+@Transactional
 public class VehiculoService {
 
     private final CrearVehiculoUseCase crearVehiculoUseCase;

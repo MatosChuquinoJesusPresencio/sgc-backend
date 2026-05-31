@@ -1,6 +1,7 @@
 package com.condominios.sgc.application.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.condominios.sgc.application.dto.ActualizarPisoRequest;
 import com.condominios.sgc.application.dto.CrearPisoRequest;
@@ -14,6 +15,7 @@ import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.PisoModel;
 
 @Service
+@Transactional
 public class PisoService {
 
     private final CrearPisoUseCase crearPisoUseCase;

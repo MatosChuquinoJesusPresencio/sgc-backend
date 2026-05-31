@@ -1,6 +1,7 @@
 package com.condominios.sgc.application.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.condominios.sgc.application.dto.ActualizarEstacionamientoRequest;
 import com.condominios.sgc.application.dto.CrearEstacionamientoRequest;
@@ -17,6 +18,7 @@ import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.EstacionamientoModel;
 
 @Service
+@Transactional
 public class EstacionamientoService {
 
     private final CrearEstacionamientoUseCase crearEstacionamientoUseCase;

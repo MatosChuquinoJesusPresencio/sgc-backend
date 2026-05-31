@@ -22,6 +22,8 @@ import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.web.dto.CondominioResponse;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/condominios")
 public class CondominioController {
@@ -34,7 +36,7 @@ public class CondominioController {
 
     @PostMapping
     @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
-    public ResponseEntity<CondominioResponse> crear(@RequestBody CrearCondominioRequest request) {
+    public ResponseEntity<CondominioResponse> crear(@Valid @RequestBody CrearCondominioRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(CondominioResponse.fromModel(condominioService.crear(request)));
     }
@@ -60,7 +62,7 @@ public class CondominioController {
     @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
     public ResponseEntity<CondominioResponse> actualizar(
             @PathVariable Long id,
-            @RequestBody ActualizarCondominioRequest request) {
+            @Valid @RequestBody ActualizarCondominioRequest request) {
         return ResponseEntity.ok(
             CondominioResponse.fromModel(condominioService.actualizar(id, request)));
     }

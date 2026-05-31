@@ -22,6 +22,8 @@ import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.web.dto.VehiculoResponse;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/vehiculos")
 public class VehiculoController {
@@ -34,7 +36,7 @@ public class VehiculoController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
-    public ResponseEntity<VehiculoResponse> crearVehiculo(@RequestBody CrearVehiculoRequest request) {
+    public ResponseEntity<VehiculoResponse> crearVehiculo(@Valid @RequestBody CrearVehiculoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(VehiculoResponse.fromModel(vehiculoService.crear(request)));
     }
@@ -59,7 +61,7 @@ public class VehiculoController {
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<VehiculoResponse> actualizarVehiculo(
             @PathVariable Long id,
-            @RequestBody ActualizarVehiculoRequest request) {
+            @Valid @RequestBody ActualizarVehiculoRequest request) {
         return ResponseEntity.ok(VehiculoResponse.fromModel(vehiculoService.actualizar(id, request)));
     }
 

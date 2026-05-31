@@ -14,6 +14,7 @@ import com.condominios.sgc.application.usecase.IniciarSesionUseCase;
 import com.condominios.sgc.application.usecase.RefrescarTokenUseCase;
 import com.condominios.sgc.application.usecase.RestablecerContrasenaUseCase;
 import com.condominios.sgc.domain.port.AutenticacionPort;
+import com.condominios.sgc.domain.port.CorreoPort;
 import com.condominios.sgc.domain.port.RestablecimientoTokenPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
 
@@ -36,8 +37,8 @@ public class AutenticacionConfig {
     }
 
     @Bean
-    public EnviarRecuperacionContrasenaUseCase enviarRecuperacionContrasenaUseCase(UsuarioPort usuarioPort, RestablecimientoTokenPort restablecimientoTokenPort) {
-        return new EnviarRecuperacionContrasenaUseCaseImpl(usuarioPort, restablecimientoTokenPort);
+    public EnviarRecuperacionContrasenaUseCase enviarRecuperacionContrasenaUseCase(UsuarioPort usuarioPort, RestablecimientoTokenPort restablecimientoTokenPort, CorreoPort correoPort) {
+        return new EnviarRecuperacionContrasenaUseCaseImpl(usuarioPort, restablecimientoTokenPort, correoPort);
     }
 
     @Bean
