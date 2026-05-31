@@ -29,6 +29,7 @@ public final class PisoSpecifications {
     public static Specification<PisoEntity> fromFiltros(Map<String, String> filtros) {
         if (filtros == null || filtros.isEmpty()) return null;
         return filtros.entrySet().stream()
+            .filter(e -> e.getValue() != null)
             .map(entry -> switch (entry.getKey()) {
                 case "torreId" -> porTorreId(Long.valueOf(entry.getValue()));
                 case "condominioId" -> porCondominioId(Long.valueOf(entry.getValue()));

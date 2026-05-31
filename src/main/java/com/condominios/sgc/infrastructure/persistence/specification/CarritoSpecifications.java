@@ -23,12 +23,14 @@ public final class CarritoSpecifications {
 
     public static Specification<CarritoEntity> porCodigo(String codigo) {
         if (codigo == null) return null;
-        return (root, query, cb) -> cb.like(cb.lower(root.get("codigo")), "%" + codigo.toLowerCase() + "%");
+        var escaped = codigo.toLowerCase().replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
+        return (root, query, cb) -> cb.like(cb.lower(root.get("codigo")), "%" + escaped + "%", '\\');
     }
 
     public static Specification<CarritoEntity> fromFiltros(Map<String, String> filtros) {
         if (filtros == null || filtros.isEmpty()) return null;
         return filtros.entrySet().stream()
+            .filter(e -> e.getValue() != null)
             .map(entry -> switch (entry.getKey()) {
                 case "condominioId" -> porCondominioId(Long.valueOf(entry.getValue()));
                 case "estado" -> porEstado(EstadoCarrito.valueOf(entry.getValue()));

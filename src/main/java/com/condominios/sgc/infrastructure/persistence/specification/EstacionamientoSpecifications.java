@@ -34,6 +34,7 @@ public final class EstacionamientoSpecifications {
     public static Specification<EstacionamientoEntity> fromFiltros(Map<String, String> filtros) {
         if (filtros == null || filtros.isEmpty()) return null;
         return filtros.entrySet().stream()
+            .filter(e -> e.getValue() != null)
             .map(entry -> switch (entry.getKey()) {
                 case "condominioId" -> porCondominioId(Long.valueOf(entry.getValue()));
                 case "disponible" -> porDisponible(Boolean.valueOf(entry.getValue()));

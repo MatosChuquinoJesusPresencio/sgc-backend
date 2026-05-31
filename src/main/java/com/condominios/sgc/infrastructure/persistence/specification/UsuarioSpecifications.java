@@ -34,6 +34,7 @@ public final class UsuarioSpecifications {
     public static Specification<UsuarioEntity> fromFiltros(Map<String, String> filtros) {
         if (filtros == null || filtros.isEmpty()) return null;
         return filtros.entrySet().stream()
+            .filter(e -> e.getValue() != null)
             .map(entry -> switch (entry.getKey()) {
                 case "correo" -> porCorreo(entry.getValue());
                 case "rol" -> porRol(Rol.valueOf(entry.getValue()));

@@ -13,7 +13,8 @@ public final class CondominioSpecifications {
 
     public static Specification<CondominioEntity> porNombre(String nombre) {
         if (nombre == null) return null;
-        return (root, query, cb) -> cb.like(cb.lower(root.get("nombre")), "%" + nombre.toLowerCase() + "%");
+        var escaped = nombre.toLowerCase().replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
+        return (root, query, cb) -> cb.like(cb.lower(root.get("nombre")), "%" + escaped + "%", '\\');
     }
 
     public static Specification<CondominioEntity> porCiudad(String ciudad) {
@@ -29,6 +30,7 @@ public final class CondominioSpecifications {
     public static Specification<CondominioEntity> fromFiltros(Map<String, String> filtros) {
         if (filtros == null || filtros.isEmpty()) return null;
         return filtros.entrySet().stream()
+            .filter(e -> e.getValue() != null)
             .map(entry -> switch (entry.getKey()) {
                 case "nombre" -> porNombre(entry.getValue());
                 case "ciudad" -> porCiudad(entry.getValue());

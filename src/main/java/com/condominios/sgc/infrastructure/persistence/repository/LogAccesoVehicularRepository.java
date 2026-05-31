@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.condominios.sgc.infrastructure.persistence.entity.LogAccesoVehicularEntity;
 
 import java.util.List;
+import org.springframework.data.repository.query.Param;
 
 @Repository
 public interface LogAccesoVehicularRepository extends JpaRepository<LogAccesoVehicularEntity, Long>,
@@ -24,12 +25,12 @@ public interface LogAccesoVehicularRepository extends JpaRepository<LogAccesoVeh
            "JOIN v.propietario u " +
            "JOIN u.condominio c " +
            "WHERE c.id = :condominioId")
-    Page<LogAccesoVehicularEntity> findByCondominioId(Long condominioId, Pageable pageable);
+    Page<LogAccesoVehicularEntity> findByCondominioId(@Param("condominioId") Long condominioId, Pageable pageable);
 
     @Query("SELECT lav FROM LogAccesoVehicularEntity lav " +
            "JOIN lav.vehiculo v " +
            "JOIN v.inquilino i " +
            "JOIN i.apartamento a " +
            "WHERE a.id = :apartamentoId")
-    Page<LogAccesoVehicularEntity> findByApartamentoId(Long apartamentoId, Pageable pageable);
+    Page<LogAccesoVehicularEntity> findByApartamentoId(@Param("apartamentoId") Long apartamentoId, Pageable pageable);
 }

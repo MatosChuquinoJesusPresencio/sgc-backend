@@ -51,12 +51,16 @@ public class EstacionamientoController {
         var filtros = req.filtros();
         if (filtros == null) return ResponseEntity.badRequest().build();
         if (filtros.containsKey("condominioId")) {
+            String condominioVal = filtros.get("condominioId");
+            if (condominioVal == null) return ResponseEntity.badRequest().build();
             return ResponseEntity.ok(estacionamientoService.listarPorCondominio(
-                    Long.valueOf(filtros.get("condominioId")), req)
+                    Long.valueOf(condominioVal), req)
                     .map(EstacionamientoResponse::fromModel));
         } else if (filtros.containsKey("apartamentoId")) {
+            String aptoVal = filtros.get("apartamentoId");
+            if (aptoVal == null) return ResponseEntity.badRequest().build();
             return ResponseEntity.ok(estacionamientoService.listarPorApartamento(
-                    Long.valueOf(filtros.get("apartamentoId")), req)
+                    Long.valueOf(aptoVal), req)
                     .map(EstacionamientoResponse::fromModel));
         }
         return ResponseEntity.badRequest().build();

@@ -38,7 +38,9 @@ public class TorreController {
         var req = PaginacionRequest.desdeParams(params);
         var filtros = req.filtros();
         if (filtros == null || !filtros.containsKey("condominioId")) return ResponseEntity.badRequest().build();
-        Long condominioId = Long.valueOf(filtros.get("condominioId"));
+        String condominioVal = filtros.get("condominioId");
+        if (condominioVal == null) return ResponseEntity.badRequest().build();
+        Long condominioId = Long.valueOf(condominioVal);
         PaginacionResponse<TorreResponse> content = torreService.listarPorCondominio(condominioId, req)
                 .map(TorreResponse::fromModel);
         return ResponseEntity.ok(content);

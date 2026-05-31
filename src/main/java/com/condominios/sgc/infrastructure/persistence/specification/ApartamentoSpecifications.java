@@ -34,6 +34,7 @@ public final class ApartamentoSpecifications {
     public static Specification<ApartamentoEntity> fromFiltros(Map<String, String> filtros) {
         if (filtros == null || filtros.isEmpty()) return null;
         return filtros.entrySet().stream()
+            .filter(e -> e.getValue() != null)
             .map(entry -> switch (entry.getKey()) {
                 case "pisoId" -> porPisoId(Long.valueOf(entry.getValue()));
                 case "torreId" -> porTorreId(Long.valueOf(entry.getValue()));

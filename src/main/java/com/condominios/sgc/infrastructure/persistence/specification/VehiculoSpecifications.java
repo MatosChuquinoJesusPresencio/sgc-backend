@@ -29,6 +29,7 @@ public final class VehiculoSpecifications {
     public static Specification<VehiculoEntity> fromFiltros(Map<String, String> filtros) {
         if (filtros == null || filtros.isEmpty()) return null;
         return filtros.entrySet().stream()
+            .filter(e -> e.getValue() != null)
             .map(entry -> switch (entry.getKey()) {
                 case "placa" -> porPlaca(entry.getValue());
                 case "propietarioId" -> porPropietarioId(Long.valueOf(entry.getValue()));

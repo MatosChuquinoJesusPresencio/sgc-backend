@@ -38,7 +38,9 @@ public class PisoController {
         var req = PaginacionRequest.desdeParams(params);
         var filtros = req.filtros();
         if (filtros == null || !filtros.containsKey("torreId")) return ResponseEntity.badRequest().build();
-        Long torreId = Long.valueOf(filtros.get("torreId"));
+        String torreVal = filtros.get("torreId");
+        if (torreVal == null) return ResponseEntity.badRequest().build();
+        Long torreId = Long.valueOf(torreVal);
         PaginacionResponse<PisoResponse> content = pisoService.listarPorTorre(torreId, req)
                 .map(PisoResponse::fromModel);
         return ResponseEntity.ok(content);

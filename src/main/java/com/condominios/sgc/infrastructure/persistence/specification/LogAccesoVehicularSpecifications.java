@@ -66,6 +66,7 @@ public final class LogAccesoVehicularSpecifications {
     public static Specification<LogAccesoVehicularEntity> fromFiltros(Map<String, String> filtros) {
         if (filtros == null || filtros.isEmpty()) return null;
         return filtros.entrySet().stream()
+            .filter(e -> e.getValue() != null)
             .map(entry -> switch (entry.getKey()) {
                 case "placa" -> porPlaca(entry.getValue());
                 case "metodo" -> porMetodo(MetodoEntrada.valueOf(entry.getValue()));

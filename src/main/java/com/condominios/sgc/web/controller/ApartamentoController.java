@@ -39,7 +39,9 @@ public class ApartamentoController {
         var req = PaginacionRequest.desdeParams(params);
         var filtros = req.filtros();
         if (filtros == null || !filtros.containsKey("pisoId")) return ResponseEntity.badRequest().build();
-        Long pisoId = Long.valueOf(filtros.get("pisoId"));
+        String pisoVal = filtros.get("pisoId");
+        if (pisoVal == null) return ResponseEntity.badRequest().build();
+        Long pisoId = Long.valueOf(pisoVal);
         PaginacionResponse<ApartamentoResponse> content = apartamentoService.listarPorPiso(pisoId, req)
                 .map(ApartamentoResponse::fromModel);
         return ResponseEntity.ok(content);
