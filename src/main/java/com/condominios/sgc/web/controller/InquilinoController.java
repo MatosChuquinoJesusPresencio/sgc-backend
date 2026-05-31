@@ -15,80 +15,58 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.condominios.sgc.application.dto.ActualizarInquilinoRequest;
 import com.condominios.sgc.application.dto.CrearInquilinoRequest;
-import com.condominios.sgc.application.usecase.ActualizarInquilinoUseCase;
-import com.condominios.sgc.application.usecase.CrearInquilinoUseCase;
-import com.condominios.sgc.application.usecase.EliminarInquilinoUseCase;
-import com.condominios.sgc.application.usecase.ListarInquilinosPorApartamentoUseCase;
-import com.condominios.sgc.application.usecase.ObtenerInquilinoUseCase;
+import com.condominios.sgc.application.service.InquilinoService;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.web.dto.InquilinoResponse;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/inquilinos")
 public class InquilinoController {
 
-    private final CrearInquilinoUseCase crearUseCase;
-    private final ObtenerInquilinoUseCase obtenerUseCase;
-    private final ListarInquilinosPorApartamentoUseCase listarUseCase;
-    private final ActualizarInquilinoUseCase actualizarUseCase;
-    private final EliminarInquilinoUseCase eliminarUseCase;
+    private final InquilinoService inquilinoService;
 
-    public InquilinoController(
-            CrearInquilinoUseCase crearUseCase,
-            ObtenerInquilinoUseCase obtenerUseCase,
-            ListarInquilinosPorApartamentoUseCase listarUseCase,
-            ActualizarInquilinoUseCase actualizarUseCase,
-            EliminarInquilinoUseCase eliminarUseCase) {
-        this.crearUseCase = crearUseCase;
-        this.obtenerUseCase = obtenerUseCase;
-        this.listarUseCase = listarUseCase;
-        this.actualizarUseCase = actualizarUseCase;
-        this.eliminarUseCase = eliminarUseCase;
+    public InquilinoController(InquilinoService inquilinoService) {
+        this.inquilinoService = inquilinoService;
     }
 
-    @PostMapping("/apartamentos/{apartamentoId}/inquilinos")
+    @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
-    public ResponseEntity<InquilinoResponse> crearInquilino(
-            @PathVariable Long apartamentoId,
-            @RequestBody CrearInquilinoRequest request) {
-        var reqCompleto = new CrearInquilinoRequest(request.nombres(), request.apellidos(), request.dni(), apartamentoId);
+    public ResponseEntity<InquilinoResponse> crear(@RequestBody CrearInquilinoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(InquilinoResponse.fromModel(crearUseCase.ejecutar(reqCompleto)));
+            .body(InquilinoResponse.fromModel(inquilinoService.crear(request)));
     }
 
-    @GetMapping("/apartamentos/{apartamentoId}/inquilinos")
+    @GetMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<PaginacionResponse<InquilinoResponse>> listarInquilinos(
-            @PathVariable Long apartamentoId,
+    public ResponseEntity<PaginacionResponse<InquilinoResponse>> listar(
+            @RequestParam Long apartamentoId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         var req = new PaginacionRequest(page, size, "id", "asc", null);
-        var pageModel = listarUseCase.ejecutar(apartamentoId, req);
-        var content = pageModel.contenido().stream().map(InquilinoResponse::fromModel).toList();
-        return ResponseEntity.ok(new PaginacionResponse<>(
-            content, pageModel.pagina(), pageModel.tamanio(),
-            pageModel.totalElementos(), pageModel.totalPaginas()));
+        PaginacionResponse<InquilinoResponse> content = inquilinoService.listarPorApartamento(apartamentoId, req)
+                .map(InquilinoResponse::fromModel);
+        return ResponseEntity.ok(content);
     }
 
-    @GetMapping("/inquilinos/{id}")
+    @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<InquilinoResponse> obtenerInquilino(@PathVariable Long id) {
-        return ResponseEntity.ok(InquilinoResponse.fromModel(obtenerUseCase.ejecutar(id)));
+    public ResponseEntity<InquilinoResponse> obtener(@PathVariable Long id) {
+        return ResponseEntity.ok(InquilinoResponse.fromModel(inquilinoService.obtener(id)));
     }
 
-    @PutMapping("/inquilinos/{id}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
-    public ResponseEntity<InquilinoResponse> actualizarInquilino(
+    public ResponseEntity<InquilinoResponse> actualizar(
             @PathVariable Long id,
             @RequestBody ActualizarInquilinoRequest request) {
-        return ResponseEntity.ok(InquilinoResponse.fromModel(actualizarUseCase.ejecutar(id, request)));
+        return ResponseEntity.ok(InquilinoResponse.fromModel(inquilinoService.actualizar(id, request)));
     }
 
-    @DeleteMapping("/inquilinos/{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
-    public ResponseEntity<Void> eliminarInquilino(@PathVariable Long id) {
-        eliminarUseCase.ejecutar(id);
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        inquilinoService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
 }

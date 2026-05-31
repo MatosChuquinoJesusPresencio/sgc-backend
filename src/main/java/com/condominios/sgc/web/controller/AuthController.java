@@ -13,16 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.condominios.sgc.application.dto.CrearUsuarioRequest;
+import com.condominios.sgc.application.service.AutenticacionService;
+import com.condominios.sgc.application.service.UsuarioService;
 import com.condominios.sgc.infrastructure.util.SecurityUtils;
-import com.condominios.sgc.application.usecase.ActualizarCorreoUseCase;
-import com.condominios.sgc.application.usecase.CambiarContrasenaUseCase;
-import com.condominios.sgc.application.usecase.CerrarSesionUseCase;
-import com.condominios.sgc.application.usecase.CrearUsuarioUseCase;
-import com.condominios.sgc.application.usecase.EnviarRecuperacionContrasenaUseCase;
-import com.condominios.sgc.application.usecase.IniciarSesionUseCase;
-import com.condominios.sgc.application.usecase.RefrescarTokenUseCase;
-import com.condominios.sgc.application.usecase.RestablecerContrasenaUseCase;
-import com.condominios.sgc.application.usecase.VerificarCorreoUseCase;
 import com.condominios.sgc.infrastructure.util.CookieUtils;
 import com.condominios.sgc.web.dto.AuthResponse;
 import com.condominios.sgc.web.dto.ChangePasswordRequest;
@@ -39,42 +32,19 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final IniciarSesionUseCase iniciarSesionUseCase;
-    private final CerrarSesionUseCase cerrarSesionUseCase;
-    private final RefrescarTokenUseCase refrescarTokenUseCase;
-    private final CrearUsuarioUseCase crearUsuarioUseCase;
-    private final EnviarRecuperacionContrasenaUseCase enviarRecuperacionContrasenaUseCase;
-    private final RestablecerContrasenaUseCase restablecerContrasenaUseCase;
-    private final CambiarContrasenaUseCase cambiarContrasenaUseCase;
-    private final VerificarCorreoUseCase verificarCorreoUseCase;
-    private final ActualizarCorreoUseCase actualizarCorreoUseCase;
+    private final AutenticacionService autenticacionService;
+    private final UsuarioService usuarioService;
 
-    public AuthController(
-            IniciarSesionUseCase iniciarSesionUseCase,
-            CerrarSesionUseCase cerrarSesionUseCase,
-            RefrescarTokenUseCase refrescarTokenUseCase,
-            CrearUsuarioUseCase crearUsuarioUseCase,
-            EnviarRecuperacionContrasenaUseCase enviarRecuperacionContrasenaUseCase,
-            RestablecerContrasenaUseCase restablecerContrasenaUseCase,
-            CambiarContrasenaUseCase cambiarContrasenaUseCase,
-            VerificarCorreoUseCase verificarCorreoUseCase,
-            ActualizarCorreoUseCase actualizarCorreoUseCase) {
-        this.iniciarSesionUseCase = iniciarSesionUseCase;
-        this.cerrarSesionUseCase = cerrarSesionUseCase;
-        this.refrescarTokenUseCase = refrescarTokenUseCase;
-        this.crearUsuarioUseCase = crearUsuarioUseCase;
-        this.enviarRecuperacionContrasenaUseCase = enviarRecuperacionContrasenaUseCase;
-        this.restablecerContrasenaUseCase = restablecerContrasenaUseCase;
-        this.cambiarContrasenaUseCase = cambiarContrasenaUseCase;
-        this.verificarCorreoUseCase = verificarCorreoUseCase;
-        this.actualizarCorreoUseCase = actualizarCorreoUseCase;
+    public AuthController(AutenticacionService autenticacionService, UsuarioService usuarioService) {
+        this.autenticacionService = autenticacionService;
+        this.usuarioService = usuarioService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(
             @RequestBody LoginRequest request,
             HttpServletResponse response) {
-        var completa = iniciarSesionUseCase.ejecutar(request.email(), request.password());
+        var completa = autenticacionService.iniciarSesion(request.email(), request.password());
         response.addHeader("Set-Cookie",
             CookieUtils.crearCookieJwt(completa.sesion().accessToken(), completa.sesion().expiresIn()).toString());
         return ResponseEntity.ok(AuthResponse.fromSesion(completa.sesion(), UsuarioResponse.fromModel(completa.usuario())));
@@ -85,7 +55,7 @@ public class AuthController {
     public ResponseEntity<Void> logout(
             @AuthenticationPrincipal Jwt jwt,
             HttpServletResponse response) {
-        cerrarSesionUseCase.ejecutar(jwt.getTokenValue());
+        autenticacionService.cerrarSesion(jwt.getTokenValue());
         response.addHeader("Set-Cookie",
             CookieUtils.limpiarCookieJwt().toString());
         return ResponseEntity.noContent().build();
@@ -95,7 +65,7 @@ public class AuthController {
     public ResponseEntity<AuthResponse> refresh(
             @RequestBody RefreshTokenRequest request,
             HttpServletResponse response) {
-        var completa = refrescarTokenUseCase.ejecutar(request.refreshToken());
+        var completa = autenticacionService.refrescarToken(request.refreshToken());
         response.addHeader("Set-Cookie",
             CookieUtils.crearCookieJwt(completa.sesion().accessToken(), completa.sesion().expiresIn()).toString());
         return ResponseEntity.ok(AuthResponse.fromSesion(completa.sesion(), UsuarioResponse.fromModel(completa.usuario())));
@@ -105,19 +75,18 @@ public class AuthController {
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<UsuarioResponse> register(@RequestBody CrearUsuarioRequest request) {
         return ResponseEntity.ok(
-            UsuarioResponse.fromModel(crearUsuarioUseCase.ejecutar(request, SecurityUtils.obtenerRolAutenticado())));
+            UsuarioResponse.fromModel(usuarioService.crear(request, SecurityUtils.obtenerRolAutenticado())));
     }
 
     @PostMapping("/forgot-password")
     public ResponseEntity<Void> forgotPassword(@RequestBody ForgotPasswordRequest request) {
-        enviarRecuperacionContrasenaUseCase.ejecutar(request.email(), "");
+        usuarioService.enviarRecuperacionContrasena(request.email(), "");
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/reset-password")
     public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequest request) {
-        restablecerContrasenaUseCase.ejecutar(
-            request.token(), request.password());
+        usuarioService.restablecerContrasena(request.token(), request.password());
         return ResponseEntity.noContent().build();
     }
 
@@ -126,7 +95,7 @@ public class AuthController {
     public ResponseEntity<Void> changePassword(
             @AuthenticationPrincipal Jwt jwt,
             @RequestBody ChangePasswordRequest request) {
-        cambiarContrasenaUseCase.ejecutar(
+        autenticacionService.cambiarContrasena(
             SecurityUtils.obtenerIdUsuario(), request.currentPassword(), request.newPassword());
         return ResponseEntity.noContent().build();
     }
@@ -138,7 +107,7 @@ public class AuthController {
             @RequestBody UpdateEmailRequest request) {
         return ResponseEntity.ok(
             UsuarioResponse.fromModel(
-                actualizarCorreoUseCase.ejecutar(
+                usuarioService.actualizarCorreo(
                     SecurityUtils.obtenerIdUsuario(), request.email(), jwt.getTokenValue())));
     }
 
@@ -147,7 +116,6 @@ public class AuthController {
             @RequestParam String token) {
         return ResponseEntity.ok(
             UsuarioResponse.fromModel(
-                verificarCorreoUseCase.ejecutar(token)));
+                usuarioService.verificarCorreo(token)));
     }
-
 }

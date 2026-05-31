@@ -1,14 +1,9 @@
 package com.condominios.sgc.web.controller;
 
 import com.condominios.sgc.application.dto.ActualizarUsuarioRequest;
-import com.condominios.sgc.application.usecase.ActualizarEstadoUsuarioUseCase;
-import com.condominios.sgc.application.usecase.ActualizarUsuarioUseCase;
-import com.condominios.sgc.application.usecase.EliminarUsuarioUseCase;
-import com.condominios.sgc.application.usecase.ListarUsuariosUseCase;
-import com.condominios.sgc.application.usecase.ObtenerUsuarioUseCase;
+import com.condominios.sgc.application.service.UsuarioService;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
-import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.web.dto.UsuarioResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,30 +26,17 @@ import java.util.Set;
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
 
-    private final ObtenerUsuarioUseCase obtenerUsuarioUseCase;
-    private final ActualizarUsuarioUseCase actualizarUsuarioUseCase;
-    private final EliminarUsuarioUseCase eliminarUsuarioUseCase;
-    private final ListarUsuariosUseCase listarUsuariosUseCase;
-    private final ActualizarEstadoUsuarioUseCase actualizarEstadoUsuarioUseCase;
+    private final UsuarioService usuarioService;
 
-    public UsuarioController(
-            ObtenerUsuarioUseCase obtenerUsuarioUseCase,
-            ActualizarUsuarioUseCase actualizarUsuarioUseCase,
-            EliminarUsuarioUseCase eliminarUsuarioUseCase,
-            ListarUsuariosUseCase listarUsuariosUseCase,
-            ActualizarEstadoUsuarioUseCase actualizarEstadoUsuarioUseCase) {
-        this.obtenerUsuarioUseCase = obtenerUsuarioUseCase;
-        this.actualizarUsuarioUseCase = actualizarUsuarioUseCase;
-        this.eliminarUsuarioUseCase = eliminarUsuarioUseCase;
-        this.listarUsuariosUseCase = listarUsuariosUseCase;
-        this.actualizarEstadoUsuarioUseCase = actualizarEstadoUsuarioUseCase;
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<UsuarioResponse> obtener(@PathVariable Long id) {
         return ResponseEntity.ok(
-            UsuarioResponse.fromModel(obtenerUsuarioUseCase.ejecutar(id)));
+            UsuarioResponse.fromModel(usuarioService.obtener(id)));
     }
 
     @GetMapping
@@ -71,15 +53,9 @@ public class UsuarioController {
         filtros.keySet().removeAll(keys);
 
         PaginacionRequest request = new PaginacionRequest(pagina, tamanio, ordenarPor, direccion, filtros);
-        PaginacionResponse<UsuarioModel> result = listarUsuariosUseCase.ejecutar(request);
-
-        return ResponseEntity.ok(PaginacionResponse.de(
-            result.contenido().stream().map(UsuarioResponse::fromModel).toList(),
-            result.pagina(),
-            result.tamanio(),
-            result.totalElementos(),
-            result.totalPaginas()
-        ));
+        PaginacionResponse<UsuarioResponse> content = usuarioService.listar(request)
+                .map(UsuarioResponse::fromModel);
+        return ResponseEntity.ok(content);
     }
 
     @PutMapping("/{id}")
@@ -88,7 +64,7 @@ public class UsuarioController {
             @PathVariable Long id,
             @RequestBody ActualizarUsuarioRequest request) {
         return ResponseEntity.ok(
-            UsuarioResponse.fromModel(actualizarUsuarioUseCase.ejecutar(id, request, SecurityUtils.obtenerRolAutenticado())));
+            UsuarioResponse.fromModel(usuarioService.actualizar(id, request, SecurityUtils.obtenerRolAutenticado())));
     }
 
     @PatchMapping("/{id}/estado")
@@ -97,14 +73,13 @@ public class UsuarioController {
             @PathVariable Long id,
             @RequestBody Map<String, Boolean> body) {
         return ResponseEntity.ok(
-            UsuarioResponse.fromModel(actualizarEstadoUsuarioUseCase.ejecutar(id, body.get("activo"), SecurityUtils.obtenerRolAutenticado())));
+            UsuarioResponse.fromModel(usuarioService.actualizarEstado(id, body.get("activo"), SecurityUtils.obtenerRolAutenticado())));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        eliminarUsuarioUseCase.ejecutar(id);
+        usuarioService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
-
 }

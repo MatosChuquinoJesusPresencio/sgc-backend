@@ -19,51 +19,33 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.condominios.sgc.application.dto.ActualizarCondominioRequest;
 import com.condominios.sgc.application.dto.CrearCondominioRequest;
-import com.condominios.sgc.application.usecase.ActualizarCondominioUseCase;
-import com.condominios.sgc.application.usecase.CrearCondominioUseCase;
-import com.condominios.sgc.application.usecase.EliminarCondominioUseCase;
-import com.condominios.sgc.application.usecase.ListarCondominiosUseCase;
-import com.condominios.sgc.application.usecase.ObtenerCondominioUseCase;
+import com.condominios.sgc.application.service.CondominioService;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
-import com.condominios.sgc.domain.model.CondominioModel;
 import com.condominios.sgc.web.dto.CondominioResponse;
 
 @RestController
 @RequestMapping("/api/condominios")
 public class CondominioController {
 
-    private final CrearCondominioUseCase crearCondominioUseCase;
-    private final ObtenerCondominioUseCase obtenerCondominioUseCase;
-    private final ListarCondominiosUseCase listarCondominiosUseCase;
-    private final ActualizarCondominioUseCase actualizarCondominioUseCase;
-    private final EliminarCondominioUseCase eliminarCondominioUseCase;
+    private final CondominioService condominioService;
 
-    public CondominioController(
-            CrearCondominioUseCase crearCondominioUseCase,
-            ObtenerCondominioUseCase obtenerCondominioUseCase,
-            ListarCondominiosUseCase listarCondominiosUseCase,
-            ActualizarCondominioUseCase actualizarCondominioUseCase,
-            EliminarCondominioUseCase eliminarCondominioUseCase) {
-        this.crearCondominioUseCase = crearCondominioUseCase;
-        this.obtenerCondominioUseCase = obtenerCondominioUseCase;
-        this.listarCondominiosUseCase = listarCondominiosUseCase;
-        this.actualizarCondominioUseCase = actualizarCondominioUseCase;
-        this.eliminarCondominioUseCase = eliminarCondominioUseCase;
+    public CondominioController(CondominioService condominioService) {
+        this.condominioService = condominioService;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
     public ResponseEntity<CondominioResponse> crear(@RequestBody CrearCondominioRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(CondominioResponse.fromModel(crearCondominioUseCase.ejecutar(request)));
+            .body(CondominioResponse.fromModel(condominioService.crear(request)));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<CondominioResponse> obtener(@PathVariable Long id) {
         return ResponseEntity.ok(
-            CondominioResponse.fromModel(obtenerCondominioUseCase.ejecutar(id)));
+            CondominioResponse.fromModel(condominioService.obtener(id)));
     }
 
     @GetMapping
@@ -80,15 +62,9 @@ public class CondominioController {
         filtros.keySet().removeAll(keys);
 
         PaginacionRequest request = new PaginacionRequest(pagina, tamanio, ordenarPor, direccion, filtros);
-        PaginacionResponse<CondominioModel> result = listarCondominiosUseCase.ejecutar(request);
-
-        return ResponseEntity.ok(PaginacionResponse.de(
-            result.contenido().stream().map(CondominioResponse::fromModel).toList(),
-            result.pagina(),
-            result.tamanio(),
-            result.totalElementos(),
-            result.totalPaginas()
-        ));
+        PaginacionResponse<CondominioResponse> content = condominioService.listar(request)
+                .map(CondominioResponse::fromModel);
+        return ResponseEntity.ok(content);
     }
 
     @PutMapping("/{id}")
@@ -97,13 +73,13 @@ public class CondominioController {
             @PathVariable Long id,
             @RequestBody ActualizarCondominioRequest request) {
         return ResponseEntity.ok(
-            CondominioResponse.fromModel(actualizarCondominioUseCase.ejecutar(id, request)));
+            CondominioResponse.fromModel(condominioService.actualizar(id, request)));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        eliminarCondominioUseCase.ejecutar(id);
+        condominioService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
 }

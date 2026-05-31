@@ -15,11 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.condominios.sgc.application.dto.ActualizarVehiculoRequest;
 import com.condominios.sgc.application.dto.CrearVehiculoRequest;
-import com.condominios.sgc.application.usecase.ActualizarVehiculoUseCase;
-import com.condominios.sgc.application.usecase.CrearVehiculoUseCase;
-import com.condominios.sgc.application.usecase.EliminarVehiculoUseCase;
-import com.condominios.sgc.application.usecase.ListarVehiculosUseCase;
-import com.condominios.sgc.application.usecase.ObtenerVehiculoUseCase;
+import com.condominios.sgc.application.service.VehiculoService;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.web.dto.VehiculoResponse;
@@ -28,30 +24,17 @@ import com.condominios.sgc.web.dto.VehiculoResponse;
 @RequestMapping("/api/vehiculos")
 public class VehiculoController {
 
-    private final CrearVehiculoUseCase crearUseCase;
-    private final ObtenerVehiculoUseCase obtenerUseCase;
-    private final ListarVehiculosUseCase listarUseCase;
-    private final ActualizarVehiculoUseCase actualizarUseCase;
-    private final EliminarVehiculoUseCase eliminarUseCase;
+    private final VehiculoService vehiculoService;
 
-    public VehiculoController(
-            CrearVehiculoUseCase crearUseCase,
-            ObtenerVehiculoUseCase obtenerUseCase,
-            ListarVehiculosUseCase listarUseCase,
-            ActualizarVehiculoUseCase actualizarUseCase,
-            EliminarVehiculoUseCase eliminarUseCase) {
-        this.crearUseCase = crearUseCase;
-        this.obtenerUseCase = obtenerUseCase;
-        this.listarUseCase = listarUseCase;
-        this.actualizarUseCase = actualizarUseCase;
-        this.eliminarUseCase = eliminarUseCase;
+    public VehiculoController(VehiculoService vehiculoService) {
+        this.vehiculoService = vehiculoService;
     }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<VehiculoResponse> crearVehiculo(@RequestBody CrearVehiculoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(VehiculoResponse.fromModel(crearUseCase.ejecutar(request)));
+            .body(VehiculoResponse.fromModel(vehiculoService.crear(request)));
     }
 
     @GetMapping
@@ -60,17 +43,15 @@ public class VehiculoController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         var req = new PaginacionRequest(page, size, "id", "asc", null);
-        var pageModel = listarUseCase.ejecutar(req);
-        var content = pageModel.contenido().stream().map(VehiculoResponse::fromModel).toList();
-        return ResponseEntity.ok(new PaginacionResponse<>(
-            content, pageModel.pagina(), pageModel.tamanio(),
-            pageModel.totalElementos(), pageModel.totalPaginas()));
+        PaginacionResponse<VehiculoResponse> content = vehiculoService.listar(req)
+                .map(VehiculoResponse::fromModel);
+        return ResponseEntity.ok(content);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<VehiculoResponse> obtenerVehiculo(@PathVariable Long id) {
-        return ResponseEntity.ok(VehiculoResponse.fromModel(obtenerUseCase.ejecutar(id)));
+        return ResponseEntity.ok(VehiculoResponse.fromModel(vehiculoService.obtener(id)));
     }
 
     @PutMapping("/{id}")
@@ -78,13 +59,13 @@ public class VehiculoController {
     public ResponseEntity<VehiculoResponse> actualizarVehiculo(
             @PathVariable Long id,
             @RequestBody ActualizarVehiculoRequest request) {
-        return ResponseEntity.ok(VehiculoResponse.fromModel(actualizarUseCase.ejecutar(id, request)));
+        return ResponseEntity.ok(VehiculoResponse.fromModel(vehiculoService.actualizar(id, request)));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<Void> eliminarVehiculo(@PathVariable Long id) {
-        eliminarUseCase.ejecutar(id);
+        vehiculoService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
 }

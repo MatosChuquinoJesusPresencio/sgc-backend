@@ -2,85 +2,62 @@ package com.condominios.sgc.web.controller;
 
 import com.condominios.sgc.application.dto.ActualizarApartamentoRequest;
 import com.condominios.sgc.application.dto.CrearApartamentoRequest;
-import com.condominios.sgc.application.usecase.*;
+import com.condominios.sgc.application.service.ApartamentoService;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
-import com.condominios.sgc.domain.model.ApartamentoModel;
 import com.condominios.sgc.web.dto.ApartamentoResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/apartamentos")
 public class ApartamentoController {
-    private final CrearApartamentoUseCase crearApartamentoUseCase;
-    private final ObtenerApartamentoUseCase obtenerApartamentoUseCase;
-    private final ListarApartamentosPorPisoUseCase listarApartamentosPorPisoUseCase;
-    private final ActualizarApartamentoUseCase actualizarApartamentoUseCase;
-    private final EliminarApartamentoUseCase eliminarApartamentoUseCase;
 
-    public ApartamentoController(CrearApartamentoUseCase crearApartamentoUseCase, ObtenerApartamentoUseCase obtenerApartamentoUseCase,
-                                 ListarApartamentosPorPisoUseCase listarApartamentosPorPisoUseCase,
-                                 ActualizarApartamentoUseCase actualizarApartamentoUseCase, EliminarApartamentoUseCase eliminarApartamentoUseCase) {
-        this.crearApartamentoUseCase = crearApartamentoUseCase;
-        this.obtenerApartamentoUseCase = obtenerApartamentoUseCase;
-        this.listarApartamentosPorPisoUseCase = listarApartamentosPorPisoUseCase;
-        this.actualizarApartamentoUseCase = actualizarApartamentoUseCase;
-        this.eliminarApartamentoUseCase = eliminarApartamentoUseCase;
+    private final ApartamentoService apartamentoService;
+
+    public ApartamentoController(ApartamentoService apartamentoService) {
+        this.apartamentoService = apartamentoService;
     }
 
-    @PostMapping("/pisos/{pisoId}/apartamentos")
+    @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
-    public ResponseEntity<ApartamentoResponse> crearApartamento(
-            @PathVariable Long pisoId,
-            @RequestBody CrearApartamentoRequest request) {
-        ApartamentoModel apartamento = crearApartamentoUseCase.ejecutar(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApartamentoResponse.fromModel(apartamento));
+    public ResponseEntity<ApartamentoResponse> crear(@RequestBody CrearApartamentoRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(ApartamentoResponse.fromModel(apartamentoService.crear(request)));
     }
 
-    @GetMapping("/pisos/{pisoId}/apartamentos")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<PaginacionResponse<ApartamentoResponse>> listarApartamentosPorPiso(
-            @PathVariable Long pisoId,
+    @GetMapping
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
+    public ResponseEntity<PaginacionResponse<ApartamentoResponse>> listar(
+            @RequestParam Long pisoId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
         PaginacionRequest req = new PaginacionRequest(page, size, "id", "asc", null);
-        PaginacionResponse<ApartamentoModel> pageModel = listarApartamentosPorPisoUseCase.ejecutar(pisoId, req);
-
-        List<ApartamentoResponse> content = pageModel.contenido().stream().map(ApartamentoResponse::fromModel).toList();
-
-        return ResponseEntity.ok(new PaginacionResponse<>(
-                content,
-                pageModel.pagina(),
-                pageModel.tamanio(),
-                pageModel.totalElementos(),
-                pageModel.totalPaginas()
-        ));
+        PaginacionResponse<ApartamentoResponse> content = apartamentoService.listarPorPiso(pisoId, req)
+                .map(ApartamentoResponse::fromModel);
+        return ResponseEntity.ok(content);
     }
 
-    @GetMapping("/apartamentos/{id}")
+    @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApartamentoResponse> obtenerApartamento(@PathVariable Long id) {
-        return ResponseEntity.ok(ApartamentoResponse.fromModel(obtenerApartamentoUseCase.ejecutar(id)));
+    public ResponseEntity<ApartamentoResponse> obtener(@PathVariable Long id) {
+        return ResponseEntity.ok(ApartamentoResponse.fromModel(apartamentoService.obtener(id)));
     }
 
-    @PutMapping("/apartamentos/{id}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
-    public ResponseEntity<ApartamentoResponse> actualizarApartamento(
+    public ResponseEntity<ApartamentoResponse> actualizar(
             @PathVariable Long id,
             @RequestBody ActualizarApartamentoRequest request) {
-        return ResponseEntity.ok(ApartamentoResponse.fromModel(actualizarApartamentoUseCase.ejecutar(id, request)));
+        return ResponseEntity.ok(ApartamentoResponse.fromModel(apartamentoService.actualizar(id, request)));
     }
 
-    @DeleteMapping("/apartamentos/{id}")
-    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
-    public ResponseEntity<Void> eliminarApartamento(@PathVariable Long id) {
-        eliminarApartamentoUseCase.ejecutar(id);
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR')")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        apartamentoService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
 }
