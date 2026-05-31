@@ -6,12 +6,15 @@ import com.condominios.sgc.domain.model.LogAccesoVehicularModel;
 import com.condominios.sgc.domain.exception.EstacionamientoException;
 import com.condominios.sgc.domain.exception.VehiculoException;
 import com.condominios.sgc.domain.port.LogAccesoVehicularPort;
+import com.condominios.sgc.infrastructure.persistence.entity.LogAccesoVehicularEntity;
 import com.condominios.sgc.infrastructure.persistence.mapper.LogAccesoVehicularMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.EstacionamientoRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.LogAccesoVehicularRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.VehiculoRepository;
+import com.condominios.sgc.infrastructure.persistence.specification.LogAccesoVehicularSpecifications;
 import com.condominios.sgc.infrastructure.util.PaginacionUtil;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -38,13 +41,27 @@ public class LogAccesoVehicularAdapter implements LogAccesoVehicularPort {
 
     @Override
     public PaginacionResponse<LogAccesoVehicularModel> findByCondominioId(Long condominioId, PaginacionRequest request) {
-        var page = logAccesoVehicularRepository.findByCondominioId(condominioId, PaginacionUtil.toPageable(request));
+        var filtros = request.filtros();
+        Specification<LogAccesoVehicularEntity> spec;
+        if (filtros != null && !filtros.isEmpty()) {
+            spec = LogAccesoVehicularSpecifications.fromFiltros(filtros);
+        } else {
+            spec = LogAccesoVehicularSpecifications.porCondominioId(condominioId);
+        }
+        var page = logAccesoVehicularRepository.findAll(spec, PaginacionUtil.toPageable(request));
         return PaginacionUtil.toPaginacionResponse(page, page.map(LogAccesoVehicularMapper::toModel).toList());
     }
 
     @Override
     public PaginacionResponse<LogAccesoVehicularModel> findByApartamentoId(Long apartamentoId, PaginacionRequest request) {
-        var page = logAccesoVehicularRepository.findByApartamentoId(apartamentoId, PaginacionUtil.toPageable(request));
+        var filtros = request.filtros();
+        Specification<LogAccesoVehicularEntity> spec;
+        if (filtros != null && !filtros.isEmpty()) {
+            spec = LogAccesoVehicularSpecifications.fromFiltros(filtros);
+        } else {
+            spec = LogAccesoVehicularSpecifications.porApartamentoId(apartamentoId);
+        }
+        var page = logAccesoVehicularRepository.findAll(spec, PaginacionUtil.toPageable(request));
         return PaginacionUtil.toPaginacionResponse(page, page.map(LogAccesoVehicularMapper::toModel).toList());
     }
 

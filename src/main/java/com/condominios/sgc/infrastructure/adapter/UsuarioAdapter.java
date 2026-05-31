@@ -8,6 +8,7 @@ import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.infrastructure.persistence.mapper.UsuarioMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.CondominioRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.UsuarioRepository;
+import com.condominios.sgc.infrastructure.persistence.specification.UsuarioSpecifications;
 import com.condominios.sgc.infrastructure.util.PaginacionUtil;
 
 import org.springframework.stereotype.Component;
@@ -58,7 +59,8 @@ public class UsuarioAdapter implements UsuarioPort {
 
     @Override
     public PaginacionResponse<UsuarioModel> findAll(PaginacionRequest request) {
-        var page = usuarioRepository.findAll(PaginacionUtil.toPageable(request));
+        var spec = UsuarioSpecifications.fromFiltros(request.filtros());
+        var page = usuarioRepository.findAll(spec, PaginacionUtil.toPageable(request));
         return PaginacionUtil.toPaginacionResponse(page, page.map(UsuarioMapper::toModel).toList());
     }
 }

@@ -1,8 +1,6 @@
 package com.condominios.sgc.web.controller;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,16 +50,7 @@ public class CondominioController {
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<PaginacionResponse<CondominioResponse>> listar(
             @RequestParam Map<String, String> params) {
-        int pagina = Integer.parseInt(params.getOrDefault("pagina", "0"));
-        int tamanio = Integer.parseInt(params.getOrDefault("tamanio", "10"));
-        String ordenarPor = params.get("ordenarPor");
-        String direccion = params.getOrDefault("direccion", "ASC");
-
-        Map<String, String> filtros = new HashMap<>(params);
-        Set<String> keys = Set.of("pagina", "tamanio", "ordenarPor", "direccion");
-        filtros.keySet().removeAll(keys);
-
-        PaginacionRequest request = new PaginacionRequest(pagina, tamanio, ordenarPor, direccion, filtros);
+        PaginacionRequest request = PaginacionRequest.desdeParams(params);
         PaginacionResponse<CondominioResponse> content = condominioService.listar(request)
                 .map(CondominioResponse::fromModel);
         return ResponseEntity.ok(content);

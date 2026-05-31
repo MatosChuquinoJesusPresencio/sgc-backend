@@ -50,10 +50,10 @@ public class CarritoController {
     @GetMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<PaginacionResponse<CarritoResponse>> listar(
-            @RequestParam Long condominioId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        var req = new PaginacionRequest(page, size, "id", "asc", null);
+            @RequestParam Map<String, String> params) {
+        var req = PaginacionRequest.desdeParams(params);
+        Long condominioId = req.filtros() != null ? Long.valueOf(req.filtros().get("condominioId")) : null;
+        if (condominioId == null) return ResponseEntity.badRequest().build();
         PaginacionResponse<CarritoResponse> content = carritoService.listarPorCondominio(condominioId, req)
                 .map(CarritoResponse::fromModel);
         return ResponseEntity.ok(content);

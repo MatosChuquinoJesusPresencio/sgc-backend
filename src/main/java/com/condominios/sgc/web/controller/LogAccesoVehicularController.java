@@ -1,5 +1,7 @@
 package com.condominios.sgc.web.controller;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,22 +32,20 @@ public class LogAccesoVehicularController {
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PaginacionResponse<LogAccesoVehicularResponse>> listar(
-            @RequestParam(required = false) Long apartamentoId,
-            @RequestParam(required = false) Long condominioId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        var req = new PaginacionRequest(page, size, "id", "asc", null);
-        PaginacionResponse<LogAccesoVehicularResponse> content;
-        if (apartamentoId != null) {
-            content = logAccesoService.listarPorApartamento(apartamentoId, req)
-                    .map(LogAccesoVehicularResponse::fromModel);
-        } else if (condominioId != null) {
-            content = logAccesoService.listarPorCondominio(condominioId, req)
-                    .map(LogAccesoVehicularResponse::fromModel);
-        } else {
-            return ResponseEntity.badRequest().build();
+            @RequestParam Map<String, String> params) {
+        var req = PaginacionRequest.desdeParams(params);
+        var filtros = req.filtros();
+        if (filtros == null) return ResponseEntity.badRequest().build();
+        if (filtros.containsKey("apartamentoId")) {
+            return ResponseEntity.ok(logAccesoService.listarPorApartamento(
+                    Long.valueOf(filtros.get("apartamentoId")), req)
+                    .map(LogAccesoVehicularResponse::fromModel));
+        } else if (filtros.containsKey("condominioId")) {
+            return ResponseEntity.ok(logAccesoService.listarPorCondominio(
+                    Long.valueOf(filtros.get("condominioId")), req)
+                    .map(LogAccesoVehicularResponse::fromModel));
         }
-        return ResponseEntity.ok(content);
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/{id}")

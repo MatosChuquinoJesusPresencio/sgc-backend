@@ -5,11 +5,14 @@ import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.TorreModel;
 import com.condominios.sgc.domain.exception.CondominioException;
 import com.condominios.sgc.domain.port.TorrePort;
+import com.condominios.sgc.infrastructure.persistence.entity.TorreEntity;
 import com.condominios.sgc.infrastructure.persistence.mapper.TorreMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.CondominioRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.TorreRepository;
+import com.condominios.sgc.infrastructure.persistence.specification.TorreSpecifications;
 import com.condominios.sgc.infrastructure.util.PaginacionUtil;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -32,7 +35,14 @@ public class TorreAdapter implements TorrePort {
 
     @Override
     public PaginacionResponse<TorreModel> findByCondominioId(Long condominioId, PaginacionRequest request) {
-        var page = torreRepository.findByCondominioId(condominioId, PaginacionUtil.toPageable(request));
+        var filtros = request.filtros();
+        Specification<TorreEntity> spec;
+        if (filtros != null && !filtros.isEmpty()) {
+            spec = TorreSpecifications.fromFiltros(filtros);
+        } else {
+            spec = TorreSpecifications.porCondominioId(condominioId);
+        }
+        var page = torreRepository.findAll(spec, PaginacionUtil.toPageable(request));
         return PaginacionUtil.toPaginacionResponse(page, page.map(TorreMapper::toModel).toList());
     }
 

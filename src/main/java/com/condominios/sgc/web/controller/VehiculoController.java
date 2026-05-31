@@ -1,5 +1,7 @@
 package com.condominios.sgc.web.controller;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,9 +42,8 @@ public class VehiculoController {
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PaginacionResponse<VehiculoResponse>> listarVehiculos(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        var req = new PaginacionRequest(page, size, "id", "asc", null);
+            @RequestParam Map<String, String> params) {
+        var req = PaginacionRequest.desdeParams(params);
         PaginacionResponse<VehiculoResponse> content = vehiculoService.listar(req)
                 .map(VehiculoResponse::fromModel);
         return ResponseEntity.ok(content);

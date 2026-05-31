@@ -44,22 +44,20 @@ public class EstacionamientoController {
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PaginacionResponse<EstacionamientoResponse>> listar(
-            @RequestParam(required = false) Long condominioId,
-            @RequestParam(required = false) Long apartamentoId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        PaginacionRequest req = new PaginacionRequest(page, size, "id", "asc", null);
-        PaginacionResponse<EstacionamientoResponse> content;
-        if (condominioId != null) {
-            content = estacionamientoService.listarPorCondominio(condominioId, req)
-                    .map(EstacionamientoResponse::fromModel);
-        } else if (apartamentoId != null) {
-            content = estacionamientoService.listarPorApartamento(apartamentoId, req)
-                    .map(EstacionamientoResponse::fromModel);
-        } else {
-            return ResponseEntity.badRequest().build();
+            @RequestParam Map<String, String> params) {
+        var req = PaginacionRequest.desdeParams(params);
+        var filtros = req.filtros();
+        if (filtros == null) return ResponseEntity.badRequest().build();
+        if (filtros.containsKey("condominioId")) {
+            return ResponseEntity.ok(estacionamientoService.listarPorCondominio(
+                    Long.valueOf(filtros.get("condominioId")), req)
+                    .map(EstacionamientoResponse::fromModel));
+        } else if (filtros.containsKey("apartamentoId")) {
+            return ResponseEntity.ok(estacionamientoService.listarPorApartamento(
+                    Long.valueOf(filtros.get("apartamentoId")), req)
+                    .map(EstacionamientoResponse::fromModel));
         }
-        return ResponseEntity.ok(content);
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/{id}")

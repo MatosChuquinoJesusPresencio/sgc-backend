@@ -5,12 +5,14 @@ import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.CarritoModel;
 import com.condominios.sgc.domain.exception.CondominioException;
 import com.condominios.sgc.domain.port.CarritoPort;
+import com.condominios.sgc.infrastructure.persistence.entity.CarritoEntity;
 import com.condominios.sgc.infrastructure.persistence.mapper.CarritoMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.CarritoRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.CondominioRepository;
 import com.condominios.sgc.infrastructure.persistence.specification.CarritoSpecifications;
 import com.condominios.sgc.infrastructure.util.PaginacionUtil;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -33,7 +35,13 @@ public class CarritoAdapter implements CarritoPort {
 
     @Override
     public PaginacionResponse<CarritoModel> findByCondominioId(Long condominioId, PaginacionRequest request) {
-        var spec = CarritoSpecifications.porCondominioId(condominioId);
+        var filtros = request.filtros();
+        Specification<CarritoEntity> spec;
+        if (filtros != null && !filtros.isEmpty()) {
+            spec = CarritoSpecifications.fromFiltros(filtros);
+        } else {
+            spec = CarritoSpecifications.porCondominioId(condominioId);
+        }
         var page = carritoRepository.findAll(spec, PaginacionUtil.toPageable(request));
         return PaginacionUtil.toPaginacionResponse(page, page.map(CarritoMapper::toModel).toList());
     }

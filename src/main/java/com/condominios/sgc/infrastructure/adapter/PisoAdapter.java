@@ -5,11 +5,14 @@ import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.PisoModel;
 import com.condominios.sgc.domain.exception.TorreException;
 import com.condominios.sgc.domain.port.PisoPort;
+import com.condominios.sgc.infrastructure.persistence.entity.PisoEntity;
 import com.condominios.sgc.infrastructure.persistence.mapper.PisoMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.PisoRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.TorreRepository;
+import com.condominios.sgc.infrastructure.persistence.specification.PisoSpecifications;
 import com.condominios.sgc.infrastructure.util.PaginacionUtil;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -32,7 +35,14 @@ public class PisoAdapter implements PisoPort {
 
     @Override
     public PaginacionResponse<PisoModel> findByTorreId(Long torreId, PaginacionRequest request) {
-        var page = pisoRepository.findByTorreId(torreId, PaginacionUtil.toPageable(request));
+        var filtros = request.filtros();
+        Specification<PisoEntity> spec;
+        if (filtros != null && !filtros.isEmpty()) {
+            spec = PisoSpecifications.fromFiltros(filtros);
+        } else {
+            spec = PisoSpecifications.porTorreId(torreId);
+        }
+        var page = pisoRepository.findAll(spec, PaginacionUtil.toPageable(request));
         return PaginacionUtil.toPaginacionResponse(page, page.map(PisoMapper::toModel).toList());
     }
 

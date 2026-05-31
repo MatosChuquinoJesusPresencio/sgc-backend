@@ -6,6 +6,7 @@ import com.condominios.sgc.domain.model.EstacionamientoModel;
 import com.condominios.sgc.domain.exception.ApartamentoException;
 import com.condominios.sgc.domain.exception.CondominioException;
 import com.condominios.sgc.domain.port.EstacionamientoPort;
+import com.condominios.sgc.infrastructure.persistence.entity.EstacionamientoEntity;
 import com.condominios.sgc.infrastructure.persistence.mapper.EstacionamientoMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.ApartamentoRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.CondominioRepository;
@@ -13,6 +14,7 @@ import com.condominios.sgc.infrastructure.persistence.repository.Estacionamiento
 import com.condominios.sgc.infrastructure.persistence.specification.EstacionamientoSpecifications;
 import com.condominios.sgc.infrastructure.util.PaginacionUtil;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -39,14 +41,26 @@ public class EstacionamientoAdapter implements EstacionamientoPort {
 
     @Override
     public PaginacionResponse<EstacionamientoModel> findByApartamentoId(Long apartamentoId, PaginacionRequest request) {
-        var spec = EstacionamientoSpecifications.porApartamentoId(apartamentoId);
+        var filtros = request.filtros();
+        Specification<EstacionamientoEntity> spec;
+        if (filtros != null && !filtros.isEmpty()) {
+            spec = EstacionamientoSpecifications.fromFiltros(filtros);
+        } else {
+            spec = EstacionamientoSpecifications.porApartamentoId(apartamentoId);
+        }
         var page = estacionamientoRepository.findAll(spec, PaginacionUtil.toPageable(request));
         return PaginacionUtil.toPaginacionResponse(page, page.map(EstacionamientoMapper::toModel).toList());
     }
 
     @Override
     public PaginacionResponse<EstacionamientoModel> findByCondominioId(Long condominioId, PaginacionRequest request) {
-        var spec = EstacionamientoSpecifications.porCondominioId(condominioId);
+        var filtros = request.filtros();
+        Specification<EstacionamientoEntity> spec;
+        if (filtros != null && !filtros.isEmpty()) {
+            spec = EstacionamientoSpecifications.fromFiltros(filtros);
+        } else {
+            spec = EstacionamientoSpecifications.porCondominioId(condominioId);
+        }
         var page = estacionamientoRepository.findAll(spec, PaginacionUtil.toPageable(request));
         return PaginacionUtil.toPaginacionResponse(page, page.map(EstacionamientoMapper::toModel).toList());
     }

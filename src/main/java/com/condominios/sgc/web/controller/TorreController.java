@@ -1,5 +1,7 @@
 package com.condominios.sgc.web.controller;
 
+import java.util.Map;
+
 import com.condominios.sgc.application.dto.ActualizarTorreRequest;
 import com.condominios.sgc.application.dto.CrearTorreRequest;
 import com.condominios.sgc.application.service.TorreService;
@@ -30,10 +32,10 @@ public class TorreController {
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PaginacionResponse<TorreResponse>> listar(
-            @RequestParam Long condominioId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        PaginacionRequest req = new PaginacionRequest(page, size, "id", "asc", null);
+            @RequestParam Map<String, String> params) {
+        var req = PaginacionRequest.desdeParams(params);
+        Long condominioId = req.filtros() != null ? Long.valueOf(req.filtros().get("condominioId")) : null;
+        if (condominioId == null) return ResponseEntity.badRequest().build();
         PaginacionResponse<TorreResponse> content = torreService.listarPorCondominio(condominioId, req)
                 .map(TorreResponse::fromModel);
         return ResponseEntity.ok(content);

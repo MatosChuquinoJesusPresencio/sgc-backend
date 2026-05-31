@@ -1,5 +1,7 @@
 package com.condominios.sgc.web.controller;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,10 +42,10 @@ public class InquilinoController {
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PaginacionResponse<InquilinoResponse>> listar(
-            @RequestParam Long apartamentoId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        var req = new PaginacionRequest(page, size, "id", "asc", null);
+            @RequestParam Map<String, String> params) {
+        var req = PaginacionRequest.desdeParams(params);
+        Long apartamentoId = req.filtros() != null ? Long.valueOf(req.filtros().get("apartamentoId")) : null;
+        if (apartamentoId == null) return ResponseEntity.badRequest().build();
         PaginacionResponse<InquilinoResponse> content = inquilinoService.listarPorApartamento(apartamentoId, req)
                 .map(InquilinoResponse::fromModel);
         return ResponseEntity.ok(content);

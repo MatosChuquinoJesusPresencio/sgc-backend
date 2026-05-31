@@ -6,6 +6,7 @@ import com.condominios.sgc.domain.model.CondominioModel;
 import com.condominios.sgc.domain.port.CondominioPort;
 import com.condominios.sgc.infrastructure.persistence.mapper.CondominioMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.CondominioRepository;
+import com.condominios.sgc.infrastructure.persistence.specification.CondominioSpecifications;
 import com.condominios.sgc.infrastructure.util.PaginacionUtil;
 
 import org.springframework.stereotype.Component;
@@ -28,7 +29,8 @@ public class CondominioAdapter implements CondominioPort {
 
     @Override
     public PaginacionResponse<CondominioModel> findAll(PaginacionRequest request) {
-        var page = condominioRepository.findAll(PaginacionUtil.toPageable(request));
+        var spec = CondominioSpecifications.fromFiltros(request.filtros());
+        var page = condominioRepository.findAll(spec, PaginacionUtil.toPageable(request));
         return PaginacionUtil.toPaginacionResponse(page, page.map(CondominioMapper::toModel).toList());
     }
 

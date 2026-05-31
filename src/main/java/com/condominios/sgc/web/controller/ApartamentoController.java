@@ -1,5 +1,7 @@
 package com.condominios.sgc.web.controller;
 
+import java.util.Map;
+
 import com.condominios.sgc.application.dto.ActualizarApartamentoRequest;
 import com.condominios.sgc.application.dto.CrearApartamentoRequest;
 import com.condominios.sgc.application.service.ApartamentoService;
@@ -31,10 +33,10 @@ public class ApartamentoController {
     @GetMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<PaginacionResponse<ApartamentoResponse>> listar(
-            @RequestParam Long pisoId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        PaginacionRequest req = new PaginacionRequest(page, size, "id", "asc", null);
+            @RequestParam Map<String, String> params) {
+        var req = PaginacionRequest.desdeParams(params);
+        Long pisoId = req.filtros() != null ? Long.valueOf(req.filtros().get("pisoId")) : null;
+        if (pisoId == null) return ResponseEntity.badRequest().build();
         PaginacionResponse<ApartamentoResponse> content = apartamentoService.listarPorPiso(pisoId, req)
                 .map(ApartamentoResponse::fromModel);
         return ResponseEntity.ok(content);

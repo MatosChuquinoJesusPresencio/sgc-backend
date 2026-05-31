@@ -7,6 +7,7 @@ import com.condominios.sgc.domain.exception.EstacionamientoException;
 import com.condominios.sgc.domain.exception.InquilinoException;
 import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.port.VehiculoPort;
+import com.condominios.sgc.infrastructure.persistence.entity.VehiculoEntity;
 import com.condominios.sgc.infrastructure.persistence.mapper.VehiculoMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.EstacionamientoRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.InquilinoRepository;
@@ -15,6 +16,7 @@ import com.condominios.sgc.infrastructure.persistence.repository.VehiculoReposit
 import com.condominios.sgc.infrastructure.persistence.specification.VehiculoSpecifications;
 import com.condominios.sgc.infrastructure.util.PaginacionUtil;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -44,20 +46,33 @@ public class VehiculoAdapter implements VehiculoPort {
 
     @Override
     public PaginacionResponse<VehiculoModel> findAll(PaginacionRequest request) {
-        var page = vehiculoRepository.findAll(PaginacionUtil.toPageable(request));
+        var spec = VehiculoSpecifications.fromFiltros(request.filtros());
+        var page = vehiculoRepository.findAll(spec, PaginacionUtil.toPageable(request));
         return PaginacionUtil.toPaginacionResponse(page, page.map(VehiculoMapper::toModel).toList());
     }
 
     @Override
     public PaginacionResponse<VehiculoModel> findByPropietarioId(Long propietarioId, PaginacionRequest request) {
-        var spec = VehiculoSpecifications.porPropietarioId(propietarioId);
+        var filtros = request.filtros();
+        Specification<VehiculoEntity> spec;
+        if (filtros != null && !filtros.isEmpty()) {
+            spec = VehiculoSpecifications.fromFiltros(filtros);
+        } else {
+            spec = VehiculoSpecifications.porPropietarioId(propietarioId);
+        }
         var page = vehiculoRepository.findAll(spec, PaginacionUtil.toPageable(request));
         return PaginacionUtil.toPaginacionResponse(page, page.map(VehiculoMapper::toModel).toList());
     }
 
     @Override
     public PaginacionResponse<VehiculoModel> findByInquilinoId(Long inquilinoId, PaginacionRequest request) {
-        var spec = VehiculoSpecifications.porInquilinoId(inquilinoId);
+        var filtros = request.filtros();
+        Specification<VehiculoEntity> spec;
+        if (filtros != null && !filtros.isEmpty()) {
+            spec = VehiculoSpecifications.fromFiltros(filtros);
+        } else {
+            spec = VehiculoSpecifications.porInquilinoId(inquilinoId);
+        }
         var page = vehiculoRepository.findAll(spec, PaginacionUtil.toPageable(request));
         return PaginacionUtil.toPaginacionResponse(page, page.map(VehiculoMapper::toModel).toList());
     }

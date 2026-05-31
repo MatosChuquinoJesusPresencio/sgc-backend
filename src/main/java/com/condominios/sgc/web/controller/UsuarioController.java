@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -43,16 +41,7 @@ public class UsuarioController {
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<PaginacionResponse<UsuarioResponse>> listar(
             @RequestParam Map<String, String> params) {
-        int pagina = Integer.parseInt(params.getOrDefault("pagina", "0"));
-        int tamanio = Integer.parseInt(params.getOrDefault("tamanio", "10"));
-        String ordenarPor = params.get("ordenarPor");
-        String direccion = params.getOrDefault("direccion", "ASC");
-
-        Map<String, String> filtros = new HashMap<>(params);
-        Set<String> keys = Set.of("pagina", "tamanio", "ordenarPor", "direccion");
-        filtros.keySet().removeAll(keys);
-
-        PaginacionRequest request = new PaginacionRequest(pagina, tamanio, ordenarPor, direccion, filtros);
+        PaginacionRequest request = PaginacionRequest.desdeParams(params);
         PaginacionResponse<UsuarioResponse> content = usuarioService.listar(request)
                 .map(UsuarioResponse::fromModel);
         return ResponseEntity.ok(content);

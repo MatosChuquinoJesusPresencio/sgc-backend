@@ -1,5 +1,7 @@
 package com.condominios.sgc.web.controller;
 
+import java.util.Map;
+
 import com.condominios.sgc.application.dto.ActualizarPisoRequest;
 import com.condominios.sgc.application.dto.CrearPisoRequest;
 import com.condominios.sgc.application.service.PisoService;
@@ -30,10 +32,10 @@ public class PisoController {
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PaginacionResponse<PisoResponse>> listar(
-            @RequestParam Long torreId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        PaginacionRequest req = new PaginacionRequest(page, size, "id", "asc", null);
+            @RequestParam Map<String, String> params) {
+        var req = PaginacionRequest.desdeParams(params);
+        Long torreId = req.filtros() != null ? Long.valueOf(req.filtros().get("torreId")) : null;
+        if (torreId == null) return ResponseEntity.badRequest().build();
         PaginacionResponse<PisoResponse> content = pisoService.listarPorTorre(torreId, req)
                 .map(PisoResponse::fromModel);
         return ResponseEntity.ok(content);

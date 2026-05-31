@@ -6,12 +6,15 @@ import com.condominios.sgc.domain.model.ApartamentoModel;
 import com.condominios.sgc.domain.exception.PisoException;
 import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.port.ApartamentoPort;
+import com.condominios.sgc.infrastructure.persistence.entity.ApartamentoEntity;
 import com.condominios.sgc.infrastructure.persistence.mapper.ApartamentoMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.ApartamentoRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.PisoRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.UsuarioRepository;
+import com.condominios.sgc.infrastructure.persistence.specification.ApartamentoSpecifications;
 import com.condominios.sgc.infrastructure.util.PaginacionUtil;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -38,7 +41,14 @@ public class ApartamentoAdapter implements ApartamentoPort {
 
     @Override
     public PaginacionResponse<ApartamentoModel> findByPisoId(Long pisoId, PaginacionRequest request) {
-        var page = apartamentoRepository.findByPisoId(pisoId, PaginacionUtil.toPageable(request));
+        var filtros = request.filtros();
+        Specification<ApartamentoEntity> spec;
+        if (filtros != null && !filtros.isEmpty()) {
+            spec = ApartamentoSpecifications.fromFiltros(filtros);
+        } else {
+            spec = ApartamentoSpecifications.porPisoId(pisoId);
+        }
+        var page = apartamentoRepository.findAll(spec, PaginacionUtil.toPageable(request));
         return PaginacionUtil.toPaginacionResponse(page, page.map(ApartamentoMapper::toModel).toList());
     }
 

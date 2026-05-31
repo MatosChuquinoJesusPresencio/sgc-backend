@@ -45,6 +45,24 @@ public final class LogAccesoVehicularSpecifications {
         return (root, query, cb) -> cb.equal(root.get("ocupante"), ocupante);
     }
 
+    public static Specification<LogAccesoVehicularEntity> porCondominioId(Long condominioId) {
+        if (condominioId == null) return null;
+        return (root, query, cb) -> {
+            var vehiculo = root.join("vehiculo");
+            var propietario = vehiculo.join("propietario");
+            return cb.equal(propietario.get("condominio").get("id"), condominioId);
+        };
+    }
+
+    public static Specification<LogAccesoVehicularEntity> porApartamentoId(Long apartamentoId) {
+        if (apartamentoId == null) return null;
+        return (root, query, cb) -> {
+            var vehiculo = root.join("vehiculo");
+            var inquilino = vehiculo.join("inquilino");
+            return cb.equal(inquilino.get("apartamento").get("id"), apartamentoId);
+        };
+    }
+
     public static Specification<LogAccesoVehicularEntity> fromFiltros(Map<String, String> filtros) {
         if (filtros == null || filtros.isEmpty()) return null;
         return filtros.entrySet().stream()
@@ -57,6 +75,8 @@ public final class LogAccesoVehicularSpecifications {
                     LocalDateTime.parse(entry.getValue()), null);
                 case "fechaEntradaHasta" -> porFechaEntradaEntre(
                     null, LocalDateTime.parse(entry.getValue()));
+                case "condominioId" -> porCondominioId(Long.valueOf(entry.getValue()));
+                case "apartamentoId" -> porApartamentoId(Long.valueOf(entry.getValue()));
                 default -> null;
             })
             .filter(Objects::nonNull)

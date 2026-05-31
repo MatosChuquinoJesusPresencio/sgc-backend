@@ -8,6 +8,7 @@ import com.condominios.sgc.domain.exception.CarritoException;
 import com.condominios.sgc.domain.exception.InquilinoException;
 import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.port.LogPrestamoCarritoPort;
+import com.condominios.sgc.infrastructure.persistence.entity.LogPrestamoCarritoEntity;
 import com.condominios.sgc.infrastructure.persistence.mapper.LogPrestamoCarritoMapper;
 import com.condominios.sgc.infrastructure.persistence.repository.ApartamentoRepository;
 import com.condominios.sgc.infrastructure.persistence.repository.CarritoRepository;
@@ -17,6 +18,7 @@ import com.condominios.sgc.infrastructure.persistence.repository.UsuarioReposito
 import com.condominios.sgc.infrastructure.persistence.specification.LogPrestamoCarritoSpecifications;
 import com.condominios.sgc.infrastructure.util.PaginacionUtil;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -49,14 +51,26 @@ public class LogPrestamoCarritoAdapter implements LogPrestamoCarritoPort {
 
     @Override
     public PaginacionResponse<LogPrestamoCarritoModel> findByCondominioId(Long condominioId, PaginacionRequest request) {
-        var spec = LogPrestamoCarritoSpecifications.porCondominioId(condominioId);
+        var filtros = request.filtros();
+        Specification<LogPrestamoCarritoEntity> spec;
+        if (filtros != null && !filtros.isEmpty()) {
+            spec = LogPrestamoCarritoSpecifications.fromFiltros(filtros);
+        } else {
+            spec = LogPrestamoCarritoSpecifications.porCondominioId(condominioId);
+        }
         var page = logPrestamoCarritoRepository.findAll(spec, PaginacionUtil.toPageable(request));
         return PaginacionUtil.toPaginacionResponse(page, page.map(LogPrestamoCarritoMapper::toModel).toList());
     }
 
     @Override
     public PaginacionResponse<LogPrestamoCarritoModel> findByApartamentoId(Long apartamentoId, PaginacionRequest request) {
-        var spec = LogPrestamoCarritoSpecifications.porApartamentoId(apartamentoId);
+        var filtros = request.filtros();
+        Specification<LogPrestamoCarritoEntity> spec;
+        if (filtros != null && !filtros.isEmpty()) {
+            spec = LogPrestamoCarritoSpecifications.fromFiltros(filtros);
+        } else {
+            spec = LogPrestamoCarritoSpecifications.porApartamentoId(apartamentoId);
+        }
         var page = logPrestamoCarritoRepository.findAll(spec, PaginacionUtil.toPageable(request));
         return PaginacionUtil.toPaginacionResponse(page, page.map(LogPrestamoCarritoMapper::toModel).toList());
     }
