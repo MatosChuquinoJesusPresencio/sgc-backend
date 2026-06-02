@@ -1,0 +1,57 @@
+{"properties": [
+  {
+    "name": "cors.allowed-origins",
+    "type": "java.lang.String",
+    "description": "Los origenes permitidos para CORS"
+  },
+  {
+    "name": "app.base-url",
+    "type": "java.lang.String",
+    "description": "La URL base de la aplicacion"
+  },
+  {
+    "name": "spring.mail.from",
+    "type": "java.lang.String",
+    "description": "La direccion de correo electronico remitente"
+  },
+  {
+    "name": "resend.api-key",
+    "type": "java.lang.String",
+    "description": "La clave de la API de Resend"
+  },
+  {
+    "name": "resend.from",
+    "type": "java.lang.String",
+    "description": "La direccion de correo electronico remitente"
+  },
+  {
+    "name": "jwt.refresh-token-expiration",
+    "type": "java.lang.String",
+    "description": "La duracion de vida del token de refresco"
+  },
+  {
+    "name": "jwt.access-token-expiration",
+    "type": "java.lang.String",
+    "description": "La duracion de vida del token de acceso"
+  },
+  {
+    "name": "jwt.secret",
+    "type": "java.lang.String",
+    "description": "La clave secreta para la generacion de tokens JWT"
+  },
+  {
+    "name": "jwt.password-reset-token-expiration",
+    "type": "java.lang.String",
+    "description": "La duracion de vida del token de reseteo de contraseña"
+  },
+  {
+    "name": "jwt.email-verification-token-expiration",
+    "type": "java.lang.String",
+    "description": "La duracion de vida del token de verificacion de correo electronico"
+  },
+  {
+    "name": "jwt.remember-me-refresh-expiration",
+    "type": "java.lang.String",
+    "description": "La duracion de vida de la cookie de refresco del recuerdame"
+  }
+]}
