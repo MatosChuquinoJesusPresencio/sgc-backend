@@ -13,7 +13,7 @@ public class IniciarSesionUseCaseImpl implements IniciarSesionUseCase {
     }
 
     @Override
-    public LoginCompleta ejecutar(String email, String password) {
-        return autenticacionPort.login(email, password);
+    public LoginCompleta ejecutar(String email, String password, boolean rememberMe) {
+        return autenticacionPort.login(email, password, rememberMe);
     }
 }

@@ -31,7 +31,7 @@ public class AutenticacionAdapter implements AutenticacionPort {
     }
 
     @Override
-    public LoginCompleta login(String email, String password) {
+    public LoginCompleta login(String email, String password, boolean rememberMe) {
         var usuario = usuarioRepository.findByCorreo(email)
             .orElseThrow(AutenticacionException::credencialesInvalidas);
 
@@ -41,7 +41,8 @@ public class AutenticacionAdapter implements AutenticacionPort {
 
         var userId = String.valueOf(usuario.getId());
         var accessToken = jwtUtil.generateAccessToken(userId, usuario.getCorreo(), usuario.getRol().name());
-        var refreshToken = jwtUtil.generateRefreshToken(userId);
+        var refreshExpiration = rememberMe ? jwtUtil.getRememberMeRefreshExpiration() : jwtUtil.getRefreshTokenExpiration();
+        var refreshToken = jwtUtil.generateRefreshToken(userId, refreshExpiration);
 
         long now = System.currentTimeMillis();
         var sesion = new SesionUsuario(

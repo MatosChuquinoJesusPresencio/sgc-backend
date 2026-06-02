@@ -18,15 +18,18 @@ public class JwtUtil {
     private final SecretKey secretKey;
     private final long accessTokenExpiration;
     private final long refreshTokenExpiration;
+    private final long rememberMeRefreshExpiration;
 
     public JwtUtil(
             @Value("${jwt.secret}") String secretBase64,
             @Value("${jwt.access-token-expiration}") long accessTokenExpiration,
-            @Value("${jwt.refresh-token-expiration}") long refreshTokenExpiration) {
+            @Value("${jwt.refresh-token-expiration}") long refreshTokenExpiration,
+            @Value("${jwt.remember-me-refresh-expiration}") long rememberMeRefreshExpiration) {
         byte[] keyBytes = Base64.getDecoder().decode(secretBase64);
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
         this.accessTokenExpiration = accessTokenExpiration;
         this.refreshTokenExpiration = refreshTokenExpiration;
+        this.rememberMeRefreshExpiration = rememberMeRefreshExpiration;
     }
 
     public String generateAccessToken(String userId, String email, String rol) {
@@ -42,11 +45,15 @@ public class JwtUtil {
     }
 
     public String generateRefreshToken(String userId) {
+        return generateRefreshToken(userId, refreshTokenExpiration);
+    }
+
+    public String generateRefreshToken(String userId, long expiration) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
             .subject(userId)
             .issuedAt(new Date(now))
-            .expiration(new Date(now + refreshTokenExpiration))
+            .expiration(new Date(now + expiration))
             .signWith(secretKey)
             .compact();
     }
@@ -65,5 +72,13 @@ public class JwtUtil {
 
     public long getAccessTokenExpiration() {
         return accessTokenExpiration;
+    }
+
+    public long getRefreshTokenExpiration() {
+        return refreshTokenExpiration;
+    }
+
+    public long getRememberMeRefreshExpiration() {
+        return rememberMeRefreshExpiration;
     }
 }

@@ -48,5 +48,10 @@
     "name": "jwt.email-verification-token-expiration",
     "type": "java.lang.String",
     "description": "La duracion de vida del token de verificacion de correo electronico"
+  },
+  {
+    "name": "jwt.remember-me-refresh-expiration",
+    "type": "java.lang.String",
+    "description": "La duracion de vida de la cookie de refresco del recuerdame"
   }
 ]}

@@ -19,7 +19,7 @@ public class CambiarContrasenaUseCaseImpl implements CambiarContrasenaUseCase {
     public void ejecutar(Long userId, String currentPassword, String newPassword) {
         var usuario = usuarioPort.findById(userId)
             .orElseThrow(AutenticacionException::usuarioNoRegistrado);
-        autenticacionPort.login(usuario.getCorreo(), currentPassword);
+        autenticacionPort.login(usuario.getCorreo(), currentPassword, false);
         autenticacionPort.changePassword(userId, newPassword);
     }
 }

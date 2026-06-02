@@ -29,8 +29,8 @@ public class AutenticacionService {
         this.cambiarContrasenaUseCase = cambiarContrasenaUseCase;
     }
 
-    public LoginCompleta iniciarSesion(String correo, String contrasena) {
-        return iniciarSesionUseCase.ejecutar(correo, contrasena);
+    public LoginCompleta iniciarSesion(String correo, String contrasena, boolean rememberMe) {
+        return iniciarSesionUseCase.ejecutar(correo, contrasena, rememberMe);
     }
 
     public void cerrarSesion(String accessToken) {

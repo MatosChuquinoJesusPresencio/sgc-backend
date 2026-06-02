@@ -3,7 +3,7 @@ package com.condominios.sgc.domain.port;
 import com.condominios.sgc.domain.auxiliar.LoginCompleta;
 
 public interface AutenticacionPort {
-    LoginCompleta login(String email, String password);
+    LoginCompleta login(String email, String password, boolean rememberMe);
     void logout(String accessToken);
     String createUser(String email, String password, String rol);
     void changePassword(Long userId, String newPassword);
