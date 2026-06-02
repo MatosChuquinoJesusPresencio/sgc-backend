@@ -8,5 +8,6 @@ public record LoginCompleta(
     String tokenType,
     long expiresIn,
     long expiresAt,
+    long refreshExpiresIn,
     UsuarioModel usuario
 ) {}

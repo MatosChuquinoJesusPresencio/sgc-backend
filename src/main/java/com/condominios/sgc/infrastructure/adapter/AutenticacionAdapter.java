@@ -49,6 +49,7 @@ public class AutenticacionAdapter implements AutenticacionPort {
             "Bearer",
             jwtUtil.getAccessTokenExpiration(),
             now + jwtUtil.getAccessTokenExpiration(),
+            refreshExpiration,
             UsuarioMapper.toModel(usuario));
     }
 
@@ -91,9 +92,14 @@ public class AutenticacionAdapter implements AutenticacionPort {
         var usuario = usuarioRepository.findById(userId)
             .orElseThrow(UsuarioException::noEncontrado);
 
+        long remainingTime = claims.getExpiration().getTime() - System.currentTimeMillis();
+        long refreshExpiration = remainingTime > jwtUtil.getRefreshTokenExpiration()
+            ? jwtUtil.getRememberMeRefreshExpiration()
+            : jwtUtil.getRefreshTokenExpiration();
+
         var newAccessToken = jwtUtil.generateAccessToken(
             String.valueOf(usuario.getId()), usuario.getCorreo(), usuario.getRol().name());
-        var newRefreshToken = jwtUtil.generateRefreshToken(String.valueOf(usuario.getId()));
+        var newRefreshToken = jwtUtil.generateRefreshToken(String.valueOf(usuario.getId()), refreshExpiration);
 
         long now = System.currentTimeMillis();
         return new LoginCompleta(
@@ -102,6 +108,7 @@ public class AutenticacionAdapter implements AutenticacionPort {
             "Bearer",
             jwtUtil.getAccessTokenExpiration(),
             now + jwtUtil.getAccessTokenExpiration(),
+            refreshExpiration,
             UsuarioMapper.toModel(usuario));
     }
 

@@ -49,13 +49,11 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(
             @Valid @RequestBody LoginRequest request,
             HttpServletResponse response) {
-        boolean rememberMe = request.rememberMe();
-        var completa = autenticacionService.iniciarSesion(request.email(), request.password(), rememberMe);
+        var completa = autenticacionService.iniciarSesion(request.email(), request.password(), request.rememberMe());
         response.addHeader("Set-Cookie",
             CookieUtils.crearCookieAccessToken(completa.accessToken(), completa.expiresIn()).toString());
-        long refreshMaxAge = rememberMe ? 2592000000L : 604800000L;
         response.addHeader("Set-Cookie",
-            CookieUtils.crearCookieRefreshToken(completa.refreshToken(), refreshMaxAge).toString());
+            CookieUtils.crearCookieRefreshToken(completa.refreshToken(), completa.refreshExpiresIn()).toString());
         return ResponseEntity.ok(AuthResponse.fromModel(completa.usuario()));
     }
 
@@ -96,7 +94,7 @@ public class AuthController {
         response.addHeader("Set-Cookie",
             CookieUtils.crearCookieAccessToken(completa.accessToken(), completa.expiresIn()).toString());
         response.addHeader("Set-Cookie",
-            CookieUtils.crearCookieRefreshToken(completa.refreshToken(), 604800000L).toString());
+            CookieUtils.crearCookieRefreshToken(completa.refreshToken(), completa.refreshExpiresIn()).toString());
         return ResponseEntity.ok(AuthResponse.fromModel(completa.usuario()));
     }
 
