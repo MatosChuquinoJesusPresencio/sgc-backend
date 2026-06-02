@@ -21,7 +21,6 @@ import com.condominios.sgc.web.dto.AuthResponse;
 import com.condominios.sgc.web.dto.ChangePasswordRequest;
 import com.condominios.sgc.web.dto.ForgotPasswordRequest;
 import com.condominios.sgc.web.dto.LoginRequest;
-import com.condominios.sgc.web.dto.RefreshTokenRequest;
 import com.condominios.sgc.web.dto.ResetPasswordRequest;
 import com.condominios.sgc.web.dto.UpdateEmailRequest;
 import com.condominios.sgc.web.dto.UsuarioResponse;
@@ -53,11 +52,11 @@ public class AuthController {
         boolean rememberMe = request.rememberMe();
         var completa = autenticacionService.iniciarSesion(request.email(), request.password(), rememberMe);
         response.addHeader("Set-Cookie",
-            CookieUtils.crearCookieAccessToken(completa.sesion().accessToken(), completa.sesion().expiresIn()).toString());
+            CookieUtils.crearCookieAccessToken(completa.accessToken(), completa.expiresIn()).toString());
         long refreshMaxAge = rememberMe ? 2592000000L : 604800000L;
         response.addHeader("Set-Cookie",
-            CookieUtils.crearCookieRefreshToken(completa.sesion().refreshToken(), refreshMaxAge).toString());
-        return ResponseEntity.ok(AuthResponse.fromSesion(completa.sesion(), UsuarioResponse.fromModel(completa.usuario())));
+            CookieUtils.crearCookieRefreshToken(completa.refreshToken(), refreshMaxAge).toString());
+        return ResponseEntity.ok(AuthResponse.fromModel(completa.usuario()));
     }
 
     @GetMapping("/me")
@@ -82,7 +81,6 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(
-            @Valid @RequestBody(required = false) RefreshTokenRequest body,
             HttpServletRequest request,
             HttpServletResponse response) {
         String refreshToken = null;
@@ -94,15 +92,12 @@ public class AuthController {
                 }
             }
         }
-        if (refreshToken == null && body != null) {
-            refreshToken = body.refreshToken();
-        }
         var completa = autenticacionService.refrescarToken(refreshToken);
         response.addHeader("Set-Cookie",
-            CookieUtils.crearCookieAccessToken(completa.sesion().accessToken(), completa.sesion().expiresIn()).toString());
+            CookieUtils.crearCookieAccessToken(completa.accessToken(), completa.expiresIn()).toString());
         response.addHeader("Set-Cookie",
-            CookieUtils.crearCookieRefreshToken(completa.sesion().refreshToken(), 604800000L).toString());
-        return ResponseEntity.ok(AuthResponse.fromSesion(completa.sesion(), UsuarioResponse.fromModel(completa.usuario())));
+            CookieUtils.crearCookieRefreshToken(completa.refreshToken(), 604800000L).toString());
+        return ResponseEntity.ok(AuthResponse.fromModel(completa.usuario()));
     }
 
     @PostMapping("/register")

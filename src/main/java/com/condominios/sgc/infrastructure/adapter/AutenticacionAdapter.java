@@ -2,8 +2,6 @@ package com.condominios.sgc.infrastructure.adapter;
 
 import com.condominios.sgc.domain.auxiliar.LoginCompleta;
 import com.condominios.sgc.domain.auxiliar.Rol;
-import com.condominios.sgc.domain.auxiliar.SesionUsuario;
-import com.condominios.sgc.domain.auxiliar.UsuarioAutenticado;
 import com.condominios.sgc.domain.exception.AutenticacionException;
 import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.port.AutenticacionPort;
@@ -45,15 +43,13 @@ public class AutenticacionAdapter implements AutenticacionPort {
         var refreshToken = jwtUtil.generateRefreshToken(userId, refreshExpiration);
 
         long now = System.currentTimeMillis();
-        var sesion = new SesionUsuario(
+        return new LoginCompleta(
             accessToken,
             refreshToken,
             "Bearer",
             jwtUtil.getAccessTokenExpiration(),
             now + jwtUtil.getAccessTokenExpiration(),
-            new UsuarioAutenticado(userId, usuario.getCorreo(), usuario.getRol())
-        );
-        return new LoginCompleta(sesion, UsuarioMapper.toModel(usuario));
+            UsuarioMapper.toModel(usuario));
     }
 
     @Override
@@ -100,15 +96,13 @@ public class AutenticacionAdapter implements AutenticacionPort {
         var newRefreshToken = jwtUtil.generateRefreshToken(String.valueOf(usuario.getId()));
 
         long now = System.currentTimeMillis();
-        var sesion = new SesionUsuario(
+        return new LoginCompleta(
             newAccessToken,
             newRefreshToken,
             "Bearer",
             jwtUtil.getAccessTokenExpiration(),
             now + jwtUtil.getAccessTokenExpiration(),
-            new UsuarioAutenticado(String.valueOf(usuario.getId()), usuario.getCorreo(), usuario.getRol())
-        );
-        return new LoginCompleta(sesion, UsuarioMapper.toModel(usuario));
+            UsuarioMapper.toModel(usuario));
     }
 
     @Override

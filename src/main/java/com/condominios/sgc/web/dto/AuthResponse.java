@@ -1,23 +1,22 @@
 package com.condominios.sgc.web.dto;
 
-import com.condominios.sgc.domain.auxiliar.SesionUsuario;
+import com.condominios.sgc.domain.auxiliar.Rol;
+import com.condominios.sgc.domain.model.UsuarioModel;
 
 public record AuthResponse(
-    String accessToken,
-    String refreshToken,
-    String tokenType,
-    long expiresIn,
-    long expiresAt,
-    UsuarioResponse usuario
+    Long id,
+    String correo,
+    String nombres,
+    String apellidos,
+    Rol rol
 ) {
-    public static AuthResponse fromSesion(SesionUsuario sesion, UsuarioResponse usuario) {
+    public static AuthResponse fromModel(UsuarioModel model) {
         return new AuthResponse(
-            sesion.accessToken(),
-            sesion.refreshToken(),
-            sesion.tokenType(),
-            sesion.expiresIn(),
-            sesion.expiresAt(),
-            usuario
+            model.getId(),
+            model.getCorreo(),
+            model.getNombres(),
+            model.getApellidos(),
+            model.getRol()
         );
     }
 }
