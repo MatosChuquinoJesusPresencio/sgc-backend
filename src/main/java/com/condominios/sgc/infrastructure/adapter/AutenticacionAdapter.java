@@ -93,9 +93,10 @@ public class AutenticacionAdapter implements AutenticacionPort {
             .orElseThrow(UsuarioException::noEncontrado);
 
         long remainingTime = claims.getExpiration().getTime() - System.currentTimeMillis();
-        long refreshExpiration = remainingTime > jwtUtil.getRefreshTokenExpiration()
-            ? jwtUtil.getRememberMeRefreshExpiration()
-            : jwtUtil.getRefreshTokenExpiration();
+        long refreshExpiration = Math.min(remainingTime, jwtUtil.getRememberMeRefreshExpiration());
+        if (refreshExpiration < jwtUtil.getRefreshTokenExpiration()) {
+            refreshExpiration = Math.min(remainingTime, jwtUtil.getRefreshTokenExpiration());
+        }
 
         var newAccessToken = jwtUtil.generateAccessToken(
             String.valueOf(usuario.getId()), usuario.getCorreo(), usuario.getRol().name());

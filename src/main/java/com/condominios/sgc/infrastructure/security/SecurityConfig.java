@@ -1,11 +1,11 @@
 package com.condominios.sgc.infrastructure.security;
 
 import java.time.Instant;
-import java.util.Collection;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.GrantedAuthority;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +17,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
@@ -27,8 +26,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.condominios.sgc.domain.model.UsuarioModel;
-import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.infrastructure.util.JwtUtil;
 
 @Configuration
@@ -36,8 +33,10 @@ import com.condominios.sgc.infrastructure.util.JwtUtil;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value("${cors.allowed-origins:*}")
-    private String allowedOrigins;
+    private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
+
+    @Value("${cors.allowed-origins:http://localhost:5173}")
+    private List<String> allowedOrigins;
 
     @Bean
     @Order(1)
@@ -58,7 +57,7 @@ public class SecurityConfig {
 
     @Bean
     @Order(2)
-    public SecurityFilterChain protectedEndpoints(HttpSecurity http, UsuarioPort usuarioPort, JwtDecoder jwtDecoder) throws Exception {
+    public SecurityFilterChain protectedEndpoints(HttpSecurity http, JwtDecoder jwtDecoder) throws Exception {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
@@ -68,7 +67,7 @@ public class SecurityConfig {
                 .bearerTokenResolver(cookieBearerTokenResolver())
                 .jwt(jwt -> jwt
                     .decoder(jwtDecoder)
-                    .jwtAuthenticationConverter(jwtAuthenticationConverter(usuarioPort))
+                    .jwtAuthenticationConverter(jwtAuthenticationConverter())
                 )
             );
         return http.build();
@@ -79,31 +78,35 @@ public class SecurityConfig {
         return token -> {
             try {
                 var claims = jwtUtil.validateToken(token);
+                Instant issuedAt = claims.getIssuedAt() != null
+                    ? claims.getIssuedAt().toInstant() : Instant.EPOCH;
+                Instant expiresAt = claims.getExpiration() != null
+                    ? claims.getExpiration().toInstant() : Instant.now().plusSeconds(60);
                 return Jwt.withTokenValue(token)
                     .subject(claims.getSubject())
                     .claim("email", claims.get("email"))
                     .claim("rol", claims.get("rol"))
-                    .issuedAt(claims.getIssuedAt() != null
-                        ? claims.getIssuedAt().toInstant() : Instant.now())
-                    .expiresAt(claims.getExpiration() != null
-                        ? claims.getExpiration().toInstant() : Instant.now())
+                    .issuedAt(issuedAt)
+                    .expiresAt(expiresAt)
                     .header("alg", "HS256")
                     .build();
             } catch (JwtException e) {
+                log.warn("JWT validation failed: {}", e.getMessage());
                 throw new JwtException("Token invalido: " + e.getMessage());
             }
         };
     }
 
-    private JwtAuthenticationConverter jwtAuthenticationConverter(UsuarioPort usuarioPort) {
+    private JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            String userId = jwt.getSubject();
-            return usuarioPort.findById(Long.valueOf(userId))
-                .filter(UsuarioModel::isActivo)
-                .<Collection<GrantedAuthority>>map(usuario ->
-                    List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().name())))
-                .orElseThrow(() -> new AccessDeniedException("Usuario inactivo o no encontrado"));
+            String rol = jwt.getClaimAsString("rol");
+            if (rol == null || rol.isBlank()) {
+                log.warn("JWT for subject '{}' has no 'rol' claim", jwt.getSubject());
+                return List.of();
+            }
+            return List.<GrantedAuthority>of(
+                new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + rol));
         });
         return converter;
     }
@@ -121,7 +124,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of(allowedOrigins));
+        config.setAllowedOriginPatterns(allowedOrigins);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
