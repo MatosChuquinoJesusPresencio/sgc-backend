@@ -14,13 +14,13 @@ public final class CookieUtils {
     public static ResponseCookie crearCookieAccessToken(String token, long maxAgeMs) {
         return ResponseCookie.from(ACCESS_COOKIE, token)
             .httpOnly(true).secure(true).path(PATH)
-            .maxAge(maxAgeMs / 1000).sameSite("Strict").build();
+            .maxAge(maxAgeMs / 1000).sameSite("None").build();
     }
 
     public static ResponseCookie crearCookieRefreshToken(String token, long maxAgeMs) {
         return ResponseCookie.from(REFRESH_COOKIE, token)
             .httpOnly(true).secure(true).path(REFRESH_PATH)
-            .maxAge(maxAgeMs / 1000).sameSite("Strict").build();
+            .maxAge(maxAgeMs / 1000).sameSite("None").build();
     }
 
     public static ResponseCookie limpiarCookieAccessToken() {
