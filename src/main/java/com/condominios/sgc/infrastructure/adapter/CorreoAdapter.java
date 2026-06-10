@@ -18,7 +18,7 @@ public class CorreoAdapter implements CorreoPort {
 
     @Override
     public void sendVerificationEmail(String recipient, String token) {
-        var link = baseUrl + "/api/auth/verificar-email?token=" + token;
+        var link = baseUrl + "/verificar-email?token=" + token;
         var html = "<h1>Verifica tu correo</h1>"
                  + "<p>Haz clic en el siguiente enlace para verificar tu direccion de correo:</p>"
                  + "<a href=\"" + link + "\">" + link + "</a>";
