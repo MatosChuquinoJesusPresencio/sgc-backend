@@ -74,6 +74,7 @@ public class ApartamentoController {
     }
 
     @GetMapping("/apartamentos")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<PaginacionResponse<ApartamentoResponse>> listarApartamentosFiltrados(
             @RequestParam(required = false) Long condominioId,
             @RequestParam(required = false) Long torreId,
