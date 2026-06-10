@@ -59,14 +59,7 @@ public class AutenticacionAdapter implements AutenticacionPort {
 
     @Override
     public String createUser(String email, String password, String rol) {
-        var entity = new com.condominios.sgc.infrastructure.persistence.entity.UsuarioEntity();
-        entity.setCorreo(email);
-        entity.setPasswordHash(passwordEncoder.encode(password));
-        entity.setRol(Rol.valueOf(rol));
-        entity.setActivo(true);
-        entity.setCorreoVerificado(false);
-        var saved = usuarioRepository.save(entity);
-        return String.valueOf(saved.getId());
+        return null;
     }
 
     @Override
