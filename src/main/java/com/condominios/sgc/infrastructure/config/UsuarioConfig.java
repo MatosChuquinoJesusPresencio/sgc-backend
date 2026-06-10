@@ -30,8 +30,8 @@ import com.condominios.sgc.domain.port.VerificacionTokenPort;
 public class UsuarioConfig {
 
     @Bean
-    public CrearUsuarioUseCase crearUsuarioUseCase(AutenticacionPort autenticacionPort, UsuarioPort usuarioPort) {
-        return new CrearUsuarioUseCaseImpl(autenticacionPort, usuarioPort);
+    public CrearUsuarioUseCase crearUsuarioUseCase(AutenticacionPort autenticacionPort, UsuarioPort usuarioPort, CorreoPort correoPort) {
+        return new CrearUsuarioUseCaseImpl(autenticacionPort, usuarioPort, correoPort);
     }
 
     @Bean
