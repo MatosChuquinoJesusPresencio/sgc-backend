@@ -39,8 +39,17 @@ public class ObtenerCondominioRelationsUseCaseImpl implements ObtenerCondominioR
 
         long carritos = carritoPort.findByCondominioId(condominioId, COUNT_ONE).totalElementos();
 
-        long configuraciones = configuracionPort.findByCondominioId(condominioId).isPresent() ? 1 : 0;
+        var configOpt = configuracionPort.findByCondominioId(condominioId);
+        long configuraciones = configOpt.isPresent() ? 1 : 0;
+        CondominioRelationsResponse.ConfigData config = configOpt
+            .map(c -> new CondominioRelationsResponse.ConfigData(
+                c.getMaxAutos(),
+                c.getMaxMotos(),
+                c.getPenalizacionPorMin(),
+                c.getMaxTiempoPrestamoMin()
+            ))
+            .orElse(null);
 
-        return new CondominioRelationsResponse(torres, usuarios, carritos, configuraciones);
+        return new CondominioRelationsResponse(torres, usuarios, carritos, configuraciones, config);
     }
 }
