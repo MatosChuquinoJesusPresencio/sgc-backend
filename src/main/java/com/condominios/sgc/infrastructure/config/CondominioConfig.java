@@ -1,18 +1,11 @@
 package com.condominios.sgc.infrastructure.config;
 
+import com.condominios.sgc.application.impl.*;
+import com.condominios.sgc.application.usecase.*;
+import com.condominios.sgc.domain.port.CondominioTreePort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.condominios.sgc.application.impl.ActualizarCondominioUseCaseImpl;
-import com.condominios.sgc.application.impl.CrearCondominioUseCaseImpl;
-import com.condominios.sgc.application.impl.EliminarCondominioUseCaseImpl;
-import com.condominios.sgc.application.impl.ListarCondominiosUseCaseImpl;
-import com.condominios.sgc.application.impl.ObtenerCondominioUseCaseImpl;
-import com.condominios.sgc.application.usecase.ActualizarCondominioUseCase;
-import com.condominios.sgc.application.usecase.CrearCondominioUseCase;
-import com.condominios.sgc.application.usecase.EliminarCondominioUseCase;
-import com.condominios.sgc.application.usecase.ListarCondominiosUseCase;
-import com.condominios.sgc.application.usecase.ObtenerCondominioUseCase;
 import com.condominios.sgc.domain.port.CondominioPort;
 import com.condominios.sgc.domain.port.ConfiguracionPort;
 
@@ -42,5 +35,10 @@ public class CondominioConfig {
     @Bean
     public ListarCondominiosUseCase listarCondominiosUseCase(CondominioPort condominioPort) {
         return new ListarCondominiosUseCaseImpl(condominioPort);
+    }
+
+    @Bean
+    public ObtenerArbolCondominioUseCase obtenerArbolCondominioUseCase(CondominioTreePort condominioTreePort) {
+        return new ObtenerArbolCondominioUseCaseImpl(condominioTreePort);
     }
 }
