@@ -35,11 +35,13 @@ public class ActualizarCorreoUseCaseImpl implements ActualizarCorreoUseCase {
             throw UsuarioException.correoYaEnUso();
         }
 
+        var tokenValue = UUID.randomUUID().toString();
+
         var tokenModel = new VerificacionTokenModel(
             UUID.randomUUID().toString(),
             id,
             nuevoCorreo,
-            verificationToken,
+            tokenValue,
             Instant.now().plusSeconds(3600)
         );
         verificacionTokenPort.save(tokenModel);
