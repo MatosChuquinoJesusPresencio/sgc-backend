@@ -22,7 +22,11 @@ public class CrearCondominioUseCaseImpl implements CrearCondominioUseCase {
 
     @Override
     public CondominioModel ejecutar(CrearCondominioRequest request) {
+        System.out.println("[Diagnóstico] CrearCondominioUseCase: nombre='" + request.nombre()
+            + "', pais='" + request.pais() + "', ciudad='" + request.ciudad()
+            + "', direccion='" + request.direccion() + "'");
         if (condominioPort.existsByNombre(request.nombre())) {
+            System.out.println("[Diagnóstico] Nombre ya existe: " + request.nombre());
             throw CondominioException.nombreEnUso();
         }
 
