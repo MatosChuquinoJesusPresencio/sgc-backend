@@ -1,18 +1,10 @@
 package com.condominios.sgc.infrastructure.config;
 
+import com.condominios.sgc.application.impl.*;
+import com.condominios.sgc.application.usecase.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.condominios.sgc.application.impl.ActualizarApartamentoUseCaseImpl;
-import com.condominios.sgc.application.impl.CrearApartamentoUseCaseImpl;
-import com.condominios.sgc.application.impl.EliminarApartamentoUseCaseImpl;
-import com.condominios.sgc.application.impl.ListarApartamentosPorPisoUseCaseImpl;
-import com.condominios.sgc.application.impl.ObtenerApartamentoUseCaseImpl;
-import com.condominios.sgc.application.usecase.ActualizarApartamentoUseCase;
-import com.condominios.sgc.application.usecase.CrearApartamentoUseCase;
-import com.condominios.sgc.application.usecase.EliminarApartamentoUseCase;
-import com.condominios.sgc.application.usecase.ListarApartamentosPorPisoUseCase;
-import com.condominios.sgc.application.usecase.ObtenerApartamentoUseCase;
 import com.condominios.sgc.domain.port.ApartamentoPort;
 import com.condominios.sgc.domain.port.PisoPort;
 
@@ -42,5 +34,10 @@ public class ApartamentoConfig {
     @Bean
     public ListarApartamentosPorPisoUseCase listarApartamentosPorPisoUseCase(ApartamentoPort apartamentoPort, PisoPort pisoPort) {
         return new ListarApartamentosPorPisoUseCaseImpl(apartamentoPort, pisoPort);
+    }
+
+    @Bean
+    public ListarApartamentosFiltradosUseCase listarApartamentosFiltradosUseCase(ApartamentoPort apartamentoPort) {
+        return new ListarApartamentosFiltradosUseCaseImpl(apartamentoPort);
     }
 }
