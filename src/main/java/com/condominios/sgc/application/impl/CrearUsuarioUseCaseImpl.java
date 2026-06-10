@@ -8,17 +8,20 @@ import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.port.AutenticacionPort;
 import com.condominios.sgc.domain.port.CorreoPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class CrearUsuarioUseCaseImpl implements CrearUsuarioUseCase {
 
     private final AutenticacionPort autenticacionPort;
     private final UsuarioPort usuarioPort;
     private final CorreoPort correoPort;
+    private final PasswordEncoder passwordEncoder;
 
-    public CrearUsuarioUseCaseImpl(AutenticacionPort autenticacionPort, UsuarioPort usuarioPort, CorreoPort correoPort) {
+    public CrearUsuarioUseCaseImpl(AutenticacionPort autenticacionPort, UsuarioPort usuarioPort, CorreoPort correoPort, PasswordEncoder passwordEncoder) {
         this.autenticacionPort = autenticacionPort;
         this.usuarioPort = usuarioPort;
         this.correoPort = correoPort;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -31,7 +34,9 @@ public class CrearUsuarioUseCaseImpl implements CrearUsuarioUseCase {
             throw UsuarioException.correoYaEnUso();
         }
 
-        autenticacionPort.createUser(request.correo(), request.contrasena(), request.rol().name());
+        var hashedPassword = passwordEncoder.encode(request.contrasena());
+
+        autenticacionPort.createUser(request.correo(), hashedPassword, request.rol().name());
 
         var usuario = new UsuarioModel(
             request.nombres(),
@@ -40,7 +45,7 @@ public class CrearUsuarioUseCaseImpl implements CrearUsuarioUseCase {
             request.telefono(),
             request.rol(),
             request.condominioId(),
-            request.contrasena()
+            hashedPassword
         );
 
         var saved = usuarioPort.save(usuario);

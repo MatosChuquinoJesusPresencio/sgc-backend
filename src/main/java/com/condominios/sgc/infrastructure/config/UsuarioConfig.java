@@ -25,13 +25,14 @@ import com.condominios.sgc.domain.port.AutenticacionPort;
 import com.condominios.sgc.domain.port.CorreoPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
 import com.condominios.sgc.domain.port.VerificacionTokenPort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class UsuarioConfig {
 
     @Bean
-    public CrearUsuarioUseCase crearUsuarioUseCase(AutenticacionPort autenticacionPort, UsuarioPort usuarioPort, CorreoPort correoPort) {
-        return new CrearUsuarioUseCaseImpl(autenticacionPort, usuarioPort, correoPort);
+    public CrearUsuarioUseCase crearUsuarioUseCase(AutenticacionPort autenticacionPort, UsuarioPort usuarioPort, CorreoPort correoPort, PasswordEncoder passwordEncoder) {
+        return new CrearUsuarioUseCaseImpl(autenticacionPort, usuarioPort, correoPort, passwordEncoder);
     }
 
     @Bean
