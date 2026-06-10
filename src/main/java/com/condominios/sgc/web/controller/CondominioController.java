@@ -78,7 +78,9 @@ public class CondominioController {
         return ResponseEntity.noContent().build();
     }
 
+
     @GetMapping("/condominios/{id}/arbol")
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<CondominioTreeResponse> obtenerArbolCompleto(@PathVariable Long id) {
         CondominioTreeResponse arbol = obtenerArbolCondominioUseCase.ejecutar(id);
         return ResponseEntity.ok(arbol);
