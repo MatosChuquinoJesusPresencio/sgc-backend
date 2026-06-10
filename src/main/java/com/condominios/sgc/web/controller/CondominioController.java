@@ -3,6 +3,7 @@ package com.condominios.sgc.web.controller;
 import java.util.Map;
 
 import com.condominios.sgc.application.usecase.ObtenerArbolCondominioUseCase;
+import com.condominios.sgc.web.dto.CondominioTreeResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -75,5 +76,11 @@ public class CondominioController {
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         condominioService.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/condominios/{id}/arbol")
+    public ResponseEntity<CondominioTreeResponse> obtenerArbolCompleto(@PathVariable Long id) {
+        CondominioTreeResponse arbol = obtenerArbolCondominioUseCase.ejecutar(id);
+        return ResponseEntity.ok(arbol);
     }
 }
