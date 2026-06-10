@@ -13,4 +13,5 @@ public interface ApartamentoPort {
     void deleteById(Long id);
     Optional<ApartamentoModel> findByPropietarioId(Long propietarioId);
     PaginacionResponse<ApartamentoModel> findByFiltros(Long condominioId, Long torreId, Long pisoId, PaginacionRequest pageRequest);
+
 }
