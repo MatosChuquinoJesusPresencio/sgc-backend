@@ -101,7 +101,7 @@ public class UsuarioModel {
     private void asignarDatos(String nombres, String apellidos, String telefono, Rol rol, Long condominioId) {
         this.nombres = requerirNoVacio(nombres, UsuarioException::nombresObligatorios);
         this.apellidos = requerirNoVacio(apellidos, UsuarioException::apellidosObligatorios);
-        this.telefono = requerirNoVacio(telefono, UsuarioException::telefonoObligatorio);
+        this.telefono = telefono;
         this.rol = requerirNoNulo(rol, UsuarioException::rolObligatorio);
         this.condominioId = condominioId;
     }

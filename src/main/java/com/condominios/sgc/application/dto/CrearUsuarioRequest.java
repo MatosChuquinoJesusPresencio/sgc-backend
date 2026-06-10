@@ -9,7 +9,7 @@ public record CrearUsuarioRequest(
     @NotBlank String nombres,
     @NotBlank String apellidos,
     @NotBlank @Email String correo,
-    @NotBlank String telefono,
+    String telefono,
     @NotNull Rol rol,
     Long condominioId,
     @NotBlank String contrasena

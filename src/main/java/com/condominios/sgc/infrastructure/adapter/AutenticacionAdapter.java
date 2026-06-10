@@ -1,7 +1,6 @@
 package com.condominios.sgc.infrastructure.adapter;
 
 import com.condominios.sgc.domain.auxiliar.LoginCompleta;
-import com.condominios.sgc.domain.auxiliar.Rol;
 import com.condominios.sgc.domain.exception.AutenticacionException;
 import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.port.AutenticacionPort;
