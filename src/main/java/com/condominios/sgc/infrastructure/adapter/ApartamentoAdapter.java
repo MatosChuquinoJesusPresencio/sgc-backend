@@ -14,9 +14,12 @@ import com.condominios.sgc.infrastructure.persistence.repository.UsuarioReposito
 import com.condominios.sgc.infrastructure.persistence.specification.ApartamentoSpecifications;
 import com.condominios.sgc.infrastructure.util.PaginacionUtil;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -73,5 +76,22 @@ public class ApartamentoAdapter implements ApartamentoPort {
     @Override
     public Optional<ApartamentoModel> findByPropietarioId(Long propietarioId) {
         return apartamentoRepository.findByPropietarioId(propietarioId).map(ApartamentoMapper::toModel);
+    }
+
+    @Override
+    public PaginacionResponse<ApartamentoModel> findByFiltros(Long condominioId, Long torreId, Long pisoId, PaginacionRequest request) {
+
+        Specification<ApartamentoEntity> spec = Specification
+                .where(ApartamentoSpecifications.porCondominioId(condominioId))
+                .and(ApartamentoSpecifications.porTorreId(torreId))
+                .and(ApartamentoSpecifications.porPisoId(pisoId));
+
+        Page<ApartamentoEntity> page = apartamentoRepository.findAll(spec, PageRequest.of(request.pagina(), request.tamanio()));
+
+        List<ApartamentoModel> modelos = page.getContent().stream()
+                .map(ApartamentoMapper::toModel)
+                .toList();
+
+        return new PaginacionResponse<>(modelos, page.getNumber(), page.getSize(), page.getTotalElements(), page.getTotalPages());
     }
 }
