@@ -2,6 +2,7 @@ package com.condominios.sgc.web.controller;
 
 import java.util.Map;
 
+import com.condominios.sgc.application.usecase.ObtenerArbolCondominioUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,9 +30,11 @@ import jakarta.validation.Valid;
 public class CondominioController {
 
     private final CondominioService condominioService;
+    private final ObtenerArbolCondominioUseCase obtenerArbolCondominioUseCase;
 
-    public CondominioController(CondominioService condominioService) {
+    public CondominioController(CondominioService condominioService, ObtenerArbolCondominioUseCase obtenerArbolCondominioUseCase) {
         this.condominioService = condominioService;
+        this.obtenerArbolCondominioUseCase = obtenerArbolCondominioUseCase;
     }
 
     @PostMapping
