@@ -7,14 +7,19 @@ import com.condominios.sgc.application.impl.ActualizarCondominioUseCaseImpl;
 import com.condominios.sgc.application.impl.CrearCondominioUseCaseImpl;
 import com.condominios.sgc.application.impl.EliminarCondominioUseCaseImpl;
 import com.condominios.sgc.application.impl.ListarCondominiosUseCaseImpl;
+import com.condominios.sgc.application.impl.ObtenerCondominioRelationsUseCaseImpl;
 import com.condominios.sgc.application.impl.ObtenerCondominioUseCaseImpl;
 import com.condominios.sgc.application.usecase.ActualizarCondominioUseCase;
 import com.condominios.sgc.application.usecase.CrearCondominioUseCase;
 import com.condominios.sgc.application.usecase.EliminarCondominioUseCase;
 import com.condominios.sgc.application.usecase.ListarCondominiosUseCase;
+import com.condominios.sgc.application.usecase.ObtenerCondominioRelationsUseCase;
 import com.condominios.sgc.application.usecase.ObtenerCondominioUseCase;
+import com.condominios.sgc.domain.port.CarritoPort;
 import com.condominios.sgc.domain.port.CondominioPort;
 import com.condominios.sgc.domain.port.ConfiguracionPort;
+import com.condominios.sgc.domain.port.TorrePort;
+import com.condominios.sgc.domain.port.UsuarioPort;
 
 @Configuration
 public class CondominioConfig {
@@ -42,5 +47,15 @@ public class CondominioConfig {
     @Bean
     public ListarCondominiosUseCase listarCondominiosUseCase(CondominioPort condominioPort) {
         return new ListarCondominiosUseCaseImpl(condominioPort);
+    }
+
+    @Bean
+    public ObtenerCondominioRelationsUseCase obtenerCondominioRelationsUseCase(
+            TorrePort torrePort,
+            UsuarioPort usuarioPort,
+            CarritoPort carritoPort,
+            ConfiguracionPort configuracionPort) {
+        return new ObtenerCondominioRelationsUseCaseImpl(
+                torrePort, usuarioPort, carritoPort, configuracionPort);
     }
 }

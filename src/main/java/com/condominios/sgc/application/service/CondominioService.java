@@ -9,10 +9,12 @@ import com.condominios.sgc.application.usecase.ActualizarCondominioUseCase;
 import com.condominios.sgc.application.usecase.CrearCondominioUseCase;
 import com.condominios.sgc.application.usecase.EliminarCondominioUseCase;
 import com.condominios.sgc.application.usecase.ListarCondominiosUseCase;
+import com.condominios.sgc.application.usecase.ObtenerCondominioRelationsUseCase;
 import com.condominios.sgc.application.usecase.ObtenerCondominioUseCase;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.CondominioModel;
+import com.condominios.sgc.web.dto.CondominioRelationsResponse;
 
 @Service
 @Transactional
@@ -23,18 +25,21 @@ public class CondominioService {
     private final ObtenerCondominioUseCase obtenerCondominioUseCase;
     private final EliminarCondominioUseCase eliminarCondominioUseCase;
     private final ListarCondominiosUseCase listarCondominiosUseCase;
+    private final ObtenerCondominioRelationsUseCase obtenerCondominioRelationsUseCase;
 
     public CondominioService(
             CrearCondominioUseCase crearCondominioUseCase,
             ActualizarCondominioUseCase actualizarCondominioUseCase,
             ObtenerCondominioUseCase obtenerCondominioUseCase,
             EliminarCondominioUseCase eliminarCondominioUseCase,
-            ListarCondominiosUseCase listarCondominiosUseCase) {
+            ListarCondominiosUseCase listarCondominiosUseCase,
+            ObtenerCondominioRelationsUseCase obtenerCondominioRelationsUseCase) {
         this.crearCondominioUseCase = crearCondominioUseCase;
         this.actualizarCondominioUseCase = actualizarCondominioUseCase;
         this.obtenerCondominioUseCase = obtenerCondominioUseCase;
         this.eliminarCondominioUseCase = eliminarCondominioUseCase;
         this.listarCondominiosUseCase = listarCondominiosUseCase;
+        this.obtenerCondominioRelationsUseCase = obtenerCondominioRelationsUseCase;
     }
 
     public CondominioModel crear(CrearCondominioRequest request) {
@@ -55,5 +60,9 @@ public class CondominioService {
 
     public PaginacionResponse<CondominioModel> listar(PaginacionRequest request) {
         return listarCondominiosUseCase.ejecutar(request);
+    }
+
+    public CondominioRelationsResponse obtenerRelations(Long id) {
+        return obtenerCondominioRelationsUseCase.ejecutar(id);
     }
 }

@@ -20,6 +20,7 @@ import com.condominios.sgc.application.dto.CrearCondominioRequest;
 import com.condominios.sgc.application.service.CondominioService;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
+import com.condominios.sgc.web.dto.CondominioRelationsResponse;
 import com.condominios.sgc.web.dto.CondominioResponse;
 
 import jakarta.validation.Valid;
@@ -65,6 +66,12 @@ public class CondominioController {
             @Valid @RequestBody ActualizarCondominioRequest request) {
         return ResponseEntity.ok(
             CondominioResponse.fromModel(condominioService.actualizar(id, request)));
+    }
+
+    @GetMapping("/{id}/relations")
+    @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
+    public ResponseEntity<CondominioRelationsResponse> obtenerRelations(@PathVariable Long id) {
+        return ResponseEntity.ok(condominioService.obtenerRelations(id));
     }
 
     @DeleteMapping("/{id}")
