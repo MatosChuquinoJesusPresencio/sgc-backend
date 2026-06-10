@@ -11,6 +11,6 @@ public record CrearUsuarioRequest(
     @NotBlank @Email String correo,
     @NotBlank String telefono,
     @NotNull Rol rol,
-    @NotNull Long condominioId,
+    Long condominioId,
     @NotBlank String contrasena
 ) {}

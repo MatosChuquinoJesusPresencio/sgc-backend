@@ -9,5 +9,5 @@ public record ActualizarUsuarioRequest(
     @NotBlank String apellidos,
     @NotBlank String telefono,
     @NotNull Rol rol,
-    @NotNull Long condominioId
+    Long condominioId
 ) {}
