@@ -31,8 +31,9 @@ public class CondominioTreeAdapter implements CondominioTreePort {
 
     @Override
     public CondominioTreeResponse obtenerArbolCompleto(Long condominioId) {
+
         CondominioEntity condominio = condominioRepository.findById(condominioId)
-                .orElseThrow(CondominioException::noEncontrado);
+                .orElseThrow(() -> CondominioException.noEncontrado(condominioId));
 
         List<TorreNode> torresNodes = torreRepository.findByCondominioId(condominioId).stream().map(torre -> {
 
@@ -44,7 +45,8 @@ public class CondominioTreeAdapter implements CondominioTreePort {
                             new InquilinoNode(inq.getId(), inq.getNombres(), inq.getApellidos(), inq.getDni())
                     ).toList();
 
-                    String propietarioId = apto.getPropietario() != null ? apto.getPropietario().getId() : null;
+                    String propietarioId = apto.getPropietario() != null ? String.valueOf(apto.getPropietario().getId()) : null;
+
                     return new ApartamentoNode(apto.getId(), apto.getNumero(), apto.getDerechoEstacionamiento(), apto.getMetraje(), propietarioId, inquilinosNodes);
                 }).toList();
 
