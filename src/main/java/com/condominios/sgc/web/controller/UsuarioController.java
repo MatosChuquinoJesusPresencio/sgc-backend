@@ -1,6 +1,7 @@
 package com.condominios.sgc.web.controller;
 
 import com.condominios.sgc.application.dto.ActualizarUsuarioRequest;
+import com.condominios.sgc.application.dto.CrearUsuarioRequest;
 import com.condominios.sgc.application.service.UsuarioService;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +49,14 @@ public class UsuarioController {
         PaginacionResponse<UsuarioResponse> content = usuarioService.listar(request)
                 .map(UsuarioResponse::fromModel);
         return ResponseEntity.ok(content);
+    }
+
+    @PostMapping
+    @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR','ADMINISTRADOR_CONDOMINIO')")
+    public ResponseEntity<UsuarioResponse> crear(
+            @Valid @RequestBody CrearUsuarioRequest request) {
+        return ResponseEntity.ok(
+            UsuarioResponse.fromModel(usuarioService.crear(request, SecurityUtils.obtenerRolAutenticado())));
     }
 
     @PutMapping("/{id}")
