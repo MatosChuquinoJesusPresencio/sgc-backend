@@ -1,12 +1,15 @@
 package com.condominios.sgc.web.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import com.condominios.sgc.application.dto.ActualizarApartamentoRequest;
 import com.condominios.sgc.application.dto.CrearApartamentoRequest;
 import com.condominios.sgc.application.service.ApartamentoService;
+import com.condominios.sgc.application.usecase.ListarApartamentosFiltradosUseCase;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
+import com.condominios.sgc.domain.model.ApartamentoModel;
 import com.condominios.sgc.web.dto.ApartamentoResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +23,11 @@ import jakarta.validation.Valid;
 public class ApartamentoController {
 
     private final ApartamentoService apartamentoService;
+    private final ListarApartamentosFiltradosUseCase listarApartamentosFiltradosUseCase;
 
-    public ApartamentoController(ApartamentoService apartamentoService) {
+    public ApartamentoController(ApartamentoService apartamentoService, ListarApartamentosFiltradosUseCase listarApartamentosFiltradosUseCase) {
         this.apartamentoService = apartamentoService;
+        this.listarApartamentosFiltradosUseCase = listarApartamentosFiltradosUseCase;
     }
 
     @PostMapping
@@ -66,5 +71,26 @@ public class ApartamentoController {
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         apartamentoService.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/apartamentos")
+    public ResponseEntity<PaginacionResponse<ApartamentoResponse>> listarApartamentosFiltrados(
+            @RequestParam(required = false) Long condominioId,
+            @RequestParam(required = false) Long torreId,
+            @RequestParam(required = false) Long pisoId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        PaginacionRequest req = new PaginacionRequest(page, size, "id", "asc", null);
+
+        PaginacionResponse<ApartamentoModel> pageModel = listarApartamentosFiltradosUseCase.ejecutar(condominioId, torreId, pisoId, req);
+
+        List<ApartamentoResponse> content = pageModel.contenido().stream()
+                .map(ApartamentoResponse::fromModel)
+                .toList();
+
+        return ResponseEntity.ok(new PaginacionResponse<>(
+                content, pageModel.pagina(), pageModel.tamanio(), pageModel.totalElementos(), pageModel.totalPaginas()
+        ));
     }
 }
