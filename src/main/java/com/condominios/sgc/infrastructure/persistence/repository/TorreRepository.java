@@ -4,13 +4,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.stereotype.Repository;
 
 import com.condominios.sgc.infrastructure.persistence.entity.TorreEntity;
 
 import java.util.List;
 
-@Repository
 public interface TorreRepository extends JpaRepository<TorreEntity, Long>,
         JpaSpecificationExecutor<TorreEntity> {
 

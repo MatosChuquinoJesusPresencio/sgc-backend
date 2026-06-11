@@ -2,13 +2,11 @@ package com.condominios.sgc.infrastructure.persistence.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.stereotype.Repository;
 
 import com.condominios.sgc.infrastructure.persistence.entity.EstacionamientoEntity;
 
 import java.util.List;
 
-@Repository
 public interface EstacionamientoRepository extends JpaRepository<EstacionamientoEntity, Long>,
         JpaSpecificationExecutor<EstacionamientoEntity> {
 
