@@ -8,7 +8,8 @@ public record AuthResponse(
     String correo,
     String nombres,
     String apellidos,
-    Rol rol
+    Rol rol,
+    Long condominioId
 ) {
     public static AuthResponse fromModel(UsuarioModel model) {
         return new AuthResponse(
@@ -16,7 +17,8 @@ public record AuthResponse(
             model.getCorreo(),
             model.getNombres(),
             model.getApellidos(),
-            model.getRol()
+            model.getRol(),
+            model.getCondominioId()
         );
     }
 }
