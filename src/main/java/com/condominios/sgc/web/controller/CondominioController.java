@@ -60,7 +60,7 @@ public class CondominioController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
+    @PreAuthorize("hasRole('SUPER_ADMINISTRADOR', 'ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<CondominioResponse> actualizar(
             @PathVariable Long id,
             @Valid @RequestBody ActualizarCondominioRequest request) {
@@ -69,7 +69,7 @@ public class CondominioController {
     }
 
     @GetMapping("/{id}/relations")
-    @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
+    @PreAuthorize("hasRole('SUPER_ADMINISTRADOR', 'ADMINISTRADOR_CONDOMINIO')")
     public ResponseEntity<CondominioRelationsResponse> obtenerRelations(@PathVariable Long id) {
         return ResponseEntity.ok(condominioService.obtenerRelations(id));
     }
