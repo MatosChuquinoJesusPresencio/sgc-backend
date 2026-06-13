@@ -1,57 +1,69 @@
-{"properties": [
-  {
-    "name": "cors.allowed-origins",
-    "type": "java.lang.String",
-    "description": "Los origenes permitidos para CORS"
-  },
-  {
-    "name": "app.base-url",
-    "type": "java.lang.String",
-    "description": "La URL base de la aplicacion"
-  },
-  {
-    "name": "spring.mail.from",
-    "type": "java.lang.String",
-    "description": "La direccion de correo electronico remitente"
-  },
-  {
-    "name": "resend.api-key",
-    "type": "java.lang.String",
-    "description": "La clave de la API de Resend"
-  },
-  {
-    "name": "resend.from",
-    "type": "java.lang.String",
-    "description": "La direccion de correo electronico remitente"
-  },
-  {
-    "name": "jwt.refresh-token-expiration",
-    "type": "java.lang.String",
-    "description": "La duracion de vida del token de refresco"
-  },
-  {
-    "name": "jwt.access-token-expiration",
-    "type": "java.lang.String",
-    "description": "La duracion de vida del token de acceso"
-  },
-  {
-    "name": "jwt.secret",
-    "type": "java.lang.String",
-    "description": "La clave secreta para la generacion de tokens JWT"
-  },
-  {
-    "name": "jwt.password-reset-token-expiration",
-    "type": "java.lang.String",
-    "description": "La duracion de vida del token de reseteo de contraseña"
-  },
-  {
-    "name": "jwt.email-verification-token-expiration",
-    "type": "java.lang.String",
-    "description": "La duracion de vida del token de verificacion de correo electronico"
-  },
-  {
-    "name": "jwt.remember-me-refresh-expiration",
-    "type": "java.lang.String",
-    "description": "La duracion de vida de la cookie de refresco del recuerdame"
-  }
-]}
+{
+  "properties": [
+    {
+      "name": "cors.allowed-origins",
+      "type": "java.lang.String",
+      "description": "Lista de orígenes (URLs) permitidos para realizar solicitudes CORS hacia la API"
+    },
+    {
+      "name": "app.base-url",
+      "type": "java.lang.String",
+      "description": "URL base de la aplicación utilizada para construir enlaces y redirecciones"
+    },
+    {
+      "name": "spring.mail.from",
+      "type": "java.lang.String",
+      "description": "Dirección de correo electrónico utilizada como remitente en los correos enviados por la aplicación"
+    },
+    {
+      "name": "resend.api-key",
+      "type": "java.lang.String",
+      "description": "Clave de autenticación para acceder a la API del servicio Resend"
+    },
+    {
+      "name": "resend.from",
+      "type": "java.lang.String",
+      "description": "Dirección de correo electrónico verificada utilizada como remitente en el servicio Resend"
+    },
+    {
+      "name": "jwt.refresh-token-expiration",
+      "type": "java.lang.String",
+      "description": "Tiempo de vida del refresh token JWT antes de su expiración"
+    },
+    {
+      "name": "jwt.access-token-expiration",
+      "type": "java.lang.String",
+      "description": "Tiempo de vida del access token JWT utilizado para autenticar solicitudes"
+    },
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "Clave secreta utilizada para firmar y validar los tokens JWT"
+    },
+    {
+      "name": "jwt.password-reset-token-expiration",
+      "type": "java.lang.String",
+      "description": "Tiempo de vida del token utilizado para el proceso de recuperación o cambio de contraseña"
+    },
+    {
+      "name": "jwt.email-verification-token-expiration",
+      "type": "java.lang.String",
+      "description": "Tiempo de vida del token utilizado para verificar la dirección de correo electrónico del usuario"
+    },
+    {
+      "name": "jwt.remember-me-refresh-expiration",
+      "type": "java.lang.String",
+      "description": "Tiempo de vida extendido del refresh token cuando se activa la opción 'recordarme'"
+    },
+    {
+      "name": "jwt.verify-email-token-expiration",
+      "type": "java.lang.String",
+      "description": "Tiempo de vida del token utilizado para la verificación de correo electrónico"
+    },
+    {
+      "name": "jwt.reset-password-token-expiration",
+      "type": "java.lang.String",
+      "description": "Tiempo de vida del token utilizado para el restablecimiento de contraseña"
+    }
+  ]
+}
