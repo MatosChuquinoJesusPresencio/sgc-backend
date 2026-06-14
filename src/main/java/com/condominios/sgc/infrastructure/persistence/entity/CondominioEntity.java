@@ -5,6 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -27,10 +30,18 @@ public class CondominioEntity {
     @Column(nullable = false)
     private String nombre;
 
-    @Column(name = "id_pais")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_pais")
+    private PaisEntity pais;
+
+    @Column(name = "id_pais", insertable = false, updatable = false)
     private Long idPais;
 
-    @Column(name = "id_ciudad")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_ciudad")
+    private CiudadEntity ciudad;
+
+    @Column(name = "id_ciudad", insertable = false, updatable = false)
     private Long idCiudad;
 
     private String direccion;
@@ -80,4 +91,8 @@ public class CondominioEntity {
     public void setEstacionamientos(List<EstacionamientoEntity> estacionamientos) { this.estacionamientos = estacionamientos; }
     public List<VehiculoEntity> getVehiculos() { return vehiculos; }
     public void setVehiculos(List<VehiculoEntity> vehiculos) { this.vehiculos = vehiculos; }
+    public PaisEntity getPais() { return pais; }
+    public void setPais(PaisEntity pais) { this.pais = pais; }
+    public CiudadEntity getCiudad() { return ciudad; }
+    public void setCiudad(CiudadEntity ciudad) { this.ciudad = ciudad; }
 }
