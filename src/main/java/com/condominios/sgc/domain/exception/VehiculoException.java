@@ -42,7 +42,11 @@ public class VehiculoException extends DominioException {
     }
 
     public static VehiculoException limiteAlcanzado() {
-        return new VehiculoException("límite de vehículos alcanzado");
+        return new VehiculoException("límite de vehiculos alcanzado");
+    }
+
+    public static VehiculoException condominioRequerido() {
+        return new VehiculoException("idCondominio no puede ser nulo");
     }
 
     public static VehiculoException limitePropietarioAlcanzado() {

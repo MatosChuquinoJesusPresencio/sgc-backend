@@ -45,7 +45,7 @@ public class UsuarioModel {
         this.contrasena = requerido(contrasena, UsuarioException::contrasenaRequerida);
         this.correoPendiente = null;
         this.correoVerificado = true;
-        this.idCondominio = idCondominio;
+        this.idCondominio = noNulo(idCondominio, UsuarioException::condominioRequerido);
     }
 
     public Long getId() { return id; }

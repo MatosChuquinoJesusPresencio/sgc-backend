@@ -25,6 +25,10 @@ public class EstacionamientoException extends DominioException {
         return new EstacionamientoException("no hay espacio disponible en el estacionamiento");
     }
 
+    public static EstacionamientoException condominioRequerido() {
+        return new EstacionamientoException("idCondominio no puede ser nulo");
+    }
+
     public static EstacionamientoException noEncontrado() {
         return new EstacionamientoException("estacionamiento no encontrado");
     }

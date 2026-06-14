@@ -4,6 +4,7 @@ import com.condominios.sgc.application.dto.command.CrearLogPrestamoCarritoComman
 import com.condominios.sgc.application.dto.response.LogPrestamoCarritoResponse;
 import com.condominios.sgc.application.usecase.logprestamocarrito.CrearLogPrestamoCarritoUseCase;
 import com.condominios.sgc.domain.auxiliar.TipoHabitante;
+import com.condominios.sgc.domain.exception.ConfiguracionException;
 import com.condominios.sgc.domain.exception.LogPrestamoCarritoException;
 import com.condominios.sgc.domain.model.ConfiguracionModel;
 import com.condominios.sgc.domain.model.LogPrestamoCarritoModel;
@@ -22,7 +23,7 @@ public class CrearLogPrestamoCarritoUseCaseImpl implements CrearLogPrestamoCarri
     @Override
     public LogPrestamoCarritoResponse ejecutar(CrearLogPrestamoCarritoCommand command) {
         ConfiguracionModel config = configuracionPort.obtenerPorCondominio(command.idCondominio())
-            .orElseThrow(() -> new RuntimeException("configuración no encontrada para el condominio"));
+            .orElseThrow(ConfiguracionException::noEncontrado);
         int count = (int) logPrestamoCarritoPort.obtenerSinDevolucion().stream()
             .filter(l -> l.getIdApartamento().equals(command.idApartamento())).count();
         if (!config.puedeUsarCarrito(count))

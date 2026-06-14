@@ -17,7 +17,7 @@ public class PisoModel {
     public PisoModel(Integer numero, Long idTorre) {
         this.id = null;
         this.numero = positivo(numero, PisoException::numeroRequerido);
-        this.idTorre = idTorre;
+        this.idTorre = noNulo(idTorre, PisoException::torreRequerida);
     }
 
     public Long getId() { return id; }

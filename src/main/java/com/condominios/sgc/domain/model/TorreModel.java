@@ -17,7 +17,7 @@ public class TorreModel {
     public TorreModel(String nombre, Long idCondominio) {
         this.id = null;
         this.nombre = requerido(nombre, TorreException::nombreRequerido);
-        this.idCondominio = idCondominio;
+        this.idCondominio = noNulo(idCondominio, TorreException::condominioRequerido);
     }
 
     public Long getId() { return id; }

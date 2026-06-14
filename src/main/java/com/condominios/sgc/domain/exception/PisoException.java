@@ -9,6 +9,10 @@ public class PisoException extends DominioException {
         return new PisoException("numero debe ser un valor positivo");
     }
 
+    public static PisoException torreRequerida() {
+        return new PisoException("idTorre no puede ser nulo");
+    }
+
     public static PisoException noEncontrado() {
         return new PisoException("piso no encontrado");
     }

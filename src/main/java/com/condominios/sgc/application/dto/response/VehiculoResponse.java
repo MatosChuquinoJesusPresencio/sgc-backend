@@ -12,12 +12,14 @@ public record VehiculoResponse(
     TipoVehiculo tipo,
     Long idPropietario,
     Long idInquilino,
-    Long idEstacionamiento
+    Long idEstacionamiento,
+    Long idCondominio
 ) {
     public static VehiculoResponse desdeModelo(VehiculoModel model) {
         return new VehiculoResponse(
             model.getId(), model.getMarca(), model.getColor(),
             model.getModelo(), model.getPlaca(), model.getTipo(),
-            model.getIdPropietario(), model.getIdInquilino(), model.getIdEstacionamiento());
+            model.getIdPropietario(), model.getIdInquilino(), model.getIdEstacionamiento(),
+            model.getIdCondominio());
     }
 }

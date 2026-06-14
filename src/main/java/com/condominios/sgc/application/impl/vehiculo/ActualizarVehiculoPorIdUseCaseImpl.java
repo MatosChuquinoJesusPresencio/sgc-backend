@@ -3,6 +3,7 @@ package com.condominios.sgc.application.impl.vehiculo;
 import com.condominios.sgc.application.dto.command.ActualizarVehiculoCommand;
 import com.condominios.sgc.application.dto.response.VehiculoResponse;
 import com.condominios.sgc.application.usecase.vehiculo.ActualizarVehiculoPorIdUseCase;
+import com.condominios.sgc.domain.exception.ConfiguracionException;
 import com.condominios.sgc.domain.exception.VehiculoException;
 import com.condominios.sgc.domain.model.ConfiguracionModel;
 import com.condominios.sgc.domain.model.VehiculoModel;
@@ -30,7 +31,7 @@ public class ActualizarVehiculoPorIdUseCaseImpl implements ActualizarVehiculoPor
             vehiculo.desasignarPropietario();
         } else if (command.idPropietario() != null) {
             ConfiguracionModel config = configuracionPort.obtenerPorCondominio(command.idCondominio())
-                .orElseThrow(() -> new RuntimeException("configuración no encontrada para el condominio"));
+                .orElseThrow(ConfiguracionException::noEncontrado);
             int count = vehiculoPort.obtenerPorPropietario(command.idPropietario()).size();
             if (!config.puedeAgregarVehiculoPropietario(count))
                 throw VehiculoException.limitePropietarioAlcanzado();

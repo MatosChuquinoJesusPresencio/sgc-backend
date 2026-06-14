@@ -3,6 +3,7 @@ package com.condominios.sgc.application.impl.inquilino;
 import com.condominios.sgc.application.dto.command.CrearInquilinoCommand;
 import com.condominios.sgc.application.dto.response.InquilinoResponse;
 import com.condominios.sgc.application.usecase.inquilino.CrearInquilinoUseCase;
+import com.condominios.sgc.domain.exception.ConfiguracionException;
 import com.condominios.sgc.domain.exception.InquilinoException;
 import com.condominios.sgc.domain.model.ConfiguracionModel;
 import com.condominios.sgc.domain.model.InquilinoModel;
@@ -21,7 +22,7 @@ public class CrearInquilinoUseCaseImpl implements CrearInquilinoUseCase {
     @Override
     public InquilinoResponse ejecutar(CrearInquilinoCommand command) {
         ConfiguracionModel config = configuracionPort.obtenerPorCondominio(command.idCondominio())
-            .orElseThrow(() -> new RuntimeException("configuración no encontrada para el condominio"));
+            .orElseThrow(ConfiguracionException::noEncontrado);
         int count = inquilinoPort.obtenerPorApartamento(command.idApartamento()).size();
         if (!config.puedeAgregarInquilino(count))
             throw InquilinoException.limiteAlcanzado();

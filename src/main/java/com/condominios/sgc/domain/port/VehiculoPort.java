@@ -13,6 +13,7 @@ public interface VehiculoPort {
     Optional<VehiculoModel> obtenerPorPlaca(String placa);
     List<VehiculoModel> obtenerPorPropietario(Long idPropietario);
     List<VehiculoModel> obtenerPorInquilino(Long idInquilino);
+    List<VehiculoModel> obtenerPorCondominio(Long idCondominio);
     List<VehiculoModel> obtenerTodos();
     PaginacionResponse<VehiculoModel> obtenerTodos(PaginacionRequest request, VehiculoFilter filtro);
     void eliminarPorId(Long id);

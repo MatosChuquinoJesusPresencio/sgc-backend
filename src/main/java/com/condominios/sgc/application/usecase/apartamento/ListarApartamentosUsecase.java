@@ -4,6 +4,6 @@ import com.condominios.sgc.application.dto.query.ListarApartamentosQuery;
 import com.condominios.sgc.application.dto.response.ApartamentoResponse;
 import com.condominios.sgc.domain.dto.response.PaginacionResponse;
 
-public interface ListarApartamentosUsecase {
+public interface ListarApartamentosUseCase {
     PaginacionResponse<ApartamentoResponse> ejecutar(ListarApartamentosQuery query);
 }

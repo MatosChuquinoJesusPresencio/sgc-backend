@@ -34,7 +34,7 @@ public class EstacionamientoModel {
         this.cantidadActual = 0;
         this.disponible = true;
         this.idApartamento = null;
-        this.idCondominio = idCondominio;
+        this.idCondominio = noNulo(idCondominio, EstacionamientoException::condominioRequerido);
     }
 
     public Long getId() { return id; }

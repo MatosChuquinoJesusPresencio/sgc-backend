@@ -3,6 +3,7 @@ package com.condominios.sgc.application.impl.estacionamiento;
 import com.condominios.sgc.application.dto.command.ActualizarEstacionamientoCommand;
 import com.condominios.sgc.application.dto.response.EstacionamientoResponse;
 import com.condominios.sgc.application.usecase.estacionamiento.ActualizarEstacionamientoPorIdUseCase;
+import com.condominios.sgc.domain.exception.ConfiguracionException;
 import com.condominios.sgc.domain.exception.EstacionamientoException;
 import com.condominios.sgc.domain.model.ConfiguracionModel;
 import com.condominios.sgc.domain.model.EstacionamientoModel;
@@ -35,7 +36,7 @@ public class ActualizarEstacionamientoPorIdUseCaseImpl implements ActualizarEsta
             estacionamiento.desasignarApartamento();
         } else if (command.idApartamento() != null) {
             ConfiguracionModel config = configuracionPort.obtenerPorCondominio(estacionamiento.getIdCondominio())
-                .orElseThrow(() -> new RuntimeException("configuración no encontrada para el condominio"));
+                .orElseThrow(ConfiguracionException::noEncontrado);
             int count = estacionamientoPort.obtenerPorApartamento(command.idApartamento()).size();
             if (!config.puedeAsignarEstacionamiento(count))
                 throw EstacionamientoException.sinEspacio();

@@ -14,9 +14,11 @@ public class VehiculoModel {
     private Long idPropietario;
     private Long idInquilino;
     private Long idEstacionamiento;
+    private Long idCondominio;
 
     public VehiculoModel(Long id, String marca, String color, String modelo, String placa, 
-            TipoVehiculo tipo, Long idPropietario, Long idInquilino, Long idEstacionamiento) {
+            TipoVehiculo tipo, Long idPropietario, Long idInquilino, Long idEstacionamiento,
+            Long idCondominio) {
         this.id = id;
         this.marca = marca;
         this.color = color;
@@ -26,9 +28,11 @@ public class VehiculoModel {
         this.idPropietario = idPropietario;
         this.idInquilino = idInquilino;
         this.idEstacionamiento = idEstacionamiento;
+        this.idCondominio = idCondominio;
     }
 
-    public VehiculoModel(String marca, String color, String modelo, String placa, TipoVehiculo tipo) {
+    public VehiculoModel(String marca, String color, String modelo, String placa, TipoVehiculo tipo,
+            Long idCondominio) {
         this.id = null;
         this.marca = requerido(marca, VehiculoException::marcaRequerida);
         this.color = requerido(color, VehiculoException::colorRequerido);
@@ -38,6 +42,7 @@ public class VehiculoModel {
         this.idPropietario = null;
         this.idInquilino = null;
         this.idEstacionamiento = null;
+        this.idCondominio = noNulo(idCondominio, VehiculoException::condominioRequerido);
     }
 
     public Long getId() { return id; }
@@ -49,6 +54,7 @@ public class VehiculoModel {
     public Long getIdPropietario() { return idPropietario; }
     public Long getIdInquilino() { return idInquilino; }
     public Long getIdEstacionamiento() { return idEstacionamiento; }
+    public Long getIdCondominio() { return idCondominio; }
 
     public void actualizar(String marca, String color, String modelo, String placa, TipoVehiculo tipo) {
         this.marca = requerido(marca, VehiculoException::marcaRequerida);
