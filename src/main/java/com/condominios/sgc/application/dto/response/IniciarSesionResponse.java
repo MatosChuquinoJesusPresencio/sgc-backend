@@ -1,6 +1,6 @@
 package com.condominios.sgc.application.dto.response;
 
-public record LoginResponse(
+public record IniciarSesionResponse(
     String token,
     Long idUsuario,
     String rol,

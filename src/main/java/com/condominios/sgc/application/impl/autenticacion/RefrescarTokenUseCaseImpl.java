@@ -1,7 +1,7 @@
 package com.condominios.sgc.application.impl.autenticacion;
 
 import com.condominios.sgc.application.dto.command.RefrescarTokenCommand;
-import com.condominios.sgc.application.dto.response.LoginResponse;
+import com.condominios.sgc.application.dto.response.IniciarSesionResponse;
 import com.condominios.sgc.application.usecase.autenticacion.RefrescarTokenUseCase;
 import com.condominios.sgc.domain.exception.TokenException;
 import com.condominios.sgc.domain.exception.UsuarioException;
@@ -19,7 +19,7 @@ public class RefrescarTokenUseCaseImpl implements RefrescarTokenUseCase {
     }
 
     @Override
-    public LoginResponse ejecutar(RefrescarTokenCommand command) {
+    public IniciarSesionResponse ejecutar(RefrescarTokenCommand command) {
         Long idUsuario = autenticacionPort.validarToken(command.token())
             .orElseThrow(TokenException::noEncontrado);
 
@@ -28,6 +28,6 @@ public class RefrescarTokenUseCaseImpl implements RefrescarTokenUseCase {
 
         String nuevoToken = autenticacionPort.generarToken(usuario.getId(), usuario.getRol().name());
 
-        return new LoginResponse(nuevoToken, usuario.getId(), usuario.getRol().name(), usuario.getNombres());
+        return new IniciarSesionResponse(nuevoToken, usuario.getId(), usuario.getRol().name(), usuario.getNombres());
     }
 }

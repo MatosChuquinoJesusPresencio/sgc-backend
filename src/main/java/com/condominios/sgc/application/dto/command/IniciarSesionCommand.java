@@ -1,6 +1,6 @@
 package com.condominios.sgc.application.dto.command;
 
-public record LoginCommand(
+public record IniciarSesionCommand(
     String correo,
     String contrasena
 ) {}
