@@ -8,4 +8,8 @@ public class TorreException extends DominioException {
     public static TorreException nombreRequerido() {
         return new TorreException("nombre no puede estar vacío");
     }
+
+    public static TorreException noEncontrado() {
+        return new TorreException("torre no encontrada");
+    }
 }

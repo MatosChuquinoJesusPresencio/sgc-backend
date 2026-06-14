@@ -11,7 +11,7 @@ public interface TorrePort {
     TorreModel guardar(TorreModel torre);
     Optional<TorreModel> obtenerPorId(Long id);
     List<TorreModel> obtenerTodos();
-    PaginacionResponse<TorreModel> obtenerTodos(PaginacionRequest paginacion, TorreFilter Filter);
+    PaginacionResponse<TorreModel> obtenerTodos(PaginacionRequest request, TorreFilter filtro);
     List<TorreModel> obtenerPorCondominio(Long idCondominio);
     void eliminarPorId(Long id);
 }

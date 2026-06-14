@@ -20,4 +20,8 @@ public class ApartamentoException extends DominioException {
     public static ApartamentoException propietarioRequerido() {
         return new ApartamentoException("idPropietario no puede ser nulo");
     }
+
+    public static ApartamentoException noEncontrado() {
+        return new ApartamentoException("apartamento no encontrado");
+    }
 }

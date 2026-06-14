@@ -24,4 +24,8 @@ public class TokenException extends DominioException {
     public static TokenException tokenYaUsado() {
         return new TokenException("el token ya fue usado");
     }
+
+    public static TokenException noEncontrado() {
+        return new TokenException("token no encontrado");
+    }
 }

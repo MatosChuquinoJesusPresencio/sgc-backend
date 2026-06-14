@@ -24,4 +24,8 @@ public class EstacionamientoException extends DominioException {
     public static EstacionamientoException sinEspacio() {
         return new EstacionamientoException("no hay espacio disponible en el estacionamiento");
     }
+
+    public static EstacionamientoException noEncontrado() {
+        return new EstacionamientoException("estacionamiento no encontrado");
+    }
 }

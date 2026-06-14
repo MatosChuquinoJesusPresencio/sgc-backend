@@ -40,4 +40,8 @@ public class LogPrestamoCarritoException extends DominioException {
     public static LogPrestamoCarritoException devolucionYaRegistrada() {
         return new LogPrestamoCarritoException("la devolución ya fue registrada");
     }
+
+    public static LogPrestamoCarritoException noEncontrado() {
+        return new LogPrestamoCarritoException("log de préstamo de carrito no encontrado");
+    }
 }

@@ -36,4 +36,8 @@ public class VehiculoException extends DominioException {
     public static VehiculoException estacionamientoRequerido() {
         return new VehiculoException("idEstacionamiento no puede ser nulo");
     }
+
+    public static VehiculoException noEncontrado() {
+        return new VehiculoException("vehículo no encontrado");
+    }
 }

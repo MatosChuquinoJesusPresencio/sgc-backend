@@ -24,4 +24,8 @@ public class InquilinoException extends DominioException {
     public static InquilinoException apartamentoRequerido() {
         return new InquilinoException("idApartamento no puede ser nulo");
     }
+
+    public static InquilinoException noEncontrado() {
+        return new InquilinoException("inquilino no encontrado");
+    }
 }

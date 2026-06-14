@@ -16,4 +16,8 @@ public class CarritoException extends DominioException {
     public static CarritoException estadoInvalido() {
         return new CarritoException("cambio de estado no permitido");
     }
+
+    public static CarritoException noEncontrado() {
+        return new CarritoException("carrito no encontrado");
+    }
 }

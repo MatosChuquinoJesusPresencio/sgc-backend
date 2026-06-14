@@ -11,7 +11,7 @@ public interface PisoPort {
     PisoModel guardar(PisoModel piso);
     Optional<PisoModel> obtenerPorId(Long id);
     List<PisoModel> obtenerTodos();
-    PaginacionResponse<PisoModel> obtenerTodos(PaginacionRequest paginacion, PisoFilter Filter);
+    PaginacionResponse<PisoModel> obtenerTodos(PaginacionRequest request, PisoFilter filtro);
     List<PisoModel> obtenerPorTorre(Long idTorre);
     void eliminarPorId(Long id);
 }

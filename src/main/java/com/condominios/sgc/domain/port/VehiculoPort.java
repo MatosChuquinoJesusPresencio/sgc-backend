@@ -14,7 +14,7 @@ public interface VehiculoPort {
     List<VehiculoModel> obtenerPorPropietario(Long idPropietario);
     List<VehiculoModel> obtenerPorInquilino(Long idInquilino);
     List<VehiculoModel> obtenerTodos();
-    PaginacionResponse<VehiculoModel> obtenerTodos(PaginacionRequest paginacion, VehiculoFilter Filter);
+    PaginacionResponse<VehiculoModel> obtenerTodos(PaginacionRequest request, VehiculoFilter filtro);
     void eliminarPorId(Long id);
 }
 

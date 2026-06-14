@@ -40,4 +40,8 @@ public class UsuarioException extends DominioException {
     public static UsuarioException sinCorreoPendiente() {
         return new UsuarioException("no hay correo pendiente por confirmar");
     }
+
+    public static UsuarioException noEncontrado() {
+        return new UsuarioException("usuario no encontrado");
+    }
 }

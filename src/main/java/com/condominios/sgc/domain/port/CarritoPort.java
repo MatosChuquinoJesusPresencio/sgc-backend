@@ -12,8 +12,7 @@ public interface CarritoPort {
     CarritoModel guardar(CarritoModel carrito);
     Optional<CarritoModel> obtenerPorId(Long id);
     Optional<CarritoModel> obtenerPorCodigo(String codigo);
-    List<CarritoModel> obtenerTodos();
-    PaginacionResponse<CarritoModel> obtenerTodos(PaginacionRequest paginacion, CarritoFilter Filter);
+    PaginacionResponse<CarritoModel> obtenerTodos(PaginacionRequest request, CarritoFilter filtro);
     List<CarritoModel> obtenerPorCondominio(Long idCondominio);
     List<CarritoModel> obtenerPorEstado(EstadoCarrito estado);
     void eliminarPorId(Long id);

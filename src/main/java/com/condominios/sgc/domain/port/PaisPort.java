@@ -6,7 +6,6 @@ import java.util.Optional;
 
 public interface PaisPort {
     Optional<PaisModel> obtenerPorId(Long id);
-    Optional<PaisModel> obtenerPorNombre(String nombre);
     List<PaisModel> obtenerTodos();
 }
 

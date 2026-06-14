@@ -28,4 +28,8 @@ public class LogAccesoVehicularException extends DominioException {
     public static LogAccesoVehicularException salidaYaRegistrada() {
         return new LogAccesoVehicularException("la salida ya fue registrada");
     }
+
+    public static LogAccesoVehicularException noEncontrado() {
+        return new LogAccesoVehicularException("log de acceso vehicular no encontrado");
+    }
 }

@@ -40,4 +40,8 @@ public class ConfiguracionException extends DominioException {
     public static ConfiguracionException condominioRequerido() {
         return new ConfiguracionException("idCondominio no puede ser nulo");
     }
+
+    public static ConfiguracionException noEncontrado() {
+        return new ConfiguracionException("configuración no encontrada");
+    }
 }

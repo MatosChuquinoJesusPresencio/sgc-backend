@@ -13,7 +13,7 @@ public interface UsuarioPort {
     Optional<UsuarioModel> obtenerPorId(Long id);
     Optional<UsuarioModel> obtenerPorCorreo(String correo);
     List<UsuarioModel> obtenerTodos();
-    PaginacionResponse<UsuarioModel> obtenerTodos(PaginacionRequest paginacion, UsuarioFilter Filter);
+    PaginacionResponse<UsuarioModel> obtenerTodos(PaginacionRequest request, UsuarioFilter filtro);
     List<UsuarioModel> obtenerPorRol(Rol rol);
     List<UsuarioModel> obtenerPorCondominio(Long idCondominio);
     void eliminarPorId(Long id);
