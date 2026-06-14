@@ -64,6 +64,26 @@
       "name": "jwt.reset-password-token-expiration",
       "type": "java.lang.String",
       "description": "Tiempo de vida del token utilizado para el restablecimiento de contraseña"
+    },
+    {
+      "name": "cookie.access-token-name",
+      "type": "java.lang.String",
+      "description": "Nombre de la cookie que almacena el access token JWT"
+    },
+    {
+      "name": "cookie.refresh-token-name",
+      "type": "java.lang.String",
+      "description": "Nombre de la cookie que almacena el refresh token JWT"
+    },
+    {
+      "name": "cookie.path",
+      "type": "java.lang.String",
+      "description": "Path de las cookies de autenticación"
+    },
+    {
+      "name": "cookie.secure",
+      "type": "java.lang.Boolean",
+      "description": "Indica si las cookies deben marcarse como Secure (solo HTTPS)"
     }
   ]
 }

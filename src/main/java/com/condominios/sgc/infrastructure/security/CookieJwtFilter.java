@@ -1,5 +1,6 @@
 package com.condominios.sgc.infrastructure.security;
 
+import com.condominios.sgc.infrastructure.util.CookieUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -13,6 +14,12 @@ import java.io.IOException;
 @Component
 public class CookieJwtFilter extends OncePerRequestFilter {
 
+    private final CookieUtil cookieUtil;
+
+    public CookieJwtFilter(CookieUtil cookieUtil) {
+        this.cookieUtil = cookieUtil;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -25,7 +32,7 @@ public class CookieJwtFilter extends OncePerRequestFilter {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("access_token".equals(cookie.getName())) {
+                if (cookieUtil.getAccessTokenName().equals(cookie.getName())) {
                     String token = cookie.getValue();
                     HttpServletRequestWrapper wrapped = new HttpServletRequestWrapper(request) {
                         @Override
