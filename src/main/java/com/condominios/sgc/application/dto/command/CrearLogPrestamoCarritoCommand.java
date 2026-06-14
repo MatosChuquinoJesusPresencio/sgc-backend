@@ -6,5 +6,6 @@ public record CrearLogPrestamoCarritoCommand(
     Long idApartamento,
     Long idCarrito,
     Long idPropietario,
-    Long idInquilino
+    Long idInquilino,
+    Long idCondominio
 ) {}

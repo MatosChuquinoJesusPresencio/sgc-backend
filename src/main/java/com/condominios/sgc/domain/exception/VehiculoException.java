@@ -40,4 +40,12 @@ public class VehiculoException extends DominioException {
     public static VehiculoException noEncontrado() {
         return new VehiculoException("vehículo no encontrado");
     }
+
+    public static VehiculoException limiteAlcanzado() {
+        return new VehiculoException("límite de vehículos alcanzado");
+    }
+
+    public static VehiculoException limitePropietarioAlcanzado() {
+        return new VehiculoException("límite de vehículos por propietario alcanzado");
+    }
 }

@@ -7,5 +7,6 @@ public record CrearInquilinoCommand(
     String apellidos,
     TipoDocumento tipoDocumento,
     String numeroDocumento,
-    Long idApartamento
+    Long idApartamento,
+    Long idCondominio
 ) {}

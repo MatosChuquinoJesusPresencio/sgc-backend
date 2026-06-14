@@ -8,4 +8,8 @@ public class PisoException extends DominioException {
     public static PisoException numeroRequerido() {
         return new PisoException("numero debe ser un valor positivo");
     }
+
+    public static PisoException noEncontrado() {
+        return new PisoException("piso no encontrado");
+    }
 }

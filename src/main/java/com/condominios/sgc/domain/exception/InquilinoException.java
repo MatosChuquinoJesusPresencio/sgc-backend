@@ -28,4 +28,8 @@ public class InquilinoException extends DominioException {
     public static InquilinoException noEncontrado() {
         return new InquilinoException("inquilino no encontrado");
     }
+
+    public static InquilinoException limiteAlcanzado() {
+        return new InquilinoException("límite de inquilinos alcanzado para este apartamento");
+    }
 }

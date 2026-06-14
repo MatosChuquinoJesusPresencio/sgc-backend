@@ -7,5 +7,6 @@ public record CrearVehiculoCommand(
     String color,
     String modelo,
     String placa,
-    TipoVehiculo tipo
+    TipoVehiculo tipo,
+    Long idCondominio
 ) {}

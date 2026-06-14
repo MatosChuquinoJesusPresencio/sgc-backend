@@ -44,4 +44,8 @@ public class LogPrestamoCarritoException extends DominioException {
     public static LogPrestamoCarritoException noEncontrado() {
         return new LogPrestamoCarritoException("log de préstamo de carrito no encontrado");
     }
+
+    public static LogPrestamoCarritoException limiteAlcanzado() {
+        return new LogPrestamoCarritoException("límite de carritos alcanzado para este apartamento");
+    }
 }

@@ -44,4 +44,8 @@ public class UsuarioException extends DominioException {
     public static UsuarioException noEncontrado() {
         return new UsuarioException("usuario no encontrado");
     }
+
+    public static UsuarioException credencialesInvalidas() {
+        return new UsuarioException("correo o contraseña incorrectos");
+    }
 }

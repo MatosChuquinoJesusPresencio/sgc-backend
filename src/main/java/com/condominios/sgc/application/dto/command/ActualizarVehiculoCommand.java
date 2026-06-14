@@ -13,5 +13,6 @@ public record ActualizarVehiculoCommand(
     Long idInquilino,
     boolean desasignarInquilino,
     Long idEstacionamiento,
-    boolean desasignarEstacionamiento
+    boolean desasignarEstacionamiento,
+    Long idCondominio
 ) {}

@@ -61,11 +61,12 @@ public class UsuarioModel {
     public Long getIdCondominio() { return idCondominio; }
 
     public void cambiarCorreo(String nuevoCorreo) {
-        this.correo = distinto(
+        distinto(
             this.correo,
             correoValido(nuevoCorreo, UsuarioException::nuevoCorreoRequerido),
             UsuarioException::correoIgualAlActual
         );
+        this.correoPendiente = nuevoCorreo;
         this.correoVerificado = false;
     }
 
@@ -99,5 +100,9 @@ public class UsuarioModel {
 
     public void desasignarCondominio() {
         this.idCondominio = null;
+    }
+
+    public void cambiarContrasena(String contrasena) {
+        this.contrasena = requerido(contrasena, UsuarioException::contrasenaRequerida);
     }
 }
