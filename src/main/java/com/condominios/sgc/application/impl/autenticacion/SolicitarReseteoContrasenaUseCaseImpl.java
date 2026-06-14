@@ -1,10 +1,5 @@
 package com.condominios.sgc.application.impl.autenticacion;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.UUID;
-
-import com.condominios.sgc.application.dto.command.SolicitarReseteoContrasenaCommand;
 import com.condominios.sgc.application.usecase.autenticacion.SolicitarReseteoContrasenaUseCase;
 import com.condominios.sgc.domain.auxiliar.TipoToken;
 import com.condominios.sgc.domain.exception.UsuarioException;
@@ -26,15 +21,12 @@ public class SolicitarReseteoContrasenaUseCaseImpl implements SolicitarReseteoCo
     }
 
     @Override
-    public void ejecutar(SolicitarReseteoContrasenaCommand command) {
-        UsuarioModel usuario = usuarioPort.obtenerPorCorreo(command.correo())
+    public void ejecutar(String correo) {
+        UsuarioModel usuario = usuarioPort.obtenerPorCorreo(correo)
             .orElseThrow(UsuarioException::noEncontrado);
 
-        String tokenStr = UUID.randomUUID().toString();
-        TokenModel token = new TokenModel(TipoToken.REESTABLECIMIENTO, tokenStr,
-            Instant.now().plus(1, ChronoUnit.HOURS), usuario.getId());
-        tokenPort.guardar(token);
+        TokenModel token = tokenPort.generarToken(TipoToken.REESTABLECIMIENTO, usuario.getId());
 
-        correoPort.enviarReseteoContrasena(usuario.getCorreo(), usuario.getNombres(), tokenStr);
+        correoPort.enviarReseteoContrasena(usuario.getCorreo(), usuario.getNombres(), token.getToken());
     }
 }

@@ -2,7 +2,6 @@ package com.condominios.sgc.application.impl.autenticacion;
 
 import java.time.Instant;
 
-import com.condominios.sgc.application.dto.command.ConfirmarCorreoCommand;
 import com.condominios.sgc.application.usecase.autenticacion.ConfirmarCorreoUseCase;
 import com.condominios.sgc.domain.exception.TokenException;
 import com.condominios.sgc.domain.exception.UsuarioException;
@@ -21,8 +20,8 @@ public class ConfirmarCorreoUseCaseImpl implements ConfirmarCorreoUseCase {
     }
 
     @Override
-    public void ejecutar(ConfirmarCorreoCommand command) {
-        TokenModel tokenModel = tokenPort.obtenerPorToken(command.token())
+    public void ejecutar(String token) {
+        TokenModel tokenModel = tokenPort.obtenerPorToken(token)
             .orElseThrow(TokenException::noEncontrado);
 
         if (tokenModel.getExpiracion().isBefore(Instant.now())) {

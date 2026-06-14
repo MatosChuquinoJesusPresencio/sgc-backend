@@ -1,6 +1,5 @@
 package com.condominios.sgc.application.impl.autenticacion;
 
-import com.condominios.sgc.application.dto.command.CerrarSesionCommand;
 import com.condominios.sgc.application.usecase.autenticacion.CerrarSesionUseCase;
 import com.condominios.sgc.domain.port.AutenticacionPort;
 
@@ -12,7 +11,7 @@ public class CerrarSesionUseCaseImpl implements CerrarSesionUseCase {
     }
 
     @Override
-    public void ejecutar(CerrarSesionCommand command) {
-        autenticacionPort.invalidarToken(command.token());
+    public void ejecutar(String token) {
+        autenticacionPort.invalidarToken(token);
     }
 }

@@ -7,7 +7,6 @@ public record ActualizarUsuarioCommand(
     String apellidos,
     String telefono,
     Rol rol,
-    String nuevoCorreo,
     Long idCondominio,
     boolean desasignarCondominio
 ) {}
