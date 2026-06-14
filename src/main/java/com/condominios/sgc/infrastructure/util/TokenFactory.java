@@ -15,8 +15,8 @@ public class TokenFactory {
     private final long verifyEmailTokenExpiration;
 
     public TokenFactory(
-            @Value("${jwt.reset-password-token-expiration}") long resetPasswordTokenExpiration,
-            @Value("${jwt.verify-email-token-expiration}") long verifyEmailTokenExpiration) {
+            @Value("${jwt.reset-password-token-expiration:900000}") long resetPasswordTokenExpiration,
+            @Value("${jwt.verify-email-token-expiration:900000}") long verifyEmailTokenExpiration) {
         this.resetPasswordTokenExpiration = resetPasswordTokenExpiration;
         this.verifyEmailTokenExpiration = verifyEmailTokenExpiration;
     }

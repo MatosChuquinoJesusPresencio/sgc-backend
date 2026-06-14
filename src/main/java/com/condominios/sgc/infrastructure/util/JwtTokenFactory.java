@@ -20,9 +20,9 @@ public class JwtTokenFactory {
 
     public JwtTokenFactory(
             SecretKey jwtSecretKey,
-            @Value("${jwt.access-token-expiration}") long accessTokenExpiration,
-            @Value("${jwt.refresh-token-expiration}") long refreshTokenExpiration,
-            @Value("${jwt.remember-me-refresh-expiration}") long recuerdameRefreshExpiration) {
+            @Value("${jwt.access-token-expiration:1800000}") long accessTokenExpiration,
+            @Value("${jwt.refresh-token-expiration:604800000}") long refreshTokenExpiration,
+            @Value("${jwt.remember-me-refresh-expiration:2592000000}") long recuerdameRefreshExpiration) {
         this.secretKey = jwtSecretKey;
         this.accessTokenExpiration = accessTokenExpiration;
         this.refreshTokenExpiration = refreshTokenExpiration;

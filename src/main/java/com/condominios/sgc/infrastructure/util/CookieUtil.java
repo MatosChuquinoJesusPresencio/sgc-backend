@@ -13,10 +13,10 @@ public class CookieUtil {
     private final boolean secure;
 
     public CookieUtil(
-            @Value("${cookie.access-token-name}") String accessTokenName,
-            @Value("${cookie.refresh-token-name}") String refreshTokenName,
-            @Value("${cookie.path}") String path,
-            @Value("${cookie.secure}") boolean secure) {
+            @Value("${cookie.access-token-name:access_token}") String accessTokenName,
+            @Value("${cookie.refresh-token-name:refresh_token}") String refreshTokenName,
+            @Value("${cookie.path:/}") String path,
+            @Value("${cookie.secure:true}") boolean secure) {
         this.accessTokenName = accessTokenName;
         this.refreshTokenName = refreshTokenName;
         this.path = path;
