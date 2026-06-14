@@ -1,0 +1,19 @@
+package com.condominios.sgc.domain.exception;
+
+public class CarritoException extends DominioException {
+    private CarritoException(String mensaje) {
+        super(mensaje);
+    }
+
+    public static CarritoException codigoRequerido() {
+        return new CarritoException("código no puede estar vacío");
+    }
+
+    public static CarritoException condominioRequerido() {
+        return new CarritoException("idCondominio no puede ser nulo");
+    }
+
+    public static CarritoException estadoInvalido() {
+        return new CarritoException("cambio de estado no permitido");
+    }
+}
