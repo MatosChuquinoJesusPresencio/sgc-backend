@@ -31,7 +31,7 @@ public class TokenEntity {
     @Column(nullable = false)
     private TipoToken tipo;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, columnDefinition = "TEXT")
     private String token;
 
     @Column(nullable = false)
