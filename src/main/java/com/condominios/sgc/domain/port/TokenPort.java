@@ -12,6 +12,7 @@ public interface TokenPort {
     List<TokenModel> obtenerTodos();
     List<TokenModel> obtenerPorUsuario(Long idUsuario);
     List<TokenModel> obtenerNoUsados();
+    TokenModel generarToken(TipoToken tipo, Long idUsuario, boolean recuerdame);
     TokenModel generarToken(TipoToken tipo, Long idUsuario);
     void eliminarPorId(Long id);
 }

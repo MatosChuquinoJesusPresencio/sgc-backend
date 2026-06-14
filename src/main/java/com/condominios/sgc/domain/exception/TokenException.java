@@ -1,8 +1,14 @@
 package com.condominios.sgc.domain.exception;
 
+import com.condominios.sgc.domain.auxiliar.TipoToken;
+
 public class TokenException extends DominioException {
     private TokenException(String mensaje) {
         super(mensaje);
+    }
+
+    private TokenException(String mensaje, Throwable causa) {
+        super(mensaje, causa);
     }
 
     public static TokenException tipoRequerido() {
@@ -31,5 +37,13 @@ public class TokenException extends DominioException {
 
     public static TokenException tokenExpirado() {
         return new TokenException("el token ha expirado");
+    }
+
+    public static TokenException tipoNoSoportado(TipoToken tipo) {
+        return new TokenException("tipo de token no soportado: " + tipo);
+    }
+
+    public static TokenException errorGeneracion(String detalle, Throwable causa) {
+        return new TokenException("error generando token: " + detalle, causa);
     }
 }

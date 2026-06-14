@@ -31,8 +31,12 @@ public class IniciarSesionUseCaseImpl implements IniciarSesionUseCase {
             throw UsuarioException.credencialesInvalidas();
         }
 
-        TokenModel token = tokenPort.generarToken(TipoToken.ACCESS, usuario.getId());
+        boolean recuerdame = command.recuerdame() != null && command.recuerdame();
 
-        return new IniciarSesionResponse(token.getToken(), usuario.getId(), usuario.getRol().name(), usuario.getNombres());
+        TokenModel accessToken = tokenPort.generarToken(TipoToken.ACCESS, usuario.getId(), recuerdame);
+        TokenModel refreshToken = tokenPort.generarToken(TipoToken.REFRESH, usuario.getId(), recuerdame);
+
+        return new IniciarSesionResponse(accessToken.getToken(), refreshToken.getToken(),
+                usuario.getId(), usuario.getRol().name(), usuario.getNombres());
     }
 }
