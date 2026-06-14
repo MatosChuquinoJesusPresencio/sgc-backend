@@ -40,7 +40,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain publicEndpoints(HttpSecurity http) throws Exception {
         http
-            .securityMatcher("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
+            .securityMatcher("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/docs/**", "/api-docs/**")
             .cors(Customizer.withDefaults())
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
