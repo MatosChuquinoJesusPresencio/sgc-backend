@@ -39,13 +39,13 @@ public class UsuarioModel {
         this.nombres = requerido(nombres, UsuarioException::nombreRequerido);
         this.apellidos = requerido(apellidos, UsuarioException::apellidoRequerido);
         this.correo = correoValido(correo, UsuarioException::correoInvalido);
-        this.telefono = telefono;
+        this.telefono = requerido(telefono, UsuarioException::telefonoRequerido);
         this.rol = noNulo(rol, UsuarioException::rolRequerido);
         this.activo = true;
         this.contrasena = requerido(contrasena, UsuarioException::contrasenaRequerida);
         this.correoPendiente = null;
         this.correoVerificado = true;
-        this.idCondominio = noNulo(idCondominio, UsuarioException::condominioRequerido);
+        this.idCondominio = idCondominio;
     }
 
     public Long getId() { return id; }
@@ -81,7 +81,7 @@ public class UsuarioModel {
             String telefono, Rol rol, Long idCondominio) {
         this.nombres = requerido(nombres, UsuarioException::nombreRequerido);
         this.apellidos = requerido(apellidos, UsuarioException::apellidoRequerido);
-        this.telefono = telefono;
+        this.telefono = requerido(telefono, UsuarioException::telefonoRequerido);
         this.rol = noNulo(rol, UsuarioException::rolRequerido);
         this.idCondominio = idCondominio;
     }

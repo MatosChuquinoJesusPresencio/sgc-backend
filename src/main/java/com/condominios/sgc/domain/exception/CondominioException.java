@@ -21,6 +21,10 @@ public class CondominioException extends DominioException {
         return new CondominioException("idCiudad no puede ser nulo");
     }
 
+    public static CondominioException direccionRequerida() {
+        return new CondominioException("direccion no puede estar vacio");
+    }
+
     public static CondominioException noEncontrado() {
         return new CondominioException("condominio no encontrado", 404);
     }

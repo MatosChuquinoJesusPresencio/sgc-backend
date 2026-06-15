@@ -17,6 +17,10 @@ public class UsuarioException extends DominioException {
         return new UsuarioException("apellidos no puede estar vacío");
     }
 
+    public static UsuarioException telefonoRequerido() {
+        return new UsuarioException("telefono no puede estar vacío");
+    }
+
     public static UsuarioException correoInvalido() {
         return new UsuarioException("correo no tiene un formato válido");
     }

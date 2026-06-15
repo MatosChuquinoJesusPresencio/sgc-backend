@@ -28,7 +28,7 @@ public class CondominioModel {
         this.nombre = requerido(nombre, CondominioException::nombreRequerido);
         this.idPais = noNulo(idPais, CondominioException::paisRequerido);
         this.idCiudad = noNulo(idCiudad, CondominioException::ciudadRequerido);
-        this.direccion = direccion;
+        this.direccion = requerido(direccion, CondominioException::direccionRequerida);
         this.fechaCreacion = Instant.now();
     }
 
@@ -43,6 +43,6 @@ public class CondominioModel {
         this.nombre = requerido(nombre, CondominioException::nombreRequerido);
         this.idPais = noNulo(idPais, CondominioException::paisRequerido);
         this.idCiudad = noNulo(idCiudad, CondominioException::ciudadRequerido);
-        this.direccion = direccion;
+        this.direccion = requerido(direccion, CondominioException::direccionRequerida);
     }
 }
