@@ -1,9 +1,11 @@
 package com.condominios.sgc.web.controller;
 
+import com.condominios.sgc.application.dto.command.ActualizarMiUsuarioCommand;
 import com.condominios.sgc.application.dto.command.ActualizarUsuarioCommand;
 import com.condominios.sgc.application.dto.command.CrearUsuarioCommand;
 import com.condominios.sgc.application.dto.command.SolicitarCambioCorreoCommand;
 import com.condominios.sgc.application.dto.query.ListarUsuariosQuery;
+import com.condominios.sgc.application.usecase.usuario.ActualizarMiUsuarioUseCase;
 import com.condominios.sgc.application.usecase.usuario.ActualizarUsuarioPorIdUseCase;
 import com.condominios.sgc.application.usecase.usuario.CambiarEstadoActivoUsuarioUseCase;
 import com.condominios.sgc.application.usecase.usuario.CrearUsuarioUseCase;
@@ -14,6 +16,7 @@ import com.condominios.sgc.application.usecase.usuario.SolicitarCambioCorreoUseC
 import com.condominios.sgc.domain.auxiliar.Rol;
 import com.condominios.sgc.domain.dto.response.PaginacionResponse;
 import com.condominios.sgc.infrastructure.util.JwtUtil;
+import com.condominios.sgc.web.dto.request.ActualizarMiUsuarioRequest;
 import com.condominios.sgc.web.dto.request.ActualizarUsuarioRequest;
 import com.condominios.sgc.web.dto.request.CambiarEstadoActivoRequest;
 import com.condominios.sgc.web.dto.request.CrearUsuarioRequest;
@@ -48,6 +51,7 @@ public class UsuarioController {
     private final ObtenerUsuarioPorIdUseCase obtenerUsuario;
     private final ListarUsuariosUseCase listarUsuarios;
     private final ActualizarUsuarioPorIdUseCase actualizarUsuario;
+    private final ActualizarMiUsuarioUseCase actualizarMiUsuario;
     private final EliminarUsuarioPorIdUseCase eliminarUsuario;
     private final CambiarEstadoActivoUsuarioUseCase cambiarEstadoActivo;
     private final SolicitarCambioCorreoUseCase solicitarCambioCorreo;
@@ -57,6 +61,7 @@ public class UsuarioController {
             ObtenerUsuarioPorIdUseCase obtenerUsuario,
             ListarUsuariosUseCase listarUsuarios,
             ActualizarUsuarioPorIdUseCase actualizarUsuario,
+            ActualizarMiUsuarioUseCase actualizarMiUsuario,
             EliminarUsuarioPorIdUseCase eliminarUsuario,
             CambiarEstadoActivoUsuarioUseCase cambiarEstadoActivo,
             SolicitarCambioCorreoUseCase solicitarCambioCorreo,
@@ -65,6 +70,7 @@ public class UsuarioController {
         this.obtenerUsuario = obtenerUsuario;
         this.listarUsuarios = listarUsuarios;
         this.actualizarUsuario = actualizarUsuario;
+        this.actualizarMiUsuario = actualizarMiUsuario;
         this.eliminarUsuario = eliminarUsuario;
         this.cambiarEstadoActivo = cambiarEstadoActivo;
         this.solicitarCambioCorreo = solicitarCambioCorreo;
@@ -101,7 +107,12 @@ public class UsuarioController {
             @RequestParam(required = false) String correo,
             @RequestParam(required = false) Rol rol,
             @RequestParam(required = false) Boolean activo,
-            @RequestParam(required = false) Long idCondominio) {
+            @RequestParam(required = false) Long idCondominio,
+            @AuthenticationPrincipal Jwt jwt) {
+        var usuarioJwt = jwtUtil.extraerUsuario(jwt);
+        if (usuarioJwt.rol() == Rol.ADMINISTRADOR_CONDOMINIO) {
+            idCondominio = usuarioJwt.idCondominio();
+        }
         var query = new ListarUsuariosQuery(pagina, tamano, nombres, apellidos,
                 correo, rol, activo, idCondominio);
         var result = listarUsuarios.ejecutar(query);
@@ -123,6 +134,21 @@ public class UsuarioController {
                 request.telefono(), request.rol(), request.idCondominio(),
                 request.desasignarCondominio(), rolSolicitante);
         var result = actualizarUsuario.ejecutar(id, command);
+        return ResponseEntity.ok(UsuarioResponse.desdeAplicacion(result));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/{id}/mi-usuario")
+    public ResponseEntity<UsuarioResponse> actualizarMiUsuario(@PathVariable Long id,
+            @RequestBody @Valid ActualizarMiUsuarioRequest request,
+            @AuthenticationPrincipal Jwt jwt) {
+        var usuarioJwt = jwtUtil.extraerUsuario(jwt);
+        if (!usuarioJwt.idUsuario().equals(id)) {
+            return ResponseEntity.status(403).build();
+        }
+        var command = new ActualizarMiUsuarioCommand(request.nombres(), request.apellidos(),
+                request.telefono());
+        var result = actualizarMiUsuario.ejecutar(id, command);
         return ResponseEntity.ok(UsuarioResponse.desdeAplicacion(result));
     }
 

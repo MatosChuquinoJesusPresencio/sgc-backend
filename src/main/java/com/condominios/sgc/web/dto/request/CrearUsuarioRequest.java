@@ -9,7 +9,7 @@ public record CrearUsuarioRequest(
     @NotBlank String nombres,
     @NotBlank String apellidos,
     @NotBlank @Email String correo,
-    String telefono,
+    @NotBlank String telefono,
     @NotNull Rol rol,
     @NotNull Long idCondominio
 ) {}

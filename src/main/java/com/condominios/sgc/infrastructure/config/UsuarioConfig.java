@@ -15,6 +15,11 @@ public class UsuarioConfig {
     }
 
     @Bean
+    public ActualizarMiUsuarioUseCase actualizarMiUsuarioUseCase(UsuarioPort usuarioPort) {
+        return new ActualizarMiUsuarioUseCaseImpl(usuarioPort);
+    }
+
+    @Bean
     public CambiarEstadoActivoUsuarioUseCase cambiarEstadoActivoUsuarioUseCase(UsuarioPort usuarioPort) {
         return new CambiarEstadoActivoUsuarioUseCaseImpl(usuarioPort);
     }

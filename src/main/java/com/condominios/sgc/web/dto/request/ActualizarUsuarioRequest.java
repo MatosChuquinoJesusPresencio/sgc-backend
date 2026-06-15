@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 public record ActualizarUsuarioRequest(
     @NotBlank String nombres,
     @NotBlank String apellidos,
-    String telefono,
+    @NotBlank String telefono,
     @NotNull Rol rol,
     @NotNull Long idCondominio,
     boolean desasignarCondominio
