@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.condominios.sgc.application.dto.command.CrearUsuarioCommand;
 import com.condominios.sgc.application.dto.response.UsuarioResponse;
 import com.condominios.sgc.application.usecase.usuario.CrearUsuarioUseCase;
+import com.condominios.sgc.domain.auxiliar.Rol;
 import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.port.AutenticacionPort;
@@ -25,6 +26,11 @@ public class CrearUsuarioUseCaseImpl implements CrearUsuarioUseCase {
     @Override
     public UsuarioResponse ejecutar(CrearUsuarioCommand command) {
         if (!command.rolSolicitante().puedeAsignar(command.rol())) {
+            throw UsuarioException.noPermisoAsignarRol();
+        }
+
+        if (command.rolSolicitante() == Rol.ADMINISTRADOR_CONDOMINIO
+                && !command.idCondominioSolicitante().equals(command.idCondominio())) {
             throw UsuarioException.noPermisoAsignarRol();
         }
 

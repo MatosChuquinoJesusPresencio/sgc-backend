@@ -9,7 +9,9 @@ import com.condominios.sgc.application.usecase.condominio.EliminarCondominioPorI
 import com.condominios.sgc.application.usecase.condominio.ListarCondominiosUseCase;
 import com.condominios.sgc.application.usecase.condominio.ObtenerCondominioPorIdUseCase;
 import com.condominios.sgc.application.usecase.condominio.ObtenerDetalleCondominioUseCase;
+import com.condominios.sgc.domain.auxiliar.Rol;
 import com.condominios.sgc.domain.dto.response.PaginacionResponse;
+import com.condominios.sgc.infrastructure.util.JwtUtil;
 import com.condominios.sgc.web.dto.request.ActualizarCondominioRequest;
 import com.condominios.sgc.web.dto.request.CrearCondominioRequest;
 import com.condominios.sgc.web.dto.response.CondominioResponse;
@@ -18,6 +20,8 @@ import com.condominios.sgc.web.dto.response.DetalleCondominioResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,19 +43,22 @@ public class CondominioController {
     private final ActualizarCondominioPorIdUseCase actualizarCondominio;
     private final EliminarCondominioPorIdUseCase eliminarCondominio;
     private final ObtenerDetalleCondominioUseCase detalleCondominio;
+    private final JwtUtil jwtUtil;
 
     public CondominioController(CrearCondominioUseCase crearCondominio,
             ObtenerCondominioPorIdUseCase obtenerCondominio,
             ListarCondominiosUseCase listarCondominios,
             ActualizarCondominioPorIdUseCase actualizarCondominio,
             EliminarCondominioPorIdUseCase eliminarCondominio,
-            ObtenerDetalleCondominioUseCase detalleCondominio) {
+            ObtenerDetalleCondominioUseCase detalleCondominio,
+            JwtUtil jwtUtil) {
         this.crearCondominio = crearCondominio;
         this.obtenerCondominio = obtenerCondominio;
         this.listarCondominios = listarCondominios;
         this.actualizarCondominio = actualizarCondominio;
         this.eliminarCondominio = eliminarCondominio;
         this.detalleCondominio = detalleCondominio;
+        this.jwtUtil = jwtUtil;
     }
 
     @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
@@ -92,7 +99,13 @@ public class CondominioController {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR_CONDOMINIO', 'SUPER_ADMINISTRADOR')")
     @PutMapping("/{id}")
     public ResponseEntity<CondominioResponse> actualizar(@PathVariable Long id,
-            @RequestBody @Valid ActualizarCondominioRequest request) {
+            @RequestBody @Valid ActualizarCondominioRequest request,
+            @AuthenticationPrincipal Jwt jwt) {
+        var usuarioJwt = jwtUtil.extraerUsuario(jwt);
+        if (usuarioJwt.rol() == Rol.ADMINISTRADOR_CONDOMINIO
+                && !usuarioJwt.idCondominio().equals(id)) {
+            return ResponseEntity.status(403).build();
+        }
         var command = new ActualizarCondominioCommand(request.nombre(), request.idPais(), request.idCiudad(),
                 request.direccion());
         var result = actualizarCondominio.ejecutar(id, command);

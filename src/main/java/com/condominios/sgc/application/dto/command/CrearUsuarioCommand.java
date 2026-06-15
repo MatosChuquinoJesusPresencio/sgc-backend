@@ -9,5 +9,6 @@ public record CrearUsuarioCommand(
     String telefono,
     Rol rol,
     Long idCondominio,
-    Rol rolSolicitante
+    Rol rolSolicitante,
+    Long idCondominioSolicitante
 ) {}

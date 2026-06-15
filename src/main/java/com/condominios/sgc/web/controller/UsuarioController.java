@@ -71,10 +71,10 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<UsuarioResponse> crear(@RequestBody @Valid CrearUsuarioRequest request,
             @AuthenticationPrincipal Jwt jwt) {
-        var rolSolicitante = jwtUtil.extraerUsuario(jwt).rol();
+        var usuarioJwt = jwtUtil.extraerUsuario(jwt);
         var command = new CrearUsuarioCommand(request.nombres(), request.apellidos(),
                 request.correo(), request.telefono(), request.rol(), request.idCondominio(),
-                rolSolicitante);
+                usuarioJwt.rol(), usuarioJwt.idCondominio());
         var result = crearUsuario.ejecutar(command);
         return ResponseEntity.created(URI.create("/api/usuarios/" + result.id()))
                 .body(UsuarioResponse.desdeAplicacion(result));
@@ -140,7 +140,12 @@ public class UsuarioController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}/solicitar-cambio-correo")
     public ResponseEntity<Void> solicitarCambioCorreo(@PathVariable Long id,
-            @RequestBody @Valid SolicitarCambioCorreoRequest request) {
+            @RequestBody @Valid SolicitarCambioCorreoRequest request,
+            @AuthenticationPrincipal Jwt jwt) {
+        var usuarioJwt = jwtUtil.extraerUsuario(jwt);
+        if (!usuarioJwt.idUsuario().equals(id)) {
+            return ResponseEntity.status(403).build();
+        }
         var command = new SolicitarCambioCorreoCommand(id, request.nuevoCorreo());
         solicitarCambioCorreo.ejecutar(command);
         return ResponseEntity.ok().build();
