@@ -44,6 +44,7 @@ public class SecurityConfig {
         http
             .securityMatcher("/api/auth/login",
                              "/api/auth/refresh",
+                             "/api/auth/confirmar-correo",
                              "/api/auth/solicitar-reseteo",
                              "/api/auth/restablecer-contrasena",
                              "/swagger-ui/**", "/v3/api-docs/**", "/docs/**", "/api-docs/**")

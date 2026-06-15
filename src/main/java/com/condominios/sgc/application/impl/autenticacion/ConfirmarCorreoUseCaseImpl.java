@@ -1,7 +1,5 @@
 package com.condominios.sgc.application.impl.autenticacion;
 
-import java.time.Instant;
-
 import com.condominios.sgc.application.usecase.autenticacion.ConfirmarCorreoUseCase;
 import com.condominios.sgc.domain.exception.TokenException;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,10 +23,6 @@ public class ConfirmarCorreoUseCaseImpl implements ConfirmarCorreoUseCase {
     public void ejecutar(String token) {
         TokenModel tokenModel = tokenPort.obtenerPorToken(token)
             .orElseThrow(TokenException::noEncontrado);
-
-        if (tokenModel.getExpiracion().isBefore(Instant.now())) {
-            throw TokenException.tokenExpirado();
-        }
 
         tokenModel.usar();
         tokenPort.guardar(tokenModel);

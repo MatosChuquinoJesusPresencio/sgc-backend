@@ -1,7 +1,5 @@
 package com.condominios.sgc.application.impl.autenticacion;
 
-import java.time.Instant;
-
 import com.condominios.sgc.application.dto.command.RestablecerContrasenaCommand;
 import com.condominios.sgc.application.usecase.autenticacion.RestablecerContrasenaUseCase;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,10 +27,6 @@ public class RestablecerContrasenaUseCaseImpl implements RestablecerContrasenaUs
     public void ejecutar(RestablecerContrasenaCommand command) {
         TokenModel tokenModel = tokenPort.obtenerPorToken(command.token())
             .orElseThrow(TokenException::noEncontrado);
-
-        if (tokenModel.getExpiracion().isBefore(Instant.now())) {
-            throw TokenException.tokenExpirado();
-        }
 
         tokenModel.usar();
         tokenPort.guardar(tokenModel);
