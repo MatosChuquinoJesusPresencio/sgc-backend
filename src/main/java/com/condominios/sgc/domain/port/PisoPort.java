@@ -13,6 +13,7 @@ public interface PisoPort {
     List<PisoModel> obtenerTodos();
     PaginacionResponse<PisoModel> obtenerTodos(PaginacionRequest request, PisoFilter filtro);
     List<PisoModel> obtenerPorTorre(Long idTorre);
+    int contarPorTorre(Long idTorre);
     void eliminarPorId(Long id);
 }
 

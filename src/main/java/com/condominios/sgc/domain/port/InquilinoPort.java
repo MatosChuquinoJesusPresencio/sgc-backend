@@ -14,6 +14,7 @@ public interface InquilinoPort {
     PaginacionResponse<InquilinoModel> obtenerTodos(PaginacionRequest request, InquilinoFilter filtro);
     Optional<InquilinoModel> obtenerPorDocumento(TipoDocumento tipoDocumento, String numeroDocumento);
     List<InquilinoModel> obtenerPorApartamento(Long idApartamento);
+    int contarPorApartamento(Long idApartamento);
     void eliminarPorId(Long id);
 }
 

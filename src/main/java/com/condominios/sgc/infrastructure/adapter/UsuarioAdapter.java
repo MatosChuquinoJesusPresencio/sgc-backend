@@ -69,6 +69,11 @@ public class UsuarioAdapter implements UsuarioPort {
     }
 
     @Override
+    public int contarPorCondominio(Long idCondominio) {
+        return (int) repository.count(UsuarioSpecification.porCondominio(idCondominio));
+    }
+
+    @Override
     public void eliminarPorId(Long id) {
         repository.deleteById(id);
     }

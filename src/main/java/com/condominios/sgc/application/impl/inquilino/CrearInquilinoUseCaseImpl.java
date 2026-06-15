@@ -23,7 +23,7 @@ public class CrearInquilinoUseCaseImpl implements CrearInquilinoUseCase {
     public InquilinoResponse ejecutar(CrearInquilinoCommand command) {
         ConfiguracionModel config = configuracionPort.obtenerPorCondominio(command.idCondominio())
             .orElseThrow(ConfiguracionException::noEncontrado);
-        int count = inquilinoPort.obtenerPorApartamento(command.idApartamento()).size();
+        int count = inquilinoPort.contarPorApartamento(command.idApartamento());
         if (!config.puedeAgregarInquilino(count))
             throw InquilinoException.limiteAlcanzado();
 

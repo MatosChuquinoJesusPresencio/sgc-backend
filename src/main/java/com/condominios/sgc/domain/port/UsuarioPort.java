@@ -16,6 +16,7 @@ public interface UsuarioPort {
     PaginacionResponse<UsuarioModel> obtenerTodos(PaginacionRequest request, UsuarioFilter filtro);
     List<UsuarioModel> obtenerPorRol(Rol rol);
     List<UsuarioModel> obtenerPorCondominio(Long idCondominio);
+    int contarPorCondominio(Long idCondominio);
     void eliminarPorId(Long id);
 }
 

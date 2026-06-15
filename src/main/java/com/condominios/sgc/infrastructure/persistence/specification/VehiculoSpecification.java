@@ -1,5 +1,6 @@
 package com.condominios.sgc.infrastructure.persistence.specification;
 
+import com.condominios.sgc.domain.auxiliar.TipoVehiculo;
 import com.condominios.sgc.domain.filter.VehiculoFilter;
 import com.condominios.sgc.infrastructure.persistence.entity.VehiculoEntity;
 import jakarta.persistence.criteria.Predicate;
@@ -8,6 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VehiculoSpecification {
+
+    public static Specification<VehiculoEntity> porCondominioYTipo(Long idCondominio, TipoVehiculo tipo) {
+        return (root, query, cb) -> cb.and(
+                cb.equal(root.get("idCondominio"), idCondominio),
+                cb.equal(root.get("tipo"), tipo));
+    }
+
+    public static Specification<VehiculoEntity> porPropietario(Long idPropietario) {
+        return (root, query, cb) -> cb.equal(root.get("idPropietario"), idPropietario);
+    }
 
     public static Specification<VehiculoEntity> conFiltro(VehiculoFilter filtro) {
         return (root, query, cb) -> {

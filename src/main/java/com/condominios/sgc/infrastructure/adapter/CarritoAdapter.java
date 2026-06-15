@@ -59,6 +59,11 @@ public class CarritoAdapter implements CarritoPort {
     }
 
     @Override
+    public int contarPorCondominio(Long idCondominio) {
+        return (int) repository.count(CarritoSpecification.porCondominio(idCondominio));
+    }
+
+    @Override
     public List<CarritoModel> obtenerPorEstado(EstadoCarrito estado) {
         return repository.findByEstado(estado).stream().map(mapper::aModelo).toList();
     }

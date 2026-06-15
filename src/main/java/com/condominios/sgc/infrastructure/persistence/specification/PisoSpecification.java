@@ -9,6 +9,10 @@ import java.util.List;
 
 public class PisoSpecification {
 
+    public static Specification<PisoEntity> porTorre(Long idTorre) {
+        return (root, query, cb) -> cb.equal(root.get("idTorre"), idTorre);
+    }
+
     public static Specification<PisoEntity> conFiltro(PisoFilter filtro) {
         return (root, query, cb) -> {
             List<Predicate> predicados = new ArrayList<>();

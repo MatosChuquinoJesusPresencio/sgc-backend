@@ -9,6 +9,10 @@ import java.util.List;
 
 public class CarritoSpecification {
 
+    public static Specification<CarritoEntity> porCondominio(Long idCondominio) {
+        return (root, query, cb) -> cb.equal(root.get("idCondominio"), idCondominio);
+    }
+
     public static Specification<CarritoEntity> conFiltro(CarritoFilter filtro) {
         return (root, query, cb) -> {
             List<Predicate> predicados = new ArrayList<>();

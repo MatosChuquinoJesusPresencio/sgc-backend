@@ -58,6 +58,11 @@ public class PisoAdapter implements PisoPort {
     }
 
     @Override
+    public int contarPorTorre(Long idTorre) {
+        return (int) repository.count(PisoSpecification.porTorre(idTorre));
+    }
+
+    @Override
     public void eliminarPorId(Long id) {
         repository.deleteById(id);
     }

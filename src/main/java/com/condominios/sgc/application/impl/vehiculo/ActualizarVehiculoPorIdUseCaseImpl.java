@@ -32,7 +32,7 @@ public class ActualizarVehiculoPorIdUseCaseImpl implements ActualizarVehiculoPor
         } else if (command.idPropietario() != null) {
             ConfiguracionModel config = configuracionPort.obtenerPorCondominio(command.idCondominio())
                 .orElseThrow(ConfiguracionException::noEncontrado);
-            int count = vehiculoPort.obtenerPorPropietario(command.idPropietario()).size();
+            int count = vehiculoPort.contarPorPropietario(command.idPropietario());
             if (!config.puedeAgregarVehiculoPropietario(count))
                 throw VehiculoException.limitePropietarioAlcanzado();
             vehiculo.asignarPropietario(command.idPropietario());

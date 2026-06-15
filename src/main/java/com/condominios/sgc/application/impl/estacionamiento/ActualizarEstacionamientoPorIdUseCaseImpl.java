@@ -37,7 +37,7 @@ public class ActualizarEstacionamientoPorIdUseCaseImpl implements ActualizarEsta
         } else if (command.idApartamento() != null) {
             ConfiguracionModel config = configuracionPort.obtenerPorCondominio(estacionamiento.getIdCondominio())
                 .orElseThrow(ConfiguracionException::noEncontrado);
-            int count = estacionamientoPort.obtenerPorApartamento(command.idApartamento()).size();
+            int count = estacionamientoPort.contarPorApartamento(command.idApartamento());
             if (!config.puedeAsignarEstacionamiento(count))
                 throw EstacionamientoException.sinEspacio();
             estacionamiento.asignarApartamento(command.idApartamento());

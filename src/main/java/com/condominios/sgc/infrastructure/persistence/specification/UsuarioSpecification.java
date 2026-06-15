@@ -9,6 +9,10 @@ import java.util.List;
 
 public class UsuarioSpecification {
 
+    public static Specification<UsuarioEntity> porCondominio(Long idCondominio) {
+        return (root, query, cb) -> cb.equal(root.get("idCondominio"), idCondominio);
+    }
+
     public static Specification<UsuarioEntity> conFiltro(UsuarioFilter filtro) {
         return (root, query, cb) -> {
             List<Predicate> predicados = new ArrayList<>();

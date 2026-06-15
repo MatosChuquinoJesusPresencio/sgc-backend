@@ -15,6 +15,7 @@ public interface CarritoPort {
     PaginacionResponse<CarritoModel> obtenerTodos(PaginacionRequest request, CarritoFilter filtro);
     List<CarritoModel> obtenerPorCondominio(Long idCondominio);
     List<CarritoModel> obtenerPorEstado(EstadoCarrito estado);
+    int contarPorCondominio(Long idCondominio);
     void eliminarPorId(Long id);
 }
 

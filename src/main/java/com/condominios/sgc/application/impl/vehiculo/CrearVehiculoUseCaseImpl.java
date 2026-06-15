@@ -23,8 +23,7 @@ public class CrearVehiculoUseCaseImpl implements CrearVehiculoUseCase {
     public VehiculoResponse ejecutar(CrearVehiculoCommand command) {
         ConfiguracionModel config = configuracionPort.obtenerPorCondominio(command.idCondominio())
             .orElseThrow(ConfiguracionException::noEncontrado);
-        long count = vehiculoPort.obtenerPorCondominio(command.idCondominio()).stream()
-            .filter(v -> command.tipo().equals(v.getTipo())).count();
+        long count = vehiculoPort.contarPorCondominioYTipo(command.idCondominio(), command.tipo());
         if (!config.puedeAgregarVehiculo(command.tipo(), (int) count))
             throw VehiculoException.limiteAlcanzado();
 

@@ -1,5 +1,6 @@
 package com.condominios.sgc.infrastructure.adapter;
 
+import com.condominios.sgc.domain.auxiliar.TipoVehiculo;
 import com.condominios.sgc.domain.dto.request.PaginacionRequest;
 import com.condominios.sgc.domain.dto.response.PaginacionResponse;
 import com.condominios.sgc.domain.filter.VehiculoFilter;
@@ -56,6 +57,16 @@ public class VehiculoAdapter implements VehiculoPort {
     @Override
     public List<VehiculoModel> obtenerPorCondominio(Long idCondominio) {
         return repository.findByIdCondominio(idCondominio).stream().map(mapper::aModelo).toList();
+    }
+
+    @Override
+    public int contarPorCondominioYTipo(Long idCondominio, TipoVehiculo tipo) {
+        return (int) repository.count(VehiculoSpecification.porCondominioYTipo(idCondominio, tipo));
+    }
+
+    @Override
+    public int contarPorPropietario(Long idPropietario) {
+        return (int) repository.count(VehiculoSpecification.porPropietario(idPropietario));
     }
 
     @Override

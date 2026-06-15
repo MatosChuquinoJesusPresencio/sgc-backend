@@ -9,6 +9,10 @@ import java.util.List;
 
 public class InquilinoSpecification {
 
+    public static Specification<InquilinoEntity> porApartamento(Long idApartamento) {
+        return (root, query, cb) -> cb.equal(root.get("idApartamento"), idApartamento);
+    }
+
     public static Specification<InquilinoEntity> conFiltro(InquilinoFilter filtro) {
         return (root, query, cb) -> {
             List<Predicate> predicados = new ArrayList<>();

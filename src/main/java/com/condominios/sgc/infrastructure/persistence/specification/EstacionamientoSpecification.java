@@ -26,6 +26,10 @@ public class EstacionamientoSpecification {
         };
     }
 
+    public static Specification<EstacionamientoEntity> porApartamento(Long idApartamento) {
+        return (root, query, cb) -> cb.equal(root.get("idApartamento"), idApartamento);
+    }
+
     public static Specification<EstacionamientoEntity> porCondominio(Long idCondominio) {
         return (root, query, cb) -> cb.equal(root.get("idCondominio"), idCondominio);
     }

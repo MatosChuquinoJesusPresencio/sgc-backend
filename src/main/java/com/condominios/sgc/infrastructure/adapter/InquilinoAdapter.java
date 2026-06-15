@@ -59,6 +59,11 @@ public class InquilinoAdapter implements InquilinoPort {
     }
 
     @Override
+    public int contarPorApartamento(Long idApartamento) {
+        return (int) repository.count(InquilinoSpecification.porApartamento(idApartamento));
+    }
+
+    @Override
     public void eliminarPorId(Long id) {
         repository.deleteById(id);
     }
