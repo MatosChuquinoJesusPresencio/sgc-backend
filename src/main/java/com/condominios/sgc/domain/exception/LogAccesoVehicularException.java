@@ -5,6 +5,10 @@ public class LogAccesoVehicularException extends DominioException {
         super(mensaje);
     }
 
+    private LogAccesoVehicularException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     public static LogAccesoVehicularException placaRequerida() {
         return new LogAccesoVehicularException("placa no puede estar vacío");
     }
@@ -30,6 +34,6 @@ public class LogAccesoVehicularException extends DominioException {
     }
 
     public static LogAccesoVehicularException noEncontrado() {
-        return new LogAccesoVehicularException("log de acceso vehicular no encontrado");
+        return new LogAccesoVehicularException("log de acceso vehicular no encontrado", 404);
     }
 }

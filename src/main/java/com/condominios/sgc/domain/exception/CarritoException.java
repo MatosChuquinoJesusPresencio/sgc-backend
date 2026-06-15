@@ -5,6 +5,10 @@ public class CarritoException extends DominioException {
         super(mensaje);
     }
 
+    private CarritoException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     public static CarritoException codigoRequerido() {
         return new CarritoException("código no puede estar vacío");
     }
@@ -18,6 +22,6 @@ public class CarritoException extends DominioException {
     }
 
     public static CarritoException noEncontrado() {
-        return new CarritoException("carrito no encontrado");
+        return new CarritoException("carrito no encontrado", 404);
     }
 }

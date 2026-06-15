@@ -5,7 +5,11 @@ public class CiudadException extends DominioException {
         super(mensaje);
     }
 
+    private CiudadException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     public static CiudadException noEncontrado() {
-        return new CiudadException("ciudad no encontrada");
+        return new CiudadException("ciudad no encontrada", 404);
     }
 }

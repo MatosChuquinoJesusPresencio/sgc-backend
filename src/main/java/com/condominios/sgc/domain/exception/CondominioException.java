@@ -5,6 +5,10 @@ public class CondominioException extends DominioException {
         super(mensaje);
     }
 
+    private CondominioException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     public static CondominioException nombreRequerido() {
         return new CondominioException("nombre no puede estar vacío");
     }
@@ -18,6 +22,6 @@ public class CondominioException extends DominioException {
     }
 
     public static CondominioException noEncontrado() {
-        return new CondominioException("condominio no encontrado");
+        return new CondominioException("condominio no encontrado", 404);
     }
 }

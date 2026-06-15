@@ -5,7 +5,11 @@ public class MonedaException extends DominioException {
         super(mensaje);
     }
 
+    private MonedaException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     public static MonedaException noEncontrado() {
-        return new MonedaException("moneda no encontrada");
+        return new MonedaException("moneda no encontrada", 404);
     }
 }

@@ -4,6 +4,7 @@ import java.time.Instant;
 
 import com.condominios.sgc.application.dto.command.RestablecerContrasenaCommand;
 import com.condominios.sgc.application.usecase.autenticacion.RestablecerContrasenaUseCase;
+import org.springframework.transaction.annotation.Transactional;
 import com.condominios.sgc.domain.exception.TokenException;
 import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.model.TokenModel;
@@ -12,6 +13,7 @@ import com.condominios.sgc.domain.port.AutenticacionPort;
 import com.condominios.sgc.domain.port.TokenPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
 
+@Transactional
 public class RestablecerContrasenaUseCaseImpl implements RestablecerContrasenaUseCase {
     private final TokenPort tokenPort;
     private final UsuarioPort usuarioPort;

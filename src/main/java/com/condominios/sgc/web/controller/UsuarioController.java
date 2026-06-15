@@ -20,10 +20,13 @@ import com.condominios.sgc.web.dto.request.CrearUsuarioRequest;
 import com.condominios.sgc.web.dto.request.SolicitarCambioCorreoRequest;
 import com.condominios.sgc.web.dto.response.UsuarioResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -38,6 +41,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api/usuarios")
+@Validated
 public class UsuarioController {
 
     private final CrearUsuarioUseCase crearUsuario;
@@ -90,8 +94,8 @@ public class UsuarioController {
     @PreAuthorize("hasAnyRole('SUPER_ADMINISTRADOR', 'ADMINISTRADOR_CONDOMINIO')")
     @GetMapping
     public ResponseEntity<PaginacionResponse<UsuarioResponse>> listar(
-            @RequestParam(defaultValue = "0") int pagina,
-            @RequestParam(defaultValue = "10") int tamano,
+            @RequestParam(defaultValue = "0") @Min(0) int pagina,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int tamano,
             @RequestParam(required = false) String nombres,
             @RequestParam(required = false) String apellidos,
             @RequestParam(required = false) String correo,

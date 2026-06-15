@@ -2,13 +2,13 @@ package com.condominios.sgc.application.impl.autenticacion;
 
 import com.condominios.sgc.application.usecase.autenticacion.SolicitarReseteoContrasenaUseCase;
 import com.condominios.sgc.domain.auxiliar.TipoToken;
-import com.condominios.sgc.domain.exception.UsuarioException;
+import org.springframework.transaction.annotation.Transactional;
 import com.condominios.sgc.domain.model.TokenModel;
-import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.port.CorreoPort;
 import com.condominios.sgc.domain.port.TokenPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
 
+@Transactional
 public class SolicitarReseteoContrasenaUseCaseImpl implements SolicitarReseteoContrasenaUseCase {
     private final UsuarioPort usuarioPort;
     private final TokenPort tokenPort;
@@ -22,11 +22,9 @@ public class SolicitarReseteoContrasenaUseCaseImpl implements SolicitarReseteoCo
 
     @Override
     public void ejecutar(String correo) {
-        UsuarioModel usuario = usuarioPort.obtenerPorCorreo(correo)
-            .orElseThrow(UsuarioException::noEncontrado);
-
-        TokenModel token = tokenPort.generarToken(TipoToken.REESTABLECIMIENTO, usuario.getId());
-
-        correoPort.enviarReseteoContrasena(usuario.getCorreo(), usuario.getNombres(), token.getToken());
+        usuarioPort.obtenerPorCorreo(correo).ifPresent(usuario -> {
+            TokenModel token = tokenPort.generarToken(TipoToken.REESTABLECIMIENTO, usuario.getId());
+            correoPort.enviarReseteoContrasena(usuario.getCorreo(), usuario.getNombres(), token.getToken());
+        });
     }
 }

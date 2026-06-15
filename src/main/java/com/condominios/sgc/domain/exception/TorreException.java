@@ -5,6 +5,10 @@ public class TorreException extends DominioException {
         super(mensaje);
     }
 
+    private TorreException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     public static TorreException nombreRequerido() {
         return new TorreException("nombre no puede estar vacío");
     }
@@ -14,6 +18,6 @@ public class TorreException extends DominioException {
     }
 
     public static TorreException noEncontrado() {
-        return new TorreException("torre no encontrada");
+        return new TorreException("torre no encontrada", 404);
     }
 }

@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.condominios.sgc.application.dto.command.CrearUsuarioCommand;
 import com.condominios.sgc.application.dto.response.UsuarioResponse;
+import org.springframework.transaction.annotation.Transactional;
 import com.condominios.sgc.application.usecase.usuario.CrearUsuarioUseCase;
 import com.condominios.sgc.domain.auxiliar.Rol;
 import com.condominios.sgc.domain.exception.UsuarioException;
@@ -12,6 +13,7 @@ import com.condominios.sgc.domain.port.AutenticacionPort;
 import com.condominios.sgc.domain.port.CorreoPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
 
+@Transactional
 public class CrearUsuarioUseCaseImpl implements CrearUsuarioUseCase {
     private final UsuarioPort usuarioPort;
     private final AutenticacionPort autenticacionPort;
@@ -32,6 +34,10 @@ public class CrearUsuarioUseCaseImpl implements CrearUsuarioUseCase {
         if (command.rolSolicitante() == Rol.ADMINISTRADOR_CONDOMINIO
                 && !command.idCondominioSolicitante().equals(command.idCondominio())) {
             throw UsuarioException.noPermisoAsignarRol();
+        }
+
+        if (usuarioPort.obtenerPorCorreo(command.correo()).isPresent()) {
+            throw UsuarioException.correoYaRegistrado();
         }
 
         String contrasenaPlana = UUID.randomUUID().toString().replace("-", "").substring(0, 12);

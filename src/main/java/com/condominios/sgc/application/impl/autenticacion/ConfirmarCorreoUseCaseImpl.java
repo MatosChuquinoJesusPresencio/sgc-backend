@@ -4,12 +4,14 @@ import java.time.Instant;
 
 import com.condominios.sgc.application.usecase.autenticacion.ConfirmarCorreoUseCase;
 import com.condominios.sgc.domain.exception.TokenException;
+import org.springframework.transaction.annotation.Transactional;
 import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.model.TokenModel;
 import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.port.TokenPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
 
+@Transactional
 public class ConfirmarCorreoUseCaseImpl implements ConfirmarCorreoUseCase {
     private final TokenPort tokenPort;
     private final UsuarioPort usuarioPort;

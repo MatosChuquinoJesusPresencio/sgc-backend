@@ -5,6 +5,10 @@ public class VehiculoException extends DominioException {
         super(mensaje);
     }
 
+    private VehiculoException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     public static VehiculoException marcaRequerida() {
         return new VehiculoException("marca no puede estar vacío");
     }
@@ -38,7 +42,7 @@ public class VehiculoException extends DominioException {
     }
 
     public static VehiculoException noEncontrado() {
-        return new VehiculoException("vehículo no encontrado");
+        return new VehiculoException("vehículo no encontrado", 404);
     }
 
     public static VehiculoException limiteAlcanzado() {

@@ -5,6 +5,10 @@ public class InquilinoException extends DominioException {
         super(mensaje);
     }
 
+    private InquilinoException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     public static InquilinoException nombreRequerido() {
         return new InquilinoException("nombres no puede estar vacío");
     }
@@ -26,10 +30,14 @@ public class InquilinoException extends DominioException {
     }
 
     public static InquilinoException noEncontrado() {
-        return new InquilinoException("inquilino no encontrado");
+        return new InquilinoException("inquilino no encontrado", 404);
     }
 
     public static InquilinoException limiteAlcanzado() {
         return new InquilinoException("límite de inquilinos alcanzado para este apartamento");
+    }
+
+    public static InquilinoException documentoYaRegistrado() {
+        return new InquilinoException("el documento ya está registrado");
     }
 }

@@ -39,6 +39,6 @@ public class RefrescarTokenUseCaseImpl implements RefrescarTokenUseCase {
         TokenModel nuevoRefresh = tokenPort.generarToken(TipoToken.REFRESH, usuario.getId(), recuerdame);
 
         return new IniciarSesionResponse(nuevoAccess.getToken(), nuevoRefresh.getToken(),
-                usuario.getId(), usuario.getRol().name(), usuario.getNombres(), recuerdame);
+                usuario.getId(), usuario.getRol(), usuario.getNombres(), recuerdame);
     }
 }

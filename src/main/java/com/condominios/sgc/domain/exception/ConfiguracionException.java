@@ -5,6 +5,10 @@ public class ConfiguracionException extends DominioException {
         super(mensaje);
     }
 
+    private ConfiguracionException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     public static ConfiguracionException maxAutosRequerido() {
         return new ConfiguracionException("maxAutos no puede ser nulo");
     }
@@ -42,6 +46,6 @@ public class ConfiguracionException extends DominioException {
     }
 
     public static ConfiguracionException noEncontrado() {
-        return new ConfiguracionException("configuración no encontrada");
+        return new ConfiguracionException("configuración no encontrada", 404);
     }
 }

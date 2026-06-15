@@ -18,10 +18,13 @@ import com.condominios.sgc.web.dto.response.CondominioResponse;
 import com.condominios.sgc.web.dto.response.DetalleCondominioResponse;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +38,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api/condominios")
+@Validated
 public class CondominioController {
 
     private final CrearCondominioUseCase crearCondominio;
@@ -81,8 +85,8 @@ public class CondominioController {
     @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
     @GetMapping
     public ResponseEntity<PaginacionResponse<CondominioResponse>> listar(
-            @RequestParam(defaultValue = "0") int pagina,
-            @RequestParam(defaultValue = "10") int tamano,
+            @RequestParam(defaultValue = "0") @Min(0) int pagina,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int tamano,
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) Long idPais,
             @RequestParam(required = false) Long idCiudad) {

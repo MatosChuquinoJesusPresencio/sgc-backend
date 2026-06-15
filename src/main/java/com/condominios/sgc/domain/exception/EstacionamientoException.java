@@ -5,6 +5,10 @@ public class EstacionamientoException extends DominioException {
         super(mensaje);
     }
 
+    private EstacionamientoException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     public static EstacionamientoException numeroRequerido() {
         return new EstacionamientoException("numero debe ser un valor positivo");
     }
@@ -30,6 +34,6 @@ public class EstacionamientoException extends DominioException {
     }
 
     public static EstacionamientoException noEncontrado() {
-        return new EstacionamientoException("estacionamiento no encontrado");
+        return new EstacionamientoException("estacionamiento no encontrado", 404);
     }
 }

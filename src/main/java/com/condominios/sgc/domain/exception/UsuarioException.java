@@ -52,4 +52,8 @@ public class UsuarioException extends DominioException {
     public static UsuarioException noPermisoAsignarRol() {
         return new UsuarioException("no tienes permiso para asignar este rol");
     }
+
+    public static UsuarioException correoYaRegistrado() {
+        return new UsuarioException("el correo ya está registrado");
+    }
 }

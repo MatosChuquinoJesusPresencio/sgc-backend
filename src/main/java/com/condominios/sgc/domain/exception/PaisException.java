@@ -5,7 +5,11 @@ public class PaisException extends DominioException {
         super(mensaje);
     }
 
+    private PaisException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     public static PaisException noEncontrado() {
-        return new PaisException("pais no encontrado");
+        return new PaisException("pais no encontrado", 404);
     }
 }

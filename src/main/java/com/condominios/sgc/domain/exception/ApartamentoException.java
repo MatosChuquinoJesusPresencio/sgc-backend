@@ -5,6 +5,10 @@ public class ApartamentoException extends DominioException {
         super(mensaje);
     }
 
+    private ApartamentoException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     public static ApartamentoException numeroRequerido() {
         return new ApartamentoException("numero debe ser positivo");
     }
@@ -22,6 +26,6 @@ public class ApartamentoException extends DominioException {
     }
 
     public static ApartamentoException noEncontrado() {
-        return new ApartamentoException("apartamento no encontrado");
+        return new ApartamentoException("apartamento no encontrado", 404);
     }
 }

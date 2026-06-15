@@ -5,6 +5,10 @@ public class PisoException extends DominioException {
         super(mensaje);
     }
 
+    private PisoException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     public static PisoException numeroRequerido() {
         return new PisoException("numero debe ser un valor positivo");
     }
@@ -14,6 +18,6 @@ public class PisoException extends DominioException {
     }
 
     public static PisoException noEncontrado() {
-        return new PisoException("piso no encontrado");
+        return new PisoException("piso no encontrado", 404);
     }
 }

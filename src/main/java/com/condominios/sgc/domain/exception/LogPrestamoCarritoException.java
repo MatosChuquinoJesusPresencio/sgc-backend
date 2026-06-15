@@ -5,6 +5,10 @@ public class LogPrestamoCarritoException extends DominioException {
         super(mensaje);
     }
 
+    private LogPrestamoCarritoException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     public static LogPrestamoCarritoException solicitanteRequerido() {
         return new LogPrestamoCarritoException("solicitante no puede ser nulo");
     }
@@ -42,7 +46,7 @@ public class LogPrestamoCarritoException extends DominioException {
     }
 
     public static LogPrestamoCarritoException noEncontrado() {
-        return new LogPrestamoCarritoException("log de préstamo de carrito no encontrado");
+        return new LogPrestamoCarritoException("log de préstamo de carrito no encontrado", 404);
     }
 
     public static LogPrestamoCarritoException limiteAlcanzado() {

@@ -1,6 +1,7 @@
 package com.condominios.sgc.application.impl.condominio;
 
 import com.condominios.sgc.application.dto.command.CrearCondominioCommand;
+import org.springframework.transaction.annotation.Transactional;
 import com.condominios.sgc.application.dto.response.CondominioResponse;
 import com.condominios.sgc.application.usecase.condominio.CrearCondominioUseCase;
 import com.condominios.sgc.domain.exception.CiudadException;
@@ -12,6 +13,7 @@ import com.condominios.sgc.domain.port.CondominioPort;
 import com.condominios.sgc.domain.port.ConfiguracionPort;
 import com.condominios.sgc.domain.port.PaisPort;
 
+@Transactional
 public class CrearCondominioUseCaseImpl implements CrearCondominioUseCase {
     private final CondominioPort condominioPort;
     private final ConfiguracionPort configuracionPort;
