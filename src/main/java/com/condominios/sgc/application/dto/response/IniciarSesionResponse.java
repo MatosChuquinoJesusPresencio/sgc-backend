@@ -5,5 +5,6 @@ public record IniciarSesionResponse(
     String refreshToken,
     Long idUsuario,
     String rol,
-    String nombres
+    String nombres,
+    boolean recuerdame
 ) {}

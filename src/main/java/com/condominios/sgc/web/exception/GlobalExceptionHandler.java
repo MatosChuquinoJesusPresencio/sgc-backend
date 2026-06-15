@@ -4,7 +4,7 @@ import com.condominios.sgc.domain.exception.CorreoException;
 import com.condominios.sgc.domain.exception.DominioException;
 import com.condominios.sgc.domain.exception.TokenException;
 import com.condominios.sgc.domain.exception.UsuarioException;
-import com.condominios.sgc.web.dto.ErrorResponse;
+import com.condominios.sgc.web.dto.response.ErrorResponse;
 
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;

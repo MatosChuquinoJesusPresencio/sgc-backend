@@ -33,12 +33,12 @@ public class RefrescarTokenUseCaseImpl implements RefrescarTokenUseCase {
         UsuarioModel usuario = usuarioPort.obtenerPorId(idUsuario)
             .orElseThrow(UsuarioException::noEncontrado);
 
-        boolean recuerdame = command.recuerdame() != null && command.recuerdame();
+        boolean recuerdame = autenticacionPort.esRecuerdame(command.token());
 
         TokenModel nuevoAccess = tokenPort.generarToken(TipoToken.ACCESS, usuario.getId(), recuerdame);
         TokenModel nuevoRefresh = tokenPort.generarToken(TipoToken.REFRESH, usuario.getId(), recuerdame);
 
         return new IniciarSesionResponse(nuevoAccess.getToken(), nuevoRefresh.getToken(),
-                usuario.getId(), usuario.getRol().name(), usuario.getNombres());
+                usuario.getId(), usuario.getRol().name(), usuario.getNombres(), recuerdame);
     }
 }

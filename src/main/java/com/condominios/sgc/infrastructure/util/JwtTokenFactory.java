@@ -29,7 +29,7 @@ public class JwtTokenFactory {
         this.recuerdameRefreshExpiration = recuerdameRefreshExpiration;
     }
 
-    public TokenModel crearToken(TipoToken tipo, Long idUsuario, String correo, String rol, boolean recuerdame) {
+    public TokenModel crearToken(TipoToken tipo, Long idUsuario, String correo, String rol, String nombres, String apellidos, Long idCondominio, boolean recuerdame) {
         Instant now = Instant.now();
         Instant expiracion = now.plusMillis(duracionMs(tipo, recuerdame));
 
@@ -42,6 +42,10 @@ public class JwtTokenFactory {
                     .claim("tipo", tipo.name())
                     .claim("correo", correo)
                     .claim("rol", rol)
+                    .claim("nombres", nombres)
+                    .claim("apellidos", apellidos)
+                    .claim("idCondominio", idCondominio)
+                    .claim("recuerdame", tipo == TipoToken.REFRESH && recuerdame)
                     .signWith(secretKey)
                     .compact();
         } catch (Exception e) {

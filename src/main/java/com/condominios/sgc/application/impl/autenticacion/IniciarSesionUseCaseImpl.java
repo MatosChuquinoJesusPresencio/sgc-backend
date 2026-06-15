@@ -37,6 +37,6 @@ public class IniciarSesionUseCaseImpl implements IniciarSesionUseCase {
         TokenModel refreshToken = tokenPort.generarToken(TipoToken.REFRESH, usuario.getId(), recuerdame);
 
         return new IniciarSesionResponse(accessToken.getToken(), refreshToken.getToken(),
-                usuario.getId(), usuario.getRol().name(), usuario.getNombres());
+                usuario.getId(), usuario.getRol().name(), usuario.getNombres(), recuerdame);
     }
 }

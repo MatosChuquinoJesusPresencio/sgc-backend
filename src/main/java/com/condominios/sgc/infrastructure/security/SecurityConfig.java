@@ -43,7 +43,13 @@ public class SecurityConfig {
             .securityMatcher("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/docs/**", "/api-docs/**")
             .cors(Customizer.withDefaults())
             .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/login",
+                                 "/api/auth/refresh",
+                                 "/api/auth/confirmar-correo",
+                                 "/api/auth/solicitar-reseteo",
+                                 "/api/auth/restablecer-contrasena").permitAll()
+                .anyRequest().authenticated())
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();

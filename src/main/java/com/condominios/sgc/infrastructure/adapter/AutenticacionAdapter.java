@@ -60,6 +60,20 @@ public class AutenticacionAdapter implements AutenticacionPort {
     }
 
     @Override
+    public boolean esRecuerdame(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+            return claims.get("recuerdame", Boolean.class) != null && claims.get("recuerdame", Boolean.class);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
     public void invalidarToken(String token) {
         tokenRepository.findByToken(token).ifPresent(t -> {
             t.setUsado(true);

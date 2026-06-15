@@ -70,7 +70,8 @@ public class TokenAdapter implements TokenPort {
                 var usuario = usuarioRepository.findById(idUsuario)
                         .orElseThrow(() -> TokenException.noEncontrado());
                 yield jwtTokenFactory.crearToken(tipo, idUsuario,
-                        usuario.getCorreo(), usuario.getRol().name(), recuerdame);
+                        usuario.getCorreo(), usuario.getRol().name(),
+                        usuario.getNombres(), usuario.getApellidos(), usuario.getIdCondominio(), recuerdame);
             }
             case VERIFICACION, REESTABLECIMIENTO -> tokenFactory.crearToken(tipo, idUsuario);
         };

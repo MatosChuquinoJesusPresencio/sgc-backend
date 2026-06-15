@@ -1,4 +1,4 @@
-package com.condominios.sgc.web.dto;
+package com.condominios.sgc.web.dto.response;
 
 public record ErrorResponse(
     int estado,
