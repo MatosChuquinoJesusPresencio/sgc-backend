@@ -1,5 +1,7 @@
 package com.condominios.sgc.application.impl.usuario;
 
+import java.util.UUID;
+
 import com.condominios.sgc.application.dto.command.CrearUsuarioCommand;
 import com.condominios.sgc.application.dto.response.UsuarioResponse;
 import com.condominios.sgc.application.usecase.usuario.CrearUsuarioUseCase;
@@ -21,14 +23,15 @@ public class CrearUsuarioUseCaseImpl implements CrearUsuarioUseCase {
 
     @Override
     public UsuarioResponse ejecutar(CrearUsuarioCommand command) {
-        String hash = autenticacionPort.hashContrasena(command.contrasena());
+        String contrasenaPlana = UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+        String hash = autenticacionPort.hashContrasena(contrasenaPlana);
 
         UsuarioModel usuario = new UsuarioModel(
             command.nombres(), command.apellidos(), command.correo(),
             command.telefono(), command.rol(), hash, command.idCondominio());
         usuario = usuarioPort.guardar(usuario);
 
-        correoPort.enviarBienvenida(usuario.getCorreo(), usuario.getNombres());
+        correoPort.enviarBienvenida(usuario.getCorreo(), usuario.getNombres(), contrasenaPlana);
 
         return UsuarioResponse.desdeModelo(usuario);
     }

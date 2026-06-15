@@ -4,16 +4,21 @@ import com.condominios.sgc.domain.port.CorreoPort;
 import com.condominios.sgc.infrastructure.client.ResendClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Component
 public class CorreoAdapter implements CorreoPort {
 
     private final ResendClient resendClient;
+    private final SpringTemplateEngine templateEngine;
     private final String baseUrl;
 
     public CorreoAdapter(ResendClient resendClient,
+                         SpringTemplateEngine templateEngine,
                          @Value("${app.base-url}") String baseUrl) {
         this.resendClient = resendClient;
+        this.templateEngine = templateEngine;
         this.baseUrl = baseUrl;
     }
 
@@ -21,13 +26,10 @@ public class CorreoAdapter implements CorreoPort {
     public void enviarEmailVerificacion(String destinatario, String nombre, String token) {
         String asunto = "Verifica tu correo electrónico";
         String enlace = baseUrl + "/auth/verificar?token=" + token;
-        String html = """
-                <h2>Verifica tu correo electrónico</h2>
-                <p>Hola <strong>%s</strong>,</p>
-                <p>Haz clic en el siguiente enlace para verificar tu cuenta:</p>
-                <p><a href="%s">Verificar correo</a></p>
-                <p>Si no solicitaste esto, ignora este mensaje.</p>
-                """.formatted(nombre, enlace);
+        Context context = new Context();
+        context.setVariable("nombre", nombre);
+        context.setVariable("enlace", enlace);
+        String html = templateEngine.process("email/verificacion", context);
         resendClient.enviar(destinatario, asunto, html);
     }
 
@@ -35,24 +37,20 @@ public class CorreoAdapter implements CorreoPort {
     public void enviarReseteoContrasena(String destinatario, String nombre, String token) {
         String asunto = "Restablece tu contraseña";
         String enlace = baseUrl + "/auth/resetear?token=" + token;
-        String html = """
-                <h2>Restablece tu contraseña</h2>
-                <p>Hola <strong>%s</strong>,</p>
-                <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
-                <p><a href="%s">Restablecer contraseña</a></p>
-                <p>Si no solicitaste esto, ignora este mensaje.</p>
-                """.formatted(nombre, enlace);
+        Context context = new Context();
+        context.setVariable("nombre", nombre);
+        context.setVariable("enlace", enlace);
+        String html = templateEngine.process("email/reseteo-contrasena", context);
         resendClient.enviar(destinatario, asunto, html);
     }
 
     @Override
-    public void enviarBienvenida(String destinatario, String nombre) {
+    public void enviarBienvenida(String destinatario, String nombre, String contrasena) {
         String asunto = "¡Bienvenido!";
-        String html = """
-                <h2>¡Bienvenido, %s!</h2>
-                <p>Tu cuenta ha sido creada exitosamente.</p>
-                <p>Ya puedes iniciar sesión y comenzar a usar la plataforma.</p>
-                """.formatted(nombre);
+        Context context = new Context();
+        context.setVariable("nombre", nombre);
+        context.setVariable("contrasena", contrasena);
+        String html = templateEngine.process("email/bienvenida", context);
         resendClient.enviar(destinatario, asunto, html);
     }
 }
