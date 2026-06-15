@@ -26,6 +26,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -98,6 +99,7 @@ public class AutenticacionController {
         return ResponseEntity.ok(new LoginResponse(result.idUsuario(), result.rol(), result.nombres()));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(
             HttpServletRequest request,
@@ -111,6 +113,7 @@ public class AutenticacionController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/cambiar-contrasena")
     public ResponseEntity<Void> cambiarContrasena(
             @RequestBody @Valid CambiarContrasenaRequest request,
@@ -134,6 +137,7 @@ public class AutenticacionController {
         return ResponseEntity.ok(new MensajeResponse("Si el correo existe, recibirás un enlace"));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/me")
     public ResponseEntity<MeResponse> me(Authentication auth) {
         var usuario = jwtUtil.extraerUsuario((Jwt) auth.getPrincipal());
