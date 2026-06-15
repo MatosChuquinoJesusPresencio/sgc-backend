@@ -48,6 +48,11 @@ public class EstacionamientoAdapter implements EstacionamientoPort {
     }
 
     @Override
+    public int contarPorCondominio(Long idCondominio) {
+        return (int) repository.count(EstacionamientoSpecification.porCondominio(idCondominio));
+    }
+
+    @Override
     public List<EstacionamientoModel> obtenerPorApartamento(Long idApartamento) {
         return repository.findByIdApartamento(idApartamento).stream().map(mapper::aModelo).toList();
     }

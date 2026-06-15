@@ -10,6 +10,7 @@ public interface ApartamentoPort {
     ApartamentoModel guardar(ApartamentoModel apartamento);
     Optional<ApartamentoModel> obtenerPorId(Long id);
     PaginacionResponse<ApartamentoModel> obtenerTodos(PaginacionRequest request, ApartamentoFilter filtro);
+    int contarPorCondominio(Long idCondominio);
     void eliminarPorId(Long id);
 }
 

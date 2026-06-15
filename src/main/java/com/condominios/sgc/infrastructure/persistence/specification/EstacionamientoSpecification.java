@@ -25,4 +25,8 @@ public class EstacionamientoSpecification {
             return cb.and(predicados.toArray(Predicate[]::new));
         };
     }
+
+    public static Specification<EstacionamientoEntity> porCondominio(Long idCondominio) {
+        return (root, query, cb) -> cb.equal(root.get("idCondominio"), idCondominio);
+    }
 }

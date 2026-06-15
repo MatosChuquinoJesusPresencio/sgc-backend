@@ -34,4 +34,17 @@ public class CondominioConfig {
         return new ObtenerCondominioPorIdUseCaseImpl(condominioPort);
     }
 
+    @Bean
+    public ObtenerDetalleCondominioUseCase obtenerDetalleCondominioUseCase(CondominioPort condominioPort,
+                                                                           TorrePort torrePort,
+                                                                           PisoPort pisoPort,
+                                                                           ApartamentoPort apartamentoPort,
+                                                                           EstacionamientoPort estacionamientoPort,
+                                                                           CarritoPort carritoPort,
+                                                                           UsuarioPort usuarioPort,
+                                                                           ConfiguracionPort configuracionPort) {
+        return new ObtenerDetalleCondominioUseCaseImpl(condominioPort, torrePort, pisoPort,
+                apartamentoPort, estacionamientoPort, carritoPort, usuarioPort, configuracionPort);
+    }
+
 }

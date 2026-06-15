@@ -11,6 +11,7 @@ public interface EstacionamientoPort {
     EstacionamientoModel guardar(EstacionamientoModel estacionamiento);
     Optional<EstacionamientoModel> obtenerPorId(Long id);
     PaginacionResponse<EstacionamientoModel> obtenerTodos(PaginacionRequest request, EstacionamientoFilter filtro);
+    int contarPorCondominio(Long idCondominio);
     List<EstacionamientoModel> obtenerPorApartamento(Long idApartamento);
     void eliminarPorId(Long id);
 }

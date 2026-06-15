@@ -23,4 +23,8 @@ public class ApartamentoSpecification {
             return cb.and(predicados.toArray(Predicate[]::new));
         };
     }
+
+    public static Specification<ApartamentoEntity> porCondominio(Long idCondominio) {
+        return (root, query, cb) -> cb.equal(root.get("piso").get("torre").get("idCondominio"), idCondominio);
+    }
 }

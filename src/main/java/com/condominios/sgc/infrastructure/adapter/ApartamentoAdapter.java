@@ -48,6 +48,11 @@ public class ApartamentoAdapter implements ApartamentoPort {
     }
 
     @Override
+    public int contarPorCondominio(Long idCondominio) {
+        return (int) repository.count(ApartamentoSpecification.porCondominio(idCondominio));
+    }
+
+    @Override
     public void eliminarPorId(Long id) {
         repository.deleteById(id);
     }
