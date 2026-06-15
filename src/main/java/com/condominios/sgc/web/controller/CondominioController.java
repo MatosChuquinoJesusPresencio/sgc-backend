@@ -116,6 +116,22 @@ public class CondominioController {
         return ResponseEntity.ok(CondominioResponse.desdeAplicacion(result));
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR_CONDOMINIO')")
+    @GetMapping("/mi-condominio")
+    public ResponseEntity<CondominioResponse> miCondominio(@AuthenticationPrincipal Jwt jwt) {
+        var idCondominio = jwtUtil.extraerUsuario(jwt).idCondominio();
+        var result = obtenerCondominio.ejecutar(idCondominio);
+        return ResponseEntity.ok(CondominioResponse.desdeAplicacion(result));
+    }
+
+    @PreAuthorize("hasRole('ADMINISTRADOR_CONDOMINIO')")
+    @GetMapping("/mi-condominio/detalle")
+    public ResponseEntity<DetalleCondominioResponse> miCondominioDetalle(@AuthenticationPrincipal Jwt jwt) {
+        var idCondominio = jwtUtil.extraerUsuario(jwt).idCondominio();
+        var result = detalleCondominio.ejecutar(idCondominio);
+        return ResponseEntity.ok(DetalleCondominioResponse.desdeAplicacion(result));
+    }
+
     @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
     @GetMapping("/{id}/detalle")
     public ResponseEntity<DetalleCondominioResponse> detalle(@PathVariable Long id) {

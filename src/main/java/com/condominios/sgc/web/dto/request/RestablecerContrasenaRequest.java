@@ -5,5 +5,5 @@ import jakarta.validation.constraints.Size;
 
 public record RestablecerContrasenaRequest(
     @NotBlank String token,
-    @NotBlank @Size(min = 8) String nuevaContrasena
+    @NotBlank @Size(min = 6) String nuevaContrasena
 ) {}
