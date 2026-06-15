@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -49,8 +50,8 @@ public class InquilinoEntity {
     @Column(name = "id_apartamento", insertable = false, updatable = false)
     private Long idApartamento;
 
-    @OneToMany(mappedBy = "inquilino")
-    private List<VehiculoEntity> vehiculos = new ArrayList<>();
+    @OneToOne(mappedBy = "inquilino")
+    private VehiculoEntity vehiculo;
 
     @OneToMany(mappedBy = "inquilino")
     private List<LogPrestamoCarritoEntity> logsPrestamoCarrito = new ArrayList<>();
@@ -69,4 +70,6 @@ public class InquilinoEntity {
     public void setApartamento(ApartamentoEntity apartamento) { this.apartamento = apartamento; }
     public Long getIdApartamento() { return idApartamento; }
     public void setIdApartamento(Long idApartamento) { this.idApartamento = idApartamento; }
+    public VehiculoEntity getVehiculo() { return vehiculo; }
+    public void setVehiculo(VehiculoEntity vehiculo) { this.vehiculo = vehiculo; }
 }

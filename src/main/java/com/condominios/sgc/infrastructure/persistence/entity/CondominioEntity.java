@@ -9,6 +9,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -58,8 +59,8 @@ public class CondominioEntity {
     @OneToMany(mappedBy = "condominio")
     private List<CarritoEntity> carritos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "condominio")
-    private List<ConfiguracionEntity> configuraciones = new ArrayList<>();
+    @OneToOne(mappedBy = "condominio")
+    private ConfiguracionEntity configuracion;
 
     @OneToMany(mappedBy = "condominio")
     private List<EstacionamientoEntity> estacionamientos = new ArrayList<>();
@@ -85,8 +86,8 @@ public class CondominioEntity {
     public void setTorres(List<TorreEntity> torres) { this.torres = torres; }
     public List<CarritoEntity> getCarritos() { return carritos; }
     public void setCarritos(List<CarritoEntity> carritos) { this.carritos = carritos; }
-    public List<ConfiguracionEntity> getConfiguraciones() { return configuraciones; }
-    public void setConfiguraciones(List<ConfiguracionEntity> configuraciones) { this.configuraciones = configuraciones; }
+    public ConfiguracionEntity getConfiguracion() { return configuracion; }
+    public void setConfiguracion(ConfiguracionEntity configuracion) { this.configuracion = configuracion; }
     public List<EstacionamientoEntity> getEstacionamientos() { return estacionamientos; }
     public void setEstacionamientos(List<EstacionamientoEntity> estacionamientos) { this.estacionamientos = estacionamientos; }
     public List<VehiculoEntity> getVehiculos() { return vehiculos; }

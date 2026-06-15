@@ -41,11 +41,11 @@ public class CondominioController {
     private final ObtenerDetalleCondominioUseCase detalleCondominio;
 
     public CondominioController(CrearCondominioUseCase crearCondominio,
-                                ObtenerCondominioPorIdUseCase obtenerCondominio,
-                                ListarCondominiosUseCase listarCondominios,
-                                ActualizarCondominioPorIdUseCase actualizarCondominio,
-                                EliminarCondominioPorIdUseCase eliminarCondominio,
-                                ObtenerDetalleCondominioUseCase detalleCondominio) {
+            ObtenerCondominioPorIdUseCase obtenerCondominio,
+            ListarCondominiosUseCase listarCondominios,
+            ActualizarCondominioPorIdUseCase actualizarCondominio,
+            EliminarCondominioPorIdUseCase eliminarCondominio,
+            ObtenerDetalleCondominioUseCase detalleCondominio) {
         this.crearCondominio = crearCondominio;
         this.obtenerCondominio = obtenerCondominio;
         this.listarCondominios = listarCondominios;
@@ -57,7 +57,8 @@ public class CondominioController {
     @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<CondominioResponse> crear(@RequestBody @Valid CrearCondominioRequest request) {
-        var command = new CrearCondominioCommand(request.nombre(), request.idPais(), request.idCiudad(), request.direccion());
+        var command = new CrearCondominioCommand(request.nombre(), request.idPais(), request.idCiudad(),
+                request.direccion());
         var result = crearCondominio.ejecutar(command);
         return ResponseEntity.created(URI.create("/api/condominios/" + result.id()))
                 .body(CondominioResponse.desdeAplicacion(result));
@@ -91,8 +92,9 @@ public class CondominioController {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR_CONDOMINIO', 'SUPER_ADMINISTRADOR')")
     @PutMapping("/{id}")
     public ResponseEntity<CondominioResponse> actualizar(@PathVariable Long id,
-                                                         @RequestBody @Valid ActualizarCondominioRequest request) {
-        var command = new ActualizarCondominioCommand(request.nombre(), request.idPais(), request.idCiudad(), request.direccion());
+            @RequestBody @Valid ActualizarCondominioRequest request) {
+        var command = new ActualizarCondominioCommand(request.nombre(), request.idPais(), request.idCiudad(),
+                request.direccion());
         var result = actualizarCondominio.ejecutar(id, command);
         return ResponseEntity.ok(CondominioResponse.desdeAplicacion(result));
     }

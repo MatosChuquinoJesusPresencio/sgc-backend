@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -35,8 +36,8 @@ public class ApartamentoEntity {
 
     private BigDecimal metraje;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_propietario")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_propietario", unique = true)
     private UsuarioEntity propietario;
 
     @Column(name = "id_propietario", insertable = false, updatable = false)

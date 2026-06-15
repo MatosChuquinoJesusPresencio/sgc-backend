@@ -1,5 +1,6 @@
 package com.condominios.sgc.infrastructure.util;
 
+import com.condominios.sgc.domain.auxiliar.Rol;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +12,7 @@ public class JwtUtil {
         String correo,
         String nombres,
         String apellidos,
-        String rol,
+        Rol rol,
         Long idCondominio
     ) {}
 
@@ -21,7 +22,7 @@ public class JwtUtil {
                 jwt.getClaimAsString("correo"),
                 jwt.getClaimAsString("nombres"),
                 jwt.getClaimAsString("apellidos"),
-                jwt.getClaimAsString("rol"),
+                Rol.valueOf(jwt.getClaimAsString("rol")),
                 jwt.getClaim("idCondominio") != null
                         ? ((Number) jwt.getClaim("idCondominio")).longValue()
                         : null);

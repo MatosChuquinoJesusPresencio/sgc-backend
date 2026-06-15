@@ -13,11 +13,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "carritos")
+@NoArgsConstructor
+@AllArgsConstructor
 public class CarritoEntity {
 
     @Id
@@ -40,8 +45,6 @@ public class CarritoEntity {
 
     @OneToMany(mappedBy = "carrito")
     private List<LogPrestamoCarritoEntity> logsPrestamoCarrito = new ArrayList<>();
-
-    public CarritoEntity() {}
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

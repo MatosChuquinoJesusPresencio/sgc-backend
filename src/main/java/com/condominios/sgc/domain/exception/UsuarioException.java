@@ -48,4 +48,8 @@ public class UsuarioException extends DominioException {
     public static UsuarioException credencialesInvalidas() {
         return new UsuarioException("correo o contraseña incorrectos");
     }
+
+    public static UsuarioException noPermisoAsignarRol() {
+        return new UsuarioException("no tienes permiso para asignar este rol");
+    }
 }

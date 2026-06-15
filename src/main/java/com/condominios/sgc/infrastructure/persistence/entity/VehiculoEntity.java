@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -52,8 +53,8 @@ public class VehiculoEntity {
     @Column(name = "id_propietario", insertable = false, updatable = false)
     private Long idPropietario;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_inquilino")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_inquilino", unique = true)
     private InquilinoEntity inquilino;
 
     @Column(name = "id_inquilino", insertable = false, updatable = false)

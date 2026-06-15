@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.condominios.sgc.application.dto.command.CrearUsuarioCommand;
 import com.condominios.sgc.application.dto.response.UsuarioResponse;
 import com.condominios.sgc.application.usecase.usuario.CrearUsuarioUseCase;
+import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.port.AutenticacionPort;
 import com.condominios.sgc.domain.port.CorreoPort;
@@ -23,6 +24,10 @@ public class CrearUsuarioUseCaseImpl implements CrearUsuarioUseCase {
 
     @Override
     public UsuarioResponse ejecutar(CrearUsuarioCommand command) {
+        if (!command.rolSolicitante().puedeAsignar(command.rol())) {
+            throw UsuarioException.noPermisoAsignarRol();
+        }
+
         String contrasenaPlana = UUID.randomUUID().toString().replace("-", "").substring(0, 12);
         String hash = autenticacionPort.hashContrasena(contrasenaPlana);
 
