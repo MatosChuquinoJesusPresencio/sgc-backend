@@ -6,6 +6,7 @@ import java.util.Optional;
 
 public interface CiudadPort {
     Optional<CiudadModel> obtenerPorId(Long id);
+    List<CiudadModel> obtenerTodos();
     List<CiudadModel> obtenerPorPais(Long idPais);
 }
 

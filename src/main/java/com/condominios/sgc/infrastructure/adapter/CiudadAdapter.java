@@ -25,6 +25,11 @@ public class CiudadAdapter implements CiudadPort {
     }
 
     @Override
+    public List<CiudadModel> obtenerTodos() {
+        return repository.findAll().stream().map(mapper::aModelo).toList();
+    }
+
+    @Override
     public List<CiudadModel> obtenerPorPais(Long idPais) {
         return repository.findByIdPais(idPais).stream().map(mapper::aModelo).toList();
     }

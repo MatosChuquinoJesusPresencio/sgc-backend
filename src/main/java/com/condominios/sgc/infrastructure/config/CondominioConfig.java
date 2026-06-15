@@ -10,13 +10,18 @@ import org.springframework.context.annotation.Configuration;
 public class CondominioConfig {
 
     @Bean
-    public ActualizarCondominioPorIdUseCase actualizarCondominioPorIdUseCase(CondominioPort condominioPort) {
-        return new ActualizarCondominioPorIdUseCaseImpl(condominioPort);
+    public ActualizarCondominioPorIdUseCase actualizarCondominioPorIdUseCase(CondominioPort condominioPort,
+            PaisPort paisPort,
+            CiudadPort ciudadPort) {
+        return new ActualizarCondominioPorIdUseCaseImpl(condominioPort, paisPort, ciudadPort);
     }
 
     @Bean
-    public CrearCondominioUseCase crearCondominioUseCase(CondominioPort condominioPort, ConfiguracionPort configuracionPort) {
-        return new CrearCondominioUseCaseImpl(condominioPort, configuracionPort);
+    public CrearCondominioUseCase crearCondominioUseCase(CondominioPort condominioPort,
+            ConfiguracionPort configuracionPort,
+            PaisPort paisPort,
+            CiudadPort ciudadPort) {
+        return new CrearCondominioUseCaseImpl(condominioPort, configuracionPort, paisPort, ciudadPort);
     }
 
     @Bean
@@ -25,26 +30,33 @@ public class CondominioConfig {
     }
 
     @Bean
-    public ListarCondominiosUseCase listarCondominiosUseCase(CondominioPort condominioPort) {
-        return new ListarCondominiosUseCaseImpl(condominioPort);
+    public ListarCondominiosUseCase listarCondominiosUseCase(CondominioPort condominioPort,
+            PaisPort paisPort,
+            CiudadPort ciudadPort) {
+        return new ListarCondominiosUseCaseImpl(condominioPort, paisPort, ciudadPort);
     }
 
     @Bean
-    public ObtenerCondominioPorIdUseCase obtenerCondominioPorIdUseCase(CondominioPort condominioPort) {
-        return new ObtenerCondominioPorIdUseCaseImpl(condominioPort);
+    public ObtenerCondominioPorIdUseCase obtenerCondominioPorIdUseCase(CondominioPort condominioPort,
+            PaisPort paisPort,
+            CiudadPort ciudadPort) {
+        return new ObtenerCondominioPorIdUseCaseImpl(condominioPort, paisPort, ciudadPort);
     }
 
     @Bean
     public ObtenerDetalleCondominioUseCase obtenerDetalleCondominioUseCase(CondominioPort condominioPort,
-                                                                           TorrePort torrePort,
-                                                                           PisoPort pisoPort,
-                                                                           ApartamentoPort apartamentoPort,
-                                                                           EstacionamientoPort estacionamientoPort,
-                                                                           CarritoPort carritoPort,
-                                                                           UsuarioPort usuarioPort,
-                                                                           ConfiguracionPort configuracionPort) {
+            TorrePort torrePort,
+            PisoPort pisoPort,
+            ApartamentoPort apartamentoPort,
+            EstacionamientoPort estacionamientoPort,
+            CarritoPort carritoPort,
+            UsuarioPort usuarioPort,
+            ConfiguracionPort configuracionPort,
+            PaisPort paisPort,
+            CiudadPort ciudadPort) {
         return new ObtenerDetalleCondominioUseCaseImpl(condominioPort, torrePort, pisoPort,
-                apartamentoPort, estacionamientoPort, carritoPort, usuarioPort, configuracionPort);
+                apartamentoPort, estacionamientoPort, carritoPort, usuarioPort, configuracionPort,
+                paisPort, ciudadPort);
     }
 
 }

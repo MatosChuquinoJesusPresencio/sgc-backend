@@ -6,14 +6,14 @@ import com.condominios.sgc.domain.model.CondominioModel;
 public record CondominioResponse(
     Long id,
     String nombre,
-    Long idPais,
-    Long idCiudad,
+    String nombrePais,
+    String nombreCiudad,
     String direccion,
     Instant fechaCreacion
 ) {
-    public static CondominioResponse desdeModelo(CondominioModel model) {
+    public static CondominioResponse desdeModelo(CondominioModel model, String nombrePais, String nombreCiudad) {
         return new CondominioResponse(
-            model.getId(), model.getNombre(), model.getIdPais(),
-            model.getIdCiudad(), model.getDireccion(), model.getFechaCreacion());
+            model.getId(), model.getNombre(), nombrePais,
+            nombreCiudad, model.getDireccion(), model.getFechaCreacion());
     }
 }
