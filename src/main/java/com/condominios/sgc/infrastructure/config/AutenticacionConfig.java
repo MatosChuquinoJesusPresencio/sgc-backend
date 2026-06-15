@@ -15,8 +15,8 @@ public class AutenticacionConfig {
     }
 
     @Bean
-    public CerrarSesionUseCase cerrarSesionUseCase(AutenticacionPort autenticacionPort) {
-        return new CerrarSesionUseCaseImpl(autenticacionPort);
+    public CerrarSesionUseCase cerrarSesionUseCase(TokenPort tokenPort) {
+        return new CerrarSesionUseCaseImpl(tokenPort);
     }
 
     @Bean

@@ -1,17 +1,20 @@
 package com.condominios.sgc.application.impl.autenticacion;
 
 import com.condominios.sgc.application.usecase.autenticacion.CerrarSesionUseCase;
-import com.condominios.sgc.domain.port.AutenticacionPort;
+import com.condominios.sgc.domain.port.TokenPort;
 
 public class CerrarSesionUseCaseImpl implements CerrarSesionUseCase {
-    private final AutenticacionPort autenticacionPort;
+    private final TokenPort tokenPort;
 
-    public CerrarSesionUseCaseImpl(AutenticacionPort autenticacionPort) {
-        this.autenticacionPort = autenticacionPort;
+    public CerrarSesionUseCaseImpl(TokenPort tokenPort) {
+        this.tokenPort = tokenPort;
     }
 
     @Override
-    public void ejecutar(String token) {
-        autenticacionPort.invalidarToken(token);
+    public void ejecutar(String accessToken, String refreshToken) {
+        if (accessToken != null)
+            tokenPort.eliminarPorToken(accessToken);
+        if (refreshToken != null)
+            tokenPort.eliminarPorToken(refreshToken);
     }
 }

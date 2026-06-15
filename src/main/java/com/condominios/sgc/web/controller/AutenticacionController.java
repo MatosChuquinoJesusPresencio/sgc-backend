@@ -104,10 +104,11 @@ public class AutenticacionController {
     public ResponseEntity<Void> logout(
             HttpServletRequest request,
             HttpServletResponse response) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            cerrarSesion.ejecutar(authHeader.substring(7));
-        }
+        String accessToken = cookieUtil.readCookie(request, cookieUtil.getAccessTokenName())
+                .orElse(null);
+        String refreshToken = cookieUtil.readCookie(request, cookieUtil.getRefreshTokenName())
+                .orElse(null);
+        cerrarSesion.ejecutar(accessToken, refreshToken);
         response.addCookie(cookieUtil.eliminarAccessTokenCookie());
         response.addCookie(cookieUtil.eliminarRefreshTokenCookie());
         return ResponseEntity.noContent().build();

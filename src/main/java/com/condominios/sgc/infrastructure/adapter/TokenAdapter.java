@@ -69,15 +69,23 @@ public class TokenAdapter implements TokenPort {
     public TokenModel generarToken(TipoToken tipo, Long idUsuario, boolean recuerdame) {
         TokenModel modelo = switch (tipo) {
             case ACCESS, REFRESH -> {
-                var usuario = usuarioRepository.findById(idUsuario)
+                var usuarioEntity = usuarioRepository.findById(idUsuario)
                         .orElseThrow(() -> TokenException.noEncontrado());
                 yield jwtTokenFactory.crearToken(tipo, idUsuario,
-                        usuario.getCorreo(), usuario.getRol().name(),
-                        usuario.getNombres(), usuario.getApellidos(), usuario.getIdCondominio(), recuerdame);
+                        usuarioEntity.getCorreo(), usuarioEntity.getRol().name(),
+                        usuarioEntity.getNombres(), usuarioEntity.getApellidos(), usuarioEntity.getIdCondominio(), recuerdame);
             }
             case VERIFICACION, REESTABLECIMIENTO -> tokenFactory.crearToken(tipo, idUsuario);
         };
-        return mapper.aModelo(repository.save(mapper.aEntidad(modelo)));
+
+        var entidad = repository.findByIdUsuarioAndTipo(idUsuario, tipo)
+                .orElseGet(() -> mapper.aEntidad(modelo));
+
+        entidad.setToken(modelo.getToken());
+        entidad.setExpiracion(modelo.getExpiracion());
+        entidad.setUsado(false);
+
+        return mapper.aModelo(repository.save(entidad));
     }
 
     @Override
@@ -86,7 +94,14 @@ public class TokenAdapter implements TokenPort {
     }
 
     @Override
+    @Transactional
     public void eliminarPorId(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void eliminarPorToken(String token) {
+        repository.findByToken(token).ifPresent(entity -> repository.delete(entity));
     }
 }

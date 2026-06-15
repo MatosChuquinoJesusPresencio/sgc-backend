@@ -30,8 +30,6 @@ public class RefrescarTokenUseCaseImpl implements RefrescarTokenUseCase {
         Long idUsuario = autenticacionPort.validarToken(command.token())
             .orElseThrow(TokenException::noEncontrado);
 
-        autenticacionPort.invalidarToken(command.token());
-
         UsuarioModel usuario = usuarioPort.obtenerPorId(idUsuario)
             .orElseThrow(UsuarioException::noEncontrado);
 

@@ -15,5 +15,6 @@ public interface TokenPort {
     TokenModel generarToken(TipoToken tipo, Long idUsuario, boolean recuerdame);
     TokenModel generarToken(TipoToken tipo, Long idUsuario);
     void eliminarPorId(Long id);
+    void eliminarPorToken(String token);
 }
 
