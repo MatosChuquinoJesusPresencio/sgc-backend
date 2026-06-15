@@ -14,11 +14,11 @@ import com.condominios.sgc.application.usecase.autenticacion.SolicitarReseteoCon
 import com.condominios.sgc.infrastructure.util.CookieUtil;
 import com.condominios.sgc.infrastructure.util.JwtUtil;
 import com.condominios.sgc.web.dto.request.CambiarContrasenaRequest;
-import com.condominios.sgc.web.dto.request.LoginRequest;
+import com.condominios.sgc.web.dto.request.IniciarSesionRequest;
 import com.condominios.sgc.web.dto.request.RefreshTokenRequest;
 import com.condominios.sgc.web.dto.request.RestablecerContrasenaRequest;
 import com.condominios.sgc.web.dto.request.SolicitarReseteoRequest;
-import com.condominios.sgc.web.dto.response.LoginResponse;
+import com.condominios.sgc.web.dto.response.IniciarSesionResponse;
 import com.condominios.sgc.web.dto.response.MeResponse;
 import com.condominios.sgc.web.dto.response.MensajeResponse;
 
@@ -72,18 +72,18 @@ public class AutenticacionController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(
-            @RequestBody @Valid LoginRequest request,
+    public ResponseEntity<IniciarSesionResponse> login(
+            @RequestBody @Valid IniciarSesionRequest request,
             HttpServletResponse response) {
         var command = new IniciarSesionCommand(request.correo(), request.contrasena(), request.recuerdame());
         var result = iniciarSesion.ejecutar(command);
-        response.addCookie(cookieUtil.crearAccessTokenCookie(result.token()));
+        response.addCookie(cookieUtil.crearAccessTokenCookie(result.accessToken()));
         response.addCookie(cookieUtil.crearRefreshTokenCookie(result.refreshToken(), result.recuerdame()));
-        return ResponseEntity.ok(new LoginResponse(result.idUsuario(), result.rol(), result.nombres()));
+        return ResponseEntity.ok(new IniciarSesionResponse(result.idUsuario(), result.rol(), result.nombres()));
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<LoginResponse> refresh(
+    public ResponseEntity<IniciarSesionResponse> refresh(
             HttpServletRequest request,
             @RequestBody(required = false) RefreshTokenRequest body,
             HttpServletResponse response) {
@@ -94,9 +94,9 @@ public class AutenticacionController {
         }
         var command = new RefrescarTokenCommand(token);
         var result = refrescarToken.ejecutar(command);
-        response.addCookie(cookieUtil.crearAccessTokenCookie(result.token()));
+        response.addCookie(cookieUtil.crearAccessTokenCookie(result.accessToken()));
         response.addCookie(cookieUtil.crearRefreshTokenCookie(result.refreshToken(), result.recuerdame()));
-        return ResponseEntity.ok(new LoginResponse(result.idUsuario(), result.rol(), result.nombres()));
+        return ResponseEntity.ok(new IniciarSesionResponse(result.idUsuario(), result.rol(), result.nombres()));
     }
 
     @PreAuthorize("isAuthenticated()")
