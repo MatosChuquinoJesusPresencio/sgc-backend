@@ -51,4 +51,9 @@ public class LogPrestamoCarritoAdapter implements LogPrestamoCarritoPort {
     public List<LogPrestamoCarritoModel> obtenerSinDevolucion() {
         return repository.findByFechaDevolucionIsNull().stream().map(mapper::aModelo).toList();
     }
+
+    @Override
+    public long contarSinDevolucionPorApartamento(Long idApartamento) {
+        return repository.countByFechaDevolucionIsNullAndIdApartamento(idApartamento);
+    }
 }

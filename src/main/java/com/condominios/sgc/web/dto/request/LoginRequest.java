@@ -1,7 +1,9 @@
 package com.condominios.sgc.web.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
+
 public record LoginRequest(
-    String correo,
-    String contrasena,
+    @NotBlank String correo,
+    @NotBlank String contrasena,
     Boolean recuerdame
 ) {}

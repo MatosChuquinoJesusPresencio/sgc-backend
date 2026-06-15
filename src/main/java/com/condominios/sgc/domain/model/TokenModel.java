@@ -41,6 +41,8 @@ public class TokenModel {
     public Long getIdUsuario() { return idUsuario; }
 
     public void usar() {
+        if (this.expiracion != null && this.expiracion.isBefore(Instant.now()))
+            throw TokenException.tokenExpirado();
         if (this.usado)
             throw TokenException.tokenYaUsado();
         this.usado = true;

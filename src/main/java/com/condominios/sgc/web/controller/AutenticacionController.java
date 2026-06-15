@@ -118,14 +118,15 @@ public class AutenticacionController {
     public ResponseEntity<Void> cambiarContrasena(
             @RequestBody @Valid CambiarContrasenaRequest request,
             Authentication auth) {
-        Jwt jwt = (Jwt) auth.getPrincipal();
+        if (!(auth.getPrincipal() instanceof Jwt jwt))
+            return ResponseEntity.status(401).build();
         Long idUsuario = Long.parseLong(jwt.getSubject());
         cambiarContrasena.ejecutar(new CambiarContrasenaCommand(idUsuario,
                 request.contrasenaActual(), request.nuevaContrasena()));
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/confirmar-correo")
+    @PostMapping("/confirmar-correo")
     public ResponseEntity<MensajeResponse> confirmarCorreo(@RequestParam String token) {
         confirmarCorreo.ejecutar(token);
         return ResponseEntity.ok(new MensajeResponse("Correo confirmado exitosamente"));

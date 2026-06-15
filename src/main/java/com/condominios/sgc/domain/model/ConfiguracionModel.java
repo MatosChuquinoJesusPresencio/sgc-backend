@@ -22,14 +22,14 @@ public class ConfiguracionModel {
             Integer maxTiempoPrestamoMin, Integer maxEstacionamientosPorApartamento, Integer maxCarritosPorApartamento,
             Integer maxVehiculosPorPropietario, Integer maxInquilinosPorApartamento, Long idCondominio) {
         this.id = id;
-        this.maxAutos = maxAutos;
-        this.maxMotos = maxMotos;
-        this.penalizacionPorMin = penalizacionPorMin;
-        this.maxTiempoPrestamoMin = maxTiempoPrestamoMin;
-        this.maxEstacionamientosPorApartamento = maxEstacionamientosPorApartamento;
-        this.maxCarritosPorApartamento = maxCarritosPorApartamento;
-        this.maxVehiculosPorPropietario = maxVehiculosPorPropietario;
-        this.maxInquilinosPorApartamento = maxInquilinosPorApartamento;
+        this.maxAutos = noNulo(maxAutos, ConfiguracionException::maxAutosRequerido);
+        this.maxMotos = noNulo(maxMotos, ConfiguracionException::maxMotosRequerido);
+        this.penalizacionPorMin = noNulo(penalizacionPorMin, ConfiguracionException::penalizacionRequerida);
+        this.maxTiempoPrestamoMin = noNulo(maxTiempoPrestamoMin, ConfiguracionException::maxTiempoRequerido);
+        this.maxEstacionamientosPorApartamento = noNulo(maxEstacionamientosPorApartamento, ConfiguracionException::maxEstacionamientosRequerido);
+        this.maxCarritosPorApartamento = noNulo(maxCarritosPorApartamento, ConfiguracionException::maxCarritosRequerido);
+        this.maxVehiculosPorPropietario = noNulo(maxVehiculosPorPropietario, ConfiguracionException::maxVehiculosRequerido);
+        this.maxInquilinosPorApartamento = noNulo(maxInquilinosPorApartamento, ConfiguracionException::maxInquilinosRequerido);
         this.idCondominio = idCondominio;
     }
 

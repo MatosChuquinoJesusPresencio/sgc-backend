@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import javax.crypto.SecretKey;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.Optional;
 
@@ -74,6 +75,7 @@ public class AutenticacionAdapter implements AutenticacionPort {
     }
 
     @Override
+    @Transactional
     public void invalidarToken(String token) {
         tokenRepository.findByToken(token).ifPresent(t -> {
             t.setUsado(true);

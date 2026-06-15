@@ -12,5 +12,6 @@ public interface LogPrestamoCarritoPort {
     Optional<LogPrestamoCarritoModel> obtenerPorId(Long id);
     PaginacionResponse<LogPrestamoCarritoModel> obtenerTodos(PaginacionRequest request, LogPrestamoCarritoFilter filtro);
     List<LogPrestamoCarritoModel> obtenerSinDevolucion();
+    long contarSinDevolucionPorApartamento(Long idApartamento);
 }
 

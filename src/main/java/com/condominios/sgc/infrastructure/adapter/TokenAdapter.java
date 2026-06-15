@@ -10,6 +10,7 @@ import com.condominios.sgc.infrastructure.persistence.repository.UsuarioReposito
 import com.condominios.sgc.infrastructure.util.JwtTokenFactory;
 import com.condominios.sgc.infrastructure.util.TokenFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +65,7 @@ public class TokenAdapter implements TokenPort {
     }
 
     @Override
+    @Transactional
     public TokenModel generarToken(TipoToken tipo, Long idUsuario, boolean recuerdame) {
         TokenModel modelo = switch (tipo) {
             case ACCESS, REFRESH -> {

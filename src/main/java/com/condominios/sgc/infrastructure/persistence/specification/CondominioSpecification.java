@@ -9,6 +9,8 @@ import java.util.List;
 
 public class CondominioSpecification {
 
+    private CondominioSpecification() {}
+
     public static Specification<CondominioEntity> conFiltro(CondominioFilter filtro) {
         return (root, query, cb) -> {
             List<Predicate> predicados = new ArrayList<>();

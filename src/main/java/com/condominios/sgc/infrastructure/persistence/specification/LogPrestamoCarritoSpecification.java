@@ -9,6 +9,8 @@ import java.util.List;
 
 public class LogPrestamoCarritoSpecification {
 
+    private LogPrestamoCarritoSpecification() {}
+
     public static Specification<LogPrestamoCarritoEntity> conFiltro(LogPrestamoCarritoFilter filtro) {
         return (root, query, cb) -> {
             List<Predicate> predicados = new ArrayList<>();

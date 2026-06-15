@@ -77,7 +77,7 @@ public class EstacionamientoModel {
         if (this.cantidadActual > 0) {
             this.cantidadActual--;
         }
-        this.disponible = true;
+        this.disponible = this.capacidadMaxima == null || this.cantidadActual < this.capacidadMaxima;
     }
 
     public boolean hayEspacio() {

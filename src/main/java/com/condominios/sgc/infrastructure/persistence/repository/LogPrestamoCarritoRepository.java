@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface LogPrestamoCarritoRepository extends JpaRepository<LogPrestamoCarritoEntity, Long>, JpaSpecificationExecutor<LogPrestamoCarritoEntity> {
     List<LogPrestamoCarritoEntity> findByFechaDevolucionIsNull();
+    long countByFechaDevolucionIsNullAndIdApartamento(Long idApartamento);
 }

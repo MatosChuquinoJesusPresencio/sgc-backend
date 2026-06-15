@@ -9,6 +9,8 @@ import java.util.List;
 
 public class PisoSpecification {
 
+    private PisoSpecification() {}
+
     public static Specification<PisoEntity> porTorre(Long idTorre) {
         return (root, query, cb) -> cb.equal(root.get("idTorre"), idTorre);
     }

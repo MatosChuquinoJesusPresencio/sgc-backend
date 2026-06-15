@@ -105,6 +105,9 @@ public class UsuarioEntity {
     public ApartamentoEntity getApartamento() { return apartamento; }
     public void setApartamento(ApartamentoEntity apartamento) { this.apartamento = apartamento; }
     public List<VehiculoEntity> getVehiculosPropietario() { return vehiculosPropietario; }
+    public void setVehiculosPropietario(List<VehiculoEntity> vehiculosPropietario) { this.vehiculosPropietario = vehiculosPropietario; }
     public List<LogPrestamoCarritoEntity> getLogsPrestamoCarrito() { return logsPrestamoCarrito; }
+    public void setLogsPrestamoCarrito(List<LogPrestamoCarritoEntity> logsPrestamoCarrito) { this.logsPrestamoCarrito = logsPrestamoCarrito; }
     public List<TokenEntity> getTokens() { return tokens; }
+    public void setTokens(List<TokenEntity> tokens) { this.tokens = tokens; }
 }

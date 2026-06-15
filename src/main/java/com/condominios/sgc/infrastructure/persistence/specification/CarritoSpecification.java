@@ -9,6 +9,8 @@ import java.util.List;
 
 public class CarritoSpecification {
 
+    private CarritoSpecification() {}
+
     public static Specification<CarritoEntity> porCondominio(Long idCondominio) {
         return (root, query, cb) -> cb.equal(root.get("idCondominio"), idCondominio);
     }

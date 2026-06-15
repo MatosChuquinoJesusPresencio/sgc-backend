@@ -9,6 +9,8 @@ import java.util.List;
 
 public class ApartamentoSpecification {
 
+    private ApartamentoSpecification() {}
+
     public static Specification<ApartamentoEntity> conFiltro(ApartamentoFilter filtro) {
         return (root, query, cb) -> {
             List<Predicate> predicados = new ArrayList<>();

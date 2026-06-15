@@ -10,12 +10,16 @@ public class CorreoException extends DominioException {
         super(mensaje);
     }
 
+    private CorreoException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     public static CorreoException errorEnvio(String destinatario, Throwable causa) {
         return new CorreoException("error enviando correo a " + destinatario, causa);
     }
 
     public static CorreoException errorEnvio(String destinatario, String detalle) {
-        return new CorreoException("error enviando correo a " + destinatario + ": " + detalle);
+        return new CorreoException("error enviando correo a " + destinatario + ": " + detalle, 500);
     }
 
     public static CorreoException errorInterno(String detalle, Throwable causa) {

@@ -9,6 +9,8 @@ import java.util.List;
 
 public class InquilinoSpecification {
 
+    private InquilinoSpecification() {}
+
     public static Specification<InquilinoEntity> porApartamento(Long idApartamento) {
         return (root, query, cb) -> cb.equal(root.get("idApartamento"), idApartamento);
     }

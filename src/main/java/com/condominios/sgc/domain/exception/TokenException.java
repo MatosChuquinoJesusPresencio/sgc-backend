@@ -7,6 +7,10 @@ public class TokenException extends DominioException {
         super(mensaje);
     }
 
+    private TokenException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     private TokenException(String mensaje, Throwable causa) {
         super(mensaje, causa);
     }
@@ -32,11 +36,11 @@ public class TokenException extends DominioException {
     }
 
     public static TokenException noEncontrado() {
-        return new TokenException("token no encontrado");
+        return new TokenException("token no encontrado", 404);
     }
 
     public static TokenException tokenExpirado() {
-        return new TokenException("el token ha expirado");
+        return new TokenException("el token ha expirado", 401);
     }
 
     public static TokenException tipoNoSoportado(TipoToken tipo) {

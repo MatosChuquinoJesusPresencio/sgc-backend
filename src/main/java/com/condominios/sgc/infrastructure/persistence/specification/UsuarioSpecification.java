@@ -9,6 +9,8 @@ import java.util.List;
 
 public class UsuarioSpecification {
 
+    private UsuarioSpecification() {}
+
     public static Specification<UsuarioEntity> porCondominio(Long idCondominio) {
         return (root, query, cb) -> cb.equal(root.get("idCondominio"), idCondominio);
     }

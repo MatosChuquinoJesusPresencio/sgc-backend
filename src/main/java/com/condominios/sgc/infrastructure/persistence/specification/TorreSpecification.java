@@ -9,6 +9,8 @@ import java.util.List;
 
 public class TorreSpecification {
 
+    private TorreSpecification() {}
+
     public static Specification<TorreEntity> conFiltro(TorreFilter filtro) {
         return (root, query, cb) -> {
             List<Predicate> predicados = new ArrayList<>();

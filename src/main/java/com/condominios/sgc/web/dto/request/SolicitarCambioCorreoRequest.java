@@ -1,5 +1,8 @@
 package com.condominios.sgc.web.dto.request;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public record SolicitarCambioCorreoRequest(
-    String nuevoCorreo
+    @NotBlank @Email String nuevoCorreo
 ) {}

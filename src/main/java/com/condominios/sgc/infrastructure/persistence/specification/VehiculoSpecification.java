@@ -10,6 +10,8 @@ import java.util.List;
 
 public class VehiculoSpecification {
 
+    private VehiculoSpecification() {}
+
     public static Specification<VehiculoEntity> porCondominioYTipo(Long idCondominio, TipoVehiculo tipo) {
         return (root, query, cb) -> cb.and(
                 cb.equal(root.get("idCondominio"), idCondominio),

@@ -5,6 +5,10 @@ public class UsuarioException extends DominioException {
         super(mensaje);
     }
 
+    private UsuarioException(String mensaje, int httpStatus) {
+        super(mensaje, httpStatus);
+    }
+
     public static UsuarioException nombreRequerido() {
         return new UsuarioException("nombres no puede estar vacío");
     }
@@ -42,11 +46,11 @@ public class UsuarioException extends DominioException {
     }
 
     public static UsuarioException noEncontrado() {
-        return new UsuarioException("usuario no encontrado");
+        return new UsuarioException("usuario no encontrado", 404);
     }
 
     public static UsuarioException credencialesInvalidas() {
-        return new UsuarioException("correo o contraseña incorrectos");
+        return new UsuarioException("correo o contraseña incorrectos", 401);
     }
 
     public static UsuarioException noPermisoAsignarRol() {

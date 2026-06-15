@@ -1,9 +1,6 @@
 package com.condominios.sgc.web.exception;
 
-import com.condominios.sgc.domain.exception.CorreoException;
 import com.condominios.sgc.domain.exception.DominioException;
-import com.condominios.sgc.domain.exception.TokenException;
-import com.condominios.sgc.domain.exception.UsuarioException;
 import com.condominios.sgc.web.dto.response.ErrorResponse;
 
 import jakarta.validation.ConstraintViolationException;
@@ -19,36 +16,17 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UsuarioException.class)
-    public ResponseEntity<ErrorResponse> handleUsuario(UsuarioException ex) {
-        String msg = ex.getMessage();
-        if (msg.contains("Credenciales"))
-            return error(401, "No autorizado", msg);
-        if (msg.contains("no encontrado"))
-            return error(404, "No encontrado", msg);
-        return error(400, "Solicitud inválida", msg);
-    }
-
-    @ExceptionHandler(TokenException.class)
-    public ResponseEntity<ErrorResponse> handleToken(TokenException ex) {
-        String msg = ex.getMessage();
-        if (msg.contains("expirado") || msg.contains("ya usado") || msg.contains("no encontrado"))
-            return error(401, "No autorizado", msg);
-        return error(400, "Solicitud inválida", msg);
-    }
-
-    @ExceptionHandler(CorreoException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleCorreo(CorreoException ex) {
-        return new ErrorResponse(500, "Error interno", ex.getMessage());
-    }
-
     @ExceptionHandler(DominioException.class)
     public ResponseEntity<ErrorResponse> handleDominio(DominioException ex) {
-        String msg = ex.getMessage();
-        if (msg.contains("no encontrado"))
-            return error(404, "No encontrado", msg);
-        return error(400, "Solicitud inválida", msg);
+        int status = ex.getHttpStatus();
+        String error = switch (status) {
+            case 401 -> "No autorizado";
+            case 404 -> "No encontrado";
+            case 500 -> "Error interno";
+            default -> "Solicitud inválida";
+        };
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status, error, ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -70,10 +48,5 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleGeneral(Exception ex) {
         return new ErrorResponse(500, "Error interno", "Ocurrió un error inesperado");
-    }
-
-    private ResponseEntity<ErrorResponse> error(int status, String error, String message) {
-        return ResponseEntity.status(status)
-                .body(new ErrorResponse(status, error, message));
     }
 }

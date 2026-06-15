@@ -9,6 +9,8 @@ import java.util.List;
 
 public class LogAccesoVehicularSpecification {
 
+    private LogAccesoVehicularSpecification() {}
+
     public static Specification<LogAccesoVehicularEntity> conFiltro(LogAccesoVehicularFilter filtro) {
         return (root, query, cb) -> {
             List<Predicate> predicados = new ArrayList<>();

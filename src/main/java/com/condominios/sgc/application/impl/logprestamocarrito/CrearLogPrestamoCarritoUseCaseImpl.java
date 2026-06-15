@@ -24,8 +24,7 @@ public class CrearLogPrestamoCarritoUseCaseImpl implements CrearLogPrestamoCarri
     public LogPrestamoCarritoResponse ejecutar(CrearLogPrestamoCarritoCommand command) {
         ConfiguracionModel config = configuracionPort.obtenerPorCondominio(command.idCondominio())
             .orElseThrow(ConfiguracionException::noEncontrado);
-        int count = (int) logPrestamoCarritoPort.obtenerSinDevolucion().stream()
-            .filter(l -> l.getIdApartamento().equals(command.idApartamento())).count();
+        int count = (int) logPrestamoCarritoPort.contarSinDevolucionPorApartamento(command.idApartamento());
         if (!config.puedeUsarCarrito(count))
             throw LogPrestamoCarritoException.limiteAlcanzado();
 

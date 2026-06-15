@@ -9,6 +9,8 @@ import java.util.List;
 
 public class EstacionamientoSpecification {
 
+    private EstacionamientoSpecification() {}
+
     public static Specification<EstacionamientoEntity> conFiltro(EstacionamientoFilter filtro) {
         return (root, query, cb) -> {
             List<Predicate> predicados = new ArrayList<>();

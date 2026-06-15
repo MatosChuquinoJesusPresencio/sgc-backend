@@ -17,6 +17,10 @@ public class CarritoException extends DominioException {
         return new CarritoException("idCondominio no puede ser nulo");
     }
 
+    public static CarritoException estadoRequerido() {
+        return new CarritoException("estado no puede ser nulo");
+    }
+
     public static CarritoException estadoInvalido() {
         return new CarritoException("cambio de estado no permitido");
     }

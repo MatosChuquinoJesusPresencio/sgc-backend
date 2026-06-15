@@ -1,8 +1,11 @@
 package com.condominios.sgc.web.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public record CrearCondominioRequest(
-    String nombre,
-    Long idPais,
-    Long idCiudad,
+    @NotBlank String nombre,
+    @NotNull Long idPais,
+    @NotNull Long idCiudad,
     String direccion
 ) {}

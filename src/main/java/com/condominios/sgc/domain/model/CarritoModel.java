@@ -30,6 +30,7 @@ public class CarritoModel {
     public Long getIdCondominio() { return idCondominio; }
     
     public void actualizarEstado(EstadoCarrito estado) {
+        noNulo(estado, CarritoException::estadoRequerido);
         if (!this.estado.puedeCambiarA(estado)) {
             throw CarritoException.estadoInvalido();
         }

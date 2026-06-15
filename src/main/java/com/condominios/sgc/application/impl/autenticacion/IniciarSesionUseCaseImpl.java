@@ -10,7 +10,9 @@ import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.port.AutenticacionPort;
 import com.condominios.sgc.domain.port.TokenPort;
 import com.condominios.sgc.domain.port.UsuarioPort;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class IniciarSesionUseCaseImpl implements IniciarSesionUseCase {
     private final UsuarioPort usuarioPort;
     private final AutenticacionPort autenticacionPort;
