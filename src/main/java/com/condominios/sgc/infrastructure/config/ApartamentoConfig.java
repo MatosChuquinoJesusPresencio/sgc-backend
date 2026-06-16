@@ -34,4 +34,17 @@ public class ApartamentoConfig {
         return new ObtenerApartamentoPorIdUseCaseImpl(apartamentoPort);
     }
 
+    @Bean
+    public ObtenerApartamentoPorPropietarioUseCase obtenerApartamentoPorPropietarioUseCase(ApartamentoPort apartamentoPort) {
+        return new ObtenerApartamentoPorPropietarioUseCaseImpl(apartamentoPort);
+    }
+
+    @Bean
+    public ObtenerDetalleApartamentoUseCase obtenerDetalleApartamentoUseCase(ApartamentoPort apartamentoPort,
+            PisoPort pisoPort, TorrePort torrePort, CondominioPort condominioPort,
+            UsuarioPort usuarioPort, InquilinoPort inquilinoPort, EstacionamientoPort estacionamientoPort) {
+        return new ObtenerDetalleApartamentoUseCaseImpl(apartamentoPort, pisoPort, torrePort,
+                condominioPort, usuarioPort, inquilinoPort, estacionamientoPort);
+    }
+
 }

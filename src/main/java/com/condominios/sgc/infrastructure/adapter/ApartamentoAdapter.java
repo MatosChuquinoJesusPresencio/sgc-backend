@@ -39,6 +39,11 @@ public class ApartamentoAdapter implements ApartamentoPort {
     }
 
     @Override
+    public Optional<ApartamentoModel> obtenerPorPropietario(Long idPropietario) {
+        return repository.findByIdPropietario(idPropietario).map(mapper::aModelo);
+    }
+
+    @Override
     public PaginacionResponse<ApartamentoModel> obtenerTodos(PaginacionRequest request, ApartamentoFilter filtro) {
         Pageable pageable = PageRequest.of(request.pagina(), request.tamano());
         Page<ApartamentoEntity> pagina = repository.findAll(ApartamentoSpecification.conFiltro(filtro), pageable);
