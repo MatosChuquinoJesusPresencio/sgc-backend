@@ -16,6 +16,8 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,9 +53,11 @@ public class InquilinoEntity {
     private Long idApartamento;
 
     @OneToOne(mappedBy = "inquilino")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private VehiculoEntity vehiculo;
 
     @OneToMany(mappedBy = "inquilino")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private List<LogPrestamoCarritoEntity> logsPrestamoCarrito = new ArrayList<>();
 
     public Long getId() { return id; }

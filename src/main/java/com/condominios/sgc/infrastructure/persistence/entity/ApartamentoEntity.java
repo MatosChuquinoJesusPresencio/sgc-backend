@@ -13,6 +13,8 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -51,12 +53,15 @@ public class ApartamentoEntity {
     private Long idPiso;
 
     @OneToMany(mappedBy = "apartamento")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<InquilinoEntity> inquilinos = new ArrayList<>();
 
     @OneToMany(mappedBy = "apartamento")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<EstacionamientoEntity> estacionamientos = new ArrayList<>();
 
     @OneToMany(mappedBy = "apartamento")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private List<LogPrestamoCarritoEntity> logsPrestamoCarrito = new ArrayList<>();
 
     public Long getId() { return id; }

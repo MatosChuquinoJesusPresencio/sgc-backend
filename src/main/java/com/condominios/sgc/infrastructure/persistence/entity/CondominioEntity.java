@@ -13,6 +13,8 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -51,21 +53,27 @@ public class CondominioEntity {
     private Instant fechaCreacion;
 
     @OneToMany(mappedBy = "condominio")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<UsuarioEntity> usuarios = new ArrayList<>();
 
     @OneToMany(mappedBy = "condominio")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<TorreEntity> torres = new ArrayList<>();
 
     @OneToMany(mappedBy = "condominio")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<CarritoEntity> carritos = new ArrayList<>();
 
     @OneToOne(mappedBy = "condominio")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private ConfiguracionEntity configuracion;
 
     @OneToMany(mappedBy = "condominio")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<EstacionamientoEntity> estacionamientos = new ArrayList<>();
 
     @OneToMany(mappedBy = "condominio")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<VehiculoEntity> vehiculos = new ArrayList<>();
 
     public Long getId() { return id; }

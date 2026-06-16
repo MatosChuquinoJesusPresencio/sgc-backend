@@ -15,6 +15,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +46,7 @@ public class CarritoEntity {
     private Long idCondominio;
 
     @OneToMany(mappedBy = "carrito")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private List<LogPrestamoCarritoEntity> logsPrestamoCarrito = new ArrayList<>();
 
     public Long getId() { return id; }
