@@ -8,4 +8,7 @@ import java.util.List;
 public interface LogPrestamoCarritoRepository extends JpaRepository<LogPrestamoCarritoEntity, Long>, JpaSpecificationExecutor<LogPrestamoCarritoEntity> {
     List<LogPrestamoCarritoEntity> findByFechaDevolucionIsNull();
     long countByFechaDevolucionIsNullAndIdApartamento(Long idApartamento);
+    List<LogPrestamoCarritoEntity> findByIdApartamentoInAndFechaDevolucionIsNull(List<Long> idsApartamento);
+    List<LogPrestamoCarritoEntity> findByIdPropietarioOrderByFechaPrestamoDesc(Long idPropietario, org.springframework.data.domain.Pageable pageable);
+    List<LogPrestamoCarritoEntity> findByIdApartamentoInOrderByFechaPrestamoDesc(List<Long> idsApartamento, org.springframework.data.domain.Pageable pageable);
 }

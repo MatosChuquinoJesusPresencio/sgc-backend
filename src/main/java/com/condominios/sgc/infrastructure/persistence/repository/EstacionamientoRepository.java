@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface EstacionamientoRepository extends JpaRepository<EstacionamientoEntity, Long>, JpaSpecificationExecutor<EstacionamientoEntity> {
     List<EstacionamientoEntity> findByIdApartamento(Long idApartamento);
+    List<EstacionamientoEntity> findByIdCondominioAndDisponibleTrue(Long idCondominio);
 }

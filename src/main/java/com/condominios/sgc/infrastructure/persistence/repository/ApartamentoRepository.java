@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ApartamentoRepository extends JpaRepository<ApartamentoEntity, Long>, JpaSpecificationExecutor<ApartamentoEntity> {
     List<ApartamentoEntity> findByIdPiso(Long idPiso);
+    List<ApartamentoEntity> findByIdPropietario(Long idPropietario);
 }

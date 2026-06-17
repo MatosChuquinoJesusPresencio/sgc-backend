@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface InquilinoRepository extends JpaRepository<InquilinoEntity, Long>, JpaSpecificationExecutor<InquilinoEntity> {
     Optional<InquilinoEntity> findByTipoDocumentoAndNumeroDocumento(TipoDocumento tipoDocumento, String numeroDocumento);
     List<InquilinoEntity> findByIdApartamento(Long idApartamento);
+    List<InquilinoEntity> findByIdApartamentoIn(List<Long> idsApartamento);
 }
