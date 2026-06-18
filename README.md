@@ -93,7 +93,6 @@ docker run -p 8080:8080 --env-file .env sgc-backend
 - **Tokens**: Access token (15 min), Refresh token (7 días), Remember-me (30 días)
 - **Endpoints públicos**: `/api/auth/login`, `/api/auth/refresh`, `/api/auth/forgot-password`, `/api/auth/reset-password`, `/api/auth/verificar-email`, `/api/health`, Swagger UI
 - **Contraseñas** hasheadas con BCrypt
-
 ## 📚 API Endpoints
 
 | Grupo                    | Prefijo                    |
