@@ -177,4 +177,6 @@ src/
 │       └── application.properties
 └── test/
     └── java/com/condominios/sgc/
+
+
 ```
