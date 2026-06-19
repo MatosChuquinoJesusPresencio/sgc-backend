@@ -34,3 +34,6 @@ build/
 
 ### Environment ###
 .env
+
+### OpenCode ###
+AGENTS.md

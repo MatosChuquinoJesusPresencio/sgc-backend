@@ -1,0 +1,8 @@
+target/
+.env
+.git
+.gitattributes
+.gitignore
+.vscode/
+*.md
+AGENTS.md
