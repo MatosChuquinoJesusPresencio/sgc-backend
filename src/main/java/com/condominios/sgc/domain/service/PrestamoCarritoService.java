@@ -1,4 +1,4 @@
-package com.condominios.sgc.domain.services;
+package com.condominios.sgc.domain.service;
 
 import java.math.BigDecimal;
 import java.time.Duration;

@@ -1,4 +1,4 @@
-package com.condominios.sgc.domain.services;
+package com.condominios.sgc.domain.service;
 
 import com.condominios.sgc.domain.type.MetodoEntrada;
 import com.condominios.sgc.domain.type.TipoHabitante;
