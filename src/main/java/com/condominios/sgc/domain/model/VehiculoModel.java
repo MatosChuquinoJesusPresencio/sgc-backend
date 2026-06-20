@@ -1,86 +1,97 @@
 package com.condominios.sgc.domain.model;
 
+import com.condominios.sgc.domain.shared.exception.VehiculoException;
+import com.condominios.sgc.domain.shared.value_objects.PlacaVehiculo;
+
 import static com.condominios.sgc.domain.util.ValidacionUtil.*;
 
-import com.condominios.sgc.domain.auxiliar.TipoVehiculo;
-import com.condominios.sgc.domain.exception.VehiculoException;
+import com.condominios.sgc.domain.type.TipoVehiculo;
 
 public class VehiculoModel {
     private Long id;
     private String marca;
     private String color;
     private String modelo;
-    private String placa;
+    private PlacaVehiculo placa;
     private TipoVehiculo tipo;
-    private Long propietarioId;
-    private Long inquilinoId;
-    private Long estacionamientoId;
+    private Long idPropietario;
+    private Long idInquilino;
+    private Long idEstacionamiento;
+    private Long idCondominio;
 
-    public VehiculoModel(
-        Long id,
-        String marca,
-        String color,
-        String modelo,
-        String placa,
-        TipoVehiculo tipo,
-        Long propietarioId,
-        Long inquilinoId,
-        Long estacionamientoId
-    ) {
-        this(marca, color, modelo, placa, tipo, propietarioId, inquilinoId, estacionamientoId);
+    public VehiculoModel(Long id, String marca, String color, String modelo, PlacaVehiculo placa,
+            TipoVehiculo tipo, Long idPropietario, Long idInquilino, Long idEstacionamiento,
+            Long idCondominio) {
         this.id = id;
+        this.marca = marca;
+        this.color = color;
+        this.modelo = modelo;
+        this.placa = placa;
+        this.tipo = tipo;
+        this.idEstacionamiento = idEstacionamiento;
+        this.idCondominio = idCondominio;
     }
 
-    public VehiculoModel(
-        String marca,
-        String color,
-        String modelo,
-        String placa,
-        TipoVehiculo tipo,
-        Long propietarioId,
-        Long inquilinoId,
-        Long estacionamientoId
-    ) {
-        validarYAsignarDatos(marca, color, modelo, placa, tipo, propietarioId, inquilinoId, estacionamientoId);
-    }
-
-    private void validarYAsignarDatos(String marca, String color, String modelo, String placa, TipoVehiculo tipo, Long propietarioId, Long inquilinoId, Long estacionamientoId) {
-        this.marca = requerirNoVacio(marca, VehiculoException::datosObligatorios);
-        this.color = requerirNoVacio(color, VehiculoException::datosObligatorios);
-        this.modelo = requerirNoVacio(modelo, VehiculoException::datosObligatorios);
-        this.placa = requerirNoVacio(placa, VehiculoException::placaObligatoria);
-        this.tipo = requerirNoNulo(tipo, VehiculoException::tipoVehiculoObligatorio);
-        this.estacionamientoId = estacionamientoId;
-        asignarDueno(propietarioId, inquilinoId);
+    public VehiculoModel(String marca, String color, String modelo, String placa, TipoVehiculo tipo,
+            Long idCondominio, Long idPropietario, Long idInquilino) {
+        this.id = null;
+        this.marca = requerido(marca, VehiculoException::marcaRequerida);
+        this.color = requerido(color, VehiculoException::colorRequerido);
+        this.modelo = requerido(modelo, VehiculoException::modeloRequerido);
+        this.placa = new PlacaVehiculo(placa);
+        this.tipo = noNulo(tipo, VehiculoException::tipoRequerido);
+        asignarSolicitante(idPropietario, idInquilino);
+        this.idEstacionamiento = null;
+        this.idCondominio = noNulo(idCondominio, VehiculoException::condominioRequerido);
     }
 
     public Long getId() { return id; }
     public String getMarca() { return marca; }
     public String getColor() { return color; }
     public String getModelo() { return modelo; }
-    public String getPlaca() { return placa; }
+    public PlacaVehiculo getPlaca() { return placa; }
     public TipoVehiculo getTipo() { return tipo; }
-    public Long getPropietarioId() { return propietarioId; }
-    public Long getInquilinoId() { return inquilinoId; }
-    public Long getEstacionamientoId() { return estacionamientoId; }
+    public Long getIdPropietario() { return idPropietario; }
+    public Long getIdInquilino() { return idInquilino; }
+    public Long getIdEstacionamiento() { return idEstacionamiento; }
+    public Long getIdCondominio() { return idCondominio; }
 
-    public void asignarDueno(Long propietarioId, Long inquilinoId) {
-        boolean tienePropietario = propietarioId != null;
-        boolean tieneInquilino = inquilinoId != null;
+    public void actualizar(String marca, String color, String modelo, String placa, TipoVehiculo tipo) {
+        this.marca = requerido(marca, VehiculoException::marcaRequerida);
+        this.color = requerido(color, VehiculoException::colorRequerido);
+        this.modelo = requerido(modelo, VehiculoException::modeloRequerido);
+        this.placa = new PlacaVehiculo(placa);
+        this.tipo = noNulo(tipo, VehiculoException::tipoRequerido);
+    }
 
-        if (tienePropietario == tieneInquilino) {
-            throw VehiculoException.duenoInvalido();
+    private void asignarPropietario(Long idPropietario) {
+        this.idPropietario = noNulo(idPropietario, VehiculoException::propietarioRequerido);
+        this.idInquilino = null;
+    }
+
+    private void asignarInquilino(Long idInquilino) {
+        this.idInquilino = noNulo(idInquilino, VehiculoException::inquilinoRequerido);
+        this.idPropietario = null;
+    }
+
+    private void asignarSolicitante(Long idPropietario, Long idInquilino) {
+        boolean hayPropietario = idPropietario != null;
+        boolean hayInquilino = idInquilino != null;
+        if (hayInquilino == hayPropietario)
+            throw VehiculoException.solicitanteInvalido();
+
+        if (hayInquilino) {
+            asignarInquilino(idInquilino);
+        } else {
+            asignarPropietario(idPropietario);
         }
-
-        this.propietarioId = propietarioId;
-        this.inquilinoId = inquilinoId;
     }
 
-    public void asignarEstacionamiento(Long estacionamientoId) {
-        this.estacionamientoId = requerirNoNulo(estacionamientoId, VehiculoException::estacionamientoObligatorio);
+    public void asignarEstacionamiento(Long idEstacionamiento) {
+        this.idEstacionamiento = noNulo(idEstacionamiento, VehiculoException::estacionamientoRequerido);
     }
 
-    public void actualizarDatos(String color) {
-        validarYAsignarDatos(this.marca, color, this.modelo, this.placa, this.tipo, this.propietarioId, this.inquilinoId, this.estacionamientoId);
+    public void desasignarEstacionamiento() {
+        this.idEstacionamiento = null;
     }
 }
