@@ -16,11 +16,11 @@ import com.condominios.sgc.domain.port.LogPrestamoCarritoPort;
 import com.condominios.sgc.domain.port.PisoPort;
 import com.condominios.sgc.domain.port.TorrePort;
 import com.condominios.sgc.domain.port.UsuarioPort;
-import com.condominios.sgc.web.dto.DashboardAdminCondominioResponse;
-import com.condominios.sgc.web.dto.DashboardAdminCondominioResponse.CondominioInfo;
-import com.condominios.sgc.web.dto.DashboardAdminCondominioResponse.ConfigData;
-import com.condominios.sgc.web.dto.LogAccesoVehicularResponse;
-import com.condominios.sgc.web.dto.LogPrestamoCarritoResponse;
+import com.condominios.sgc.infrastructure.web.dto.DashboardAdminCondominioResponse;
+import com.condominios.sgc.infrastructure.web.dto.LogAccesoVehicularResponse;
+import com.condominios.sgc.infrastructure.web.dto.LogPrestamoCarritoResponse;
+import com.condominios.sgc.infrastructure.web.dto.DashboardAdminCondominioResponse.CondominioInfo;
+import com.condominios.sgc.infrastructure.web.dto.DashboardAdminCondominioResponse.ConfigData;
 
 public class ObtenerDashboardAdminCondominioUseCaseImpl implements ObtenerDashboardAdminCondominioUseCase {
 

@@ -6,7 +6,7 @@ import com.condominios.sgc.domain.port.CarritoPort;
 import com.condominios.sgc.domain.port.ConfiguracionPort;
 import com.condominios.sgc.domain.port.TorrePort;
 import com.condominios.sgc.domain.port.UsuarioPort;
-import com.condominios.sgc.web.dto.CondominioRelationsResponse;
+import com.condominios.sgc.infrastructure.web.dto.CondominioRelationsResponse;
 
 public class ObtenerCondominioRelationsUseCaseImpl implements ObtenerCondominioRelationsUseCase {
 

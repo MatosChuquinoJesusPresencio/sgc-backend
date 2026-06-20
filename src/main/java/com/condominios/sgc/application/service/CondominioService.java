@@ -14,7 +14,7 @@ import com.condominios.sgc.application.usecase.ObtenerCondominioUseCase;
 import com.condominios.sgc.domain.dto.PaginacionRequest;
 import com.condominios.sgc.domain.dto.PaginacionResponse;
 import com.condominios.sgc.domain.model.CondominioModel;
-import com.condominios.sgc.web.dto.CondominioRelationsResponse;
+import com.condominios.sgc.infrastructure.web.dto.CondominioRelationsResponse;
 
 @Service
 @Transactional

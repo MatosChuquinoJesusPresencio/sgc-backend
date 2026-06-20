@@ -11,9 +11,9 @@ import com.condominios.sgc.domain.port.LogAccesoVehicularPort;
 import com.condominios.sgc.domain.port.LogPrestamoCarritoPort;
 import com.condominios.sgc.domain.port.TorrePort;
 import com.condominios.sgc.domain.port.UsuarioPort;
-import com.condominios.sgc.web.dto.ActividadCondominio;
-import com.condominios.sgc.web.dto.CondominioResumen;
-import com.condominios.sgc.web.dto.DashboardSuperAdminResponse;
+import com.condominios.sgc.infrastructure.web.dto.ActividadCondominio;
+import com.condominios.sgc.infrastructure.web.dto.CondominioResumen;
+import com.condominios.sgc.infrastructure.web.dto.DashboardSuperAdminResponse;
 
 public class ObtenerDashboardSuperAdminUseCaseImpl implements ObtenerDashboardSuperAdminUseCase {
 
