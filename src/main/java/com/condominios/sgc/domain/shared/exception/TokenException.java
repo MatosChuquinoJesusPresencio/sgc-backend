@@ -25,10 +25,6 @@ public class TokenException extends DominioException {
         return new TokenException("idUsuario no puede ser nulo");
     }
 
-    public static TokenException tokenYaUsado() {
-        return new TokenException("el token ya fue usado");
-    }
-
     public static TokenException noEncontrado() {
         return new TokenException("token no encontrado");
     }
