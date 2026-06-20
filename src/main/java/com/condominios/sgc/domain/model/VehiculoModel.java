@@ -1,7 +1,7 @@
 package com.condominios.sgc.domain.model;
 
 import com.condominios.sgc.domain.shared.exception.VehiculoException;
-import com.condominios.sgc.domain.shared.value_objects.PlacaVehiculo;
+import com.condominios.sgc.domain.shared.valueobject.PlacaVehiculo;
 
 import static com.condominios.sgc.domain.util.ValidacionUtil.*;
 

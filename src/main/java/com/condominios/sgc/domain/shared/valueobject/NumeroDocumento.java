@@ -1,4 +1,4 @@
-package com.condominios.sgc.domain.shared.value_objects;
+package com.condominios.sgc.domain.shared.valueobject;
 
 import com.condominios.sgc.domain.shared.exception.ValueObjectException;
 import com.condominios.sgc.domain.type.TipoDocumento;

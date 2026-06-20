@@ -1,8 +1,8 @@
 package com.condominios.sgc.domain.model;
 
 import com.condominios.sgc.domain.shared.exception.InquilinoException;
-import com.condominios.sgc.domain.shared.value_objects.NombreCompleto;
-import com.condominios.sgc.domain.shared.value_objects.NumeroDocumento;
+import com.condominios.sgc.domain.shared.valueobject.NombreCompleto;
+import com.condominios.sgc.domain.shared.valueobject.NumeroDocumento;
 import com.condominios.sgc.domain.type.TipoDocumento;
 
 import static com.condominios.sgc.domain.util.ValidacionUtil.*;

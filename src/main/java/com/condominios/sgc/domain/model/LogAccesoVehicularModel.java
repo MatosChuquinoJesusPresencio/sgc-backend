@@ -5,7 +5,7 @@ import java.time.Instant;
 import com.condominios.sgc.domain.type.MetodoEntrada;
 import com.condominios.sgc.domain.type.TipoHabitante;
 import com.condominios.sgc.domain.shared.exception.LogAccesoVehicularException;
-import com.condominios.sgc.domain.shared.value_objects.PlacaVehiculo;
+import com.condominios.sgc.domain.shared.valueobject.PlacaVehiculo;
 
 import static com.condominios.sgc.domain.util.ValidacionUtil.*;
 

@@ -2,9 +2,9 @@ package com.condominios.sgc.domain.model;
 
 import com.condominios.sgc.domain.type.Rol;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
-import com.condominios.sgc.domain.shared.value_objects.Correo;
-import com.condominios.sgc.domain.shared.value_objects.NombreCompleto;
-import com.condominios.sgc.domain.shared.value_objects.Telefono;
+import com.condominios.sgc.domain.shared.valueobject.Correo;
+import com.condominios.sgc.domain.shared.valueobject.NombreCompleto;
+import com.condominios.sgc.domain.shared.valueobject.Telefono;
 
 import static com.condominios.sgc.domain.util.ValidacionUtil.*;
 
