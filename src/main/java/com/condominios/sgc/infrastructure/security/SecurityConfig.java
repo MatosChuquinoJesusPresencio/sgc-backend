@@ -33,7 +33,10 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .httpBasic(h -> h.disable())
+            .formLogin(f -> f.disable())
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/").permitAll()
                 .requestMatchers("/api/auth/iniciar-sesion").permitAll()
                 .requestMatchers("/api/auth/cerrar-sesion").permitAll()
                 .requestMatchers("/api/auth/olvidaste-contrasena").permitAll()
