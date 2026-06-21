@@ -1,4 +1,4 @@
-package com.condominios.sgc.infrastructure.adapter.out.config;
+package com.condominios.sgc.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

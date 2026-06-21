@@ -4,6 +4,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
+import com.condominios.sgc.domain.shared.exception.AutenticacionException;
 import com.condominios.sgc.domain.type.Rol;
 
 @Component
@@ -14,7 +15,7 @@ public class SecurityUtil {
         if (auth != null && auth.getPrincipal() instanceof Jwt jwt) {
             return Long.parseLong(jwt.getSubject());
         }
-        throw new IllegalStateException("No se pudo determinar el ID del usuario autenticado");
+        throw AutenticacionException.usuarioNoAutenticado();
     }
 
     public Rol obtenerRolAutenticado() {
@@ -22,6 +23,6 @@ public class SecurityUtil {
         if (auth != null && auth.getPrincipal() instanceof Jwt jwt) {
             return Rol.valueOf(jwt.getClaimAsString("rol"));
         }
-        throw new IllegalStateException("No se pudo determinar el rol del usuario autenticado");
+        throw AutenticacionException.usuarioNoAutenticado();
     }
 }
