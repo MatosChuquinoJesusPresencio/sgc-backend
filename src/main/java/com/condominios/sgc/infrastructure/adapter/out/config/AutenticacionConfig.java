@@ -8,6 +8,7 @@ import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.service.CorreoServicePort;
 import com.condominios.sgc.application.port.out.service.HashServicePort;
 import com.condominios.sgc.application.port.out.service.JwtServicePort;
+import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.application.service.CerrarSesionService;
 import com.condominios.sgc.application.service.IniciarSesionService;
 import com.condominios.sgc.application.service.ObtenerUsuarioActualService;
@@ -60,7 +61,8 @@ public class AutenticacionConfig {
 
     @Bean
     public ObtenerUsuarioActualService obtenerUsuarioActualService(
-            UsuarioRepositoryPort usuarioRepository) {
-        return new ObtenerUsuarioActualService(usuarioRepository);
+            UsuarioRepositoryPort usuarioRepository,
+            SecurityServicePort securityService) {
+        return new ObtenerUsuarioActualService(usuarioRepository, securityService);
     }
 }
