@@ -2,10 +2,10 @@ package com.condominios.sgc.application.port.out.catalog;
 
 import java.util.Optional;
 
-import com.condominios.sgc.domain.model.catalog.Moneda;
+import com.condominios.sgc.domain.model.catalog.MonedaModel;
 
 public interface MonedaRepositoryPort {
-    Optional<Moneda> buscarPorId(Long id);
-    Moneda guardar(Moneda moneda);
+    Optional<MonedaModel> buscarPorId(Long id);
+    MonedaModel guardar(MonedaModel modelo);
     void eliminarPorId(Long id);
 }
