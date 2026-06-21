@@ -52,6 +52,9 @@ public class RefrescarTokenService implements RefrescarTokenUseCase {
             usuario.getRol(),
             usuario.getIdCondominio());
 
-        return new SesionUsuarioResult(valorTokenAcceso, valorTokenRefresco, usuarioActual);
+        long expAccesoMs = jwtService.obtenerDuracionMs(TipoToken.ACCESO, false);
+        long expRefrescoMs = jwtService.obtenerDuracionMs(TipoToken.REFRESCO, false);
+
+        return new SesionUsuarioResult(valorTokenAcceso, valorTokenRefresco, usuarioActual, expAccesoMs, expRefrescoMs);
     }
 }

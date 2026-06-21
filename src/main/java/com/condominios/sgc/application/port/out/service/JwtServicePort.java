@@ -11,4 +11,5 @@ public interface JwtServicePort {
     String generarToken(Long idUsuario, TipoToken tipo);
     boolean validar(String token);
     Instant obtenerExpiracion(TipoToken tipo);
+    long obtenerDuracionMs(TipoToken tipo, Boolean recuerdame);
 }

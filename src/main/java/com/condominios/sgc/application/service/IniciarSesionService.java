@@ -52,9 +52,14 @@ public class IniciarSesionService implements IniciarSesionUseCase {
                 usuario.getRol(),
                 usuario.getIdCondominio());
 
+        long expAccesoMs = jwtService.obtenerDuracionMs(TipoToken.ACCESO, esRecuerdame);
+        long expRefrescoMs = jwtService.obtenerDuracionMs(TipoToken.REFRESCO, esRecuerdame);
+
         return new SesionUsuarioResult(
                 valorTokenAcceso,
                 valorTokenRefresco,
-                usuarioActual);
+                usuarioActual,
+                expAccesoMs,
+                expRefrescoMs);
     }
 }
