@@ -13,12 +13,12 @@ public class AutenticacionMapper {
     public AutenticacionResponse toAutenticacionResponse(SesionUsuarioResult resultado) {
         var u = resultado.usuarioActual();
         var usuarioResponse = new UsuarioResponse(
-            u.id(), null, u.nombres(), u.apellidos(), null, u.rol(), null, null, u.idCondominio());
+            u.id(), u.nombres(), u.apellidos(), u.rol(), u.idCondominio());
         return new AutenticacionResponse(usuarioResponse, resultado.expiracionAccesoMs(), resultado.expiracionRefrescoMs());
     }
 
     public UsuarioResponse toUsuarioResponse(UsuarioActualResult u) {
         return new UsuarioResponse(
-            u.id(), null, u.nombres(), u.apellidos(), null, u.rol(), null, null, u.idCondominio());
+            u.id(), u.nombres(), u.apellidos(), u.rol(), u.idCondominio());
     }
 }
