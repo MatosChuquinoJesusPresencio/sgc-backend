@@ -46,8 +46,8 @@ public class SecurityConfig {
                 "/api/auth/forgot-password", "/api/auth/reset-password",
                 "/api/auth/verificar-email",
                 "/api/health", "/api/health/**",
-                "/v3/api-docs", "/v3/api-docs/**",
-                "/swagger-ui/**", "/swagger-ui.html")
+                "/docs/api-docs", "/docs/api-docs/**",
+                "/swagger-ui/**", "/docs/swagger-ui.html")
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
