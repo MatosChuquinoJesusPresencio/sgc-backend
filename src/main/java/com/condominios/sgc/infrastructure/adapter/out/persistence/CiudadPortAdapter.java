@@ -1,9 +1,10 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence;
 
-import com.condominios.sgc.application.port.out.catalog.CiudadRepositoryPort;
-import com.condominios.sgc.domain.model.catalog.CiudadModel;
+import com.condominios.sgc.application.port.out.CiudadRepositoryPort;
+import com.condominios.sgc.domain.model.CiudadModel;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.CiudadMapper;
-import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.catalog.CiudadJpaRepository;
+import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.CiudadJpaRepository;
+
 import org.springframework.stereotype.Component;
 import java.util.Optional;
 

@@ -1,8 +1,8 @@
-package com.condominios.sgc.application.port.out.catalog;
+package com.condominios.sgc.application.port.out;
 
 import java.util.Optional;
 
-import com.condominios.sgc.domain.model.catalog.MonedaModel;
+import com.condominios.sgc.domain.model.MonedaModel;
 
 public interface MonedaRepositoryPort {
     Optional<MonedaModel> buscarPorId(Long id);

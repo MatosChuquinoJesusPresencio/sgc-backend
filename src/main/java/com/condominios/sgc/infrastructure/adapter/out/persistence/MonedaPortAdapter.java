@@ -1,9 +1,10 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence;
 
-import com.condominios.sgc.application.port.out.catalog.MonedaRepositoryPort;
-import com.condominios.sgc.domain.model.catalog.MonedaModel;
+import com.condominios.sgc.application.port.out.MonedaRepositoryPort;
+import com.condominios.sgc.domain.model.MonedaModel;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.MonedaMapper;
-import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.catalog.MonedaJpaRepository;
+import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.MonedaJpaRepository;
+
 import org.springframework.stereotype.Component;
 import java.util.Optional;
 

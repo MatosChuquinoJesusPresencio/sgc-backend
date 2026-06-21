@@ -1,9 +1,10 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence;
 
-import com.condominios.sgc.application.port.out.catalog.PaisRepositoryPort;
-import com.condominios.sgc.domain.model.catalog.PaisModel;
+import com.condominios.sgc.application.port.out.PaisRepositoryPort;
+import com.condominios.sgc.domain.model.PaisModel;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.PaisMapper;
-import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.catalog.PaisJpaRepository;
+import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.PaisJpaRepository;
+
 import org.springframework.stereotype.Component;
 import java.util.Optional;
 

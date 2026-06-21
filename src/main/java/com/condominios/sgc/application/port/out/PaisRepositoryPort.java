@@ -1,8 +1,8 @@
-package com.condominios.sgc.application.port.out.catalog;
+package com.condominios.sgc.application.port.out;
 
 import java.util.Optional;
 
-import com.condominios.sgc.domain.model.catalog.PaisModel;
+import com.condominios.sgc.domain.model.PaisModel;
 
 public interface PaisRepositoryPort {
     Optional<PaisModel> buscarPorId(Long id);

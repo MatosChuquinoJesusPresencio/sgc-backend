@@ -1,7 +1,7 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence.mapper;
 
-import com.condominios.sgc.domain.model.catalog.PaisModel;
-import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.catalog.PaisEntity;
+import com.condominios.sgc.domain.model.PaisModel;
+import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.PaisEntity;
 
 public final class PaisMapper {
 

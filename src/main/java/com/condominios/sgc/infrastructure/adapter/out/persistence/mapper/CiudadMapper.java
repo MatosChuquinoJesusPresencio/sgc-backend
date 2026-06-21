@@ -1,7 +1,7 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence.mapper;
 
-import com.condominios.sgc.domain.model.catalog.CiudadModel;
-import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.catalog.CiudadEntity;
+import com.condominios.sgc.domain.model.CiudadModel;
+import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.CiudadEntity;
 
 public final class CiudadMapper {
 

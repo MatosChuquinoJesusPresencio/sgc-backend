@@ -1,7 +1,7 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence.mapper;
 
-import com.condominios.sgc.domain.model.catalog.MonedaModel;
-import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.catalog.MonedaEntity;
+import com.condominios.sgc.domain.model.MonedaModel;
+import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.MonedaEntity;
 
 public final class MonedaMapper {
 

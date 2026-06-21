@@ -1,4 +1,4 @@
-package com.condominios.sgc.infrastructure.adapter.out.persistence.entity.catalog;
+package com.condominios.sgc.infrastructure.adapter.out.persistence.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "ciudad")
+@Table(name = "pais")
 @Getter
 @Setter
 @NoArgsConstructor
-public class CiudadEntity {
+public class PaisEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +24,9 @@ public class CiudadEntity {
     @Column(nullable = false)
     private String nombre;
 
-    @Column(name = "pais_id", nullable = false)
-    private Long idPais;
+    @Column(nullable = false)
+    private String codigoIso;
+
+    @Column(name = "moneda_id", nullable = false)
+    private Long idMoneda;
 }
