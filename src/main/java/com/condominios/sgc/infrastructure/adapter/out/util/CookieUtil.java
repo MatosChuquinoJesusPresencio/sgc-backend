@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+
 @Component
 public class CookieUtil {
 
@@ -31,7 +34,7 @@ public class CookieUtil {
 
     public ResponseCookie crearCookieRefreshToken(String token, long maxAgeMs) {
         return ResponseCookie.from(refreshCookieName, token)
-            .httpOnly(true).secure(secure).path("/api/auth/refresh")
+            .httpOnly(true).secure(secure).path(path)
             .maxAge(maxAgeMs / 1000).sameSite("None").build();
     }
 
@@ -43,7 +46,18 @@ public class CookieUtil {
 
     public ResponseCookie limpiarCookieRefreshToken() {
         return ResponseCookie.from(refreshCookieName, "")
-            .httpOnly(true).secure(secure).path("/api/auth/refresh")
+            .httpOnly(true).secure(secure).path(path)
             .maxAge(0).build();
+    }
+
+    public String extraerRefreshToken(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals(refreshCookieName)) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 }
