@@ -26,12 +26,12 @@ public class SecurityConfig {
     public SecurityFilterChain publicEndpoints(HttpSecurity http,
             CorsConfigurationSource corsSource) throws Exception {
         http
-            .securityMatcher("/", "/api/auth/login", "/api/auth/refresh",
-                "/api/auth/forgot-password", "/api/auth/reset-password",
+            .securityMatcher("/", "/api/auth/iniciar-sesion", "/api/auth/refrescar",
+                "/api/auth/olvide-contrasena", "/api/auth/restablecer-contrasena",
                 "/api/auth/verificar-email",
                 "/api/healt", "/api/healt/**",
                 "/docs/api-docs", "/docs/api-docs/**",
-                "/swagger-ui/**", "/docs/swagger-ui.html")
+                "/documentacion", "/documentacion/**")
             .cors(cors -> cors.configurationSource(corsSource))
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
