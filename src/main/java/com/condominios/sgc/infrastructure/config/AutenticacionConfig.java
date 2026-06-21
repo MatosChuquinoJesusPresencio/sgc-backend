@@ -9,12 +9,15 @@ import com.condominios.sgc.application.port.out.service.CorreoServicePort;
 import com.condominios.sgc.application.port.out.service.HashServicePort;
 import com.condominios.sgc.application.port.out.service.JwtServicePort;
 import com.condominios.sgc.application.port.out.service.SecurityServicePort;
+import com.condominios.sgc.application.service.ActualizarCorreoService;
+import com.condominios.sgc.application.service.CambiarContrasenaService;
 import com.condominios.sgc.application.service.CerrarSesionService;
 import com.condominios.sgc.application.service.IniciarSesionService;
 import com.condominios.sgc.application.service.ObtenerUsuarioActualService;
 import com.condominios.sgc.application.service.OlvidasteContrasenaService;
 import com.condominios.sgc.application.service.RefrescarTokenService;
 import com.condominios.sgc.application.service.RestablecerContrasenaService;
+import com.condominios.sgc.application.service.VerificarEmailService;
 
 @Configuration
 public class AutenticacionConfig {
@@ -64,5 +67,32 @@ public class AutenticacionConfig {
             UsuarioRepositoryPort usuarioRepository,
             SecurityServicePort securityService) {
         return new ObtenerUsuarioActualService(usuarioRepository, securityService);
+    }
+
+    @Bean
+    public CambiarContrasenaService cambiarContrasenaService(
+            SecurityServicePort securityService,
+            UsuarioRepositoryPort usuarioRepository,
+            HashServicePort hashService) {
+        return new CambiarContrasenaService(securityService, usuarioRepository, hashService);
+    }
+
+    @Bean
+    public ActualizarCorreoService actualizarCorreoService(
+            SecurityServicePort securityService,
+            UsuarioRepositoryPort usuarioRepository,
+            HashServicePort hashService,
+            JwtServicePort jwtService,
+            TokenRepositoryPort tokenRepository,
+            CorreoServicePort correoService) {
+        return new ActualizarCorreoService(securityService, usuarioRepository,
+            jwtService, tokenRepository, correoService);
+    }
+
+    @Bean
+    public VerificarEmailService verificarEmailService(
+            TokenRepositoryPort tokenRepository,
+            UsuarioRepositoryPort usuarioRepository) {
+        return new VerificarEmailService(tokenRepository, usuarioRepository);
     }
 }

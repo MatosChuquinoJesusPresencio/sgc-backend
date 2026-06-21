@@ -29,7 +29,7 @@ public class SecurityConfig {
             .securityMatcher("/", "/api/auth/login", "/api/auth/refresh",
                 "/api/auth/forgot-password", "/api/auth/reset-password",
                 "/api/auth/verificar-email",
-                "/api/health", "/api/health/**",
+                "/api/healt", "/api/healt/**",
                 "/docs/api-docs", "/docs/api-docs/**",
                 "/swagger-ui/**", "/docs/swagger-ui.html")
             .cors(cors -> cors.configurationSource(corsSource))

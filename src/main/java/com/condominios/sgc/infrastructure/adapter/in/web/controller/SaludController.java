@@ -14,7 +14,7 @@ public class SaludController {
         return ResponseEntity.ok(Map.of("mensaje", "Bienvenido a la API del Sistema de Gestion de Condominios"));
     }
 
-    @GetMapping("/api/salud")
+    @GetMapping("/api/healt")
     public ResponseEntity<Map<String, String>> salud() {
         return ResponseEntity.ok(Map.of("status", "ok"));
     }
