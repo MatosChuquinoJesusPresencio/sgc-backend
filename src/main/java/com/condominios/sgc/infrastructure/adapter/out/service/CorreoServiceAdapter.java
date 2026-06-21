@@ -15,7 +15,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Component
-public class CorreoServicePortAdapter implements CorreoServicePort {
+public class CorreoServiceAdapter implements CorreoServicePort {
 
     private final RestTemplate restTemplate;
     private final SpringTemplateEngine templateEngine;
@@ -23,7 +23,7 @@ public class CorreoServicePortAdapter implements CorreoServicePort {
     private final String from;
     private final String baseUrl;
 
-    public CorreoServicePortAdapter(
+    public CorreoServiceAdapter(
             RestTemplate restTemplate,
             SpringTemplateEngine templateEngine,
             @Value("${resend.api-key}") String apiKey,

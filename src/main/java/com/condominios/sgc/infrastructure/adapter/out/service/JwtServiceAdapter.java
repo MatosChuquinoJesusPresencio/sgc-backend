@@ -10,11 +10,11 @@ import com.condominios.sgc.domain.type.TipoToken;
 import com.condominios.sgc.infrastructure.adapter.out.util.JwtUtil;
 
 @Component
-public class JwtServicePortAdapter implements JwtServicePort {
+public class JwtServiceAdapter implements JwtServicePort {
 
     private final JwtUtil jwtUtil;
 
-    public JwtServicePortAdapter(JwtUtil jwtUtil) {
+    public JwtServiceAdapter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 
@@ -50,6 +50,14 @@ public class JwtServicePortAdapter implements JwtServicePort {
     @Override
     public Instant obtenerExpiracion(TipoToken tipo) {
         return Instant.now().plusMillis(obtenerExpiracionMs(tipo));
+    }
+
+    @Override
+    public long obtenerDuracionMs(TipoToken tipo, Boolean recuerdame) {
+        if (tipo == TipoToken.REFRESCO && recuerdame != null && recuerdame) {
+            return jwtUtil.getRememberMeRefreshExpiration();
+        }
+        return obtenerExpiracionMs(tipo);
     }
 
     private long obtenerExpiracionMs(TipoToken tipo) {

@@ -6,11 +6,11 @@ import org.springframework.stereotype.Component;
 import com.condominios.sgc.application.port.out.service.HashServicePort;
 
 @Component
-public class HashServicePortAdapter implements HashServicePort {
+public class HashServiceAdapter implements HashServicePort {
 
     private final PasswordEncoder passwordEncoder;
 
-    public HashServicePortAdapter(PasswordEncoder passwordEncoder) {
+    public HashServiceAdapter(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
