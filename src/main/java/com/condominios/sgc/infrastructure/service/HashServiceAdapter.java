@@ -1,4 +1,4 @@
-package com.condominios.sgc.infrastructure.adapter.out.service;
+package com.condominios.sgc.infrastructure.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

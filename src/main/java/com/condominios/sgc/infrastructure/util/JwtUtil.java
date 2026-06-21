@@ -1,4 +1,4 @@
-package com.condominios.sgc.infrastructure.adapter.out.util;
+package com.condominios.sgc.infrastructure.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

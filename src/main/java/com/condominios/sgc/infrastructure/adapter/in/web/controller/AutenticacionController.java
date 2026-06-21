@@ -29,7 +29,7 @@ import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.Restablecer
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AutenticacionResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.UsuarioResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.mapper.AutenticacionMapper;
-import com.condominios.sgc.infrastructure.adapter.out.util.CookieUtil;
+import com.condominios.sgc.infrastructure.util.CookieUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -75,23 +75,23 @@ public class AutenticacionController {
         this.cookieUtil = cookieUtil;
     }
 
-    @PostMapping("/iniciar-sesion")
-    public ResponseEntity<AutenticacionResponse> iniciarSesion(
+    @PostMapping("/login")
+    public ResponseEntity<AutenticacionResponse> login(
             @Valid @RequestBody IniciarSesionRequest request) {
         var resultado = iniciarSesion.ejecutar(
             request.correo(), request.contrasena(), request.recuerdame());
         return conCookies(resultado);
     }
 
-    @PostMapping("/refrescar")
-    public ResponseEntity<AutenticacionResponse> refrescar(HttpServletRequest request) {
+    @PostMapping("/refresh")
+    public ResponseEntity<AutenticacionResponse> refresh(HttpServletRequest request) {
         var resultado = refrescarToken.ejecutar(cookieUtil.extraerRefreshToken(request));
         return conCookies(resultado);
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/cerrar-sesion")
-    public ResponseEntity<Void> cerrarSesion(HttpServletRequest request) {
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
         cerrarSesion.ejecutar(cookieUtil.extraerRefreshToken(request));
         var headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, cookieUtil.limpiarCookieAccessToken().toString());
@@ -99,44 +99,44 @@ public class AutenticacionController {
         return ResponseEntity.ok().headers(headers).build();
     }
 
-    @PostMapping("/olvide-contrasena")
-    public ResponseEntity<Void> olvidasteContrasena(
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> forgotPassword(
             @Valid @RequestBody OlvidasteContrasenaRequest request) {
         olvidasteContrasena.ejecutar(request.correo());
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/restablecer-contrasena")
-    public ResponseEntity<Void> restablecerContrasena(
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(
             @Valid @RequestBody RestablecerContrasenaRequest request) {
         restablecerContrasena.ejecutar(request.token(), request.nuevaContrasena());
         return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/yo")
-    public ResponseEntity<UsuarioResponse> yo() {
+    @GetMapping("/me")
+    public ResponseEntity<UsuarioResponse> me() {
         return ResponseEntity.ok(mapper.toUsuarioResponse(obtenerUsuarioActual.ejecutar()));
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PutMapping("/cambiar-contrasena")
-    public ResponseEntity<Void> cambiarContrasena(
+    @PutMapping("/change-password")
+    public ResponseEntity<Void> changePassword(
             @Valid @RequestBody CambiarContrasenaRequest request) {
         cambiarContrasena.ejecutar(request.contrasenaActual(), request.nuevaContrasena());
         return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PutMapping("/correo")
-    public ResponseEntity<Void> actualizarCorreo(
+    @PutMapping("/email")
+    public ResponseEntity<Void> email(
             @Valid @RequestBody ActualizarCorreoRequest request) {
         actualizarCorreo.ejecutar(request.nuevoCorreo(), request.contrasena());
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/verificar-email")
-    public ResponseEntity<Void> verificarEmail(@RequestParam String token) {
+    @PostMapping("/verify-email")
+    public ResponseEntity<Void> verifyEmail(@RequestParam String token) {
         verificarEmail.ejecutar(token);
         return ResponseEntity.ok().build();
     }

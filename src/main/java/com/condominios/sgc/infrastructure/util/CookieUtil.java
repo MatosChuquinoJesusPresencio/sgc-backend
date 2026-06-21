@@ -1,4 +1,4 @@
-package com.condominios.sgc.infrastructure.adapter.out.util;
+package com.condominios.sgc.infrastructure.util;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;

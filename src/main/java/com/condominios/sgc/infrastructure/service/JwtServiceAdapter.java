@@ -1,4 +1,4 @@
-package com.condominios.sgc.infrastructure.adapter.out.service;
+package com.condominios.sgc.infrastructure.service;
 
 import java.time.Instant;
 
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import com.condominios.sgc.application.port.out.service.JwtServicePort;
 import com.condominios.sgc.domain.type.Rol;
 import com.condominios.sgc.domain.type.TipoToken;
-import com.condominios.sgc.infrastructure.adapter.out.util.JwtUtil;
+import com.condominios.sgc.infrastructure.util.JwtUtil;
 
 @Component
 public class JwtServiceAdapter implements JwtServicePort {

@@ -1,10 +1,10 @@
-package com.condominios.sgc.infrastructure.adapter.out.service;
+package com.condominios.sgc.infrastructure.service;
 
 import org.springframework.stereotype.Component;
 
 import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.domain.type.Rol;
-import com.condominios.sgc.infrastructure.adapter.out.util.SecurityUtil;
+import com.condominios.sgc.infrastructure.util.SecurityUtil;
 
 @Component
 public class SecurityServiceAdapter implements SecurityServicePort {
