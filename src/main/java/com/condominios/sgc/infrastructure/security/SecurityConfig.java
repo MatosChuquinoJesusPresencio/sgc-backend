@@ -31,7 +31,8 @@ public class SecurityConfig {
                 "/api/auth/verificar-email",
                 "/api/healt", "/api/healt/**",
                 "/docs/api-docs", "/docs/api-docs/**",
-                "/documentacion", "/documentacion/**")
+                "/documentacion", "/documentacion/**",
+                "/swagger-ui/**")
             .cors(cors -> cors.configurationSource(corsSource))
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
