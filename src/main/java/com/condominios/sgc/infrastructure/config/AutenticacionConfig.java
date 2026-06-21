@@ -10,9 +10,11 @@ import com.condominios.sgc.application.port.out.service.HashServicePort;
 import com.condominios.sgc.application.port.out.service.JwtServicePort;
 import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.application.service.ActualizarCorreoService;
+import com.condominios.sgc.application.service.ActualizarPerfilService;
 import com.condominios.sgc.application.service.CambiarContrasenaService;
 import com.condominios.sgc.application.service.CerrarSesionService;
 import com.condominios.sgc.application.service.IniciarSesionService;
+import com.condominios.sgc.application.service.ObtenerPerfilService;
 import com.condominios.sgc.application.service.ObtenerUsuarioActualService;
 import com.condominios.sgc.application.service.OlvidasteContrasenaService;
 import com.condominios.sgc.application.service.RefrescarTokenService;
@@ -94,5 +96,19 @@ public class AutenticacionConfig {
             TokenRepositoryPort tokenRepository,
             UsuarioRepositoryPort usuarioRepository) {
         return new VerificarEmailService(tokenRepository, usuarioRepository);
+    }
+
+    @Bean
+    public ObtenerPerfilService obtenerPerfilService(
+            SecurityServicePort securityService,
+            UsuarioRepositoryPort usuarioRepository) {
+        return new ObtenerPerfilService(securityService, usuarioRepository);
+    }
+
+    @Bean
+    public ActualizarPerfilService actualizarPerfilService(
+            SecurityServicePort securityService,
+            UsuarioRepositoryPort usuarioRepository) {
+        return new ActualizarPerfilService(securityService, usuarioRepository);
     }
 }
