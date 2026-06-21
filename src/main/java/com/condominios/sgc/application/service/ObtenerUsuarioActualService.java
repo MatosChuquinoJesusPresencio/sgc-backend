@@ -26,6 +26,7 @@ public class ObtenerUsuarioActualService implements ObtenerUsuarioActualUseCase 
             usuario.getId(),
             usuario.getNombreCompleto().nombres(),
             usuario.getNombreCompleto().apellidos(),
+            usuario.getCorreo().direccion(),
             usuario.getRol(),
             usuario.getIdCondominio());
     }

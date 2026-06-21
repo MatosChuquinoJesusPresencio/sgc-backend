@@ -49,6 +49,7 @@ public class RefrescarTokenService implements RefrescarTokenUseCase {
             usuario.getId(),
             usuario.getNombreCompleto().nombres(),
             usuario.getNombreCompleto().apellidos(),
+            usuario.getCorreo().direccion(),
             usuario.getRol(),
             usuario.getIdCondominio());
 

@@ -49,6 +49,7 @@ public class IniciarSesionService implements IniciarSesionUseCase {
         var usuarioActual = new UsuarioActualResult(usuario.getId(),
                 usuario.getNombreCompleto().nombres(),
                 usuario.getNombreCompleto().apellidos(),
+                usuario.getCorreo().direccion(),
                 usuario.getRol(),
                 usuario.getIdCondominio());
 
