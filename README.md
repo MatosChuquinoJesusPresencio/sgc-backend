@@ -65,8 +65,7 @@ com.condominios.sgc/
     ├── config/                        Beans de infraestructura (CORS, JwtDecoder, servicios)
     ├── security/                      SecurityConfig, CookieBearerTokenResolver
     ├── service/                       Implementaciones de servicios de aplicación
-    ├── util/                          JwtUtil, CookieUtils, SecurityUtils
-    └── web/dto/                       DTOs web adicionales
+    └── util/                          JwtUtil, CookieUtils, SecurityUtils
 ```
 
 **Regla fundamental:** `domain/` y `application/` **nunca importan** de
@@ -355,9 +354,3 @@ com.condominios.sgc/
     ├── service/         CorreoService, HashService, JwtService
     └── util/            JwtUtil, CookieUtils, SecurityUtils
 ```
-
----
-
-## Licencia
-
-Uso interno — proyecto de gestión condominial.
