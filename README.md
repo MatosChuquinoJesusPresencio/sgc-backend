@@ -101,6 +101,31 @@ Inversion).
 
 ---
 
+## Configuración de la Base de Datos
+
+En la raíz del proyecto encontrarás la carpeta `db`, la cual contiene los scripts SQL (seeds) necesarios para poblar la base de datos con los datos iniciales o de prueba.
+
+Dependiendo de tu entorno, puedes ejecutar estos scripts de las siguientes maneras:
+
+### Opción 1: En la nube (Supabase)
+Si estás utilizando el entorno en la nube de Supabase:
+1. Abre tu proyecto en el panel de control de [Supabase](https://supabase.com/).
+2. Ve a la sección **SQL Editor** en el menú lateral.
+3. Haz clic en **+ New query**.
+4. Copia el contenido de los archivos SQL que se encuentran en la carpeta `db`.
+5. Pega el código en el editor y presiona **Run** para ejecutarlo.
+
+### Opción 2: En local (pgAdmin)
+Si tienes la base de datos PostgreSQL corriendo localmente y utilizas pgAdmin:
+1. Abre **pgAdmin** y conéctate a tu servidor local.
+2. Despliega tu servidor, ve a **Databases** y selecciona la base de datos del proyecto.
+3. Haz clic en el botón de **Query Tool** (icono de base de datos con un rayo o lupa) en la barra de herramientas superior.
+4. Tienes dos formas de ejecutar el script:
+   - **Copiar y pegar:** Abre el archivo SQL de la carpeta `db` en cualquier editor de texto, copia el contenido, pégalo en el Query Tool y presiona **Execute/Refresh** (F5).
+   - **Abrir archivo:** En el Query Tool, haz clic en el icono de "Open File" (carpeta), busca el archivo SQL dentro de tu carpeta `db`, ábrelo y presiona **Execute/Refresh** (F5).
+
+---
+
 ## Roles y permisos
 
 | Rol                        | Descripción                                      |
