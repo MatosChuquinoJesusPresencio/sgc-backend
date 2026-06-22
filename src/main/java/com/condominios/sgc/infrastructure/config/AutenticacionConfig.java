@@ -16,6 +16,16 @@ import com.condominios.sgc.application.port.in.GestionarAdminEstructuraUseCase;
 import com.condominios.sgc.application.port.in.GestionarAdminLogsUseCase;
 import com.condominios.sgc.application.port.in.GestionarAdminUsuariosUseCase;
 import com.condominios.sgc.application.port.in.GestionarCondominioUseCase;
+import com.condominios.sgc.application.port.in.GestionarPropietarioApartamentoUseCase;
+import com.condominios.sgc.application.port.in.GestionarPropietarioDashboardUseCase;
+import com.condominios.sgc.application.port.in.GestionarPropietarioInquilinosUseCase;
+import com.condominios.sgc.application.port.in.GestionarPropietarioLogsUseCase;
+import com.condominios.sgc.application.port.in.GestionarPropietarioVehiculosUseCase;
+import com.condominios.sgc.application.port.in.GestionarSeguridadAccesoUseCase;
+import com.condominios.sgc.application.port.in.GestionarSeguridadDashboardUseCase;
+import com.condominios.sgc.application.port.in.GestionarSeguridadEstacionamientosUseCase;
+import com.condominios.sgc.application.port.in.GestionarSeguridadPrestamosUseCase;
+import com.condominios.sgc.application.port.in.GestionarSeguridadVehiculosUseCase;
 import com.condominios.sgc.application.port.in.GestionarDashboardUseCase;
 import com.condominios.sgc.application.port.in.GestionarUsuariosGlobalUseCase;
 import com.condominios.sgc.application.port.in.IniciarSesionUseCase;
@@ -53,6 +63,16 @@ import com.condominios.sgc.application.service.GestionarAdminUsuariosService;
 import com.condominios.sgc.application.service.GestionarAdministradorService;
 import com.condominios.sgc.application.service.GestionarCondominioService;
 import com.condominios.sgc.application.service.GestionarDashboardService;
+import com.condominios.sgc.application.service.GestionarPropietarioApartamentoService;
+import com.condominios.sgc.application.service.GestionarPropietarioDashboardService;
+import com.condominios.sgc.application.service.GestionarPropietarioInquilinosService;
+import com.condominios.sgc.application.service.GestionarPropietarioLogsService;
+import com.condominios.sgc.application.service.GestionarPropietarioVehiculosService;
+import com.condominios.sgc.application.service.GestionarSeguridadAccesoService;
+import com.condominios.sgc.application.service.GestionarSeguridadDashboardService;
+import com.condominios.sgc.application.service.GestionarSeguridadEstacionamientosService;
+import com.condominios.sgc.application.service.GestionarSeguridadPrestamosService;
+import com.condominios.sgc.application.service.GestionarSeguridadVehiculosService;
 import com.condominios.sgc.application.service.GestionarUsuariosGlobalService;
 import com.condominios.sgc.application.service.PerfilService;
 
@@ -309,5 +329,113 @@ public class AutenticacionConfig {
             LogPrestamoCarritoRepositoryPort logCarritoRepository) {
         return new GestionarAdminLogsService(
             securityService, usuarioRepository, logAccesoRepository, logCarritoRepository);
+    }
+
+    @Bean
+    public GestionarPropietarioDashboardUseCase gestionarPropietarioDashboardUseCase(
+            SecurityServicePort securityService,
+            UsuarioRepositoryPort usuarioRepository,
+            ApartamentoRepositoryPort apartamentoRepository,
+            CondominioRepositoryPort condominioRepository,
+            InquilinoRepositoryPort inquilinoRepository,
+            VehiculoRepositoryPort vehiculoRepository) {
+        return new GestionarPropietarioDashboardService(
+            securityService, usuarioRepository, apartamentoRepository,
+            condominioRepository, inquilinoRepository, vehiculoRepository);
+    }
+
+    @Bean
+    public GestionarPropietarioApartamentoUseCase gestionarPropietarioApartamentoUseCase(
+            SecurityServicePort securityService,
+            UsuarioRepositoryPort usuarioRepository,
+            ApartamentoRepositoryPort apartamentoRepository,
+            CondominioRepositoryPort condominioRepository,
+            InquilinoRepositoryPort inquilinoRepository,
+            VehiculoRepositoryPort vehiculoRepository) {
+        return new GestionarPropietarioApartamentoService(
+            securityService, usuarioRepository, apartamentoRepository,
+            condominioRepository, inquilinoRepository, vehiculoRepository);
+    }
+
+    @Bean
+    public GestionarPropietarioInquilinosUseCase gestionarPropietarioInquilinosUseCase(
+            SecurityServicePort securityService,
+            UsuarioRepositoryPort usuarioRepository,
+            ApartamentoRepositoryPort apartamentoRepository,
+            InquilinoRepositoryPort inquilinoRepository) {
+        return new GestionarPropietarioInquilinosService(
+            securityService, usuarioRepository, apartamentoRepository, inquilinoRepository);
+    }
+
+    @Bean
+    public GestionarPropietarioVehiculosUseCase gestionarPropietarioVehiculosUseCase(
+            SecurityServicePort securityService,
+            UsuarioRepositoryPort usuarioRepository,
+            VehiculoRepositoryPort vehiculoRepository) {
+        return new GestionarPropietarioVehiculosService(
+            securityService, usuarioRepository, vehiculoRepository);
+    }
+
+    @Bean
+    public GestionarPropietarioLogsUseCase gestionarPropietarioLogsUseCase(
+            SecurityServicePort securityService,
+            UsuarioRepositoryPort usuarioRepository,
+            LogAccesoVehicularRepositoryPort logAccesoRepository,
+            LogPrestamoCarritoRepositoryPort logCarritoRepository) {
+        return new GestionarPropietarioLogsService(
+            securityService, usuarioRepository, logAccesoRepository, logCarritoRepository);
+    }
+
+    @Bean
+    public GestionarSeguridadDashboardUseCase gestionarSeguridadDashboardUseCase(
+            SecurityServicePort securityService,
+            UsuarioRepositoryPort usuarioRepository,
+            EstacionamientoRepositoryPort estacionamientoRepository,
+            LogPrestamoCarritoRepositoryPort logPrestamoRepository,
+            LogAccesoVehicularRepositoryPort logAccesoRepository) {
+        return new GestionarSeguridadDashboardService(
+            securityService, usuarioRepository, estacionamientoRepository,
+            logPrestamoRepository, logAccesoRepository);
+    }
+
+    @Bean
+    public GestionarSeguridadEstacionamientosUseCase gestionarSeguridadEstacionamientosUseCase(
+            SecurityServicePort securityService,
+            UsuarioRepositoryPort usuarioRepository,
+            EstacionamientoRepositoryPort estacionamientoRepository) {
+        return new GestionarSeguridadEstacionamientosService(
+            securityService, usuarioRepository, estacionamientoRepository);
+    }
+
+    @Bean
+    public GestionarSeguridadVehiculosUseCase gestionarSeguridadVehiculosUseCase(
+            VehiculoRepositoryPort vehiculoRepository,
+            UsuarioRepositoryPort usuarioRepository) {
+        return new GestionarSeguridadVehiculosService(
+            vehiculoRepository, usuarioRepository);
+    }
+
+    @Bean
+    public GestionarSeguridadPrestamosUseCase gestionarSeguridadPrestamosUseCase(
+            SecurityServicePort securityService,
+            UsuarioRepositoryPort usuarioRepository,
+            CarritoRepositoryPort carritoRepository,
+            ApartamentoRepositoryPort apartamentoRepository,
+            LogPrestamoCarritoRepositoryPort logPrestamoRepository) {
+        return new GestionarSeguridadPrestamosService(
+            securityService, usuarioRepository, carritoRepository,
+            apartamentoRepository, logPrestamoRepository);
+    }
+
+    @Bean
+    public GestionarSeguridadAccesoUseCase gestionarSeguridadAccesoUseCase(
+            SecurityServicePort securityService,
+            UsuarioRepositoryPort usuarioRepository,
+            VehiculoRepositoryPort vehiculoRepository,
+            EstacionamientoRepositoryPort estacionamientoRepository,
+            LogAccesoVehicularRepositoryPort logAccesoRepository) {
+        return new GestionarSeguridadAccesoService(
+            securityService, usuarioRepository, vehiculoRepository,
+            estacionamientoRepository, logAccesoRepository);
     }
 }

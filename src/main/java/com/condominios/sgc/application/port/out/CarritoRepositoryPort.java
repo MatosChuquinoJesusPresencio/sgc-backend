@@ -11,4 +11,5 @@ public interface CarritoRepositoryPort {
     void eliminarPorId(Long id);
     long contarPorCondominio(Long idCondominio);
     List<CarritoModel> buscarPorCondominio(Long idCondominio);
+    Optional<CarritoModel> buscarPorCodigo(String codigo);
 }

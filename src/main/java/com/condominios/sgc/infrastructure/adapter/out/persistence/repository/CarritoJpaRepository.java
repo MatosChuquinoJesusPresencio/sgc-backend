@@ -1,6 +1,7 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.CarritoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,6 @@ public interface CarritoJpaRepository extends JpaRepository<CarritoEntity, Long>
     long countByIdCondominio(@Param("idCondominio") Long idCondominio);
 
     List<CarritoEntity> findByIdCondominioOrderByIdAsc(Long idCondominio);
+
+    Optional<CarritoEntity> findByCodigo(String codigo);
 }

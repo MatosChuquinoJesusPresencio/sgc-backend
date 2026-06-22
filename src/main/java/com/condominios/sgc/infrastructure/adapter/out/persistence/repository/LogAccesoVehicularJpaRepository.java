@@ -1,6 +1,7 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence.repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.LogAccesoVehicularEntity;
 import org.springframework.data.domain.Page;
@@ -26,4 +27,11 @@ public interface LogAccesoVehicularJpaRepository extends JpaRepository<LogAcceso
             @Param("fechaInicio") LocalDateTime fechaInicio,
             @Param("fechaFin") LocalDateTime fechaFin,
             Pageable pageable);
+
+    @Query("""
+        SELECT l FROM LogAccesoVehicularEntity l
+        WHERE l.idCondominio = :cid
+        ORDER BY l.fechaEntrada DESC
+        """)
+    List<LogAccesoVehicularEntity> findRecentByCondominio(@Param("cid") Long cid, Pageable pageable);
 }

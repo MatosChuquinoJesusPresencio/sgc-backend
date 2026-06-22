@@ -1,6 +1,7 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence.repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.LogPrestamoCarritoEntity;
 import org.springframework.data.domain.Page;
@@ -25,4 +26,6 @@ public interface LogPrestamoCarritoJpaRepository extends JpaRepository<LogPresta
             @Param("fechaInicio") LocalDateTime fechaInicio,
             @Param("fechaFin") LocalDateTime fechaFin,
             Pageable pageable);
+
+    List<LogPrestamoCarritoEntity> findByIdCondominioAndFechaDevolucionIsNullOrderByFechaPrestamoDesc(Long idCondominio);
 }

@@ -45,4 +45,9 @@ public class CarritoRepositoryAdapter implements CarritoRepositoryPort {
                 .map(CarritoMapper::toModel)
                 .toList();
     }
+
+    @Override
+    public Optional<CarritoModel> buscarPorCodigo(String codigo) {
+        return repository.findByCodigo(codigo).map(CarritoMapper::toModel);
+    }
 }
