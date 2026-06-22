@@ -12,4 +12,8 @@ public interface CondominioRepositoryPort {
 
     List<CondominioModel> buscarActivosSinAdministrador();
     Optional<String> buscarNombrePorId(Long id);
+    List<CondominioModel> buscarTodos(String search, Boolean activo, int pagina, int tamano);
+    long contarTodos(String search, Boolean activo);
+    List<CondominioModel> buscarRecientes(int limite);
+    long contarActivos();
 }

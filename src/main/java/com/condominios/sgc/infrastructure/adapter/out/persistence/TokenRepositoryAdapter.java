@@ -30,4 +30,9 @@ public class TokenRepositoryAdapter implements TokenRepositoryPort {
     public void eliminar(TokenModel modelo) {
         repository.deleteById(modelo.getId());
     }
+
+    @Override
+    public void eliminarPorUsuarioId(Long usuarioId) {
+        repository.deleteByIdUsuario(usuarioId);
+    }
 }

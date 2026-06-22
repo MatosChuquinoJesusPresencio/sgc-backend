@@ -8,4 +8,5 @@ public interface TokenRepositoryPort {
     Optional<TokenModel> obtenerPorToken(String token);
     TokenModel guardar(TokenModel modelo);
     void eliminar(TokenModel modelo);
+    void eliminarPorUsuarioId(Long usuarioId);
 }

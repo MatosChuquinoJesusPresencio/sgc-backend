@@ -1,9 +1,11 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence;
 
+import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.UsuarioEntity;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
@@ -65,5 +67,38 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
             .stream()
             .map(UsuarioMapper::toModel)
             .toList();
+    }
+
+    @Override
+    public Optional<UsuarioModel> buscarPorCondominioId(Long idCondominio) {
+        return repository.findByIdCondominio(idCondominio).map(UsuarioMapper::toModel);
+    }
+
+    @Override
+    public long contarPorRol(String rol) {
+        return repository.countByRol(rol);
+    }
+
+    @Override
+    public List<UsuarioModel> buscarRecientesPorRol(String rol, int limite) {
+        var pageable = PageRequest.of(0, limite, Sort.by(Sort.Direction.DESC, UsuarioEntity::getFechaCreacion));
+        return repository.buscarRecientesPorRol(rol, pageable)
+            .stream()
+            .map(UsuarioMapper::toModel)
+            .toList();
+    }
+
+    @Override
+    public List<UsuarioModel> buscarTodos(String search, String rol, Boolean activo, int pagina, int tamano) {
+        var pageable = PageRequest.of(pagina, tamano);
+        return repository.buscarTodos(search, rol, activo, pageable)
+            .stream()
+            .map(UsuarioMapper::toModel)
+            .toList();
+    }
+
+    @Override
+    public long contarTodos(String search, String rol, Boolean activo) {
+        return repository.contarTodos(search, rol, activo);
     }
 }

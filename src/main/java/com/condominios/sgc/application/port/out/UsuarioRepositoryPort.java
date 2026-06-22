@@ -15,5 +15,10 @@ public interface UsuarioRepositoryPort {
     long contarAdministradores(String search, Boolean activo);
     boolean existePorCorreo(String correo);
     List<UsuarioModel> buscarAdministradoresSinCondominio();
+    Optional<UsuarioModel> buscarPorCondominioId(Long idCondominio);
+    long contarPorRol(String rol);
+    List<UsuarioModel> buscarRecientesPorRol(String rol, int limite);
+    List<UsuarioModel> buscarTodos(String search, String rol, Boolean activo, int pagina, int tamano);
+    long contarTodos(String search, String rol, Boolean activo);
 }
 

@@ -32,4 +32,33 @@ public interface UsuarioJpaRepository extends JpaRepository<UsuarioEntity, Long>
                                @Param("activo") Boolean activo);
 
     List<UsuarioEntity> findByRolAndIdCondominioIsNull(String rol);
+
+    Optional<UsuarioEntity> findByIdCondominio(Long idCondominio);
+
+    long countByRol(String rol);
+
+    @Query("SELECT u FROM UsuarioEntity u WHERE u.rol = :rol ORDER BY u.fechaCreacion DESC")
+    List<UsuarioEntity> buscarRecientesPorRol(@Param("rol") String rol, Pageable pageable);
+
+    @Query("SELECT u FROM UsuarioEntity u WHERE "
+         + "(:search IS NULL OR LOWER(u.nombres) LIKE LOWER(CONCAT('%', :search, '%')) "
+         + "OR LOWER(u.apellidos) LIKE LOWER(CONCAT('%', :search, '%')) "
+         + "OR LOWER(u.correo) LIKE LOWER(CONCAT('%', :search, '%'))) "
+         + "AND (:rol IS NULL OR u.rol = :rol) "
+         + "AND (:activo IS NULL OR u.activo = :activo) "
+         + "ORDER BY u.fechaCreacion DESC")
+    List<UsuarioEntity> buscarTodos(@Param("search") String search,
+                                    @Param("rol") String rol,
+                                    @Param("activo") Boolean activo,
+                                    Pageable pageable);
+
+    @Query("SELECT COUNT(u) FROM UsuarioEntity u WHERE "
+         + "(:search IS NULL OR LOWER(u.nombres) LIKE LOWER(CONCAT('%', :search, '%')) "
+         + "OR LOWER(u.apellidos) LIKE LOWER(CONCAT('%', :search, '%')) "
+         + "OR LOWER(u.correo) LIKE LOWER(CONCAT('%', :search, '%'))) "
+         + "AND (:rol IS NULL OR u.rol = :rol) "
+         + "AND (:activo IS NULL OR u.activo = :activo)")
+    long contarTodos(@Param("search") String search,
+                     @Param("rol") String rol,
+                     @Param("activo") Boolean activo);
 }

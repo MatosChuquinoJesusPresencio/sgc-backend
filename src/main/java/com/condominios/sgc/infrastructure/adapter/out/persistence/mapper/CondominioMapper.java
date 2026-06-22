@@ -8,6 +8,7 @@ import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.Configu
 import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.TorreEntity;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 
 public final class CondominioMapper {
@@ -30,6 +31,21 @@ public final class CondominioMapper {
             e.getFechaCreacion().toInstant(ZoneOffset.UTC),
             torres,
             config
+        );
+    }
+
+    public static CondominioModel toModelLigero(CondominioEntity e) {
+        if (e == null) return null;
+        return new CondominioModel(
+            e.getId(),
+            e.getNombre(),
+            e.getIdPais(),
+            e.getIdCiudad(),
+            e.getDireccion(),
+            e.getActivo(),
+            e.getFechaCreacion().toInstant(ZoneOffset.UTC),
+            new ArrayList<>(),
+            null
         );
     }
 

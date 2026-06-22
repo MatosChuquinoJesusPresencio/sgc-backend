@@ -1,12 +1,14 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Component;
+
 import com.condominios.sgc.application.port.out.PaisRepositoryPort;
 import com.condominios.sgc.domain.model.PaisModel;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.PaisMapper;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.PaisJpaRepository;
-
-import org.springframework.stereotype.Component;
-import java.util.Optional;
 
 @Component
 public class PaisRepositoryAdapter implements PaisRepositoryPort {
@@ -30,5 +32,10 @@ public class PaisRepositoryAdapter implements PaisRepositoryPort {
     @Override
     public void eliminarPorId(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public List<PaisModel> listarTodos() {
+        return repository.findAll().stream().map(PaisMapper::toModel).toList();
     }
 }

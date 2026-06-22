@@ -3,6 +3,8 @@ package com.condominios.sgc.infrastructure.adapter.out.persistence;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.condominios.sgc.application.port.out.CondominioRepositoryPort;
@@ -53,5 +55,33 @@ public class CondominioRepositoryAdapter implements CondominioRepositoryPort {
     @Override
     public Optional<String> buscarNombrePorId(Long id) {
         return repository.findNombreById(id);
+    }
+
+    @Override
+    public List<CondominioModel> buscarTodos(String search, Boolean activo, int pagina, int tamano) {
+        var pageable = PageRequest.of(pagina, tamano);
+        return repository.buscarTodos(search, activo, pageable)
+            .stream()
+            .map(CondominioMapper::toModelLigero)
+            .toList();
+    }
+
+    @Override
+    public long contarTodos(String search, Boolean activo) {
+        return repository.contarTodos(search, activo);
+    }
+
+    @Override
+    public List<CondominioModel> buscarRecientes(int limite) {
+        var pageable = PageRequest.of(0, limite, Sort.by(Sort.Direction.DESC, CondominioEntity::getFechaCreacion));
+        return repository.buscarRecientes(pageable)
+            .stream()
+            .map(CondominioMapper::toModelLigero)
+            .toList();
+    }
+
+    @Override
+    public long contarActivos() {
+        return repository.contarActivos();
     }
 }
