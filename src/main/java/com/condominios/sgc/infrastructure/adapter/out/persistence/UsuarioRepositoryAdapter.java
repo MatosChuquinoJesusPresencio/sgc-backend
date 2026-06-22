@@ -101,4 +101,23 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
     public long contarTodos(String search, String rol, Boolean activo) {
         return repository.contarTodos(search, rol, activo);
     }
+
+    @Override
+    public long contarPorCondominioYRol(Long idCondominio, String rol) {
+        return repository.countByIdCondominioAndRol(idCondominio, rol);
+    }
+
+    @Override
+    public List<UsuarioModel> buscarPorCondominio(Long idCondominio, String search, String rol, Boolean activo, int pagina, int tamano) {
+        var pageable = PageRequest.of(pagina, tamano);
+        return repository.buscarPorCondominio(idCondominio, search, rol, activo, pageable)
+            .stream()
+            .map(UsuarioMapper::toModel)
+            .toList();
+    }
+
+    @Override
+    public long contarPorCondominio(Long idCondominio, String search, String rol, Boolean activo) {
+        return repository.contarPorCondominio(idCondominio, search, rol, activo);
+    }
 }

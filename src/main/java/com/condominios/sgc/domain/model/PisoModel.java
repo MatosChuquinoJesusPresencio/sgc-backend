@@ -49,4 +49,8 @@ public class PisoModel {
             .findFirst()
             .orElseThrow(ApartamentoException::noEncontrado);
     }
+
+    public boolean eliminarApartamentoPorId(Long apartamentoId) {
+        return apartamentos.removeIf(a -> a.getId().equals(apartamentoId));
+    }
 }

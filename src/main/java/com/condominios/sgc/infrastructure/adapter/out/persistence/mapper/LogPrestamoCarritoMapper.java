@@ -23,7 +23,8 @@ public final class LogPrestamoCarritoMapper {
             e.getIdApartamento(),
             e.getIdCarrito(),
             e.getIdInquilino(),
-            e.getIdPropietario()
+            e.getIdPropietario(),
+            e.getIdCondominio()
         );
     }
 
@@ -41,6 +42,7 @@ public final class LogPrestamoCarritoMapper {
         e.setIdCarrito(m.getIdCarrito());
         e.setIdInquilino(m.getIdInquilino());
         e.setIdPropietario(m.getIdPropietario());
+        e.setIdCondominio(m.getIdCondominio());
         return e;
     }
 }

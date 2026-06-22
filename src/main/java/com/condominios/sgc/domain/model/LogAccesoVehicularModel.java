@@ -19,10 +19,11 @@ public class LogAccesoVehicularModel {
     private Instant fechaSalida;
     private Long idVehiculo;
     private Long idEstacionamiento;
+    private Long idCondominio;
 
     public LogAccesoVehicularModel(Long id, PlacaVehiculo placa, TipoHabitante ocupante,
             String datosInquilino, MetodoEntrada metodo, Instant fechaEntrada,
-            Instant fechaSalida, Long idVehiculo, Long idEstacionamiento) {
+            Instant fechaSalida, Long idVehiculo, Long idEstacionamiento, Long idCondominio) {
         this.id = id;
         this.placa = placa;
         this.ocupante = ocupante;
@@ -32,10 +33,12 @@ public class LogAccesoVehicularModel {
         this.fechaSalida = fechaSalida;
         this.idVehiculo = idVehiculo;
         this.idEstacionamiento = idEstacionamiento;
+        this.idCondominio = idCondominio;
     }
 
     public LogAccesoVehicularModel(String placa, TipoHabitante ocupante,
-            String datosInquilino, MetodoEntrada metodo, Long idVehiculo, Long idEstacionamiento) {
+            String datosInquilino, MetodoEntrada metodo, Long idVehiculo, Long idEstacionamiento,
+            Long idCondominio) {
         this.id = null;
         this.placa = new PlacaVehiculo(placa);
         this.ocupante = noNulo(ocupante, LogAccesoVehicularException::ocupanteRequerido);
@@ -45,6 +48,7 @@ public class LogAccesoVehicularModel {
         this.fechaSalida = null;
         this.idVehiculo = noNulo(idVehiculo, LogAccesoVehicularException::vehiculoRequerido);
         this.idEstacionamiento = noNulo(idEstacionamiento, LogAccesoVehicularException::estacionamientoRequerido);
+        this.idCondominio = noNulo(idCondominio, LogAccesoVehicularException::condominioRequerido);
     }
 
     public Long getId() { return id; }
@@ -56,6 +60,7 @@ public class LogAccesoVehicularModel {
     public Instant getFechaSalida() { return fechaSalida; }
     public Long getIdVehiculo() { return idVehiculo; }
     public Long getIdEstacionamiento() { return idEstacionamiento; }
+    public Long getIdCondominio() { return idCondominio; }
 
     public void registrarSalida() {
         if (this.fechaSalida != null)

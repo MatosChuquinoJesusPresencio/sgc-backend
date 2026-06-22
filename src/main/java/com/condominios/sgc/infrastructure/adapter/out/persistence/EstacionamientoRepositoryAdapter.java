@@ -1,11 +1,13 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.condominios.sgc.application.port.out.EstacionamientoRepositoryPort;
 import com.condominios.sgc.domain.model.EstacionamientoModel;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.EstacionamientoMapper;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.EstacionamientoJpaRepository;
 import org.springframework.stereotype.Component;
-import java.util.Optional;
 
 @Component
 public class EstacionamientoRepositoryAdapter implements EstacionamientoRepositoryPort {
@@ -29,5 +31,18 @@ public class EstacionamientoRepositoryAdapter implements EstacionamientoReposito
     @Override
     public void eliminarPorId(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public List<EstacionamientoModel> buscarPorCondominio(Long idCondominio) {
+        return repository.findByIdCondominioOrderByNumeroAsc(idCondominio)
+                .stream()
+                .map(EstacionamientoMapper::toModel)
+                .toList();
+    }
+
+    @Override
+    public long contarPorCondominio(Long idCondominio) {
+        return repository.countByIdCondominio(idCondominio);
     }
 }

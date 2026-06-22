@@ -102,4 +102,18 @@ public class CondominioModel {
             .findFirst()
             .orElseThrow(TorreException::noEncontrado);
     }
+
+    public boolean eliminarTorre(Long torreId) {
+        return torres.removeIf(t -> t.getId().equals(torreId));
+    }
+
+    public boolean eliminarPiso(Long pisoId) {
+        return torres.stream().anyMatch(t -> t.eliminarPisoPorId(pisoId));
+    }
+
+    public boolean eliminarApartamento(Long apartamentoId) {
+        return torres.stream()
+            .flatMap(t -> t.getPisos().stream())
+            .anyMatch(p -> p.eliminarApartamentoPorId(apartamentoId));
+    }
 }

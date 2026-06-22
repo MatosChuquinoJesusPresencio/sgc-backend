@@ -1,11 +1,13 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.condominios.sgc.application.port.out.InquilinoRepositoryPort;
 import com.condominios.sgc.domain.model.InquilinoModel;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.InquilinoMapper;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.InquilinoJpaRepository;
 import org.springframework.stereotype.Component;
-import java.util.Optional;
 
 @Component
 public class InquilinoRepositoryAdapter implements InquilinoRepositoryPort {
@@ -29,5 +31,17 @@ public class InquilinoRepositoryAdapter implements InquilinoRepositoryPort {
     @Override
     public void eliminarPorId(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public List<InquilinoModel> buscarPorApartamento(Long idApartamento) {
+        return repository.findByIdApartamento(idApartamento).stream()
+            .map(InquilinoMapper::toModel)
+            .toList();
+    }
+
+    @Override
+    public void eliminarPorApartamento(Long idApartamento) {
+        repository.deleteByIdApartamento(idApartamento);
     }
 }

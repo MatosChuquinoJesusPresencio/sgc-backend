@@ -21,7 +21,7 @@ public class RegistroAccesoService {
         var idEstacionamiento = estacionamiento != null ? estacionamiento.getId() : null;
         return new LogAccesoVehicularModel(
             placa, ocupante, datosInquilino, metodo,
-            vehiculo.getId(), idEstacionamiento);
+            vehiculo.getId(), idEstacionamiento, vehiculo.getIdCondominio());
     }
 
     public void registrarSalida(

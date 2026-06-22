@@ -43,4 +43,7 @@ public class LogAccesoVehicularEntity {
 
     @Column(name = "estacionamiento_id")
     private Long idEstacionamiento;
+
+    @Column(name = "condominio_id", nullable = false)
+    private Long idCondominio;
 }

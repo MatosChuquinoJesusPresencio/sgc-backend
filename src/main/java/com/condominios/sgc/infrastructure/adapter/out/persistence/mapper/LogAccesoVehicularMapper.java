@@ -23,7 +23,8 @@ public final class LogAccesoVehicularMapper {
             e.getFechaEntrada().toInstant(ZoneOffset.UTC),
             e.getFechaSalida() != null ? e.getFechaSalida().toInstant(ZoneOffset.UTC) : null,
             e.getIdVehiculo(),
-            e.getIdEstacionamiento()
+            e.getIdEstacionamiento(),
+            e.getIdCondominio()
         );
     }
 
@@ -39,6 +40,7 @@ public final class LogAccesoVehicularMapper {
         e.setFechaSalida(m.getFechaSalida() != null ? LocalDateTime.ofInstant(m.getFechaSalida(), ZoneOffset.UTC) : null);
         e.setIdVehiculo(m.getIdVehiculo());
         e.setIdEstacionamiento(m.getIdEstacionamiento());
+        e.setIdCondominio(m.getIdCondominio());
         return e;
     }
 }

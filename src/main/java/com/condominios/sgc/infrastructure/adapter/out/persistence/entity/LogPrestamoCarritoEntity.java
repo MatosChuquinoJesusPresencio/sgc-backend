@@ -51,4 +51,7 @@ public class LogPrestamoCarritoEntity {
 
     @Column(name = "propietario_id")
     private Long idPropietario;
+
+    @Column(name = "condominio_id", nullable = false)
+    private Long idCondominio;
 }

@@ -30,4 +30,9 @@ public class VehiculoRepositoryAdapter implements VehiculoRepositoryPort {
     public void eliminarPorId(Long id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public long contarPorCondominio(Long idCondominio) {
+        return repository.countByIdCondominio(idCondominio);
+    }
 }

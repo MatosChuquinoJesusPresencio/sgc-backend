@@ -1,11 +1,13 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.condominios.sgc.application.port.out.CarritoRepositoryPort;
 import com.condominios.sgc.domain.model.CarritoModel;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.CarritoMapper;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.CarritoJpaRepository;
 import org.springframework.stereotype.Component;
-import java.util.Optional;
 
 @Component
 public class CarritoRepositoryAdapter implements CarritoRepositoryPort {
@@ -29,5 +31,18 @@ public class CarritoRepositoryAdapter implements CarritoRepositoryPort {
     @Override
     public void eliminarPorId(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public long contarPorCondominio(Long idCondominio) {
+        return repository.countByIdCondominio(idCondominio);
+    }
+
+    @Override
+    public List<CarritoModel> buscarPorCondominio(Long idCondominio) {
+        return repository.findByIdCondominioOrderByIdAsc(idCondominio)
+                .stream()
+                .map(CarritoMapper::toModel)
+                .toList();
     }
 }

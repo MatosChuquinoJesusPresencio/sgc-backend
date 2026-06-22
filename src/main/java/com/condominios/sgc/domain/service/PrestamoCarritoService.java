@@ -26,7 +26,7 @@ public class PrestamoCarritoService {
         carrito.actualizarEstado(EstadoCarrito.EN_USO);
         return new LogPrestamoCarritoModel(
             nombreSolicitante, dniSolicitante, idApartamento,
-            carrito.getId(), idPropietario, idInquilino);
+            carrito.getId(), idPropietario, idInquilino, carrito.getIdCondominio());
     }
 
     public void devolver(

@@ -52,4 +52,8 @@ public class LogPrestamoCarritoException extends DominioException {
     public static LogPrestamoCarritoException limiteAlcanzado() {
         return new LogPrestamoCarritoException("límite de carritos alcanzado para este apartamento");
     }
+
+    public static LogPrestamoCarritoException condominioRequerido() {
+        return new LogPrestamoCarritoException("idCondominio no puede ser nulo");
+    }
 }

@@ -49,4 +49,8 @@ public class TorreModel {
             .findFirst()
             .orElseThrow(PisoException::noEncontrado);
     }
+
+    public boolean eliminarPisoPorId(Long pisoId) {
+        return pisos.removeIf(p -> p.getId().equals(pisoId));
+    }
 }

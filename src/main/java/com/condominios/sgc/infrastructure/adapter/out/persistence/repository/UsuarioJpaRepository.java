@@ -61,4 +61,31 @@ public interface UsuarioJpaRepository extends JpaRepository<UsuarioEntity, Long>
     long contarTodos(@Param("search") String search,
                      @Param("rol") String rol,
                      @Param("activo") Boolean activo);
+
+    @Query("SELECT COUNT(u) FROM UsuarioEntity u WHERE u.idCondominio = :idCondominio AND u.rol = :rol")
+    long countByIdCondominioAndRol(@Param("idCondominio") Long idCondominio, @Param("rol") String rol);
+
+    @Query("SELECT u FROM UsuarioEntity u WHERE u.idCondominio = :idCondominio "
+         + "AND (:search IS NULL OR LOWER(u.nombres) LIKE LOWER(CONCAT('%', :search, '%')) "
+         + "OR LOWER(u.apellidos) LIKE LOWER(CONCAT('%', :search, '%')) "
+         + "OR LOWER(u.correo) LIKE LOWER(CONCAT('%', :search, '%'))) "
+         + "AND (:rol IS NULL OR u.rol = :rol) "
+         + "AND (:activo IS NULL OR u.activo = :activo) "
+         + "ORDER BY u.fechaCreacion DESC")
+    List<UsuarioEntity> buscarPorCondominio(@Param("idCondominio") Long idCondominio,
+                                            @Param("search") String search,
+                                            @Param("rol") String rol,
+                                            @Param("activo") Boolean activo,
+                                            Pageable pageable);
+
+    @Query("SELECT COUNT(u) FROM UsuarioEntity u WHERE u.idCondominio = :idCondominio "
+         + "AND (:search IS NULL OR LOWER(u.nombres) LIKE LOWER(CONCAT('%', :search, '%')) "
+         + "OR LOWER(u.apellidos) LIKE LOWER(CONCAT('%', :search, '%')) "
+         + "OR LOWER(u.correo) LIKE LOWER(CONCAT('%', :search, '%'))) "
+         + "AND (:rol IS NULL OR u.rol = :rol) "
+         + "AND (:activo IS NULL OR u.activo = :activo)")
+    long contarPorCondominio(@Param("idCondominio") Long idCondominio,
+                             @Param("search") String search,
+                             @Param("rol") String rol,
+                             @Param("activo") Boolean activo);
 }

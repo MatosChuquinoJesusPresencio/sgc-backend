@@ -21,11 +21,12 @@ public class LogPrestamoCarritoModel {
     private Long idCarrito;
     private Long idInquilino;
     private Long idPropietario;
+    private Long idCondominio;
 
     public LogPrestamoCarritoModel(Long id, TipoHabitante solicitante, 
             String nombreSolicitante, String dniSolicitante, BigDecimal penalizacion, 
             Instant fechaPrestamo, Instant fechaDevolucion, Long idApartamento, 
-            Long idCarrito, Long idInquilino, Long idPropietario) {
+            Long idCarrito, Long idInquilino, Long idPropietario, Long idCondominio) {
         this.id = id;
         this.solicitante = solicitante;
         this.nombreSolicitante = nombreSolicitante;
@@ -37,10 +38,11 @@ public class LogPrestamoCarritoModel {
         this.idCarrito = idCarrito;
         this.idInquilino = idInquilino;
         this.idPropietario = idPropietario;
+        this.idCondominio = idCondominio;
     }
 
     public LogPrestamoCarritoModel(String nombreSolicitante, String dniSolicitante, 
-        Long idApartamento, Long idCarrito, Long idPropietario, Long idInquilino) {
+        Long idApartamento, Long idCarrito, Long idPropietario, Long idInquilino, Long idCondominio) {
         this.id = null;
         this.nombreSolicitante = requerido(nombreSolicitante, LogPrestamoCarritoException::nombreSolicitanteRequerido);
         this.dniSolicitante = requerido(dniSolicitante, LogPrestamoCarritoException::dniSolicitanteRequerido);
@@ -49,6 +51,7 @@ public class LogPrestamoCarritoModel {
         this.fechaDevolucion = null;
         this.idApartamento = noNulo(idApartamento, LogPrestamoCarritoException::apartamentoRequerido);
         this.idCarrito = noNulo(idCarrito, LogPrestamoCarritoException::carritoRequerido);
+        this.idCondominio = noNulo(idCondominio, LogPrestamoCarritoException::condominioRequerido);
         asignarSolicitante(idPropietario, idInquilino);
     }
 
@@ -63,6 +66,7 @@ public class LogPrestamoCarritoModel {
     public Long getIdCarrito() { return idCarrito; }
     public Long getIdInquilino() { return idInquilino; }
     public Long getIdPropietario() { return idPropietario; }
+    public Long getIdCondominio() { return idCondominio; }
 
     private void asignarPropietario(Long idPropietario) {
         this.idPropietario = noNulo(idPropietario, LogPrestamoCarritoException::propietarioRequerido);

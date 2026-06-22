@@ -32,4 +32,8 @@ public class LogAccesoVehicularException extends DominioException {
     public static LogAccesoVehicularException noEncontrado() {
         return new LogAccesoVehicularException("log de acceso vehicular no encontrado");
     }
+
+    public static LogAccesoVehicularException condominioRequerido() {
+        return new LogAccesoVehicularException("idCondominio no puede ser nulo");
+    }
 }

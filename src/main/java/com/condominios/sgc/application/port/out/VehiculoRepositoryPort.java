@@ -8,4 +8,5 @@ public interface VehiculoRepositoryPort {
     Optional<VehiculoModel> buscarPorId(Long id);
     VehiculoModel guardar(VehiculoModel modelo);
     void eliminarPorId(Long id);
+    long contarPorCondominio(Long idCondominio);
 }

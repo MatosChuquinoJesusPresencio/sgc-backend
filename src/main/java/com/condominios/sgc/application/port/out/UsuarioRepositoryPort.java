@@ -20,5 +20,8 @@ public interface UsuarioRepositoryPort {
     List<UsuarioModel> buscarRecientesPorRol(String rol, int limite);
     List<UsuarioModel> buscarTodos(String search, String rol, Boolean activo, int pagina, int tamano);
     long contarTodos(String search, String rol, Boolean activo);
+    long contarPorCondominioYRol(Long idCondominio, String rol);
+    List<UsuarioModel> buscarPorCondominio(Long idCondominio, String search, String rol, Boolean activo, int pagina, int tamano);
+    long contarPorCondominio(Long idCondominio, String search, String rol, Boolean activo);
 }
 
