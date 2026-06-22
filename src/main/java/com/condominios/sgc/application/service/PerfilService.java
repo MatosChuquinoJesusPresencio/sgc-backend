@@ -1,23 +1,25 @@
 package com.condominios.sgc.application.service;
 
 import com.condominios.sgc.application.dto.result.PerfilUsuarioResult;
+import com.condominios.sgc.application.port.in.ActualizarPerfilUseCase;
 import com.condominios.sgc.application.port.in.ObtenerPerfilUseCase;
 import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 
-public class ObtenerPerfilService implements ObtenerPerfilUseCase {
+public class PerfilService implements ObtenerPerfilUseCase, ActualizarPerfilUseCase {
 
     private final SecurityServicePort securityService;
     private final UsuarioRepositoryPort usuarioRepository;
 
-    public ObtenerPerfilService(SecurityServicePort securityService, UsuarioRepositoryPort usuarioRepository) {
+    public PerfilService(SecurityServicePort securityService,
+                         UsuarioRepositoryPort usuarioRepository) {
         this.securityService = securityService;
         this.usuarioRepository = usuarioRepository;
     }
 
     @Override
-    public PerfilUsuarioResult ejecutar() {
+    public PerfilUsuarioResult obtenerPerfil() {
         var id = securityService.obtenerIdUsuario();
         var usuario = usuarioRepository.buscarPorId(id)
             .orElseThrow(UsuarioException::noEncontrado);
@@ -33,5 +35,15 @@ public class ObtenerPerfilService implements ObtenerPerfilUseCase {
             usuario.getCorreoVerificado(),
             usuario.getIdCondominio(),
             usuario.getFechaCreacion());
+    }
+
+    @Override
+    public void actualizarPerfil(String nombres, String apellidos, String telefono) {
+        var id = securityService.obtenerIdUsuario();
+        var usuario = usuarioRepository.buscarPorId(id)
+            .orElseThrow(UsuarioException::noEncontrado);
+
+        usuario.actualizar(nombres, apellidos, telefono);
+        usuarioRepository.guardar(usuario);
     }
 }

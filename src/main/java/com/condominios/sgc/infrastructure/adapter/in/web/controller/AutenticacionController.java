@@ -78,21 +78,21 @@ public class AutenticacionController {
     @PostMapping("/login")
     public ResponseEntity<AutenticacionResponse> login(
             @Valid @RequestBody IniciarSesionRequest request) {
-        var resultado = iniciarSesion.ejecutar(
+        var resultado = iniciarSesion.iniciarSesion(
             request.correo(), request.contrasena(), request.recuerdame());
         return conCookies(resultado);
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<AutenticacionResponse> refresh(HttpServletRequest request) {
-        var resultado = refrescarToken.ejecutar(cookieUtil.extraerRefreshToken(request));
+        var resultado = refrescarToken.refrescarToken(cookieUtil.extraerRefreshToken(request));
         return conCookies(resultado);
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request) {
-        cerrarSesion.ejecutar(cookieUtil.extraerRefreshToken(request));
+        cerrarSesion.cerrarSesion(cookieUtil.extraerRefreshToken(request));
         var headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, cookieUtil.limpiarCookieAccessToken().toString());
         headers.add(HttpHeaders.SET_COOKIE, cookieUtil.limpiarCookieRefreshToken().toString());
@@ -102,28 +102,28 @@ public class AutenticacionController {
     @PostMapping("/forgot-password")
     public ResponseEntity<Void> forgotPassword(
             @Valid @RequestBody OlvidasteContrasenaRequest request) {
-        olvidasteContrasena.ejecutar(request.correo());
+        olvidasteContrasena.olvidasteContrasena(request.correo());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/reset-password")
     public ResponseEntity<Void> resetPassword(
             @Valid @RequestBody RestablecerContrasenaRequest request) {
-        restablecerContrasena.ejecutar(request.token(), request.nuevaContrasena());
+        restablecerContrasena.restablecerContrasena(request.token(), request.nuevaContrasena());
         return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/me")
     public ResponseEntity<UsuarioResponse> me() {
-        return ResponseEntity.ok(mapper.toUsuarioResponse(obtenerUsuarioActual.ejecutar()));
+        return ResponseEntity.ok(mapper.toUsuarioResponse(obtenerUsuarioActual.obtenerUsuarioActual()));
     }
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/change-password")
     public ResponseEntity<Void> changePassword(
             @Valid @RequestBody CambiarContrasenaRequest request) {
-        cambiarContrasena.ejecutar(request.contrasenaActual(), request.nuevaContrasena());
+        cambiarContrasena.cambiarContrasena(request.contrasenaActual(), request.nuevaContrasena());
         return ResponseEntity.ok().build();
     }
 
@@ -131,13 +131,13 @@ public class AutenticacionController {
     @PutMapping("/email")
     public ResponseEntity<Void> email(
             @Valid @RequestBody ActualizarCorreoRequest request) {
-        actualizarCorreo.ejecutar(request.nuevoCorreo(), request.contrasena());
+        actualizarCorreo.actualizarCorreo(request.nuevoCorreo(), request.contrasena());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/verify-email")
     public ResponseEntity<Void> verifyEmail(@RequestParam String token) {
-        verificarEmail.ejecutar(token);
+        verificarEmail.verificarEmail(token);
         return ResponseEntity.ok().build();
     }
 

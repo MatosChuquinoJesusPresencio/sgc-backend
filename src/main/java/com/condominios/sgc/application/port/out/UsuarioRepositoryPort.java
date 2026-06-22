@@ -1,5 +1,6 @@
 package com.condominios.sgc.application.port.out;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.condominios.sgc.domain.model.UsuarioModel;
@@ -9,5 +10,10 @@ public interface UsuarioRepositoryPort {
     Optional<UsuarioModel> buscarPorCorreo(String correo);
     UsuarioModel guardar(UsuarioModel modelo);
     void eliminarPorId(Long id);
+
+    List<UsuarioModel> buscarAdministradores(String search, Boolean activo, int pagina, int tamano);
+    long contarAdministradores(String search, Boolean activo);
+    boolean existePorCorreo(String correo);
+    List<UsuarioModel> buscarAdministradoresSinCondominio();
 }
 

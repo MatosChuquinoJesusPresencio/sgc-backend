@@ -35,7 +35,7 @@ public class PerfilController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<PerfilResponse> obtenerPerfil() {
-        var resultado = obtenerPerfil.ejecutar();
+        var resultado = obtenerPerfil.obtenerPerfil();
         return ResponseEntity.ok(mapper.toPerfilResponse(resultado));
     }
 
@@ -43,7 +43,7 @@ public class PerfilController {
     @PutMapping
     public ResponseEntity<Void> actualizarPerfil(
             @Valid @RequestBody ActualizarPerfilRequest request) {
-        actualizarPerfil.ejecutar(request.nombres(), request.apellidos(), request.telefono());
+        actualizarPerfil.actualizarPerfil(request.nombres(), request.apellidos(), request.telefono());
         return ResponseEntity.ok().build();
     }
 }

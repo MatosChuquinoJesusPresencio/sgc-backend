@@ -1,5 +1,5 @@
 package com.condominios.sgc.application.port.in;
 
 public interface CerrarSesionUseCase {
-    void ejecutar(String tokenRefresco);
+    void cerrarSesion(String tokenRefresco);
 }

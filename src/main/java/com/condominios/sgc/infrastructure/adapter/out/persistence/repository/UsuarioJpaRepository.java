@@ -1,9 +1,35 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence.repository;
 
-import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.UsuarioEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.UsuarioEntity;
 
 public interface UsuarioJpaRepository extends JpaRepository<UsuarioEntity, Long> {
     Optional<UsuarioEntity> findByCorreo(String correo);
+
+    boolean existsByCorreoIgnoreCase(String correo);
+
+    @Query("SELECT u FROM UsuarioEntity u WHERE u.rol = 'ADMINISTRADOR_CONDOMINIO' "
+         + "AND (:search IS NULL OR LOWER(u.nombres) LIKE LOWER(CONCAT('%', :search, '%')) "
+         + "OR LOWER(u.apellidos) LIKE LOWER(CONCAT('%', :search, '%'))) "
+         + "AND (:activo IS NULL OR u.activo = :activo)")
+    Page<UsuarioEntity> buscarAdministradores(@Param("search") String search,
+                                               @Param("activo") Boolean activo,
+                                               Pageable pageable);
+
+    @Query("SELECT COUNT(u) FROM UsuarioEntity u WHERE u.rol = 'ADMINISTRADOR_CONDOMINIO' "
+         + "AND (:search IS NULL OR LOWER(u.nombres) LIKE LOWER(CONCAT('%', :search, '%')) "
+         + "OR LOWER(u.apellidos) LIKE LOWER(CONCAT('%', :search, '%'))) "
+         + "AND (:activo IS NULL OR u.activo = :activo)")
+    long contarAdministradores(@Param("search") String search,
+                               @Param("activo") Boolean activo);
+
+    List<UsuarioEntity> findByRolAndIdCondominioIsNull(String rol);
 }

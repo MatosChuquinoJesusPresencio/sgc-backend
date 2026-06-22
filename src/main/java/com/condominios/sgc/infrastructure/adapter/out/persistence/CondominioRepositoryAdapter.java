@@ -1,12 +1,15 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Component;
+
 import com.condominios.sgc.application.port.out.CondominioRepositoryPort;
 import com.condominios.sgc.domain.model.CondominioModel;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.CondominioEntity;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.CondominioMapper;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.CondominioJpaRepository;
-import org.springframework.stereotype.Component;
-import java.util.Optional;
 
 @Component
 public class CondominioRepositoryAdapter implements CondominioRepositoryPort {
@@ -37,5 +40,18 @@ public class CondominioRepositoryAdapter implements CondominioRepositoryPort {
     @Override
     public void eliminarPorId(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public List<CondominioModel> buscarActivosSinAdministrador() {
+        return repository.buscarActivosSinAdministrador()
+            .stream()
+            .map(CondominioMapper::toModel)
+            .toList();
+    }
+
+    @Override
+    public Optional<String> buscarNombrePorId(Long id) {
+        return repository.findNombreById(id);
     }
 }
