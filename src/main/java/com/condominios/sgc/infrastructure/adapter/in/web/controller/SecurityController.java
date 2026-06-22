@@ -22,13 +22,13 @@ import com.condominios.sgc.domain.type.MetodoEntrada;
 import com.condominios.sgc.domain.type.TipoHabitante;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminLogEntryResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.mapper.AdminCondominioMapper;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.RegistrarEntradaVehiculoRequest;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.RegistrarPrestamoCarritoRequest;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.RegistrarSalidaVehiculoRequest;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityActiveCartLoanResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityDashboardResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityVehicleVerificationResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.mapper.SeguridadMapper;
-import com.condominios.sgc.infrastructure.web.dto.RegistrarEntradaVehiculoRequest;
-import com.condominios.sgc.infrastructure.web.dto.RegistrarPrestamoCarritoRequest;
-import com.condominios.sgc.infrastructure.web.dto.RegistrarSalidaVehiculoRequest;
-import com.condominios.sgc.infrastructure.web.dto.SecurityActiveCartLoanResponse;
-import com.condominios.sgc.infrastructure.web.dto.SecurityDashboardResponse;
-import com.condominios.sgc.infrastructure.web.dto.SecurityVehicleVerificationResponse;
 
 @RestController
 @RequestMapping("/api/security")

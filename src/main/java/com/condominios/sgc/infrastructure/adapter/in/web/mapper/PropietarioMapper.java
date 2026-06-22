@@ -8,9 +8,9 @@ import com.condominios.sgc.application.dto.result.PropietarioApartamentoDetailRe
 import com.condominios.sgc.application.dto.result.PropietarioDashboardResult;
 import com.condominios.sgc.application.dto.result.PropietarioInquilinoResult;
 import com.condominios.sgc.application.dto.result.PropietarioVehiculoResult;
-import com.condominios.sgc.infrastructure.web.dto.PropietarioApartamentoDetailResponse;
-import com.condominios.sgc.infrastructure.web.dto.PropietarioInquilinoResponse;
-import com.condominios.sgc.infrastructure.web.dto.PropietarioVehiculoResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioApartamentoDetailResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioInquilinoResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioVehiculoResponse;
 
 @Component
 public class PropietarioMapper {

@@ -8,11 +8,11 @@ import com.condominios.sgc.application.dto.result.SecurityActiveCartLoanResult;
 import com.condominios.sgc.application.dto.result.SecurityDashboardResult;
 import com.condominios.sgc.application.dto.result.SecurityParkingSlotResult;
 import com.condominios.sgc.application.dto.result.SecurityVehicleVerificationResult;
-import com.condominios.sgc.infrastructure.web.dto.SecurityActiveCartLoanResponse;
-import com.condominios.sgc.infrastructure.web.dto.SecurityDashboardResponse;
-import com.condominios.sgc.infrastructure.web.dto.SecurityDashboardResponse.SecurityRecentLogEntry;
-import com.condominios.sgc.infrastructure.web.dto.SecurityParkingSlotResponse;
-import com.condominios.sgc.infrastructure.web.dto.SecurityVehicleVerificationResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityActiveCartLoanResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityDashboardResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityDashboardResponse.SecurityRecentLogEntry;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityParkingSlotResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityVehicleVerificationResponse;
 
 @Component
 public class SeguridadMapper {

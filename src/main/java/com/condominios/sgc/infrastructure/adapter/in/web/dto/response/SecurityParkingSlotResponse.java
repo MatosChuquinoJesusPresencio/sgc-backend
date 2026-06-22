@@ -1,4 +1,4 @@
-package com.condominios.sgc.infrastructure.web.dto;
+package com.condominios.sgc.infrastructure.adapter.in.web.dto.response;
 
 public record SecurityParkingSlotResponse(
     Long id,

@@ -21,12 +21,12 @@ import com.condominios.sgc.application.port.in.GestionarPropietarioLogsUseCase;
 import com.condominios.sgc.application.port.in.GestionarPropietarioVehiculosUseCase;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminLogEntryResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PaginaResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.CrearPropietarioInquilinoRequest;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.CrearPropietarioVehiculoRequest;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioApartamentoDetailResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioInquilinoResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioVehiculoResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.mapper.AdminCondominioMapper;
-import com.condominios.sgc.infrastructure.web.dto.CrearPropietarioInquilinoRequest;
-import com.condominios.sgc.infrastructure.web.dto.CrearPropietarioVehiculoRequest;
-import com.condominios.sgc.infrastructure.web.dto.PropietarioApartamentoDetailResponse;
-import com.condominios.sgc.infrastructure.web.dto.PropietarioInquilinoResponse;
-import com.condominios.sgc.infrastructure.web.dto.PropietarioVehiculoResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.mapper.PropietarioMapper;
 
 import jakarta.validation.Valid;
