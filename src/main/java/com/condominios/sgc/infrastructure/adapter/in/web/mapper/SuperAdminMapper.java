@@ -43,7 +43,15 @@ public class SuperAdminMapper {
     }
 
     public CondominioSimpleResponse toCondominioSimpleResponse(CondominioSimpleResult r) {
-        return new CondominioSimpleResponse(r.id(), r.nombre());
+        return new CondominioSimpleResponse(
+            r.id(), 
+            r.nombre(), 
+            r.direccion(),
+            r.nombrePais(),
+            r.nombreCiudad(),
+            r.nombreAdministrador(),
+            r.fechaCreacion()
+        );
     }
 
     public List<CondominioSimpleResponse> toCondominioSimpleResponses(List<CondominioSimpleResult> results) {

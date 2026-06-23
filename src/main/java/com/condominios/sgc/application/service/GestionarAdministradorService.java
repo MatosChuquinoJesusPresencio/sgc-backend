@@ -1,5 +1,7 @@
 package com.condominios.sgc.application.service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import com.condominios.sgc.application.dto.command.ActualizarAdministradorCommand;
@@ -9,11 +11,15 @@ import com.condominios.sgc.application.dto.result.AdministradorResult;
 import com.condominios.sgc.application.dto.result.CondominioSimpleResult;
 import com.condominios.sgc.application.dto.result.PaginaResult;
 import com.condominios.sgc.application.port.in.GestionarAdministradorUseCase;
+import com.condominios.sgc.application.port.out.CiudadRepositoryPort;
 import com.condominios.sgc.application.port.out.CondominioRepositoryPort;
+import com.condominios.sgc.application.port.out.PaisRepositoryPort;
 import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.service.CorreoServicePort;
 import com.condominios.sgc.application.port.out.service.HashServicePort;
 import com.condominios.sgc.application.port.out.service.SecurityServicePort;
+import com.condominios.sgc.domain.model.CiudadModel;
+import com.condominios.sgc.domain.model.PaisModel;
 import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
@@ -23,6 +29,8 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
 
     private final UsuarioRepositoryPort usuarioRepository;
     private final CondominioRepositoryPort condominioRepository;
+    private final CiudadRepositoryPort ciudadRepositoryPort;
+    private final PaisRepositoryPort paisRepositoryPort;
     private final HashServicePort hashService;
     private final CorreoServicePort correoService;
 
@@ -30,10 +38,14 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
             CondominioRepositoryPort condominioRepository,
+            PaisRepositoryPort paisRepositoryPort,
+            CiudadRepositoryPort ciudadRepositoryPort,
             HashServicePort hashService,
             CorreoServicePort correoService) {
         this.usuarioRepository = usuarioRepository;
         this.condominioRepository = condominioRepository;
+        this.paisRepositoryPort = paisRepositoryPort;
+        this.ciudadRepositoryPort = ciudadRepositoryPort;
         this.hashService = hashService;
         this.correoService = correoService;
     }
@@ -121,7 +133,19 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
     public List<CondominioSimpleResult> listarCondominiosDisponibles() {
         return condominioRepository.buscarActivosSinAdministrador()
             .stream()
-            .map(c -> new CondominioSimpleResult(c.getId(), c.getNombre()))
+            .map(c -> {
+                String nombrePais = paisRepositoryPort.buscarPorId(c.getIdPais())
+                    .map(PaisModel::nombre).orElse(null);
+                String nombreCiudad = ciudadRepositoryPort.buscarPorId(c.getIdCiudad())
+                    .map(CiudadModel::nombre).orElse(null);
+                LocalDateTime fecha = c.getFechaCreacion() != null
+                    ? LocalDateTime.ofInstant(c.getFechaCreacion(), ZoneId.systemDefault())
+                    : null;
+                return new CondominioSimpleResult(
+                    c.getId(), c.getNombre(), c.getDireccion(),
+                    nombrePais, nombreCiudad, null, fecha
+                );
+            })
             .toList();
     }
 

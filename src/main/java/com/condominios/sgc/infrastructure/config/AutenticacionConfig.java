@@ -217,11 +217,13 @@ public class AutenticacionConfig {
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
             CondominioRepositoryPort condominioRepository,
+            PaisRepositoryPort paisRepository,
+            CiudadRepositoryPort ciudadRepository,
             HashServicePort hashService,
             CorreoServicePort correoService) {
         return new GestionarAdministradorService(
-            securityService, usuarioRepository, condominioRepository,
-            hashService, correoService);
+            securityService, usuarioRepository, condominioRepository, paisRepository, 
+            ciudadRepository, hashService, correoService);
     }
 
     @Bean
@@ -244,8 +246,10 @@ public class AutenticacionConfig {
     @Bean
     public GestionarDashboardUseCase gestionarDashboardUseCase(
             CondominioRepositoryPort condominioRepository,
-            UsuarioRepositoryPort usuarioRepository) {
-        return new GestionarDashboardService(condominioRepository, usuarioRepository);
+            UsuarioRepositoryPort usuarioRepository,
+            PaisRepositoryPort paisRepository,
+            CiudadRepositoryPort ciudadRepository) {
+        return new GestionarDashboardService(condominioRepository, usuarioRepository, paisRepository, ciudadRepository);
     }
 
     @Bean
