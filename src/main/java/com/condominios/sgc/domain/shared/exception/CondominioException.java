@@ -32,4 +32,8 @@ public class CondominioException extends DominioException {
     public static CondominioException nombreYaExiste(String nombre) {
         return new CondominioException("ya existe un condominio con el nombre '" + nombre + "'");
     }
+
+    public static CondominioException yaTieneAdministradorAsignado() {
+        return new CondominioException("el condominio ya tiene un administrador asignado");
+    }
 }

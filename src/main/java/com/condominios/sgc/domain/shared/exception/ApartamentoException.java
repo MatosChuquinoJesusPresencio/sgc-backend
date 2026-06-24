@@ -20,4 +20,8 @@ public class ApartamentoException extends DominioException {
     public static ApartamentoException noEncontrado() {
         return new ApartamentoException("apartamento no encontrado");
     }
+
+    public static ApartamentoException yaTienePropietarioAsignado() {
+        return new ApartamentoException("el apartamento ya tiene un propietario asignado");
+    }
 }

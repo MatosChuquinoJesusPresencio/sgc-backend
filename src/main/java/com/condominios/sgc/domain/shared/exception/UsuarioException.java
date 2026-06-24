@@ -56,4 +56,8 @@ public class UsuarioException extends DominioException {
     public static UsuarioException usuarioInactivo() {
         return new UsuarioException("el usuario está desactivado");
     }
+
+    public static UsuarioException yaTieneCondominioAsignado() {
+        return new UsuarioException("el administrador ya tiene un condominio asignado");
+    }
 }

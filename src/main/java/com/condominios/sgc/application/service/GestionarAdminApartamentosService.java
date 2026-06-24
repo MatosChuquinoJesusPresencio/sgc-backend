@@ -60,6 +60,8 @@ public class GestionarAdminApartamentosService implements GestionarAdminApartame
         var condominioId = obtenerCondominioId();
         var apto = apartamentoRepository.buscarPorId(apartamentoId)
             .orElseThrow(ApartamentoException::noEncontrado);
+        if (apto.getIdPropietario() != null)
+            throw ApartamentoException.yaTienePropietarioAsignado();
         var propietario = usuarioRepository.buscarPorId(cmd.idPropietario())
             .orElseThrow(UsuarioException::noEncontrado);
         if (!condominioId.equals(propietario.getIdCondominio())) {
