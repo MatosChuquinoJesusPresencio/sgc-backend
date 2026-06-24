@@ -9,6 +9,8 @@ import com.condominios.sgc.domain.type.Rol;
 import com.condominios.sgc.domain.type.TipoToken;
 import com.condominios.sgc.infrastructure.util.JwtUtil;
 
+import io.jsonwebtoken.JwtException;
+
 @Component
 public class JwtServiceAdapter implements JwtServicePort {
 
@@ -42,7 +44,7 @@ public class JwtServiceAdapter implements JwtServicePort {
         try {
             jwtUtil.validateToken(token);
             return true;
-        } catch (Exception e) {
+        } catch (JwtException e) {
             return false;
         }
     }
