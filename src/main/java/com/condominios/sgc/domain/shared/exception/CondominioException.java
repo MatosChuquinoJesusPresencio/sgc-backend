@@ -28,4 +28,8 @@ public class CondominioException extends DominioException {
     public static CondominioException condominioInactivo() {
         return new CondominioException("el condominio está desactivado");
     }
+
+    public static CondominioException nombreYaExiste(String nombre) {
+        return new CondominioException("ya existe un condominio con el nombre '" + nombre + "'");
+    }
 }

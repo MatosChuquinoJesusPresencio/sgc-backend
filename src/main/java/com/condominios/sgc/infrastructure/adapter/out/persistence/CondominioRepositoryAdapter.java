@@ -28,6 +28,11 @@ public class CondominioRepositoryAdapter implements CondominioRepositoryPort {
     }
 
     @Override
+    public Optional<CondominioModel> buscarPorNombre(String nombre) {
+        return repository.findByNombre(nombre).map(CondominioMapper::toModelLigero);
+    }
+
+    @Override
     public CondominioModel guardar(CondominioModel modelo) {
         CondominioEntity entity = CondominioMapper.toEntity(modelo);
         if (entity.getTorres() != null) {

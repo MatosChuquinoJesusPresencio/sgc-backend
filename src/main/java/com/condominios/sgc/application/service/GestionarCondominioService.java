@@ -41,6 +41,8 @@ public class GestionarCondominioService implements GestionarCondominioUseCase {
 
     @Override
     public CondominioResult crear(CrearCondominioCommand cmd) {
+        condominioRepository.buscarPorNombre(cmd.nombre())
+            .ifPresent(c -> { throw CondominioException.nombreYaExiste(cmd.nombre()); });
         var condominio = new CondominioModel(cmd.nombre(), cmd.idPais(), cmd.idCiudad(), cmd.direccion());
         condominio.activar();
         var guardado = condominioRepository.guardar(condominio);
@@ -51,6 +53,10 @@ public class GestionarCondominioService implements GestionarCondominioUseCase {
     public CondominioResult actualizar(Long id, ActualizarCondominioCommand cmd) {
         var condominio = condominioRepository.buscarPorId(id)
             .orElseThrow(CondominioException::noEncontrado);
+        if (!condominio.getNombre().equals(cmd.nombre())) {
+            condominioRepository.buscarPorNombre(cmd.nombre())
+                .ifPresent(c -> { throw CondominioException.nombreYaExiste(cmd.nombre()); });
+        }
         condominio.actualizar(cmd.nombre(), cmd.idPais(), cmd.idCiudad(), cmd.direccion());
         return toResult(condominioRepository.guardar(condominio));
     }

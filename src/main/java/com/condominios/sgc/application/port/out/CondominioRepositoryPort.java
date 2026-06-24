@@ -7,6 +7,7 @@ import com.condominios.sgc.domain.model.CondominioModel;
 
 public interface CondominioRepositoryPort {
     Optional<CondominioModel> buscarPorId(Long id);
+    Optional<CondominioModel> buscarPorNombre(String nombre);
     CondominioModel guardar(CondominioModel modelo);
     void eliminarPorId(Long id);
 

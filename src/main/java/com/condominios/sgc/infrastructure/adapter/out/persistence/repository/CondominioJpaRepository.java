@@ -14,6 +14,8 @@ import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.Condomi
 
 public interface CondominioJpaRepository extends JpaRepository<CondominioEntity, Long> {
 
+    Optional<CondominioEntity> findByNombre(String nombre);
+
     @EntityGraph(attributePaths = {
         "torres", "torres.pisos", "torres.pisos.apartamentos", "configuracion"
     })
