@@ -3,11 +3,8 @@ package com.condominios.sgc.infrastructure.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.condominios.sgc.application.port.in.ActualizarCorreoUseCase;
 import com.condominios.sgc.application.port.in.ActualizarPerfilUseCase;
-import com.condominios.sgc.application.port.in.CambiarContrasenaUseCase;
 import com.condominios.sgc.application.port.in.CatalogoUseCase;
-import com.condominios.sgc.application.port.in.CerrarSesionUseCase;
 import com.condominios.sgc.application.port.in.GestionarAdminActivosUseCase;
 import com.condominios.sgc.application.port.in.GestionarAdminApartamentosUseCase;
 import com.condominios.sgc.application.port.in.GestionarAdminCondominioUseCase;
@@ -28,13 +25,7 @@ import com.condominios.sgc.application.port.in.GestionarSeguridadPrestamosUseCas
 import com.condominios.sgc.application.port.in.GestionarSeguridadVehiculosUseCase;
 import com.condominios.sgc.application.port.in.GestionarDashboardUseCase;
 import com.condominios.sgc.application.port.in.GestionarUsuariosGlobalUseCase;
-import com.condominios.sgc.application.port.in.IniciarSesionUseCase;
 import com.condominios.sgc.application.port.in.ObtenerPerfilUseCase;
-import com.condominios.sgc.application.port.in.ObtenerUsuarioActualUseCase;
-import com.condominios.sgc.application.port.in.OlvidasteContrasenaUseCase;
-import com.condominios.sgc.application.port.in.RefrescarTokenUseCase;
-import com.condominios.sgc.application.port.in.RestablecerContrasenaUseCase;
-import com.condominios.sgc.application.port.in.VerificarEmailUseCase;
 import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.CarritoRepositoryPort;
 import com.condominios.sgc.application.port.out.CiudadRepositoryPort;
@@ -89,51 +80,6 @@ public class AutenticacionConfig {
             CorreoServicePort correoService) {
         return new AutenticacionService(usuarioRepository, hashService, jwtService,
             tokenRepository, securityService, correoService);
-    }
-
-    @Bean
-    public IniciarSesionUseCase iniciarSesionUseCase(AutenticacionService svc) {
-        return svc::iniciarSesion;
-    }
-
-    @Bean
-    public RefrescarTokenUseCase refrescarTokenUseCase(AutenticacionService svc) {
-        return svc::refrescarToken;
-    }
-
-    @Bean
-    public CerrarSesionUseCase cerrarSesionUseCase(AutenticacionService svc) {
-        return svc::cerrarSesion;
-    }
-
-    @Bean
-    public OlvidasteContrasenaUseCase olvidasteContrasenaUseCase(AutenticacionService svc) {
-        return svc::olvidasteContrasena;
-    }
-
-    @Bean
-    public RestablecerContrasenaUseCase restablecerContrasenaUseCase(AutenticacionService svc) {
-        return svc::restablecerContrasena;
-    }
-
-    @Bean
-    public ObtenerUsuarioActualUseCase obtenerUsuarioActualUseCase(AutenticacionService svc) {
-        return svc::obtenerUsuarioActual;
-    }
-
-    @Bean
-    public CambiarContrasenaUseCase cambiarContrasenaUseCase(AutenticacionService svc) {
-        return svc::cambiarContrasena;
-    }
-
-    @Bean
-    public ActualizarCorreoUseCase actualizarCorreoUseCase(AutenticacionService svc) {
-        return svc::actualizarCorreo;
-    }
-
-    @Bean
-    public VerificarEmailUseCase verificarEmailUseCase(AutenticacionService svc) {
-        return svc::verificarEmail;
     }
 
     @Bean
