@@ -53,7 +53,7 @@ public class CondominioRepositoryAdapter implements CondominioRepositoryPort {
     public List<CondominioModel> buscarActivosSinAdministrador() {
         return repository.buscarActivosSinAdministrador()
             .stream()
-            .map(CondominioMapper::toModel)
+            .map(CondominioMapper::toModelLigero)
             .toList();
     }
 
