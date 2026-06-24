@@ -41,13 +41,13 @@ public class CookieUtil {
     public ResponseCookie limpiarCookieAccessToken() {
         return ResponseCookie.from(accessCookieName, "")
             .httpOnly(true).secure(secure).path(path)
-            .maxAge(0).build();
+            .maxAge(0).sameSite("None").build();
     }
 
     public ResponseCookie limpiarCookieRefreshToken() {
         return ResponseCookie.from(refreshCookieName, "")
             .httpOnly(true).secure(secure).path(path)
-            .maxAge(0).build();
+            .maxAge(0).sameSite("None").build();
     }
 
     public String extraerRefreshToken(HttpServletRequest request) {
