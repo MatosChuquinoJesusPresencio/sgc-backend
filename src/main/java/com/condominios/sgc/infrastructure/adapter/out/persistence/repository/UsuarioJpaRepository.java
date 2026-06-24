@@ -16,20 +16,26 @@ public interface UsuarioJpaRepository extends JpaRepository<UsuarioEntity, Long>
 
     boolean existsByCorreoIgnoreCase(String correo);
 
-    @Query("SELECT u FROM UsuarioEntity u WHERE u.rol = 'ADMINISTRADOR_CONDOMINIO' "
-         + "AND (cast(:search as String) IS NULL OR function('unaccent', LOWER(u.nombres)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%'))) "
-         + "OR function('unaccent', LOWER(u.apellidos)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%')))) "
-         + "AND (:activo IS NULL OR u.activo = :activo)")
+    @Query(value = "SELECT * FROM usuario u WHERE u.rol = 'ADMINISTRADOR_CONDOMINIO' "
+         + "AND (cast(:search as text) IS NULL OR unaccent(LOWER(u.nombres)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%'))) "
+         + "OR unaccent(LOWER(u.apellidos)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%')))) "
+         + "AND (:activo IS NULL OR u.activo = :activo)",
+         countQuery = "SELECT count(*) FROM usuario u WHERE u.rol = 'ADMINISTRADOR_CONDOMINIO' "
+         + "AND (cast(:search as text) IS NULL OR unaccent(LOWER(u.nombres)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%'))) "
+         + "OR unaccent(LOWER(u.apellidos)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%')))) "
+         + "AND (:activo IS NULL OR u.activo = :activo)",
+         nativeQuery = true)
     Page<UsuarioEntity> buscarAdministradores(@Param("search") String search,
                                                @Param("activo") Boolean activo,
                                                Pageable pageable);
 
-    @Query("SELECT COUNT(u) FROM UsuarioEntity u WHERE u.rol = 'ADMINISTRADOR_CONDOMINIO' "
-         + "AND (cast(:search as String) IS NULL OR function('unaccent', LOWER(u.nombres)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%'))) "
-         + "OR function('unaccent', LOWER(u.apellidos)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%')))) "
-         + "AND (:activo IS NULL OR u.activo = :activo)")
+    @Query(value = "SELECT count(*) FROM usuario u WHERE u.rol = 'ADMINISTRADOR_CONDOMINIO' "
+         + "AND (cast(:search as text) IS NULL OR unaccent(LOWER(u.nombres)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%'))) "
+         + "OR unaccent(LOWER(u.apellidos)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%')))) "
+         + "AND (:activo IS NULL OR u.activo = :activo)",
+         nativeQuery = true)
     long contarAdministradores(@Param("search") String search,
-                               @Param("activo") Boolean activo);
+                                @Param("activo") Boolean activo);
 
     List<UsuarioEntity> findByRolAndIdCondominioIsNull(String rol);
 
@@ -41,24 +47,26 @@ public interface UsuarioJpaRepository extends JpaRepository<UsuarioEntity, Long>
     @Query("SELECT u FROM UsuarioEntity u WHERE u.rol = :rol ORDER BY u.fechaCreacion DESC")
     List<UsuarioEntity> buscarRecientesPorRol(@Param("rol") String rol, Pageable pageable);
 
-    @Query("SELECT u FROM UsuarioEntity u WHERE "
-         + "(cast(:search as String) IS NULL OR function('unaccent', LOWER(u.nombres)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%'))) "
-         + "OR function('unaccent', LOWER(u.apellidos)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%'))) "
-         + "OR function('unaccent', LOWER(u.correo)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%')))) "
+    @Query(value = "SELECT * FROM usuario u WHERE "
+         + "(cast(:search as text) IS NULL OR unaccent(LOWER(u.nombres)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%'))) "
+         + "OR unaccent(LOWER(u.apellidos)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%'))) "
+         + "OR unaccent(LOWER(u.correo)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%')))) "
          + "AND (:rol IS NULL OR u.rol = :rol) "
          + "AND (:activo IS NULL OR u.activo = :activo) "
-         + "ORDER BY u.fechaCreacion DESC")
+         + "ORDER BY u.fechaCreacion DESC",
+         nativeQuery = true)
     List<UsuarioEntity> buscarTodos(@Param("search") String search,
                                     @Param("rol") String rol,
                                     @Param("activo") Boolean activo,
                                     Pageable pageable);
 
-    @Query("SELECT COUNT(u) FROM UsuarioEntity u WHERE "
-         + "(cast(:search as String) IS NULL OR function('unaccent', LOWER(u.nombres)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%'))) "
-         + "OR function('unaccent', LOWER(u.apellidos)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%'))) "
-         + "OR function('unaccent', LOWER(u.correo)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%')))) "
+    @Query(value = "SELECT count(*) FROM usuario u WHERE "
+         + "(cast(:search as text) IS NULL OR unaccent(LOWER(u.nombres)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%'))) "
+         + "OR unaccent(LOWER(u.apellidos)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%'))) "
+         + "OR unaccent(LOWER(u.correo)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%')))) "
          + "AND (:rol IS NULL OR u.rol = :rol) "
-         + "AND (:activo IS NULL OR u.activo = :activo)")
+         + "AND (:activo IS NULL OR u.activo = :activo)",
+         nativeQuery = true)
     long contarTodos(@Param("search") String search,
                      @Param("rol") String rol,
                      @Param("activo") Boolean activo);
@@ -66,25 +74,27 @@ public interface UsuarioJpaRepository extends JpaRepository<UsuarioEntity, Long>
     @Query("SELECT COUNT(u) FROM UsuarioEntity u WHERE u.idCondominio = :idCondominio AND u.rol = :rol")
     long countByIdCondominioAndRol(@Param("idCondominio") Long idCondominio, @Param("rol") String rol);
 
-    @Query("SELECT u FROM UsuarioEntity u WHERE u.idCondominio = :idCondominio "
-         + "AND (cast(:search as String) IS NULL OR function('unaccent', LOWER(u.nombres)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%'))) "
-         + "OR function('unaccent', LOWER(u.apellidos)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%'))) "
-         + "OR function('unaccent', LOWER(u.correo)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%')))) "
+    @Query(value = "SELECT * FROM usuario u WHERE u.idCondominio = :idCondominio "
+         + "AND (cast(:search as text) IS NULL OR unaccent(LOWER(u.nombres)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%'))) "
+         + "OR unaccent(LOWER(u.apellidos)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%'))) "
+         + "OR unaccent(LOWER(u.correo)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%')))) "
          + "AND (:rol IS NULL OR u.rol = :rol) "
          + "AND (:activo IS NULL OR u.activo = :activo) "
-         + "ORDER BY u.fechaCreacion DESC")
+         + "ORDER BY u.fechaCreacion DESC",
+         nativeQuery = true)
     List<UsuarioEntity> buscarPorCondominio(@Param("idCondominio") Long idCondominio,
                                             @Param("search") String search,
                                             @Param("rol") String rol,
                                             @Param("activo") Boolean activo,
                                             Pageable pageable);
 
-    @Query("SELECT COUNT(u) FROM UsuarioEntity u WHERE u.idCondominio = :idCondominio "
-         + "AND (cast(:search as String) IS NULL OR function('unaccent', LOWER(u.nombres)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%'))) "
-         + "OR function('unaccent', LOWER(u.apellidos)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%'))) "
-         + "OR function('unaccent', LOWER(u.correo)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%')))) "
+    @Query(value = "SELECT count(*) FROM usuario u WHERE u.idCondominio = :idCondominio "
+         + "AND (cast(:search as text) IS NULL OR unaccent(LOWER(u.nombres)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%'))) "
+         + "OR unaccent(LOWER(u.apellidos)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%'))) "
+         + "OR unaccent(LOWER(u.correo)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%')))) "
          + "AND (:rol IS NULL OR u.rol = :rol) "
-         + "AND (:activo IS NULL OR u.activo = :activo)")
+         + "AND (:activo IS NULL OR u.activo = :activo)",
+         nativeQuery = true)
     long contarPorCondominio(@Param("idCondominio") Long idCondominio,
                              @Param("search") String search,
                              @Param("rol") String rol,
