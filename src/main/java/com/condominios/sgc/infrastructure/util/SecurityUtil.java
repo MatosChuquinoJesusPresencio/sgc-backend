@@ -13,7 +13,11 @@ public class SecurityUtil {
     public Long obtenerIdUsuario() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() instanceof Jwt jwt) {
-            return Long.parseLong(jwt.getSubject());
+            try {
+                return Long.parseLong(jwt.getSubject());
+            } catch (NumberFormatException | NullPointerException e) {
+                throw AutenticacionException.tokenInvalido();
+            }
         }
         throw AutenticacionException.usuarioNoAutenticado();
     }
@@ -21,7 +25,11 @@ public class SecurityUtil {
     public Rol obtenerRolAutenticado() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() instanceof Jwt jwt) {
-            return Rol.valueOf(jwt.getClaimAsString("rol"));
+            try {
+                return Rol.valueOf(jwt.getClaimAsString("rol"));
+            } catch (IllegalArgumentException | NullPointerException e) {
+                throw AutenticacionException.tokenInvalido();
+            }
         }
         throw AutenticacionException.usuarioNoAutenticado();
     }
