@@ -1,5 +1,6 @@
 package com.condominios.sgc.infrastructure.util;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 public class JwtUtil {
@@ -41,6 +43,7 @@ public class JwtUtil {
     public String generateAccessToken(String userId, String email, String rol) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
+            .id(UUID.randomUUID().toString())
             .subject(userId)
             .claim("email", email)
             .claim("rol", rol)
@@ -57,6 +60,7 @@ public class JwtUtil {
     public String generateRefreshToken(String userId, long expiration) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
+            .id(UUID.randomUUID().toString())
             .subject(userId)
             .issuedAt(new Date(now))
             .expiration(new Date(now + expiration))
@@ -64,14 +68,17 @@ public class JwtUtil {
             .compact();
     }
 
-    public Jws<io.jsonwebtoken.Claims> validateToken(String token) {
+    public Jws<Claims> validateToken(String token) {
+        if (token == null || token.isBlank())
+            throw new JwtException("Token vacio");
+
         try {
             return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token);
-        } catch (io.jsonwebtoken.JwtException e) {
-            throw new JwtException("Token invalido: " + e.getMessage());
+        } catch (JwtException e) {
+            throw new JwtException("Token invalido");
         }
     }
 
@@ -98,6 +105,7 @@ public class JwtUtil {
     public String generateToken(String userId, long expirationMs) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
+            .id(UUID.randomUUID().toString())
             .subject(userId)
             .issuedAt(new Date(now))
             .expiration(new Date(now + expirationMs))

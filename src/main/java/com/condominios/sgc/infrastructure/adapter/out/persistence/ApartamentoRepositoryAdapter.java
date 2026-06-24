@@ -8,6 +8,7 @@ import com.condominios.sgc.domain.model.ApartamentoModel;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.ApartamentoMapper;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.ApartamentoJpaRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class ApartamentoRepositoryAdapter implements ApartamentoRepositoryPort {
@@ -18,6 +19,7 @@ public class ApartamentoRepositoryAdapter implements ApartamentoRepositoryPort {
         this.repository = repository;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<ApartamentoModel> buscarPorId(Long id) {
         return repository.findById(id).map(ApartamentoMapper::toModel);
@@ -33,6 +35,7 @@ public class ApartamentoRepositoryAdapter implements ApartamentoRepositoryPort {
         repository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ApartamentoModel> buscarPorPropietario(Long idPropietario) {
         return repository.findByIdPropietario(idPropietario)
@@ -41,6 +44,7 @@ public class ApartamentoRepositoryAdapter implements ApartamentoRepositoryPort {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<ApartamentoModel> buscarPorNumeroYCondominio(Integer numero, Long idCondominio) {
         return repository.findByNumeroAndCondominioId(numero, idCondominio)

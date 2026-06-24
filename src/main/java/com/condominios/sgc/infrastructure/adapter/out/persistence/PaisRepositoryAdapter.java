@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.condominios.sgc.application.port.out.PaisRepositoryPort;
 import com.condominios.sgc.domain.model.PaisModel;
@@ -19,6 +20,7 @@ public class PaisRepositoryAdapter implements PaisRepositoryPort {
         this.repository = repository;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<PaisModel> buscarPorId(Long id) {
         return repository.findById(id).map(PaisMapper::toModel);
@@ -34,6 +36,7 @@ public class PaisRepositoryAdapter implements PaisRepositoryPort {
         repository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<PaisModel> listarTodos() {
         return repository.findAll().stream().map(PaisMapper::toModel).toList();

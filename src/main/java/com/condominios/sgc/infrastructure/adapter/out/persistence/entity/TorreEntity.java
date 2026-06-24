@@ -12,6 +12,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.ArrayList;
@@ -36,5 +38,6 @@ public class TorreEntity {
     private CondominioEntity condominio;
 
     @OneToMany(mappedBy = "torre", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(FetchMode.SUBSELECT)
     private List<PisoEntity> pisos = new ArrayList<>();
 }

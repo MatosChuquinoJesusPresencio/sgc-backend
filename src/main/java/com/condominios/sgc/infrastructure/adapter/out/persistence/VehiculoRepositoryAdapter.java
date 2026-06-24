@@ -8,6 +8,7 @@ import com.condominios.sgc.domain.model.VehiculoModel;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.VehiculoMapper;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.VehiculoJpaRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class VehiculoRepositoryAdapter implements VehiculoRepositoryPort {
@@ -18,6 +19,7 @@ public class VehiculoRepositoryAdapter implements VehiculoRepositoryPort {
         this.repository = repository;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<VehiculoModel> buscarPorId(Long id) {
         return repository.findById(id).map(VehiculoMapper::toModel);
@@ -38,6 +40,7 @@ public class VehiculoRepositoryAdapter implements VehiculoRepositoryPort {
         return repository.countByIdCondominio(idCondominio);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<VehiculoModel> buscarPorPropietario(Long idPropietario) {
         return repository.findByIdPropietario(idPropietario)
@@ -46,6 +49,7 @@ public class VehiculoRepositoryAdapter implements VehiculoRepositoryPort {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<VehiculoModel> buscarPorPlaca(String placa) {
         return repository.findByPlaca(placa).map(VehiculoMapper::toModel);

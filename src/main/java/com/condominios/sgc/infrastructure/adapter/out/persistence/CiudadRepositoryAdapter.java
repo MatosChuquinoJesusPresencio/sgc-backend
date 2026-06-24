@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.condominios.sgc.application.port.out.CiudadRepositoryPort;
 import com.condominios.sgc.domain.model.CiudadModel;
@@ -19,6 +20,7 @@ public class CiudadRepositoryAdapter implements CiudadRepositoryPort {
         this.repository = repository;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<CiudadModel> buscarPorId(Long id) {
         return repository.findById(id).map(CiudadMapper::toModel);
@@ -34,6 +36,7 @@ public class CiudadRepositoryAdapter implements CiudadRepositoryPort {
         repository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<CiudadModel> buscarPorPaisId(Long paisId) {
         return repository.findByIdPais(paisId).stream().map(CiudadMapper::toModel).toList();

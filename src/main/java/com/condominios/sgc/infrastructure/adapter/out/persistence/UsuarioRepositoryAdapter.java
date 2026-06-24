@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.domain.model.UsuarioModel;
@@ -23,11 +24,13 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
         this.repository = repository;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<UsuarioModel> buscarPorId(Long id) {
         return repository.findById(id).map(UsuarioMapper::toModel);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<UsuarioModel> buscarPorCorreo(String correo) {
         return repository.findByCorreo(correo).map(UsuarioMapper::toModel);
@@ -69,6 +72,7 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
             .toList();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<UsuarioModel> buscarPorCondominioId(Long idCondominio) {
         return repository.findByIdCondominio(idCondominio).map(UsuarioMapper::toModel);

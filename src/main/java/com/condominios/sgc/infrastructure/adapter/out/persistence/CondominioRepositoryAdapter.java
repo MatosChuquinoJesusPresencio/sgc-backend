@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.condominios.sgc.application.port.out.CondominioRepositoryPort;
 import com.condominios.sgc.domain.model.CondominioModel;
@@ -14,6 +15,7 @@ import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.Condomi
 import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.CondominioJpaRepository;
 
 @Component
+@Transactional(readOnly = true)
 public class CondominioRepositoryAdapter implements CondominioRepositoryPort {
 
     private final CondominioJpaRepository repository;
@@ -24,7 +26,7 @@ public class CondominioRepositoryAdapter implements CondominioRepositoryPort {
 
     @Override
     public Optional<CondominioModel> buscarPorId(Long id) {
-        return repository.findWithTreeById(id).map(CondominioMapper::toModel);
+        return repository.findById(id).map(CondominioMapper::toModel);
     }
 
     @Override
@@ -32,6 +34,7 @@ public class CondominioRepositoryAdapter implements CondominioRepositoryPort {
         return repository.findByNombre(nombre).map(CondominioMapper::toModelLigero);
     }
 
+    @Transactional
     @Override
     public CondominioModel guardar(CondominioModel modelo) {
         CondominioEntity entity = CondominioMapper.toEntity(modelo);

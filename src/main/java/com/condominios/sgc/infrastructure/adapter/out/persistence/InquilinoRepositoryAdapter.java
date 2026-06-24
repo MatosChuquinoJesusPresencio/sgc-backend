@@ -8,6 +8,7 @@ import com.condominios.sgc.domain.model.InquilinoModel;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.InquilinoMapper;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.InquilinoJpaRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class InquilinoRepositoryAdapter implements InquilinoRepositoryPort {
@@ -18,6 +19,7 @@ public class InquilinoRepositoryAdapter implements InquilinoRepositoryPort {
         this.repository = repository;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<InquilinoModel> buscarPorId(Long id) {
         return repository.findById(id).map(InquilinoMapper::toModel);
@@ -33,6 +35,7 @@ public class InquilinoRepositoryAdapter implements InquilinoRepositoryPort {
         repository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<InquilinoModel> buscarPorApartamento(Long idApartamento) {
         return repository.findByIdApartamento(idApartamento).stream()
