@@ -53,7 +53,7 @@ public interface UsuarioJpaRepository extends JpaRepository<UsuarioEntity, Long>
          + "OR unaccent(LOWER(u.correo)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%')))) "
          + "AND (:rol IS NULL OR u.rol = :rol) "
          + "AND (:activo IS NULL OR u.activo = :activo) "
-         + "ORDER BY u.fechaCreacion DESC",
+         + "ORDER BY u.fecha_creacion DESC",
          nativeQuery = true)
     List<UsuarioEntity> buscarTodos(@Param("search") String search,
                                     @Param("rol") String rol,
@@ -80,7 +80,7 @@ public interface UsuarioJpaRepository extends JpaRepository<UsuarioEntity, Long>
          + "OR unaccent(LOWER(u.correo)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%')))) "
          + "AND (:rol IS NULL OR u.rol = :rol) "
          + "AND (:activo IS NULL OR u.activo = :activo) "
-         + "ORDER BY u.fechaCreacion DESC",
+         + "ORDER BY u.fecha_creacion DESC",
          nativeQuery = true)
     List<UsuarioEntity> buscarPorCondominio(@Param("idCondominio") Long idCondominio,
                                             @Param("search") String search,
