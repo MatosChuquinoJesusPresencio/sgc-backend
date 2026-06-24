@@ -190,6 +190,9 @@ public class AutenticacionService implements IniciarSesionUseCase, RefrescarToke
         var usuario = usuarioRepository.buscarPorId(idUsuario)
             .orElseThrow(UsuarioException::noEncontrado);
 
+        if (!hashService.verificar(contrasena, usuario.getContrasena()))
+            throw AutenticacionException.credencialesInvalidas();
+
         usuarioRepository.buscarPorCorreo(nuevoCorreo)
             .ifPresent(u -> { throw UsuarioException.correoYaRegistrado(); });
 
