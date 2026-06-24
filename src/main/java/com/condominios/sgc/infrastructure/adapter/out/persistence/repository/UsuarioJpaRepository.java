@@ -33,7 +33,8 @@ public interface UsuarioJpaRepository extends JpaRepository<UsuarioEntity, Long>
 
     List<UsuarioEntity> findByRolAndIdCondominioIsNull(String rol);
 
-    Optional<UsuarioEntity> findByIdCondominio(Long idCondominio);
+    @Query("SELECT u FROM UsuarioEntity u WHERE u.idCondominio = :idCondominio AND u.rol = 'ADMINISTRADOR_CONDOMINIO'")
+    Optional<UsuarioEntity> findByIdCondominio(@Param("idCondominio") Long idCondominio);
 
     long countByRol(String rol);
 

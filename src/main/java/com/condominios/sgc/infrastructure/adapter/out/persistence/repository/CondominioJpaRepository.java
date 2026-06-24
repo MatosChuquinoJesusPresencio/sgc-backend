@@ -20,7 +20,7 @@ public interface CondominioJpaRepository extends JpaRepository<CondominioEntity,
     Optional<CondominioEntity> findWithTreeById(Long id);
 
     @Query("SELECT c FROM CondominioEntity c WHERE c.activo = true AND c.id NOT IN "
-         + "(SELECT DISTINCT u.idCondominio FROM UsuarioEntity u WHERE u.idCondominio IS NOT NULL)")
+         + "(SELECT DISTINCT u.idCondominio FROM UsuarioEntity u WHERE u.idCondominio IS NOT NULL AND u.rol = 'ADMINISTRADOR_CONDOMINIO')")
     List<CondominioEntity> buscarActivosSinAdministrador();
 
     @Query("SELECT c.nombre FROM CondominioEntity c WHERE c.id = :id")
