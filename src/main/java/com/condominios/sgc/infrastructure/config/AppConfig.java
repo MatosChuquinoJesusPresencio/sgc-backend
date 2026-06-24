@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -21,6 +22,7 @@ import com.condominios.sgc.infrastructure.util.JwtUtil;
 import com.condominios.sgc.infrastructure.security.CookieBearerTokenResolver;
 
 @Configuration
+@EnableRetry
 public class AppConfig {
 
     @Bean

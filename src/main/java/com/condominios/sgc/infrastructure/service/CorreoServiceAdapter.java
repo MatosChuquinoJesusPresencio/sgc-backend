@@ -9,6 +9,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.web.client.RestTemplate;
 
 import com.condominios.sgc.application.port.out.service.CorreoServicePort;
@@ -65,6 +67,7 @@ public class CorreoServiceAdapter implements CorreoServicePort {
         enviarCorreo(destino, "Verifica tu correo electr\u00f3nico", html);
     }
 
+    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000, multiplier = 2))
     private void enviarCorreo(String destino, String asunto, String html) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
