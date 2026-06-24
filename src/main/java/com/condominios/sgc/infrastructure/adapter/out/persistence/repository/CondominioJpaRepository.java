@@ -27,14 +27,14 @@ public interface CondominioJpaRepository extends JpaRepository<CondominioEntity,
     Optional<String> findNombreById(@Param("id") Long id);
 
     @Query("SELECT c FROM CondominioEntity c WHERE "
-         + "(cast(:search as String) IS NULL OR LOWER(c.nombre) LIKE LOWER(CONCAT('%', cast(:search as String), '%'))) "
+         + "(cast(:search as String) IS NULL OR function('unaccent', LOWER(c.nombre)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%')))) "
          + "AND (:activo IS NULL OR c.activo = :activo)")
     Page<CondominioEntity> buscarTodos(@Param("search") String search,
                                        @Param("activo") Boolean activo,
                                        Pageable pageable);
 
     @Query("SELECT COUNT(c) FROM CondominioEntity c WHERE "
-         + "(cast(:search as String) IS NULL OR LOWER(c.nombre) LIKE LOWER(CONCAT('%', cast(:search as String), '%'))) "
+         + "(cast(:search as String) IS NULL OR function('unaccent', LOWER(c.nombre)) LIKE function('unaccent', LOWER(CONCAT('%', cast(:search as String), '%')))) "
          + "AND (:activo IS NULL OR c.activo = :activo)")
     long contarTodos(@Param("search") String search,
                      @Param("activo") Boolean activo);
