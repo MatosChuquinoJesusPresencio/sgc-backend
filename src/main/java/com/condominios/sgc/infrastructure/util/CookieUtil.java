@@ -34,7 +34,7 @@ public class CookieUtil {
 
     public ResponseCookie crearCookieRefreshToken(String token, long maxAgeMs) {
         return ResponseCookie.from(refreshCookieName, token)
-            .httpOnly(true).secure(secure).path(path)
+            .httpOnly(true).secure(secure).path("/api/auth")
             .maxAge(maxAgeMs / 1000).sameSite("None").build();
     }
 
@@ -46,7 +46,7 @@ public class CookieUtil {
 
     public ResponseCookie limpiarCookieRefreshToken() {
         return ResponseCookie.from(refreshCookieName, "")
-            .httpOnly(true).secure(secure).path(path)
+            .httpOnly(true).secure(secure).path("/api/auth")
             .maxAge(0).sameSite("None").build();
     }
 
