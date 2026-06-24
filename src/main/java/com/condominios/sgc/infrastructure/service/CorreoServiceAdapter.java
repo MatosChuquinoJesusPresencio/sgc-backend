@@ -1,6 +1,8 @@
 package com.condominios.sgc.infrastructure.service;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -68,12 +70,11 @@ public class CorreoServiceAdapter implements CorreoServicePort {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(apiKey);
 
-        Map<String, String> body = Map.of(
-            "from", from,
-            "to", destino,
-            "subject", asunto,
-            "html", html
-        );
+        Map<String, String> body = new HashMap<>();
+        body.put("from", Objects.requireNonNullElse(from, ""));
+        body.put("to", Objects.requireNonNullElse(destino, ""));
+        body.put("subject", Objects.requireNonNullElse(asunto, ""));
+        body.put("html", Objects.requireNonNullElse(html, ""));
 
         restTemplate.postForEntity(
             "https://api.resend.com/emails",
