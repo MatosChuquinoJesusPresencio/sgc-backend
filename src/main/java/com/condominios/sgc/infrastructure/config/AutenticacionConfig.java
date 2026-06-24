@@ -3,7 +3,6 @@ package com.condominios.sgc.infrastructure.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.condominios.sgc.application.port.in.ActualizarPerfilUseCase;
 import com.condominios.sgc.application.port.in.CatalogoUseCase;
 import com.condominios.sgc.application.port.in.GestionarAdminActivosUseCase;
 import com.condominios.sgc.application.port.in.GestionarAdminApartamentosUseCase;
@@ -25,7 +24,6 @@ import com.condominios.sgc.application.port.in.GestionarSeguridadPrestamosUseCas
 import com.condominios.sgc.application.port.in.GestionarSeguridadVehiculosUseCase;
 import com.condominios.sgc.application.port.in.GestionarDashboardUseCase;
 import com.condominios.sgc.application.port.in.GestionarUsuariosGlobalUseCase;
-import com.condominios.sgc.application.port.in.ObtenerPerfilUseCase;
 import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.CarritoRepositoryPort;
 import com.condominios.sgc.application.port.out.CiudadRepositoryPort;
@@ -87,16 +85,6 @@ public class AutenticacionConfig {
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository) {
         return new PerfilService(securityService, usuarioRepository);
-    }
-
-    @Bean
-    public ObtenerPerfilUseCase obtenerPerfilUseCase(PerfilService svc) {
-        return svc::obtenerPerfil;
-    }
-
-    @Bean
-    public ActualizarPerfilUseCase actualizarPerfilUseCase(PerfilService svc) {
-        return svc::actualizarPerfil;
     }
 
     @Bean
