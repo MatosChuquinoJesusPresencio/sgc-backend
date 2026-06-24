@@ -23,6 +23,8 @@ import com.condominios.sgc.domain.shared.exception.TokenException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.type.TipoToken;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+
 public class AutenticacionService implements IniciarSesionUseCase, RefrescarTokenUseCase,
         CerrarSesionUseCase, OlvidasteContrasenaUseCase, RestablecerContrasenaUseCase,
         ObtenerUsuarioActualUseCase, CambiarContrasenaUseCase, ActualizarCorreoUseCase,
@@ -50,6 +52,7 @@ public class AutenticacionService implements IniciarSesionUseCase, RefrescarToke
     }
 
     @Override
+    @RateLimiter(name = "login-password")
     public SesionUsuarioResult iniciarSesion(String correo, String contrasena, Boolean recuerdame) {
         var usuario = usuarioRepository.buscarPorCorreo(correo)
                 .orElseThrow(AutenticacionException::credencialesInvalidas);
@@ -128,6 +131,7 @@ public class AutenticacionService implements IniciarSesionUseCase, RefrescarToke
     }
 
     @Override
+    @RateLimiter(name = "forgot-password")
     public void olvidasteContrasena(String correo) {
         var usuario = usuarioRepository.buscarPorCorreo(correo)
             .orElseThrow(AutenticacionException::credencialesInvalidas);
