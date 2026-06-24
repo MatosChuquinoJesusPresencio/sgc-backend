@@ -80,135 +80,76 @@ import com.condominios.sgc.application.service.PerfilService;
 public class AutenticacionConfig {
 
     @Bean
-    public IniciarSesionUseCase iniciarSesionUseCase(
+    public AutenticacionService autenticacionService(
             UsuarioRepositoryPort usuarioRepository,
             HashServicePort hashService,
             JwtServicePort jwtService,
             TokenRepositoryPort tokenRepository,
             SecurityServicePort securityService,
             CorreoServicePort correoService) {
-        var svc = new AutenticacionService(usuarioRepository, hashService, jwtService,
+        return new AutenticacionService(usuarioRepository, hashService, jwtService,
             tokenRepository, securityService, correoService);
+    }
+
+    @Bean
+    public IniciarSesionUseCase iniciarSesionUseCase(AutenticacionService svc) {
         return svc::iniciarSesion;
     }
 
     @Bean
-    public RefrescarTokenUseCase refrescarTokenUseCase(
-            UsuarioRepositoryPort usuarioRepository,
-            HashServicePort hashService,
-            JwtServicePort jwtService,
-            TokenRepositoryPort tokenRepository,
-            SecurityServicePort securityService,
-            CorreoServicePort correoService) {
-        var svc = new AutenticacionService(usuarioRepository, hashService, jwtService,
-            tokenRepository, securityService, correoService);
+    public RefrescarTokenUseCase refrescarTokenUseCase(AutenticacionService svc) {
         return svc::refrescarToken;
     }
 
     @Bean
-    public CerrarSesionUseCase cerrarSesionUseCase(
-            UsuarioRepositoryPort usuarioRepository,
-            HashServicePort hashService,
-            JwtServicePort jwtService,
-            TokenRepositoryPort tokenRepository,
-            SecurityServicePort securityService,
-            CorreoServicePort correoService) {
-        var svc = new AutenticacionService(usuarioRepository, hashService, jwtService,
-            tokenRepository, securityService, correoService);
+    public CerrarSesionUseCase cerrarSesionUseCase(AutenticacionService svc) {
         return svc::cerrarSesion;
     }
 
     @Bean
-    public OlvidasteContrasenaUseCase olvidasteContrasenaUseCase(
-            UsuarioRepositoryPort usuarioRepository,
-            HashServicePort hashService,
-            JwtServicePort jwtService,
-            TokenRepositoryPort tokenRepository,
-            SecurityServicePort securityService,
-            CorreoServicePort correoService) {
-        var svc = new AutenticacionService(usuarioRepository, hashService, jwtService,
-            tokenRepository, securityService, correoService);
+    public OlvidasteContrasenaUseCase olvidasteContrasenaUseCase(AutenticacionService svc) {
         return svc::olvidasteContrasena;
     }
 
     @Bean
-    public RestablecerContrasenaUseCase restablecerContrasenaUseCase(
-            UsuarioRepositoryPort usuarioRepository,
-            HashServicePort hashService,
-            JwtServicePort jwtService,
-            TokenRepositoryPort tokenRepository,
-            SecurityServicePort securityService,
-            CorreoServicePort correoService) {
-        var svc = new AutenticacionService(usuarioRepository, hashService, jwtService,
-            tokenRepository, securityService, correoService);
+    public RestablecerContrasenaUseCase restablecerContrasenaUseCase(AutenticacionService svc) {
         return svc::restablecerContrasena;
     }
 
     @Bean
-    public ObtenerUsuarioActualUseCase obtenerUsuarioActualUseCase(
-            UsuarioRepositoryPort usuarioRepository,
-            HashServicePort hashService,
-            JwtServicePort jwtService,
-            TokenRepositoryPort tokenRepository,
-            SecurityServicePort securityService,
-            CorreoServicePort correoService) {
-        var svc = new AutenticacionService(usuarioRepository, hashService, jwtService,
-            tokenRepository, securityService, correoService);
+    public ObtenerUsuarioActualUseCase obtenerUsuarioActualUseCase(AutenticacionService svc) {
         return svc::obtenerUsuarioActual;
     }
 
     @Bean
-    public CambiarContrasenaUseCase cambiarContrasenaUseCase(
-            UsuarioRepositoryPort usuarioRepository,
-            HashServicePort hashService,
-            JwtServicePort jwtService,
-            TokenRepositoryPort tokenRepository,
-            SecurityServicePort securityService,
-            CorreoServicePort correoService) {
-        var svc = new AutenticacionService(usuarioRepository, hashService, jwtService,
-            tokenRepository, securityService, correoService);
+    public CambiarContrasenaUseCase cambiarContrasenaUseCase(AutenticacionService svc) {
         return svc::cambiarContrasena;
     }
 
     @Bean
-    public ActualizarCorreoUseCase actualizarCorreoUseCase(
-            UsuarioRepositoryPort usuarioRepository,
-            HashServicePort hashService,
-            JwtServicePort jwtService,
-            TokenRepositoryPort tokenRepository,
-            SecurityServicePort securityService,
-            CorreoServicePort correoService) {
-        var svc = new AutenticacionService(usuarioRepository, hashService, jwtService,
-            tokenRepository, securityService, correoService);
+    public ActualizarCorreoUseCase actualizarCorreoUseCase(AutenticacionService svc) {
         return svc::actualizarCorreo;
     }
 
     @Bean
-    public VerificarEmailUseCase verificarEmailUseCase(
-            UsuarioRepositoryPort usuarioRepository,
-            HashServicePort hashService,
-            JwtServicePort jwtService,
-            TokenRepositoryPort tokenRepository,
-            SecurityServicePort securityService,
-            CorreoServicePort correoService) {
-        var svc = new AutenticacionService(usuarioRepository, hashService, jwtService,
-            tokenRepository, securityService, correoService);
+    public VerificarEmailUseCase verificarEmailUseCase(AutenticacionService svc) {
         return svc::verificarEmail;
     }
 
     @Bean
-    public ObtenerPerfilUseCase obtenerPerfilUseCase(
+    public PerfilService perfilService(
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository) {
-        var svc = new PerfilService(securityService, usuarioRepository);
+        return new PerfilService(securityService, usuarioRepository);
+    }
+
+    @Bean
+    public ObtenerPerfilUseCase obtenerPerfilUseCase(PerfilService svc) {
         return svc::obtenerPerfil;
     }
 
     @Bean
-    public ActualizarPerfilUseCase actualizarPerfilUseCase(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository) {
-        var svc = new PerfilService(securityService, usuarioRepository);
+    public ActualizarPerfilUseCase actualizarPerfilUseCase(PerfilService svc) {
         return svc::actualizarPerfil;
     }
 
