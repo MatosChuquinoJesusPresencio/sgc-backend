@@ -147,7 +147,7 @@ rol en el claim `rol`.
 | Método | Ruta                               | Descripción                       |
 |--------|------------------------------------|-----------------------------------|
 | GET    | `/`                                | Mensaje de bienvenida             |
-| GET    | `/api/healt`                       | Health check                      |
+| GET    | `/api/health`                       | Health check                      |
 | POST   | `/api/auth/login`                  | Iniciar sesión (devuelve cookies) |
 | POST   | `/api/auth/refresh`                | Refrescar token de acceso         |
 | POST   | `/api/auth/forgot-password`        | Solicitar restablecimiento        |

@@ -29,7 +29,7 @@ public class SecurityConfig {
             .securityMatcher("/", "/api/auth/login", "/api/auth/refresh",
                 "/api/auth/forgot-password", "/api/auth/reset-password",
                 "/api/auth/verify-email",
-                "/api/healt", "/api/healt/**",
+                "/api/health", "/api/health/**",
                 "/docs/api-docs", "/docs/api-docs/**",
                 "/docs", "/docs/**",
                 "/swagger-ui/**")
