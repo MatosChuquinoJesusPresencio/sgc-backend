@@ -1,6 +1,6 @@
 package com.condominios.sgc.infrastructure.util;
 
-import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
@@ -64,13 +64,12 @@ public class JwtUtil {
             .compact();
     }
 
-    public Claims validateToken(String token) {
+    public Jws<io.jsonwebtoken.Claims> validateToken(String token) {
         try {
             return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseSignedClaims(token);
         } catch (io.jsonwebtoken.JwtException e) {
             throw new JwtException("Token invalido: " + e.getMessage());
         }

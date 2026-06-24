@@ -59,18 +59,20 @@ public class AppConfig {
     public JwtDecoder jwtDecoder(JwtUtil jwtUtil) {
         return token -> {
             try {
-                var claims = jwtUtil.validateToken(token);
-                Instant issuedAt = claims.getIssuedAt() != null
-                    ? claims.getIssuedAt().toInstant() : Instant.EPOCH;
-                Instant expiresAt = claims.getExpiration() != null
-                    ? claims.getExpiration().toInstant() : Instant.now().plusSeconds(60);
+                var jws = jwtUtil.validateToken(token);
+                var payload = jws.getPayload();
+                var header = jws.getHeader();
+                Instant issuedAt = payload.getIssuedAt() != null
+                    ? payload.getIssuedAt().toInstant() : Instant.EPOCH;
+                Instant expiresAt = payload.getExpiration() != null
+                    ? payload.getExpiration().toInstant() : Instant.now().plusSeconds(60);
                 return Jwt.withTokenValue(token)
-                    .subject(claims.getSubject())
-                    .claim("email", claims.get("email"))
-                    .claim("rol", claims.get("rol"))
+                    .subject(payload.getSubject())
+                    .claim("email", payload.get("email"))
+                    .claim("rol", payload.get("rol"))
                     .issuedAt(issuedAt)
                     .expiresAt(expiresAt)
-                    .header("alg", "HS256")
+                    .header("alg", header.getAlgorithm())
                     .build();
             } catch (JwtException e) {
                 throw new JwtException("Token invalido: " + e.getMessage());
