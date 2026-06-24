@@ -81,7 +81,7 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
 
     @Override
     public List<UsuarioModel> buscarRecientesPorRol(String rol, int limite) {
-        var pageable = PageRequest.of(0, limite, Sort.by(Sort.Direction.DESC, UsuarioEntity::getFechaCreacion));
+        var pageable = PageRequest.of(0, limite, Sort.by(Sort.Direction.DESC, "fechaCreacion"));
         return repository.buscarRecientesPorRol(rol, pageable)
             .stream()
             .map(UsuarioMapper::toModel)
