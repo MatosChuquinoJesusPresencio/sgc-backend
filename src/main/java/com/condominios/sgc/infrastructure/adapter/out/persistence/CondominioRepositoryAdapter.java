@@ -73,7 +73,7 @@ public class CondominioRepositoryAdapter implements CondominioRepositoryPort {
 
     @Override
     public List<CondominioModel> buscarRecientes(int limite) {
-        var pageable = PageRequest.of(0, limite, Sort.by(Sort.Direction.DESC, "fechaCreacion"));
+        var pageable = PageRequest.of(0, limite, Sort.by(Sort.Direction.DESC, CondominioEntity::getFechaCreacion));
         return repository.buscarRecientes(pageable)
             .stream()
             .map(CondominioMapper::toModelLigero)

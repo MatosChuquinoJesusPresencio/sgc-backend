@@ -1,6 +1,5 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence;
 
-import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.UsuarioEntity;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.type.Rol;
+import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.CondominioEntity;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.UsuarioMapper;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.UsuarioJpaRepository;
 
@@ -81,7 +81,7 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
 
     @Override
     public List<UsuarioModel> buscarRecientesPorRol(String rol, int limite) {
-        var pageable = PageRequest.of(0, limite, Sort.by(Sort.Direction.DESC, "fechaCreacion"));
+        var pageable = PageRequest.of(0, limite, Sort.by(Sort.Direction.DESC, CondominioEntity::getFechaCreacion));
         return repository.buscarRecientesPorRol(rol, pageable)
             .stream()
             .map(UsuarioMapper::toModel)
