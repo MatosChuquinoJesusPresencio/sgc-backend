@@ -112,8 +112,13 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
         if (idCondominio == null) {
             usuario.desasignarCondominio();
         } else {
-            if (usuario.getIdCondominio() != null)
-                throw UsuarioException.yaTieneCondominioAsignado();
+            if (usuario.getIdCondominio() != null) {
+                if (usuario.getIdCondominio().equals(idCondominio)) {
+                    usuarioRepository.guardar(usuario);
+                    return;
+                }
+                usuario.desasignarCondominio();
+            }
             if (usuarioRepository.buscarPorCondominioId(idCondominio).isPresent())
                 throw CondominioException.yaTieneAdministradorAsignado();
             var condominio = condominioRepository.buscarPorId(idCondominio)
