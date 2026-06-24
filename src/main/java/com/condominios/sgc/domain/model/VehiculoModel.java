@@ -28,6 +28,8 @@ public class VehiculoModel {
         this.modelo = modelo;
         this.placa = placa;
         this.tipo = tipo;
+        this.idPropietario = idPropietario;
+        this.idInquilino = idInquilino;
         this.idEstacionamiento = idEstacionamiento;
         this.idCondominio = idCondominio;
     }
