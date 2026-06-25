@@ -38,24 +38,48 @@ public interface LogAccesoVehicularJpaRepository extends JpaRepository<LogAcceso
 
     @Query(value = """
         SELECT 
+            id,
             'VEHICULO' AS tipoLog,
-            placa AS identificador,
-            ocupante AS usuario,
-            fecha_entrada AS fecha
+            placa,
+            ocupante,
+            datos_inquilino AS datosInquilino,
+            metodo,
+            fecha_entrada AS fechaEntrada,
+            fecha_salida AS fechaSalida,
+            NULL AS solicitante,
+            NULL AS nombreSolicitante,
+            NULL AS dniSolicitante,
+            NULL AS penalizacion,
+            NULL AS fechaPrestamo,
+            NULL AS fechaDevolucion,
+            condominio_id AS condominioId,
+            fecha_entrada AS fechaOrden
         FROM log_acceso_vehicular
         WHERE condominio_id = :condominioId
         
         UNION ALL
         
         SELECT 
+            id,
             'CARRITO' AS tipoLog,
-            solicitante AS identificador,
-            nombre_solicitante AS usuario,
-            fecha_prestamo AS fecha
+            NULL AS placa,
+            NULL AS ocupante,
+            NULL AS datosInquilino,
+            NULL AS metodo,
+            NULL AS fechaEntrada,
+            NULL AS fechaSalida,
+            solicitante,
+            nombre_solicitante AS nombreSolicitante,
+            dni_solicitante AS dniSolicitante,
+            penalizacion,
+            fecha_prestamo AS fechaPrestamo,
+            fecha_devolucion AS fechaDevolucion,
+            condominio_id AS condominioId,
+            fecha_prestamo AS fechaOrden
         FROM log_prestamo_carrito
         WHERE condominio_id = :condominioId
         
-        ORDER BY fecha DESC
+        ORDER BY fechaOrden DESC
     """, countQuery = """
         SELECT sum(total) FROM (
             SELECT count(id) as total FROM log_acceso_vehicular WHERE condominio_id = :condominioId
