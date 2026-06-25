@@ -35,6 +35,7 @@ public interface LogAccesoVehicularJpaRepository extends JpaRepository<LogAcceso
         """)
     List<LogAccesoVehicularEntity> findRecentByCondominio(@Param("cid") Long cid, Pageable pageable);
 
+
     @Query(value = """
         SELECT 
             'VEHICULO' AS tipoLog,
