@@ -34,4 +34,33 @@ public interface LogAccesoVehicularJpaRepository extends JpaRepository<LogAcceso
         ORDER BY l.fechaEntrada DESC
         """)
     List<LogAccesoVehicularEntity> findRecentByCondominio(@Param("cid") Long cid, Pageable pageable);
+
+    @Query(value = """
+        SELECT 
+            'VEHICULO' AS tipoLog,
+            placa AS identificador,
+            ocupante AS usuario,
+            fecha_entrada AS fecha
+        FROM log_acceso_vehicular
+        WHERE condominio_id = :condominioId
+        
+        UNION ALL
+        
+        SELECT 
+            'CARRITO' AS tipoLog,
+            solicitante AS identificador,
+            nombre_solicitante AS usuario,
+            fecha_prestamo AS fecha
+        FROM log_prestamo_carrito
+        WHERE condominio_id = :condominioId
+        
+        ORDER BY fecha DESC
+    """, countQuery = """
+        SELECT sum(total) FROM (
+            SELECT count(id) as total FROM log_acceso_vehicular WHERE condominio_id = :condominioId
+            UNION ALL
+            SELECT count(id) as total FROM log_prestamo_carrito WHERE condominio_id = :condominioId
+        ) as count_table
+    """, nativeQuery = true)
+    Page<LogCombinadoProjection> buscarHistorialCombinadoPaginado(@Param("condominioId") Long condominioId, Pageable pageable);
 }
