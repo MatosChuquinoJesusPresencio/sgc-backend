@@ -10,8 +10,9 @@ public record CrearAdminUserRequest(
     @NotBlank @Email String correo,
 
     @NotBlank
-    @Size(max = 9, message = "El teléfono debe tener entre 7 y 15 caracteres")
+    @Size(max = 9, message = "El teléfono debe tener 9 caracteres")
     String telefono,
+
     @NotBlank String contrasena,
     @NotBlank String rol
 ) {

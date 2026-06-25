@@ -7,7 +7,7 @@ public record ActualizarAdministradorRequest(
     @NotBlank String nombres,
     @NotBlank String apellidos,
     @NotBlank
-    @Size(max = 9, message = "El teléfono debe tener entre 7 y 15 caracteres")
+    @Size(max = 9, message = "El teléfono debe tener 9 caracteres")
     String telefono
 ) {
 }
