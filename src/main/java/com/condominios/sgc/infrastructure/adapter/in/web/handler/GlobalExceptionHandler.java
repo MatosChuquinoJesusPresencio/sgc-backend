@@ -9,7 +9,7 @@ import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
+import org.springframework.dao.DataIntegrityViolationException;
 import com.condominios.sgc.domain.shared.exception.AutenticacionException;
 import com.condominios.sgc.domain.shared.exception.DominioException;
 import com.condominios.sgc.domain.shared.exception.TokenException;
@@ -67,5 +67,9 @@ public class GlobalExceptionHandler {
             "error", mensaje,
             "status", status.value()
         ));
+    }
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        return error(HttpStatus.CONFLICT, "conflicto en la base de datos: el registro ya existe o está en uso por otra entidad");
     }
 }
