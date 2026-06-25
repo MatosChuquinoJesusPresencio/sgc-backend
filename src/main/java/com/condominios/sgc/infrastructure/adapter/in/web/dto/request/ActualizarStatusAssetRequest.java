@@ -8,6 +8,6 @@ public record ActualizarStatusAssetRequest(
     @NotBlank String estado,
     @NotNull Boolean disponible,
     @NotBlank String tipoVehiculo,
-    Integer capacidadMaxima
+    @NotNull Integer capacidadMaxima
 ) {
 }
