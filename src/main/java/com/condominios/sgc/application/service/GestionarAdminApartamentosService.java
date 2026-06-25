@@ -19,6 +19,7 @@ import com.condominios.sgc.domain.model.InquilinoModel;
 import com.condominios.sgc.domain.shared.exception.ApartamentoException;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
+import jakarta.transaction.Transactional;
 
 public class GestionarAdminApartamentosService implements GestionarAdminApartamentosUseCase {
 
@@ -71,6 +72,7 @@ public class GestionarAdminApartamentosService implements GestionarAdminApartame
         apartamentoRepository.guardar(apto);
     }
 
+    @Transactional
     @Override
     public void actualizarOcupantes(Long apartamentoId, ActualizarOcupantesCommand cmd) {
         if (apartamentoRepository.buscarPorId(apartamentoId).isEmpty()) {
