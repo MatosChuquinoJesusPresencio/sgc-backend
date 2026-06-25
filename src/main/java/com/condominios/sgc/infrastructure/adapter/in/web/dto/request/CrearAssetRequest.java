@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public record CrearAssetRequest(
     @NotBlank String tipo,
-    String codigo,
+    @NotBlank String codigo,
     Integer numero
 ) {
 }
