@@ -1,11 +1,11 @@
 package com.condominios.sgc.domain.model;
 
-import static com.condominios.sgc.domain.util.ValidacionUtil.*;
-
 import java.math.BigDecimal;
 
-import com.condominios.sgc.domain.auxiliar.TipoVehiculo;
-import com.condominios.sgc.domain.exception.ConfiguracionException;
+import com.condominios.sgc.domain.type.TipoVehiculo;
+import com.condominios.sgc.domain.shared.exception.ConfiguracionException;
+
+import static com.condominios.sgc.domain.util.ValidacionUtil.*;
 
 public class ConfiguracionModel {
     private Long id;
@@ -17,61 +17,20 @@ public class ConfiguracionModel {
     private Integer maxCarritosPorApartamento;
     private Integer maxVehiculosPorPropietario;
     private Integer maxInquilinosPorApartamento;
-    private Long condominioId;
 
-    public ConfiguracionModel(
-            Long id,
-            Integer maxAutos,
-            Integer maxMotos,
-            BigDecimal penalizacionPorMin,
-            Integer maxTiempoPrestamoMin,
-            Integer maxEstacionamientosPorApartamento,
-            Integer maxCarritosPorApartamento,
-            Integer maxVehiculosPorPropietario,
-            Integer maxInquilinosPorApartamento,
-            Long condominioId
-        ) {
-        this(maxAutos,
-                maxMotos,
-                penalizacionPorMin,
-                maxTiempoPrestamoMin,
-                maxEstacionamientosPorApartamento,
-                maxCarritosPorApartamento,
-                maxVehiculosPorPropietario,
-                maxInquilinosPorApartamento,
-                condominioId);
+    public ConfiguracionModel(Long id, Integer maxAutos, Integer maxMotos, 
+        BigDecimal penalizacionPorMin, Integer maxTiempoPrestamoMin, 
+        Integer maxEstacionamientosPorApartamento, Integer maxCarritosPorApartamento,
+        Integer maxVehiculosPorPropietario, Integer maxInquilinosPorApartamento) {
         this.id = id;
-    }
-
-        public ConfiguracionModel(
-            Integer maxAutos,
-            Integer maxMotos,
-            BigDecimal penalizacionPorMin,
-            Integer maxTiempoPrestamoMin,
-            Integer maxEstacionamientosPorApartamento,
-            Integer maxCarritosPorApartamento,
-            Integer maxVehiculosPorPropietario,
-            Integer maxInquilinosPorApartamento,
-            Long condominioId
-        ) {
-        validarYAsignarDatos(maxAutos, maxMotos, penalizacionPorMin, maxTiempoPrestamoMin,
-                maxEstacionamientosPorApartamento, maxCarritosPorApartamento, maxVehiculosPorPropietario,
-                maxInquilinosPorApartamento, condominioId);
-    }
-
-    private void validarYAsignarDatos(Integer maxAutos, Integer maxMotos, BigDecimal penalizacionPorMin,
-            Integer maxTiempoPrestamoMin, Integer maxEstacionamientosPorApartamento,
-            Integer maxCarritosPorApartamento, Integer maxVehiculosPorPropietario, Integer maxInquilinosPorApartamento,
-            Long condominioId) {
-        this.maxAutos = requerirNoNegativo(maxAutos, ConfiguracionException::maximoAutosInvalido);
-        this.maxMotos = requerirNoNegativo(maxMotos, ConfiguracionException::maximoMotosInvalido);
-        this.penalizacionPorMin = requerirNoNegativo(penalizacionPorMin, ConfiguracionException::penalizacionInvalida);
-        this.maxTiempoPrestamoMin = requerirNoNegativo(maxTiempoPrestamoMin, ConfiguracionException::maximoTiempoPrestamoInvalido);
-        this.maxEstacionamientosPorApartamento = requerirNoNegativo(maxEstacionamientosPorApartamento, ConfiguracionException::maximoEstacionamientosInvalido);
-        this.maxCarritosPorApartamento = requerirNoNegativo(maxCarritosPorApartamento, ConfiguracionException::maximoCarritosInvalido);
-        this.maxVehiculosPorPropietario = requerirNoNegativo(maxVehiculosPorPropietario, ConfiguracionException::maximoVehiculosPorPropietarioInvalido);
-        this.maxInquilinosPorApartamento = requerirNoNegativo(maxInquilinosPorApartamento, ConfiguracionException::maximoInquilinosInvalido);
-        this.condominioId = requerirNoNulo(condominioId, ConfiguracionException::condominioIdObligatorio);
+        this.maxAutos = maxAutos;
+        this.maxMotos = maxMotos;
+        this.penalizacionPorMin = penalizacionPorMin;
+        this.maxTiempoPrestamoMin = maxTiempoPrestamoMin;
+        this.maxEstacionamientosPorApartamento = maxEstacionamientosPorApartamento;
+        this.maxCarritosPorApartamento = maxCarritosPorApartamento;
+        this.maxVehiculosPorPropietario = maxVehiculosPorPropietario;
+        this.maxInquilinosPorApartamento = maxInquilinosPorApartamento;
     }
 
     public Long getId() { return id; }
@@ -83,55 +42,60 @@ public class ConfiguracionModel {
     public Integer getMaxCarritosPorApartamento() { return maxCarritosPorApartamento; }
     public Integer getMaxVehiculosPorPropietario() { return maxVehiculosPorPropietario; }
     public Integer getMaxInquilinosPorApartamento() { return maxInquilinosPorApartamento; }
-    public Long getCondominioId() { return condominioId; }
-
-    public void actualizarDatos(Integer maxAutos, Integer maxMotos, BigDecimal penalizacionPorMin,
-            Integer maxTiempoPrestamoMin, Integer maxEstacionamientosPorApartamento, Integer maxCarritosPorApartamento,
-            Integer maxVehiculosPorPropietario, Integer maxInquilinosPorApartamento) {
-
-        validarYAsignarDatos(maxAutos, maxMotos, penalizacionPorMin, maxTiempoPrestamoMin,
-                maxEstacionamientosPorApartamento, maxCarritosPorApartamento, maxVehiculosPorPropietario,
-                maxInquilinosPorApartamento, this.condominioId);
-    }
-
-    public void puedoEstacionarVehiculo(TipoVehiculo tipoVehiculo, Integer vehiculosPorTipo){
-        if(tipoVehiculo == TipoVehiculo.AUTO){
-            if(vehiculosPorTipo >= maxAutos)
-                throw ConfiguracionException.vehiculosPorTipoExcedidos(tipoVehiculo.toString(), maxAutos, vehiculosPorTipo);
-        }else if(tipoVehiculo == TipoVehiculo.MOTO){
-            if(vehiculosPorTipo >= maxMotos)
-                throw ConfiguracionException.vehiculosPorTipoExcedidos(tipoVehiculo.toString(), maxMotos, vehiculosPorTipo);
-        }else{
-            throw ConfiguracionException.tipoVehiculoNoSoportado(tipoVehiculo.toString());
-        }
-    }
     
-    public void verificarTiempoPrestamoExcedido(Integer tiempoPrestamo) {
-        if (tiempoPrestamo > maxTiempoPrestamoMin)
-            throw ConfiguracionException.tiempoPrestamoExcedido(maxTiempoPrestamoMin, tiempoPrestamo);
+    public void actualizar(Integer maxAutos, Integer maxMotos, BigDecimal penalizacionPorMin, 
+            Integer maxTiempoPrestamoMin, Integer maxEstacionamientosPorApartamento, 
+            Integer maxCarritosPorApartamento, Integer maxVehiculosPorPropietario, 
+            Integer maxInquilinosPorApartamento) {
+        this.maxAutos = noNulo(maxAutos, ConfiguracionException::maxAutosRequerido);
+        this.maxMotos = noNulo(maxMotos, ConfiguracionException::maxMotosRequerido);
+        this.penalizacionPorMin = noNulo(penalizacionPorMin, ConfiguracionException::penalizacionRequerida);
+        this.maxTiempoPrestamoMin = noNulo(maxTiempoPrestamoMin, ConfiguracionException::maxTiempoRequerido);
+        this.maxEstacionamientosPorApartamento = noNulo(maxEstacionamientosPorApartamento, ConfiguracionException::maxEstacionamientosRequerido);
+        this.maxCarritosPorApartamento = noNulo(maxCarritosPorApartamento, ConfiguracionException::maxCarritosRequerido);
+        this.maxVehiculosPorPropietario = noNulo(maxVehiculosPorPropietario, ConfiguracionException::maxVehiculosRequerido);
+        this.maxInquilinosPorApartamento = noNulo(maxInquilinosPorApartamento, ConfiguracionException::maxInquilinosRequerido);
     }
 
-    public void puedeAgregarVehiculoAlPropietario(Integer vehiculosDelPropietario) {
-        if (vehiculosDelPropietario >= maxVehiculosPorPropietario)
-            throw ConfiguracionException.vehiculosPorPropietarioExcedidos(maxVehiculosPorPropietario,
-                    vehiculosDelPropietario);
+    public boolean puedeAgregarVehiculo(TipoVehiculo tipo, int cantidadActual) {
+        int max = tipo == TipoVehiculo.AUTO ? maxAutos : maxMotos;
+        return cantidadActual < max;
     }
 
-    public void puedoUsarEstacionamiento(Integer estacionamientosEnUsoPorApartamento) {
-        if (estacionamientosEnUsoPorApartamento >= maxEstacionamientosPorApartamento)
-            throw ConfiguracionException.estacionamientosExcedidosPorApartamento(maxEstacionamientosPorApartamento,
-                    estacionamientosEnUsoPorApartamento);
+    public boolean puedeAsignarEstacionamiento(int cantidadActual) {
+        return cantidadActual < maxEstacionamientosPorApartamento;
     }
 
-    public void puedoSolicitarCarrito(Integer carritosEnUsoPorApartamento) {
-        if (carritosEnUsoPorApartamento >= maxCarritosPorApartamento)
-            throw ConfiguracionException.carritosExcedidosPorApartamento(maxCarritosPorApartamento,
-                    carritosEnUsoPorApartamento);
+    public boolean puedeUsarCarrito(int cantidadActual) {
+        return cantidadActual < maxCarritosPorApartamento;
     }
 
-    public void puedoAgregarInquilino(Integer inquilinosPorApartamento) {
-        if (inquilinosPorApartamento >= maxInquilinosPorApartamento)
-            throw ConfiguracionException.inquilinosPorApartamentoExcedidos(maxInquilinosPorApartamento,
-                    inquilinosPorApartamento);
+    public boolean puedeAgregarVehiculoPropietario(int cantidadActual) {
+        return cantidadActual < maxVehiculosPorPropietario;
+    }
+
+    public boolean puedeAgregarInquilino(int cantidadActual) {
+        return cantidadActual < maxInquilinosPorApartamento;
+    }
+
+    public boolean tiempoExcedeLimitePrestamo(int minutos) {
+        return minutos > maxTiempoPrestamoMin;
+    }
+
+    public BigDecimal calcularPenalizacion(int minutosExcedidos) {
+        return penalizacionPorMin.multiply(BigDecimal.valueOf(minutosExcedidos));
+    }
+
+    public static ConfiguracionModel nuevo() {
+        return new ConfiguracionModel(
+            null, 
+            2, 
+            4, 
+            new BigDecimal(1), 
+            30, 
+            2, 
+            2, 
+            2, 
+            2);
     }
 }

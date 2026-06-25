@@ -1,69 +1,58 @@
 package com.condominios.sgc.domain.model;
 
-import static com.condominios.sgc.domain.util.ValidacionUtil.*;
-
 import java.math.BigDecimal;
 
-import com.condominios.sgc.domain.exception.ApartamentoException;
+import com.condominios.sgc.domain.shared.exception.ApartamentoException;
+import static com.condominios.sgc.domain.util.ValidacionUtil.*;
 
 public class ApartamentoModel {
-
     private Long id;
     private Integer numero;
     private Boolean derechoEstacionamiento;
     private BigDecimal metraje;
-    private Long propietarioId;
-    private Long pisoId;
+    private Long idPropietario;
 
-    public ApartamentoModel(
-        Long id,
-        Integer numero,
-        Boolean derechoEstacionamiento,
-        BigDecimal metraje,
-        Long propietarioId,
-        Long pisoId
-    ) {
-        this(numero, derechoEstacionamiento, metraje, pisoId);
+    public ApartamentoModel(Long id, Integer numero, Boolean derechoEstacionamiento,
+            BigDecimal metraje, Long idPropietario) {
         this.id = id;
-        this.propietarioId = propietarioId;
+        this.numero = numero;
+        this.derechoEstacionamiento = derechoEstacionamiento;
+        this.metraje = metraje;
+        this.idPropietario = idPropietario;
     }
 
-    public ApartamentoModel(
-        Integer numero,
-        Boolean derechoEstacionamiento,
-        BigDecimal metraje,
-        Long pisoId
-    ) {
-        validarYAsignarDatos(numero, derechoEstacionamiento, metraje, pisoId);
-    }
-
-    private void validarYAsignarDatos(Integer numero, Boolean derechoEstacionamiento, BigDecimal metraje, Long pisoId) {
-        this.numero = requerirPositivo(numero, ApartamentoException::numeroInvalido);
-        this.metraje = requerirPositivo(metraje, ApartamentoException::metrajeInvalido);
-        this.derechoEstacionamiento = requerirNoNulo(derechoEstacionamiento, ApartamentoException::derechoEstacionamientoObligatorio);
-        this.pisoId = requerirNoNulo(pisoId, ApartamentoException::pisoIdObligatorio);
+    public ApartamentoModel(Integer numero, BigDecimal metraje) {
+        this.id = null;
+        this.numero = positivo(numero, ApartamentoException::numeroRequerido);
+        this.derechoEstacionamiento = false;
+        this.metraje = noNulo(metraje, ApartamentoException::metrajeRequerido);
+        this.idPropietario = null;
     }
 
     public Long getId() { return id; }
     public Integer getNumero() { return numero; }
     public Boolean getDerechoEstacionamiento() { return derechoEstacionamiento; }
-    public BigDecimal getMetraje() { return metraje; }
-    public Long getPropietarioId() { return propietarioId; }
-    public Long getPisoId() { return pisoId; }
+    public BigDecimal getMetraje() { return metraje;}
+    public Long getIdPropietario() { return idPropietario; }
 
-    public void asignarPropietario(Long propietarioId) {
-        this.propietarioId = requerirNoNulo(propietarioId, ApartamentoException::propietarioIdObligatorio);
+    public void actualizar(Integer numero, BigDecimal metraje) {
+        this.numero = positivo(numero, ApartamentoException::numeroRequerido);
+        this.metraje = noNulo(metraje, ApartamentoException::metrajeRequerido);
     }
 
-    public void removerPropietario() {
-        this.propietarioId = null;
+    public void asignarPropietario(Long idPropietario) {
+        this.idPropietario = noNulo(idPropietario, ApartamentoException::propietarioRequerido);
     }
 
-    public void actualizarDatos(
-        Integer numero,
-        Boolean derechoEstacionamiento,
-        BigDecimal metraje
-    ) {
-        validarYAsignarDatos(numero, derechoEstacionamiento, metraje, this.pisoId);
+    public void desasignarPropietario() {
+        this.idPropietario = null;
+    }
+
+    public void darDerechoEstacionamiento() {
+        this.derechoEstacionamiento = true;
+    }
+
+    public void quitarDerechoEstacionamiento() {
+        this.derechoEstacionamiento = false;
     }
 }
