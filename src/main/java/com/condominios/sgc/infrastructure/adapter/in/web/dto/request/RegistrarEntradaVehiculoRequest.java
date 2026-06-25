@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public record RegistrarEntradaVehiculoRequest(
         @NotBlank String placa,
-    String metodo,
+        @NotBlank String metodo,
     String ocupante,
         @NotBlank String datosInquilino
 ) {
