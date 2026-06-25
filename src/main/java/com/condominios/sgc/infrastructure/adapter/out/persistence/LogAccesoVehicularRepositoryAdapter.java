@@ -60,19 +60,26 @@ public class LogAccesoVehicularRepositoryAdapter implements LogAccesoVehicularRe
     }
     @Override
     public Page<AdminLogEntryResult> buscarHistorialCombinado(Long condominioId, int pagina, int tamano) {
-        // Creamos la petición de paginación
         PageRequest pageRequest = PageRequest.of(pagina, tamano);
-
-        // Llamamos al Native Query
         Page<LogCombinadoProjection> proyeccionPage = repository.buscarHistorialCombinadoPaginado(condominioId, pageRequest);
 
-        // Mapeamos el resultado SQL a tu DTO (AdminLogEntryResult)
-        return proyeccionPage.map(proyeccion ->
+        return proyeccionPage.map(p ->
                 new AdminLogEntryResult(
-                        proyeccion.getTipoLog(),
-                        proyeccion.getIdentificador(),
-                        proyeccion.getUsuario(),
-                        proyeccion.getFecha().toString() // *Nota: Si tu DTO pide la fecha en String, pon proyeccion.getFecha().toString()
+                        p.getId(),
+                        p.getTipoLog(),
+                        p.getPlaca(),
+                        p.getOcupante(),
+                        p.getDatosInquilino(),
+                        p.getMetodo(),
+                        p.getFechaEntrada() != null ? p.getFechaEntrada().toString() : null,
+                        p.getFechaSalida() != null ? p.getFechaSalida().toString() : null,
+                        p.getSolicitante(),
+                        p.getNombreSolicitante(),
+                        p.getDniSolicitante(),
+                        p.getPenalizacion(),
+                        p.getFechaPrestamo() != null ? p.getFechaPrestamo().toString() : null,
+                        p.getFechaDevolucion() != null ? p.getFechaDevolucion().toString() : null,
+                        p.getCondominioId()
                 )
         );
     }
