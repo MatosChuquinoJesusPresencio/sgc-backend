@@ -6,7 +6,7 @@ public record CrearPropietarioVehiculoRequest(
         @NotBlank String marca,
     String color,
     String modelo,
-    String placa,
+        @NotBlank String placa,
     String tipo
 ) {
 }
