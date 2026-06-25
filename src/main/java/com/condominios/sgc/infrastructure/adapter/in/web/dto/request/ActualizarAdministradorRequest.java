@@ -1,10 +1,11 @@
 package com.condominios.sgc.infrastructure.adapter.in.web.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public record ActualizarAdministradorRequest(
     @NotBlank String nombres,
     @NotBlank String apellidos,
-    String telefono
+    @NotBlank String telefono
 ) {
 }
