@@ -6,7 +6,7 @@ public record ActualizarStatusAssetRequest(
     @NotBlank String tipo,
     String estado,
     Boolean disponible,
-    String tipoVehiculo,
+    @NotBlank String tipoVehiculo,
     Integer capacidadMaxima
 ) {
 }
