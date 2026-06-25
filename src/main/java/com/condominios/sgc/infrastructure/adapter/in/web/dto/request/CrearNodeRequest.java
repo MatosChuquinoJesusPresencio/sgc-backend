@@ -8,7 +8,7 @@ public record CrearNodeRequest(
     @NotBlank String tipo,
     @NotBlank String nombre,
     @NotBlank String nombreTorre,
-    Integer numero,
+    @NotBlank Integer numero,
     Integer numeroPiso,
     Integer numeroApartamento,
     BigDecimal metraje
