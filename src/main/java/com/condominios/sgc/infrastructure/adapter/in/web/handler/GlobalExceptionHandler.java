@@ -68,8 +68,5 @@ public class GlobalExceptionHandler {
             "status", status.value()
         ));
     }
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Map<String, Object>> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
-        return error(HttpStatus.CONFLICT, "conflicto en la base de datos: el registro ya existe o está en uso por otra entidad");
-    }
+
 }
