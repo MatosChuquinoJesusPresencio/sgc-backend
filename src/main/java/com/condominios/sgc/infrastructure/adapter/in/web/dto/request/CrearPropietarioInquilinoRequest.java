@@ -6,6 +6,6 @@ public record CrearPropietarioInquilinoRequest(
         @NotBlank String nombres,
         @NotBlank String apellidos,
         @NotBlank String tipoDocumento,
-    String numeroDocumento
+        @NotBlank String numeroDocumento
 ) {
 }
