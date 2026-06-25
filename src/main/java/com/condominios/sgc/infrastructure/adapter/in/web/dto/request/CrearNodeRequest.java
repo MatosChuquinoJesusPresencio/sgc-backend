@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public record CrearNodeRequest(
     @NotBlank String tipo,
-    String nombre,
+    @NotBlank String nombre,
     String nombreTorre,
     Integer numero,
     Integer numeroPiso,
