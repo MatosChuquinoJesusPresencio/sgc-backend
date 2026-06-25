@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public record ActualizarStatusAssetRequest(
     @NotBlank String tipo,
-    String estado,
+    @NotBlank String estado,
     Boolean disponible,
     @NotBlank String tipoVehiculo,
     Integer capacidadMaxima
