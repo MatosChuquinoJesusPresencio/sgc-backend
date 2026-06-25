@@ -7,7 +7,7 @@ public record CrearAdminUserRequest(
     @NotBlank String nombres,
     @NotBlank String apellidos,
     @NotBlank @Email String correo,
-    String telefono,
+    @NotBlank String telefono,
     @NotBlank String contrasena,
     @NotBlank String rol
 ) {
