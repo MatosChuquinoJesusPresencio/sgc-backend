@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 public record CrearPropietarioInquilinoRequest(
         @NotBlank String nombres,
         @NotBlank String apellidos,
-    String tipoDocumento,
+        @NotBlank String tipoDocumento,
     String numeroDocumento
 ) {
 }
