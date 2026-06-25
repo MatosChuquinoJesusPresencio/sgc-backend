@@ -3,6 +3,7 @@ package com.condominios.sgc.application.port.out;
 import java.time.Instant;
 import java.util.Optional;
 
+import com.condominios.sgc.application.dto.result.AdminLogEntryResult;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,4 +17,5 @@ public interface LogAccesoVehicularRepositoryPort {
     void eliminarPorId(Long id);
     Page<LogAccesoVehicularModel> buscarPorCondominio(Long idCondominio, Long userId, Instant fechaInicio, Instant fechaFin, Pageable pageable);
     List<LogAccesoVehicularModel> buscarRecientesPorCondominio(Long idCondominio, int limit);
+    Page<AdminLogEntryResult> buscarHistorialCombinado(Long condominioId, int pagina, int tamano);
 }
