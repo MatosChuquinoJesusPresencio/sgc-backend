@@ -72,7 +72,7 @@ public class LogAccesoVehicularRepositoryAdapter implements LogAccesoVehicularRe
                         proyeccion.getTipoLog(),
                         proyeccion.getIdentificador(),
                         proyeccion.getUsuario(),
-                        proyeccion.getFecha() // *Nota: Si tu DTO pide la fecha en String, pon proyeccion.getFecha().toString()
+                        proyeccion.getFecha().toString() // *Nota: Si tu DTO pide la fecha en String, pon proyeccion.getFecha().toString()
                 )
         );
     }
