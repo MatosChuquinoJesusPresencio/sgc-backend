@@ -14,6 +14,7 @@ import com.condominios.sgc.domain.shared.exception.ApartamentoException;
 import com.condominios.sgc.domain.shared.exception.InquilinoException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.type.TipoDocumento;
+import org.springframework.transaction.annotation.Transactional;
 
 public class GestionarPropietarioInquilinosService implements GestionarPropietarioInquilinosUseCase {
 
@@ -49,6 +50,7 @@ public class GestionarPropietarioInquilinosService implements GestionarPropietar
             .toList();
     }
 
+    @Transactional
     @Override
     public PropietarioInquilinoResult crear(CrearPropietarioInquilinoCommand cmd) {
         var idApartamento = obtenerIdApartamento();
