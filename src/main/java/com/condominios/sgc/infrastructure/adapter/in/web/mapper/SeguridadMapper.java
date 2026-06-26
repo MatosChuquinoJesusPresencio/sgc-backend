@@ -1,5 +1,6 @@
 package com.condominios.sgc.infrastructure.adapter.in.web.mapper;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ public class SeguridadMapper {
 
     public SecurityDashboardResponse toDashboardResponse(SecurityDashboardResult r) {
         var entries = r.movimientosRecientes().stream()
-            .map(e -> new SecurityRecentLogEntry(e.id(), e.tipo(), e.descripcion(), e.fecha()))
+            .map(e -> new SecurityRecentLogEntry(e.id(), e.tipo(), e.descripcion(), fmt(e.fecha())))
             .toList();
         return new SecurityDashboardResponse(
             r.totalEstacionamientos(), r.estacionamientosOcupados(),
@@ -54,5 +55,9 @@ public class SeguridadMapper {
         return new SecurityActiveCartLoanResponse(
             r.id(), r.nombreSolicitante(), r.dniSolicitante(),
             r.codigoCarrito(), r.fechaPrestamo(), r.penalizacion());
+    }
+
+    private static String fmt(Instant i) {
+        return i != null ? i.toString() : null;
     }
 }

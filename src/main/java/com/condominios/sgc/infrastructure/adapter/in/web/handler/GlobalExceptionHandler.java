@@ -15,6 +15,8 @@ import com.condominios.sgc.domain.shared.exception.AutenticacionException;
 import com.condominios.sgc.domain.shared.exception.DominioException;
 import com.condominios.sgc.domain.shared.exception.TokenException;
 import com.condominios.sgc.domain.shared.exception.ValueObjectException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -61,6 +63,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DominioException.class)
     public ResponseEntity<Map<String, Object>> handleDominio(DominioException ex) {
         return error(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleDataIntegrity(DataIntegrityViolationException ex) {
+        return error(HttpStatus.CONFLICT, "conflicto con datos existentes");
+    }
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<Map<String, Object>> handleOptimisticLock(ObjectOptimisticLockingFailureException ex) {
+        return error(HttpStatus.CONFLICT, "conflicto de concurrencia, intente nuevamente");
     }
 
     @ExceptionHandler(Exception.class)

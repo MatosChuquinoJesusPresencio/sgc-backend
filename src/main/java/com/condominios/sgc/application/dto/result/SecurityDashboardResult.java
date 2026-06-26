@@ -1,5 +1,6 @@
 package com.condominios.sgc.application.dto.result;
 
+import java.time.Instant;
 import java.util.List;
 
 public record SecurityDashboardResult(
@@ -12,6 +13,6 @@ public record SecurityDashboardResult(
         Long id,
         String tipo,
         String descripcion,
-        String fecha
+        Instant fecha
     ) {}
 }

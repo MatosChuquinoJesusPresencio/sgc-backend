@@ -52,7 +52,7 @@ public class GestionarSeguridadDashboardService implements GestionarSeguridadDas
                 l.getId(),
                 "VEHICULAR",
                 l.getPlaca().valor() + " - " + l.getMetodo().name(),
-                l.getFechaEntrada() != null ? l.getFechaEntrada().toString() : null))
+                l.getFechaEntrada()))
             .toList();
 
         return new SecurityDashboardResult(total, ocupados, prestamosActivos, recientes);
