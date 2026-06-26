@@ -24,6 +24,7 @@ import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.type.Rol;
+import org.springframework.transaction.annotation.Transactional;
 
 public class GestionarAdministradorService implements GestionarAdministradorUseCase {
 
@@ -58,6 +59,7 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
         return new PaginaResult<>(items, total, query.pagina(), query.tamano());
     }
 
+    @Transactional
     @Override
     public AdministradorResult crear(CrearAdministradorCommand cmd) {
         if (usuarioRepository.existePorCorreo(cmd.correo()))
