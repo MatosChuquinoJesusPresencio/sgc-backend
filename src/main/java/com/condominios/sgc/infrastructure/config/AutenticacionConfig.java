@@ -143,10 +143,11 @@ public class AutenticacionConfig {
             UsuarioRepositoryPort usuarioRepository,
             CondominioRepositoryPort condominioRepository,
             ApartamentoRepositoryPort apartamentoRepository,
-            InquilinoRepositoryPort inquilinoRepository) {
+            InquilinoRepositoryPort inquilinoRepository,
+            VehiculoRepositoryPort vehiculoRepository) {
         return new GestionarAdminApartamentosService(
             securityService, usuarioRepository, condominioRepository,
-            apartamentoRepository, inquilinoRepository);
+            apartamentoRepository, inquilinoRepository, vehiculoRepository);
     }
 
     @Bean
@@ -241,9 +242,10 @@ public class AutenticacionConfig {
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
             ApartamentoRepositoryPort apartamentoRepository,
-            InquilinoRepositoryPort inquilinoRepository) {
+            InquilinoRepositoryPort inquilinoRepository,
+            VehiculoRepositoryPort vehiculoRepository) {
         return new GestionarPropietarioInquilinosService(
-            securityService, usuarioRepository, apartamentoRepository, inquilinoRepository);
+            securityService, usuarioRepository, apartamentoRepository, inquilinoRepository, vehiculoRepository);
     }
 
     @Bean

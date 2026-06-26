@@ -12,4 +12,5 @@ public interface VehiculoRepositoryPort {
     long contarPorCondominio(Long idCondominio);
     List<VehiculoModel> buscarPorPropietario(Long idPropietario);
     Optional<VehiculoModel> buscarPorPlaca(String placa);
+    void eliminarPorInquilino(Long idInquilino);
 }

@@ -54,4 +54,9 @@ public class VehiculoRepositoryAdapter implements VehiculoRepositoryPort {
     public Optional<VehiculoModel> buscarPorPlaca(String placa) {
         return repository.findByPlaca(placa).map(VehiculoMapper::toModel);
     }
+
+    @Override
+    public void eliminarPorInquilino(Long idInquilino) {
+        repository.deleteByIdInquilino(idInquilino);
+    }
 }

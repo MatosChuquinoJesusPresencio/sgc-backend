@@ -14,6 +14,7 @@ import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.CondominioRepositoryPort;
 import com.condominios.sgc.application.port.out.InquilinoRepositoryPort;
 import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
+import com.condominios.sgc.application.port.out.VehiculoRepositoryPort;
 import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.domain.model.ApartamentoModel;
 import com.condominios.sgc.domain.model.CondominioModel;
@@ -29,18 +30,21 @@ public class GestionarAdminApartamentosService implements GestionarAdminApartame
     private final CondominioRepositoryPort condominioRepository;
     private final ApartamentoRepositoryPort apartamentoRepository;
     private final InquilinoRepositoryPort inquilinoRepository;
+    private final VehiculoRepositoryPort vehiculoRepository;
 
     public GestionarAdminApartamentosService(
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
             CondominioRepositoryPort condominioRepository,
             ApartamentoRepositoryPort apartamentoRepository,
-            InquilinoRepositoryPort inquilinoRepository) {
+            InquilinoRepositoryPort inquilinoRepository,
+            VehiculoRepositoryPort vehiculoRepository) {
         this.securityService = securityService;
         this.usuarioRepository = usuarioRepository;
         this.condominioRepository = condominioRepository;
         this.apartamentoRepository = apartamentoRepository;
         this.inquilinoRepository = inquilinoRepository;
+        this.vehiculoRepository = vehiculoRepository;
     }
 
     @Override
@@ -81,6 +85,9 @@ public class GestionarAdminApartamentosService implements GestionarAdminApartame
     public void actualizarOcupantes(Long apartamentoId, ActualizarOcupantesCommand cmd) {
         if (apartamentoRepository.buscarPorId(apartamentoId).isEmpty()) {
             throw ApartamentoException.noEncontrado();
+        }
+        for (var i : inquilinoRepository.buscarPorApartamento(apartamentoId)) {
+            vehiculoRepository.eliminarPorInquilino(i.getId());
         }
         inquilinoRepository.eliminarPorApartamento(apartamentoId);
         for (var entry : cmd.inquilinos()) {
