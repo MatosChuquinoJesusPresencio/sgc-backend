@@ -13,6 +13,7 @@ import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.type.Rol;
+import org.springframework.transaction.annotation.Transactional;
 
 public class GestionarAdminUsuariosService implements GestionarAdminUsuariosUseCase {
 
@@ -39,6 +40,7 @@ public class GestionarAdminUsuariosService implements GestionarAdminUsuariosUseC
         return new PaginaResult<>(items, total, query.pagina(), query.tamano());
     }
 
+    @Transactional
     @Override
     public AdminUserResult crear(CrearAdminUserCommand cmd) {
         var rolDestino = Rol.valueOf(cmd.rol());
