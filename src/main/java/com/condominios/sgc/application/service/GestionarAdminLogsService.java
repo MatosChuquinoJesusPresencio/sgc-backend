@@ -55,40 +55,22 @@ public class GestionarAdminLogsService implements GestionarAdminLogsUseCase {
     }
 
     @Override
-    public PaginaResult<AdminLogEntryResult> listar(
-            String type, Long userId, Instant fechaInicio, Instant fechaFin, PaginaQuery pagina) {
-        var condominioId = obtenerCondominioId();
-        var pageable = PageRequest.of(pagina.pagina(), pagina.tamano());
+    public PaginaResult<AdminLogEntryResult> listar(String filtro, Long condominioId, Instant fechaInicio, Instant fechaFin, PaginaQuery paginaQuery) {
 
-        if ("CARRITO".equalsIgnoreCase(type)) {
-            return toPaginaResult(
-                logCarritoRepository.buscarPorCondominio(condominioId, userId, fechaInicio, fechaFin, pageable),
-                this::toResult);
-        }
-        if ("VEHICULAR".equalsIgnoreCase(type)) {
-            return toPaginaResult(
-                logAccesoRepository.buscarPorCondominio(condominioId, userId, fechaInicio, fechaFin, pageable),
-                this::toResult);
-        }
 
-        var vehicularPage = logAccesoRepository.buscarPorCondominio(
-            condominioId, userId, fechaInicio, fechaFin, PageRequest.of(0, Integer.MAX_VALUE));
-        var carritoPage = logCarritoRepository.buscarPorCondominio(
-            condominioId, userId, fechaInicio, fechaFin, PageRequest.of(0, Integer.MAX_VALUE));
+        Page<AdminLogEntryResult> paginaLogs = logAccesoRepository.buscarHistorialCombinado(
+                condominioId,
+                paginaQuery.pagina(),
+                paginaQuery.tamano()
+        );
 
-        var combined = new ArrayList<AdminLogEntryResult>();
-        combined.addAll(vehicularPage.getContent().stream().map(this::toResult).toList());
-        combined.addAll(carritoPage.getContent().stream().map(this::toResult).toList());
 
-        combined.sort(Comparator.<AdminLogEntryResult, String>comparing(
-            r -> r.fechaEntrada() != null ? r.fechaEntrada() : r.fechaPrestamo(),
-            Comparator.nullsLast(Comparator.reverseOrder())));
-
-        int total = combined.size();
-        int from = pagina.pagina() * pagina.tamano();
-        int to = Math.min(from + pagina.tamano(), total);
-        var items = from < total ? combined.subList(from, to) : List.<AdminLogEntryResult>of();
-        return new PaginaResult<>(items, total, pagina.pagina(), pagina.tamano());
+        return new PaginaResult<>(
+                paginaLogs.getContent(),
+                paginaLogs.getTotalElements(),
+                paginaQuery.pagina(),
+                paginaQuery.tamano()
+        );
     }
 
     private <T> PaginaResult<AdminLogEntryResult> toPaginaResult(
