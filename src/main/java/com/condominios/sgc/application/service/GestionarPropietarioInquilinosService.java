@@ -61,6 +61,7 @@ public class GestionarPropietarioInquilinosService implements GestionarPropietar
         return toResult(inquilinoRepository.guardar(modelo));
     }
 
+    @Transactional
     @Override
     public void eliminar(Long id) {
         var inquilino = inquilinoRepository.buscarPorId(id)
