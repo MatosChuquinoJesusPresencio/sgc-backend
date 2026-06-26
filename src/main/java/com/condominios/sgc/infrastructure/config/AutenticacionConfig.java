@@ -141,12 +141,11 @@ public class AutenticacionConfig {
     public GestionarAdminApartamentosUseCase gestionarAdminApartamentosUseCase(
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
-            CondominioRepositoryPort condominioRepository,
             ApartamentoRepositoryPort apartamentoRepository,
             InquilinoRepositoryPort inquilinoRepository,
             VehiculoRepositoryPort vehiculoRepository) {
         return new GestionarAdminApartamentosService(
-            securityService, usuarioRepository, condominioRepository,
+            securityService, usuarioRepository,
             apartamentoRepository, inquilinoRepository, vehiculoRepository);
     }
 

@@ -1,23 +1,16 @@
 package com.condominios.sgc.application.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.condominios.sgc.application.dto.command.ActualizarOcupantesCommand;
 import com.condominios.sgc.application.dto.command.AsignarPropietarioCommand;
 import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.AdminApartamentoDetailResult;
-import com.condominios.sgc.application.dto.result.AdminInquilinoResult;
 import com.condominios.sgc.application.dto.result.PaginaResult;
 import com.condominios.sgc.application.port.in.GestionarAdminApartamentosUseCase;
 import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
-import com.condominios.sgc.application.port.out.CondominioRepositoryPort;
 import com.condominios.sgc.application.port.out.InquilinoRepositoryPort;
 import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.VehiculoRepositoryPort;
 import com.condominios.sgc.application.port.out.service.SecurityServicePort;
-import com.condominios.sgc.domain.model.ApartamentoModel;
-import com.condominios.sgc.domain.model.CondominioModel;
 import com.condominios.sgc.domain.model.InquilinoModel;
 import com.condominios.sgc.domain.shared.exception.ApartamentoException;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
@@ -30,21 +23,19 @@ public class GestionarAdminApartamentosService implements GestionarAdminApartame
 
     private final SecurityServicePort securityService;
     private final UsuarioRepositoryPort usuarioRepository;
-    private final CondominioRepositoryPort condominioRepository;
     private final ApartamentoRepositoryPort apartamentoRepository;
     private final InquilinoRepositoryPort inquilinoRepository;
     private final VehiculoRepositoryPort vehiculoRepository;
 
+
     public GestionarAdminApartamentosService(
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
-            CondominioRepositoryPort condominioRepository,
             ApartamentoRepositoryPort apartamentoRepository,
             InquilinoRepositoryPort inquilinoRepository,
             VehiculoRepositoryPort vehiculoRepository) {
         this.securityService = securityService;
         this.usuarioRepository = usuarioRepository;
-        this.condominioRepository = condominioRepository;
         this.apartamentoRepository = apartamentoRepository;
         this.inquilinoRepository = inquilinoRepository;
         this.vehiculoRepository = vehiculoRepository;
@@ -52,20 +43,8 @@ public class GestionarAdminApartamentosService implements GestionarAdminApartame
 
     @Override
     public PaginaResult<AdminApartamentoDetailResult> listar(PaginaQuery pagina) {
-        var condominio = cargarCondominio();
-        var results = new ArrayList<AdminApartamentoDetailResult>();
-        for (var torre : condominio.getTorres()) {
-            for (var piso : torre.getPisos()) {
-                for (var apto : piso.getApartamentos()) {
-                    results.add(toDetail(apto, torre.getNombre(), piso.getNumero()));
-                }
-            }
-        }
-        int total = results.size();
-        int from = pagina.pagina() * pagina.tamano();
-        int to = Math.min(from + pagina.tamano(), total);
-        var items = from < total ? results.subList(from, to) : List.<AdminApartamentoDetailResult>of();
-        return new PaginaResult<>(items, total, pagina.pagina(), pagina.tamano());
+        var condominioId = obtenerCondominioId();
+        return apartamentoRepository.buscarEnCondominio(condominioId, pagina);
     }
 
     @Override
@@ -102,30 +81,6 @@ public class GestionarAdminApartamentosService implements GestionarAdminApartame
                 apartamentoId);
             inquilinoRepository.guardar(inquilino);
         }
-    }
-
-    private AdminApartamentoDetailResult toDetail(ApartamentoModel apto, String torreNombre, Integer pisoNumero) {
-        String nombrePropietario = null;
-        if (apto.getIdPropietario() != null) {
-            nombrePropietario = usuarioRepository.buscarPorId(apto.getIdPropietario())
-                .map(u -> u.getNombres() + " " + u.getApellidos())
-                .orElse(null);
-        }
-        var inquilinos = inquilinoRepository.buscarPorApartamento(apto.getId()).stream()
-            .map(i -> new AdminInquilinoResult(
-                i.getId(), i.getNombres(), i.getApellidos(),
-                i.getNumeroDocumento().tipo().name(),
-                i.getNumeroDocumento().numero()))
-            .toList();
-        return new AdminApartamentoDetailResult(
-            apto.getId(), apto.getNumero(), apto.getMetraje(),
-            apto.getDerechoEstacionamiento(), apto.getIdPropietario(),
-            nombrePropietario, torreNombre, pisoNumero, inquilinos);
-    }
-
-    private CondominioModel cargarCondominio() {
-        return condominioRepository.buscarPorId(obtenerCondominioId())
-            .orElseThrow(CondominioException::noEncontrado);
     }
 
     private Long obtenerCondominioId() {
