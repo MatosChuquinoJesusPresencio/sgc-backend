@@ -79,6 +79,7 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
         return toResult(usuario);
     }
 
+    @Transactional
     @Override
     public AdministradorResult actualizar(Long id, ActualizarAdministradorCommand cmd) {
         var usuario = usuarioRepository.buscarPorId(id)
