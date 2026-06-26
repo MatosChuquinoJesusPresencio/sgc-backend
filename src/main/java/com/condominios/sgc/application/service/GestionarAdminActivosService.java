@@ -19,6 +19,7 @@ import com.condominios.sgc.domain.shared.exception.EstacionamientoException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.type.EstadoCarrito;
 import com.condominios.sgc.domain.type.TipoVehiculo;
+import org.springframework.transaction.annotation.Transactional;
 
 public class GestionarAdminActivosService implements GestionarAdminActivosUseCase {
 
@@ -63,6 +64,7 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
         return resultados;
     }
 
+    @Transactional
     @Override
     public AdminAssetResult crear(CrearAssetCommand cmd) {
         var condominioId = obtenerCondominioId();
