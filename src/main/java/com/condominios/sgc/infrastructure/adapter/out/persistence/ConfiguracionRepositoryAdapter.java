@@ -25,9 +25,4 @@ public class ConfiguracionRepositoryAdapter implements ConfiguracionRepositoryPo
     public ConfiguracionModel guardar(ConfiguracionModel modelo) {
         return ConfiguracionMapper.toModel(repository.save(ConfiguracionMapper.toEntity(modelo)));
     }
-
-    @Override
-    public void eliminarPorId(Long id) {
-        repository.deleteById(id);
-    }
 }

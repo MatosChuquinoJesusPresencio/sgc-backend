@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.condominios.sgc.application.dto.command.ActualizarOcupantesCommand;
 import com.condominios.sgc.application.dto.command.AsignarPropietarioCommand;
+import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.AdminApartamentoDetailResult;
 import com.condominios.sgc.application.dto.result.AdminInquilinoResult;
+import com.condominios.sgc.application.dto.result.PaginaResult;
 import com.condominios.sgc.application.port.in.GestionarAdminApartamentosUseCase;
 import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.CondominioRepositoryPort;
@@ -42,7 +44,7 @@ public class GestionarAdminApartamentosService implements GestionarAdminApartame
     }
 
     @Override
-    public List<AdminApartamentoDetailResult> listar() {
+    public PaginaResult<AdminApartamentoDetailResult> listar(PaginaQuery pagina) {
         var condominio = cargarCondominio();
         var results = new ArrayList<AdminApartamentoDetailResult>();
         for (var torre : condominio.getTorres()) {
@@ -52,7 +54,11 @@ public class GestionarAdminApartamentosService implements GestionarAdminApartame
                 }
             }
         }
-        return results;
+        int total = results.size();
+        int from = pagina.pagina() * pagina.tamano();
+        int to = Math.min(from + pagina.tamano(), total);
+        var items = from < total ? results.subList(from, to) : List.<AdminApartamentoDetailResult>of();
+        return new PaginaResult<>(items, total, pagina.pagina(), pagina.tamano());
     }
 
     @Override

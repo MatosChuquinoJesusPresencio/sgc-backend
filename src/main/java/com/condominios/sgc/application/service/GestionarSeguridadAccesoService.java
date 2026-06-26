@@ -2,6 +2,7 @@ package com.condominios.sgc.application.service;
 
 import com.condominios.sgc.application.dto.command.RegistrarEntradaVehiculoCommand;
 import com.condominios.sgc.application.dto.command.RegistrarSalidaVehiculoCommand;
+import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.AdminLogEntryResult;
 import com.condominios.sgc.application.port.in.GestionarSeguridadAccesoUseCase;
 import com.condominios.sgc.application.port.out.EstacionamientoRepositoryPort;
@@ -45,8 +46,8 @@ public class GestionarSeguridadAccesoService implements GestionarSeguridadAcceso
         var vehiculo = vehiculoRepository.buscarPorPlaca(cmd.placa())
             .orElseThrow(VehiculoException::noEncontrado);
 
-        var estacionamientos = estacionamientoRepository.buscarPorCondominio(condominioId);
-        var slot = estacionamientos.stream()
+        var estacionamientos = estacionamientoRepository.buscarPorCondominio(condominioId, new PaginaQuery(0, Integer.MAX_VALUE));
+        var slot = estacionamientos.items().stream()
             .filter(e -> e.hayEspacio())
             .findFirst()
             .orElseThrow(EstacionamientoException::sinEspacio);

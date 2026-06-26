@@ -7,6 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.condominios.sgc.application.dto.query.PaginaQuery;
+import com.condominios.sgc.application.dto.result.PaginaResult;
 import com.condominios.sgc.application.port.out.CondominioRepositoryPort;
 import com.condominios.sgc.domain.model.CondominioModel;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.CondominioEntity;
@@ -65,12 +67,11 @@ public class CondominioRepositoryAdapter implements CondominioRepositoryPort {
     }
 
     @Override
-    public List<CondominioModel> buscarTodos(String search, Boolean activo, int pagina, int tamano) {
-        var pageable = PageRequest.of(pagina, tamano);
-        return repository.buscarTodos(search, activo, pageable)
-            .stream()
-            .map(CondominioMapper::toModelLigero)
-            .toList();
+    public PaginaResult<CondominioModel> buscarTodos(String search, Boolean activo, PaginaQuery paginacion) {
+        var pageable = PageRequest.of(paginacion.pagina(), paginacion.tamano());
+        var page = repository.buscarTodos(search, activo, pageable);
+        var items = page.getContent().stream().map(CondominioMapper::toModelLigero).toList();
+        return new PaginaResult<>(items, page.getTotalElements(), page.getNumber(), page.getSize());
     }
 
     @Override

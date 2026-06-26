@@ -26,16 +26,6 @@ public class PaisRepositoryAdapter implements PaisRepositoryPort {
         return repository.findById(id).map(PaisMapper::toModel);
     }
 
-    @Override
-    public PaisModel guardar(PaisModel modelo) {
-        return PaisMapper.toModel(repository.save(PaisMapper.toEntity(modelo)));
-    }
-
-    @Override
-    public void eliminarPorId(Long id) {
-        repository.deleteById(id);
-    }
-
     @Transactional(readOnly = true)
     @Override
     public List<PaisModel> listarTodos() {

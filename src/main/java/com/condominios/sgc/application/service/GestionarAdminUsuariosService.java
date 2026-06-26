@@ -32,11 +32,9 @@ public class GestionarAdminUsuariosService implements GestionarAdminUsuariosUseC
     @Override
     public PaginaResult<AdminUserResult> listar(String search, String rol, Boolean activo, PaginaQuery query) {
         var condominioId = obtenerCondominioId();
-        var usuarios = usuarioRepository.buscarPorCondominio(
-            condominioId, search, rol, activo, query.pagina(), query.tamano());
-        long total = usuarioRepository.contarPorCondominio(condominioId, search, rol, activo);
-        var items = usuarios.stream().map(this::toResult).toList();
-        return new PaginaResult<>(items, total, query.pagina(), query.tamano());
+        var pagina = usuarioRepository.buscarPorCondominio(condominioId, search, rol, activo, query);
+        var items = pagina.items().stream().map(this::toResult).toList();
+        return new PaginaResult<>(items, pagina.total(), pagina.pagina(), pagina.tamano());
     }
 
     @Override

@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 import com.condominios.sgc.application.dto.command.ActualizarAdminUserCommand;
 import com.condominios.sgc.application.dto.command.ActualizarMiCondominioCommand;
 import com.condominios.sgc.application.dto.command.ActualizarOcupantesCommand;
@@ -157,9 +155,11 @@ public class AdminCondominioController {
     }
 
     @GetMapping("/apartments")
-    public ResponseEntity<List<AdminApartamentoDetailResponse>> listarApartamentos() {
-        var resultados = gestionarAdminApartamentos.listar();
-        return ResponseEntity.ok(mapper.toApartamentoDetailResponses(resultados));
+    public ResponseEntity<PaginaResponse<AdminApartamentoDetailResponse>> listarApartamentos(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        var resultado = gestionarAdminApartamentos.listar(new PaginaQuery(page, size));
+        return ResponseEntity.ok(mapper.toApartamentoDetailPaginaResponse(resultado));
     }
 
     @PutMapping("/apartments/{id}/assign-owner")
@@ -186,9 +186,12 @@ public class AdminCondominioController {
     }
 
     @GetMapping("/assets")
-    public ResponseEntity<List<AdminAssetResponse>> listarActivos() {
-        var resultados = gestionarAdminActivos.listar();
-        return ResponseEntity.ok(mapper.toAssetResponses(resultados));
+    public ResponseEntity<PaginaResponse<AdminAssetResponse>> listarActivos(
+            @RequestParam String type,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        var resultado = gestionarAdminActivos.listar(type, new PaginaQuery(page, size));
+        return ResponseEntity.ok(mapper.toAssetPaginaResponse(resultado));
     }
 
     @PostMapping("/assets")

@@ -2,6 +2,7 @@ package com.condominios.sgc.application.service;
 
 import java.util.List;
 
+import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.SecurityParkingSlotResult;
 import com.condominios.sgc.application.port.in.GestionarSeguridadEstacionamientosUseCase;
 import com.condominios.sgc.application.port.out.EstacionamientoRepositoryPort;
@@ -28,8 +29,8 @@ public class GestionarSeguridadEstacionamientosService implements GestionarSegur
     public List<SecurityParkingSlotResult> listarSlots() {
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
-        return estacionamientoRepository.buscarPorCondominio(usuario.getIdCondominio())
-            .stream()
+        return estacionamientoRepository.buscarPorCondominio(usuario.getIdCondominio(), new PaginaQuery(0, Integer.MAX_VALUE))
+            .items().stream()
             .map(e -> new SecurityParkingSlotResult(
                 e.getId(), e.getNumero(), e.getTipoVehiculo(),
                 e.getCapacidadMaxima(), e.getCantidadActual(), e.getDisponible()))

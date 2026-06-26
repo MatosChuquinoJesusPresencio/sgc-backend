@@ -21,14 +21,4 @@ public class MonedaRepositoryAdapter implements MonedaRepositoryPort {
     public Optional<MonedaModel> buscarPorId(Long id) {
         return repository.findById(id).map(MonedaMapper::toModel);
     }
-
-    @Override
-    public MonedaModel guardar(MonedaModel modelo) {
-        return MonedaMapper.toModel(repository.save(MonedaMapper.toEntity(modelo)));
-    }
-
-    @Override
-    public void eliminarPorId(Long id) {
-        repository.deleteById(id);
-    }
 }

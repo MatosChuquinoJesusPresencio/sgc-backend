@@ -7,7 +7,5 @@ import com.condominios.sgc.domain.model.PaisModel;
 
 public interface PaisRepositoryPort {
     Optional<PaisModel> buscarPorId(Long id);
-    PaisModel guardar(PaisModel modelo);
-    void eliminarPorId(Long id);
     List<PaisModel> listarTodos();
 }

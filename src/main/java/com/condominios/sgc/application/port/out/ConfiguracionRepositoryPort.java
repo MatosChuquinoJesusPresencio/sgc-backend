@@ -7,5 +7,4 @@ import com.condominios.sgc.domain.model.ConfiguracionModel;
 public interface ConfiguracionRepositoryPort {
     Optional<ConfiguracionModel> buscarPorId(Long id);
     ConfiguracionModel guardar(ConfiguracionModel modelo);
-    void eliminarPorId(Long id);
 }

@@ -42,18 +42,39 @@ class AdminCondominioControllerTest extends ControllerTestBase {
     @Order(1)
     @Test
     void listarApartamentos_returns200() throws Exception {
-        mockMvc.perform(get("/api/admin/apartments")
+        mockMvc.perform(get("/api/admin/apartments?page=0&size=20")
                         .header("Authorization", "Bearer " + TOKEN))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].numero").value("101"));
+                .andExpect(jsonPath("$.items[0].numero").value("101"))
+                .andExpect(jsonPath("$.total").isNumber());
     }
 
     @Order(1)
     @Test
-    void listarActivos_returns200() throws Exception {
+    void listarActivos_carrito_returns200() throws Exception {
+        mockMvc.perform(get("/api/admin/assets?type=CARRITO")
+                        .header("Authorization", "Bearer " + TOKEN))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items").isArray())
+                .andExpect(jsonPath("$.total").isNumber());
+    }
+
+    @Order(1)
+    @Test
+    void listarActivos_estacionamiento_returns200() throws Exception {
+        mockMvc.perform(get("/api/admin/assets?type=ESTACIONAMIENTO")
+                        .header("Authorization", "Bearer " + TOKEN))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items").isArray())
+                .andExpect(jsonPath("$.total").isNumber());
+    }
+
+    @Order(1)
+    @Test
+    void listarActivos_sinType_returns400() throws Exception {
         mockMvc.perform(get("/api/admin/assets")
                         .header("Authorization", "Bearer " + TOKEN))
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest());
     }
 
     @Order(1)
@@ -161,13 +182,13 @@ class AdminCondominioControllerTest extends ControllerTestBase {
                                 }
                                 """))
                 .andExpect(status().isOk());
-        var listResult = mockMvc.perform(get("/api/admin/apartments")
+        var listResult = mockMvc.perform(get("/api/admin/apartments?page=0&size=100")
                         .header("Authorization", "Bearer " + TOKEN))
                 .andExpect(status().isOk())
                 .andReturn();
         var json = listResult.getResponse().getContentAsString();
         var doc = com.jayway.jsonpath.JsonPath.parse(json);
-        var apts = doc.read("$[?(@.numero==998)]", java.util.List.class);
+        var apts = doc.read("$.items[?(@.numero==998)]", java.util.List.class);
         if (!apts.isEmpty()) {
             var aptMap = (java.util.Map<String, Object>) apts.get(0);
             var aptId = ((Number) aptMap.get("id")).longValue();

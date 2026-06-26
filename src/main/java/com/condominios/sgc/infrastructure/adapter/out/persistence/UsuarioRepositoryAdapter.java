@@ -7,6 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.condominios.sgc.application.dto.query.PaginaQuery;
+import com.condominios.sgc.application.dto.result.PaginaResult;
 import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.type.Rol;
@@ -45,16 +47,11 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
     }
 
     @Override
-    public List<UsuarioModel> buscarAdministradores(String search, Boolean activo, int pagina, int tamano) {
-        var pageable = PageRequest.of(pagina, tamano);
-        return repository.buscarAdministradores(search, activo, pageable)
-            .map(UsuarioMapper::toModel)
-            .toList();
-    }
-
-    @Override
-    public long contarAdministradores(String search, Boolean activo) {
-        return repository.contarAdministradores(search, activo);
+    public PaginaResult<UsuarioModel> buscarAdministradores(String search, Boolean activo, PaginaQuery paginacion) {
+        var pageable = PageRequest.of(paginacion.pagina(), paginacion.tamano());
+        var page = repository.buscarAdministradores(search, activo, pageable);
+        var items = page.getContent().stream().map(UsuarioMapper::toModel).toList();
+        return new PaginaResult<>(items, page.getTotalElements(), page.getNumber(), page.getSize());
     }
 
     @Override
@@ -91,17 +88,11 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
     }
 
     @Override
-    public List<UsuarioModel> buscarTodos(String search, String rol, Boolean activo, int pagina, int tamano) {
-        var pageable = PageRequest.of(pagina, tamano);
-        return repository.buscarTodos(search, rol, activo, pageable)
-            .stream()
-            .map(UsuarioMapper::toModel)
-            .toList();
-    }
-
-    @Override
-    public long contarTodos(String search, String rol, Boolean activo) {
-        return repository.contarTodos(search, rol, activo);
+    public PaginaResult<UsuarioModel> buscarTodos(String search, String rol, Boolean activo, PaginaQuery paginacion) {
+        var pageable = PageRequest.of(paginacion.pagina(), paginacion.tamano());
+        var page = repository.buscarTodos(search, rol, activo, pageable);
+        var items = page.getContent().stream().map(UsuarioMapper::toModel).toList();
+        return new PaginaResult<>(items, page.getTotalElements(), page.getNumber(), page.getSize());
     }
 
     @Override
@@ -110,16 +101,10 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
     }
 
     @Override
-    public List<UsuarioModel> buscarPorCondominio(Long idCondominio, String search, String rol, Boolean activo, int pagina, int tamano) {
-        var pageable = PageRequest.of(pagina, tamano);
-        return repository.buscarPorCondominio(idCondominio, search, rol, activo, pageable)
-            .stream()
-            .map(UsuarioMapper::toModel)
-            .toList();
-    }
-
-    @Override
-    public long contarPorCondominio(Long idCondominio, String search, String rol, Boolean activo) {
-        return repository.contarPorCondominio(idCondominio, search, rol, activo);
+    public PaginaResult<UsuarioModel> buscarPorCondominio(Long idCondominio, String search, String rol, Boolean activo, PaginaQuery paginacion) {
+        var pageable = PageRequest.of(paginacion.pagina(), paginacion.tamano());
+        var page = repository.buscarPorCondominio(idCondominio, search, rol, activo, pageable);
+        var items = page.getContent().stream().map(UsuarioMapper::toModel).toList();
+        return new PaginaResult<>(items, page.getTotalElements(), page.getNumber(), page.getSize());
     }
 }

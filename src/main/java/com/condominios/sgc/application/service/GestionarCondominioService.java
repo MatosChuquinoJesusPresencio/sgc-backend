@@ -33,10 +33,9 @@ public class GestionarCondominioService implements GestionarCondominioUseCase {
 
     @Override
     public PaginaResult<CondominioResult> listar(String search, Boolean activo, PaginaQuery query) {
-        var condominios = condominioRepository.buscarTodos(search, activo, query.pagina(), query.tamano());
-        long total = condominioRepository.contarTodos(search, activo);
-        var items = condominios.stream().map(this::toResult).toList();
-        return new PaginaResult<>(items, total, query.pagina(), query.tamano());
+        var pagina = condominioRepository.buscarTodos(search, activo, query);
+        var items = pagina.items().stream().map(this::toResult).toList();
+        return new PaginaResult<>(items, pagina.total(), pagina.pagina(), pagina.tamano());
     }
 
     @Override

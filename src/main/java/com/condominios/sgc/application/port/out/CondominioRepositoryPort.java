@@ -3,6 +3,8 @@ package com.condominios.sgc.application.port.out;
 import java.util.List;
 import java.util.Optional;
 
+import com.condominios.sgc.application.dto.query.PaginaQuery;
+import com.condominios.sgc.application.dto.result.PaginaResult;
 import com.condominios.sgc.domain.model.CondominioModel;
 
 public interface CondominioRepositoryPort {
@@ -13,7 +15,7 @@ public interface CondominioRepositoryPort {
 
     List<CondominioModel> buscarActivosSinAdministrador();
     Optional<String> buscarNombrePorId(Long id);
-    List<CondominioModel> buscarTodos(String search, Boolean activo, int pagina, int tamano);
+    PaginaResult<CondominioModel> buscarTodos(String search, Boolean activo, PaginaQuery paginacion);
     long contarTodos(String search, Boolean activo);
     List<CondominioModel> buscarRecientes(int limite);
     long contarActivos();

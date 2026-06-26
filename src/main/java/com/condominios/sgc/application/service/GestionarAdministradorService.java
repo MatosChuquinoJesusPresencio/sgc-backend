@@ -50,10 +50,9 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
 
     @Override
     public PaginaResult<AdministradorResult> listar(String search, Boolean activo, PaginaQuery query) {
-        var admins = usuarioRepository.buscarAdministradores(search, activo, query.pagina(), query.tamano());
-        long total = usuarioRepository.contarAdministradores(search, activo);
-        var items = admins.stream().map(this::toResult).toList();
-        return new PaginaResult<>(items, total, query.pagina(), query.tamano());
+        var pagina = usuarioRepository.buscarAdministradores(search, activo, query);
+        var items = pagina.items().stream().map(this::toResult).toList();
+        return new PaginaResult<>(items, pagina.total(), pagina.pagina(), pagina.tamano());
     }
 
     @Override

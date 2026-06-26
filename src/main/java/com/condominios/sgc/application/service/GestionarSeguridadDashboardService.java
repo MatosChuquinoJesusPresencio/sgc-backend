@@ -1,5 +1,6 @@
 package com.condominios.sgc.application.service;
 
+import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.SecurityDashboardResult;
 import com.condominios.sgc.application.dto.result.SecurityDashboardResult.SecurityRecentLogEntry;
 import com.condominios.sgc.application.port.in.GestionarSeguridadDashboardUseCase;
@@ -37,9 +38,9 @@ public class GestionarSeguridadDashboardService implements GestionarSeguridadDas
             .orElseThrow(UsuarioException::noEncontrado);
         var condominioId = usuario.getIdCondominio();
 
-        var estacionamientos = estacionamientoRepository.buscarPorCondominio(condominioId);
-        int total = estacionamientos.size();
-        int ocupados = (int) estacionamientos.stream()
+        var estacionamientos = estacionamientoRepository.buscarPorCondominio(condominioId, new PaginaQuery(0, Integer.MAX_VALUE));
+        int total = (int) estacionamientos.total();
+        int ocupados = (int) estacionamientos.items().stream()
             .filter(e -> e.getCantidadActual() != null && e.getCantidadActual() > 0)
             .count();
 

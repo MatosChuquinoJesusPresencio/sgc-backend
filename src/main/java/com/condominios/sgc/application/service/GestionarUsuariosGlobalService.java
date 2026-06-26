@@ -31,9 +31,8 @@ public class GestionarUsuariosGlobalService implements GestionarUsuariosGlobalUs
 
     @Override
     public PaginaResult<UsuarioGlobalResult> listar(String search, String rol, Boolean activo, PaginaQuery query) {
-        var usuarios = usuarioRepository.buscarTodos(search, rol, activo, query.pagina(), query.tamano());
-        long total = usuarioRepository.contarTodos(search, rol, activo);
-        var items = usuarios.stream().map(u -> {
+        var pagina = usuarioRepository.buscarTodos(search, rol, activo, query);
+        var items = pagina.items().stream().map(u -> {
             String nombreCondominio = null;
             if (u.getIdCondominio() != null) {
                 nombreCondominio = condominioRepository.buscarNombrePorId(u.getIdCondominio()).orElse(null);
@@ -47,7 +46,7 @@ public class GestionarUsuariosGlobalService implements GestionarUsuariosGlobalUs
                 nombreCondominio, u.getFechaCreacion()
             );
         }).toList();
-        return new PaginaResult<>(items, total, query.pagina(), query.tamano());
+        return new PaginaResult<>(items, pagina.total(), pagina.pagina(), pagina.tamano());
     }
 
     @Override

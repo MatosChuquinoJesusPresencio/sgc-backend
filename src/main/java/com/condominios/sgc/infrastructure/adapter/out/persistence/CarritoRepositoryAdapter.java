@@ -1,13 +1,16 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence;
 
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Component;
+
+import com.condominios.sgc.application.dto.query.PaginaQuery;
+import com.condominios.sgc.application.dto.result.PaginaResult;
 import com.condominios.sgc.application.port.out.CarritoRepositoryPort;
 import com.condominios.sgc.domain.model.CarritoModel;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.CarritoMapper;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.CarritoJpaRepository;
-import org.springframework.stereotype.Component;
 
 @Component
 public class CarritoRepositoryAdapter implements CarritoRepositoryPort {
@@ -39,11 +42,11 @@ public class CarritoRepositoryAdapter implements CarritoRepositoryPort {
     }
 
     @Override
-    public List<CarritoModel> buscarPorCondominio(Long idCondominio) {
-        return repository.findByIdCondominioOrderByIdAsc(idCondominio)
-                .stream()
-                .map(CarritoMapper::toModel)
-                .toList();
+    public PaginaResult<CarritoModel> buscarPorCondominio(Long idCondominio, PaginaQuery paginacion) {
+        var pageable = PageRequest.of(paginacion.pagina(), paginacion.tamano());
+        var page = repository.findByIdCondominio(idCondominio, pageable);
+        var items = page.getContent().stream().map(CarritoMapper::toModel).toList();
+        return new PaginaResult<>(items, page.getTotalElements(), page.getNumber(), page.getSize());
     }
 
     @Override

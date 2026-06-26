@@ -1,7 +1,5 @@
 package com.condominios.sgc.infrastructure.adapter.in.web.mapper;
 
-import java.util.List;
-
 import org.springframework.stereotype.Component;
 
 import com.condominios.sgc.application.dto.result.AdminApartamentoDetailResult;
@@ -94,8 +92,11 @@ public class AdminCondominioMapper {
             r.torreNombre(), r.pisoNumero(), inquilinos);
     }
 
-    public List<AdminApartamentoDetailResponse> toApartamentoDetailResponses(List<AdminApartamentoDetailResult> results) {
-        return results.stream().map(this::toApartamentoDetailResponse).toList();
+    public PaginaResponse<AdminApartamentoDetailResponse> toApartamentoDetailPaginaResponse(
+            PaginaResult<AdminApartamentoDetailResult> pagina) {
+        var items = pagina.items().stream().map(this::toApartamentoDetailResponse).toList();
+        return new PaginaResponse<>(items, pagina.total(), pagina.pagina(),
+            pagina.tamano(), pagina.totalPaginas(), pagina.hayMas());
     }
 
     private AdminInquilinoResponse toInquilinoResponse(AdminInquilinoResult r) {
@@ -113,8 +114,10 @@ public class AdminCondominioMapper {
         );
     }
 
-    public List<AdminAssetResponse> toAssetResponses(List<AdminAssetResult> results) {
-        return results.stream().map(this::toAssetResponse).toList();
+    public PaginaResponse<AdminAssetResponse> toAssetPaginaResponse(PaginaResult<AdminAssetResult> pagina) {
+        var items = pagina.items().stream().map(this::toAssetResponse).toList();
+        return new PaginaResponse<>(items, pagina.total(), pagina.pagina(),
+            pagina.tamano(), pagina.totalPaginas(), pagina.hayMas());
     }
 
     public AdminLogEntryResponse toLogEntryResponse(AdminLogEntryResult r) {

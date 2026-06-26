@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-
 import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.AdminLogEntryResult;
 import com.condominios.sgc.application.dto.result.PaginaResult;
@@ -58,27 +55,25 @@ public class GestionarAdminLogsService implements GestionarAdminLogsUseCase {
     public PaginaResult<AdminLogEntryResult> listar(
             String type, Long userId, Instant fechaInicio, Instant fechaFin, PaginaQuery pagina) {
         var condominioId = obtenerCondominioId();
-        var pageable = PageRequest.of(pagina.pagina(), pagina.tamano());
 
         if ("CARRITO".equalsIgnoreCase(type)) {
-            return toPaginaResult(
-                logCarritoRepository.buscarPorCondominio(condominioId, userId, fechaInicio, fechaFin, pageable),
-                this::toResult);
+            var result = logCarritoRepository.buscarPorCondominio(condominioId, userId, fechaInicio, fechaFin, pagina);
+            var items = result.items().stream().map(this::toResult).toList();
+            return new PaginaResult<>(items, result.total(), result.pagina(), result.tamano());
         }
         if ("VEHICULAR".equalsIgnoreCase(type)) {
-            return toPaginaResult(
-                logAccesoRepository.buscarPorCondominio(condominioId, userId, fechaInicio, fechaFin, pageable),
-                this::toResult);
+            var result = logAccesoRepository.buscarPorCondominio(condominioId, userId, fechaInicio, fechaFin, pagina);
+            var items = result.items().stream().map(this::toResult).toList();
+            return new PaginaResult<>(items, result.total(), result.pagina(), result.tamano());
         }
 
-        var vehicularPage = logAccesoRepository.buscarPorCondominio(
-            condominioId, userId, fechaInicio, fechaFin, PageRequest.of(0, Integer.MAX_VALUE));
-        var carritoPage = logCarritoRepository.buscarPorCondominio(
-            condominioId, userId, fechaInicio, fechaFin, PageRequest.of(0, Integer.MAX_VALUE));
+        var todo = new PaginaQuery(0, Integer.MAX_VALUE);
+        var vehicularPage = logAccesoRepository.buscarPorCondominio(condominioId, userId, fechaInicio, fechaFin, todo);
+        var carritoPage = logCarritoRepository.buscarPorCondominio(condominioId, userId, fechaInicio, fechaFin, todo);
 
         var combined = new ArrayList<AdminLogEntryResult>();
-        combined.addAll(vehicularPage.getContent().stream().map(this::toResult).toList());
-        combined.addAll(carritoPage.getContent().stream().map(this::toResult).toList());
+        combined.addAll(vehicularPage.items().stream().map(this::toResult).toList());
+        combined.addAll(carritoPage.items().stream().map(this::toResult).toList());
 
         combined.sort(Comparator.<AdminLogEntryResult, String>comparing(
             r -> r.fechaEntrada() != null ? r.fechaEntrada() : r.fechaPrestamo(),
@@ -89,13 +84,6 @@ public class GestionarAdminLogsService implements GestionarAdminLogsUseCase {
         int to = Math.min(from + pagina.tamano(), total);
         var items = from < total ? combined.subList(from, to) : List.<AdminLogEntryResult>of();
         return new PaginaResult<>(items, total, pagina.pagina(), pagina.tamano());
-    }
-
-    private <T> PaginaResult<AdminLogEntryResult> toPaginaResult(
-            Page<T> page, java.util.function.Function<T, AdminLogEntryResult> mapper) {
-        var items = page.getContent().stream().map(mapper).toList();
-        return new PaginaResult<>(
-            items, (int) page.getTotalElements(), page.getNumber(), page.getSize());
     }
 
     private AdminLogEntryResult toResult(LogAccesoVehicularModel m) {

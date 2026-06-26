@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import org.springframework.data.domain.PageRequest;
-
 import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.AdminLogEntryResult;
 import com.condominios.sgc.application.dto.result.PaginaResult;
@@ -46,14 +44,15 @@ public class GestionarPropietarioLogsService implements GestionarPropietarioLogs
         if (condominioId == null) throw CondominioException.noEncontrado();
         var userId = usuario.getId();
 
+        var todo = new PaginaQuery(0, Integer.MAX_VALUE);
         var vehicularPage = logAccesoRepository.buscarPorCondominio(
-            condominioId, userId, fechaInicio, fechaFin, PageRequest.of(0, Integer.MAX_VALUE));
+            condominioId, userId, fechaInicio, fechaFin, todo);
         var carritoPage = logCarritoRepository.buscarPorCondominio(
-            condominioId, userId, fechaInicio, fechaFin, PageRequest.of(0, Integer.MAX_VALUE));
+            condominioId, userId, fechaInicio, fechaFin, todo);
 
         var combined = new ArrayList<AdminLogEntryResult>();
-        combined.addAll(vehicularPage.getContent().stream().map(this::toResult).toList());
-        combined.addAll(carritoPage.getContent().stream().map(this::toResult).toList());
+        combined.addAll(vehicularPage.items().stream().map(this::toResult).toList());
+        combined.addAll(carritoPage.items().stream().map(this::toResult).toList());
 
         combined.sort(Comparator.<AdminLogEntryResult, String>comparing(
             r -> r.fechaEntrada() != null ? r.fechaEntrada() : r.fechaPrestamo(),

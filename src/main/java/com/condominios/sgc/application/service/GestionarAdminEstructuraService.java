@@ -11,6 +11,7 @@ import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.domain.model.CondominioModel;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
+import com.condominios.sgc.domain.shared.exception.ParametroInvalidoException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 
 public class GestionarAdminEstructuraService implements GestionarAdminEstructuraUseCase {
@@ -62,7 +63,7 @@ public class GestionarAdminEstructuraService implements GestionarAdminEstructura
             case TIPO_PISO -> condominio.agregarPiso(cmd.nombreTorre(), cmd.numero());
             case TIPO_APARTAMENTO -> condominio.agregarApartamento(
                 cmd.nombreTorre(), cmd.numeroPiso(), cmd.numeroApartamento(), cmd.metraje());
-            default -> throw new IllegalArgumentException("tipo de nodo inválido: " + cmd.tipo());
+            default -> throw new ParametroInvalidoException("tipo de nodo inválido: " + cmd.tipo());
         }
         condominioRepository.guardar(condominio);
     }
@@ -74,10 +75,10 @@ public class GestionarAdminEstructuraService implements GestionarAdminEstructura
             case TIPO_TORRE -> condominio.eliminarTorre(id);
             case TIPO_PISO -> condominio.eliminarPiso(id);
             case TIPO_APARTAMENTO -> condominio.eliminarApartamento(id);
-            default -> throw new IllegalArgumentException("tipo de nodo inválido: " + tipo);
+            default -> throw new ParametroInvalidoException("tipo de nodo inválido: " + tipo);
         };
         if (!eliminado) {
-            throw new IllegalArgumentException(
+            throw new ParametroInvalidoException(
                 "nodo " + tipo + " con id " + id + " no encontrado en el condominio");
         }
         condominioRepository.guardar(condominio);

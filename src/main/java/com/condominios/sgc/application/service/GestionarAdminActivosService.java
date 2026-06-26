@@ -1,11 +1,12 @@
 package com.condominios.sgc.application.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.condominios.sgc.application.dto.command.ActualizarStatusAssetCommand;
 import com.condominios.sgc.application.dto.command.CrearAssetCommand;
+import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.AdminAssetResult;
+import com.condominios.sgc.application.dto.result.PaginaResult;
 import com.condominios.sgc.application.port.in.GestionarAdminActivosUseCase;
 import com.condominios.sgc.application.port.out.CarritoRepositoryPort;
 import com.condominios.sgc.application.port.out.EstacionamientoRepositoryPort;
@@ -16,6 +17,7 @@ import com.condominios.sgc.domain.model.EstacionamientoModel;
 import com.condominios.sgc.domain.shared.exception.CarritoException;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.EstacionamientoException;
+import com.condominios.sgc.domain.shared.exception.ParametroInvalidoException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.type.EstadoCarrito;
 import com.condominios.sgc.domain.type.TipoVehiculo;
@@ -49,18 +51,22 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
     }
 
     @Override
-    public List<AdminAssetResult> listar() {
+    public PaginaResult<AdminAssetResult> listar(String type, PaginaQuery pagina) {
         var condominioId = obtenerCondominioId();
-        var resultados = new ArrayList<AdminAssetResult>();
 
-        for (var c : carritoRepository.buscarPorCondominio(condominioId)) {
-            resultados.add(toResult(c));
-        }
-        for (var e : estacionamientoRepository.buscarPorCondominio(condominioId)) {
-            resultados.add(toResult(e));
+        if ("CARRITO".equalsIgnoreCase(type)) {
+            var result = carritoRepository.buscarPorCondominio(condominioId, pagina);
+            var items = result.items().stream().map(this::toResult).toList();
+            return new PaginaResult<>(items, result.total(), result.pagina(), result.tamano());
         }
 
-        return resultados;
+        if ("ESTACIONAMIENTO".equalsIgnoreCase(type)) {
+            var result = estacionamientoRepository.buscarPorCondominio(condominioId, pagina);
+            var items = result.items().stream().map(this::toResult).toList();
+            return new PaginaResult<>(items, result.total(), result.pagina(), result.tamano());
+        }
+
+        return new PaginaResult<>(List.of(), 0, pagina.pagina(), pagina.tamano());
     }
 
     @Override
@@ -74,7 +80,7 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
             var modelo = new EstacionamientoModel(cmd.numero(), condominioId);
             return toResult(estacionamientoRepository.guardar(modelo));
         }
-        throw new IllegalArgumentException("Tipo de activo no válido: " + cmd.tipo());
+        throw new ParametroInvalidoException("Tipo de activo no válido: " + cmd.tipo());
     }
 
     @Override
@@ -105,7 +111,7 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
             }
             return toResult(estacionamientoRepository.guardar(estacionamiento));
         }
-        throw new IllegalArgumentException("Tipo de activo no válido: " + cmd.tipo());
+        throw new ParametroInvalidoException("Tipo de activo no válido: " + cmd.tipo());
     }
 
     private AdminAssetResult toResult(CarritoModel m) {

@@ -6,11 +6,11 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import com.condominios.sgc.application.dto.query.PaginaQuery;
+import com.condominios.sgc.application.dto.result.PaginaResult;
 import com.condominios.sgc.application.port.out.LogAccesoVehicularRepositoryPort;
 import com.condominios.sgc.domain.model.LogAccesoVehicularModel;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.LogAccesoVehicularMapper;
@@ -41,12 +41,14 @@ public class LogAccesoVehicularRepositoryAdapter implements LogAccesoVehicularRe
     }
 
     @Override
-    public Page<LogAccesoVehicularModel> buscarPorCondominio(
-            Long idCondominio, Long userId, Instant fechaInicio, Instant fechaFin, Pageable pageable) {
+    public PaginaResult<LogAccesoVehicularModel> buscarPorCondominio(
+            Long idCondominio, Long userId, Instant fechaInicio, Instant fechaFin, PaginaQuery paginacion) {
+        var pageable = PageRequest.of(paginacion.pagina(), paginacion.tamano());
         var inicio = fechaInicio != null ? LocalDateTime.ofInstant(fechaInicio, ZoneOffset.UTC) : null;
         var fin = fechaFin != null ? LocalDateTime.ofInstant(fechaFin, ZoneOffset.UTC) : null;
-        return repository.findByFilters(idCondominio, userId, inicio, fin, pageable)
+        var page = repository.findByFilters(idCondominio, userId, inicio, fin, pageable)
                 .map(LogAccesoVehicularMapper::toModel);
+        return new PaginaResult<>(page.getContent(), page.getTotalElements(), page.getNumber(), page.getSize());
     }
 
     @Override
