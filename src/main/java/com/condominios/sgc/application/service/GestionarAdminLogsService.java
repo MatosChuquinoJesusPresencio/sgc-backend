@@ -97,8 +97,8 @@ public class GestionarAdminLogsService implements GestionarAdminLogsUseCase {
             null, null, null, null, null, null,
             m.getSolicitante().name(), m.getNombreSolicitante(), m.getDniSolicitante(),
             m.getPenalizacion(),
-            toString(m.getFechaPrestamo()),
-            toString(m.getFechaDevolucion()),
+            m.getFechaPrestamo(),
+            m.getFechaDevolucion(),
             m.getIdCondominio());
     }
 
