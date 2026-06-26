@@ -23,6 +23,9 @@ import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.type.Rol;
 
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional(readOnly = true)
 public class GestionarAdministradorService implements GestionarAdministradorUseCase {
 
     private final UsuarioRepositoryPort usuarioRepository;
@@ -56,6 +59,7 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
     }
 
     @Override
+    @Transactional
     public AdministradorResult crear(CrearAdministradorCommand cmd) {
         if (usuarioRepository.existePorCorreo(cmd.correo()))
             throw UsuarioException.correoYaRegistrado();
@@ -75,6 +79,7 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
     }
 
     @Override
+    @Transactional
     public AdministradorResult actualizar(Long id, ActualizarAdministradorCommand cmd) {
         var usuario = usuarioRepository.buscarPorId(id)
             .orElseThrow(UsuarioException::noEncontrado);
@@ -83,6 +88,7 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
     }
 
     @Override
+    @Transactional
     public void eliminar(Long id) {
         if (usuarioRepository.buscarPorId(id).isEmpty())
             throw UsuarioException.noEncontrado();
@@ -90,6 +96,7 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
     }
 
     @Override
+    @Transactional
     public void activarDesactivar(Long id, Boolean activo) {
         var usuario = usuarioRepository.buscarPorId(id)
             .orElseThrow(UsuarioException::noEncontrado);
@@ -103,6 +110,7 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
     }
 
     @Override
+    @Transactional
     public void asignarCondominio(Long id, Long idCondominio) {
         var usuario = usuarioRepository.buscarPorId(id)
             .orElseThrow(UsuarioException::noEncontrado);

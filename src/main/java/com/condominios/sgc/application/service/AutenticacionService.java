@@ -23,8 +23,11 @@ import com.condominios.sgc.domain.shared.exception.TokenException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.type.TipoToken;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 
+@Transactional(readOnly = true)
 public class AutenticacionService implements IniciarSesionUseCase, RefrescarTokenUseCase,
         CerrarSesionUseCase, OlvidasteContrasenaUseCase, RestablecerContrasenaUseCase,
         ObtenerUsuarioActualUseCase, CambiarContrasenaUseCase, ActualizarCorreoUseCase,
@@ -52,6 +55,7 @@ public class AutenticacionService implements IniciarSesionUseCase, RefrescarToke
     }
 
     @Override
+    @Transactional
     @RateLimiter(name = "login-password")
     public SesionUsuarioResult iniciarSesion(String correo, String contrasena, Boolean recuerdame) {
         var usuario = usuarioRepository.buscarPorCorreo(correo)
@@ -91,6 +95,7 @@ public class AutenticacionService implements IniciarSesionUseCase, RefrescarToke
     }
 
     @Override
+    @Transactional
     public SesionUsuarioResult refrescarToken(String tokenRefresco) {
         if (!jwtService.validar(tokenRefresco))
             throw AutenticacionException.credencialesInvalidas();
@@ -125,12 +130,14 @@ public class AutenticacionService implements IniciarSesionUseCase, RefrescarToke
     }
 
     @Override
+    @Transactional
     public void cerrarSesion(String tokenRefresco) {
         tokenRepository.obtenerPorToken(tokenRefresco)
             .ifPresent(tokenRepository::eliminar);
     }
 
     @Override
+    @Transactional
     @RateLimiter(name = "forgot-password")
     public void olvidasteContrasena(String correo) {
         var usuario = usuarioRepository.buscarPorCorreo(correo)
@@ -146,6 +153,7 @@ public class AutenticacionService implements IniciarSesionUseCase, RefrescarToke
     }
 
     @Override
+    @Transactional
     public void restablecerContrasena(String token, String contrasena) {
         var tokenModel = tokenRepository.obtenerPorToken(token)
             .orElseThrow(AutenticacionException::credencialesInvalidas);
@@ -176,6 +184,7 @@ public class AutenticacionService implements IniciarSesionUseCase, RefrescarToke
     }
 
     @Override
+    @Transactional
     public void cambiarContrasena(String contrasenaActual, String nuevaContrasena) {
         var id = securityService.obtenerIdUsuario();
         var usuario = usuarioRepository.buscarPorId(id)
@@ -189,6 +198,7 @@ public class AutenticacionService implements IniciarSesionUseCase, RefrescarToke
     }
 
     @Override
+    @Transactional
     public void actualizarCorreo(String nuevoCorreo, String contrasena) {
         var idUsuario = securityService.obtenerIdUsuario();
         var usuario = usuarioRepository.buscarPorId(idUsuario)
@@ -213,6 +223,7 @@ public class AutenticacionService implements IniciarSesionUseCase, RefrescarToke
     }
 
     @Override
+    @Transactional
     public void verificarEmail(String token) {
         var tokenModel = tokenRepository.obtenerPorToken(token)
             .orElseThrow(TokenException::noEncontrado);

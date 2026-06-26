@@ -13,6 +13,9 @@ import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.domain.model.CondominioModel;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional(readOnly = true)
 public class GestionarCondominioService implements GestionarCondominioUseCase {
 
     private final CondominioRepositoryPort condominioRepository;
@@ -39,6 +42,7 @@ public class GestionarCondominioService implements GestionarCondominioUseCase {
     }
 
     @Override
+    @Transactional
     public CondominioResult crear(CrearCondominioCommand cmd) {
         condominioRepository.buscarPorNombre(cmd.nombre())
             .ifPresent(c -> { throw CondominioException.nombreYaExiste(cmd.nombre()); });
@@ -49,6 +53,7 @@ public class GestionarCondominioService implements GestionarCondominioUseCase {
     }
 
     @Override
+    @Transactional
     public CondominioResult actualizar(Long id, ActualizarCondominioCommand cmd) {
         var condominio = condominioRepository.buscarPorId(id)
             .orElseThrow(CondominioException::noEncontrado);
@@ -61,6 +66,7 @@ public class GestionarCondominioService implements GestionarCondominioUseCase {
     }
 
     @Override
+    @Transactional
     public void eliminar(Long id) {
         if (condominioRepository.buscarPorId(id).isEmpty())
             throw CondominioException.noEncontrado();
@@ -68,6 +74,7 @@ public class GestionarCondominioService implements GestionarCondominioUseCase {
     }
 
     @Override
+    @Transactional
     public void activarDesactivar(Long id, Boolean activo) {
         var condominio = condominioRepository.buscarPorId(id)
             .orElseThrow(CondominioException::noEncontrado);

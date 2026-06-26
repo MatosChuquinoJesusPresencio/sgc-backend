@@ -13,6 +13,9 @@ import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.shared.exception.VehiculoException;
 import com.condominios.sgc.domain.type.TipoVehiculo;
 
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional(readOnly = true)
 public class GestionarPropietarioVehiculosService implements GestionarPropietarioVehiculosUseCase {
 
     private final SecurityServicePort securityService;
@@ -43,6 +46,7 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
     }
 
     @Override
+    @Transactional
     public PropietarioVehiculoResult crear(CrearPropietarioVehiculoCommand cmd) {
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
@@ -54,6 +58,7 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
     }
 
     @Override
+    @Transactional
     public void eliminar(Long id) {
         var vehiculo = vehiculoRepository.buscarPorId(id)
             .orElseThrow(VehiculoException::noEncontrado);

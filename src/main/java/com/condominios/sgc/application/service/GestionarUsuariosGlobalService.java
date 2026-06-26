@@ -11,6 +11,9 @@ import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.service.HashServicePort;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional(readOnly = true)
 public class GestionarUsuariosGlobalService implements GestionarUsuariosGlobalUseCase {
 
     private final UsuarioRepositoryPort usuarioRepository;
@@ -50,6 +53,7 @@ public class GestionarUsuariosGlobalService implements GestionarUsuariosGlobalUs
     }
 
     @Override
+    @Transactional
     public void invalidarSesion(Long id) {
         if (usuarioRepository.buscarPorId(id).isEmpty())
             throw UsuarioException.noEncontrado();
@@ -57,6 +61,7 @@ public class GestionarUsuariosGlobalService implements GestionarUsuariosGlobalUs
     }
 
     @Override
+    @Transactional
     public void forzarCambioContrasena(Long id, ForzarCambioContrasenaCommand cmd) {
         var usuario = usuarioRepository.buscarPorId(id)
             .orElseThrow(UsuarioException::noEncontrado);

@@ -16,6 +16,9 @@ import com.condominios.sgc.domain.shared.exception.InquilinoException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.type.TipoDocumento;
 
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional(readOnly = true)
 public class GestionarPropietarioInquilinosService implements GestionarPropietarioInquilinosUseCase {
 
     private final SecurityServicePort securityService;
@@ -54,6 +57,7 @@ public class GestionarPropietarioInquilinosService implements GestionarPropietar
     }
 
     @Override
+    @Transactional
     public PropietarioInquilinoResult crear(CrearPropietarioInquilinoCommand cmd) {
         var idApartamento = obtenerIdApartamento();
         var modelo = new InquilinoModel(
@@ -64,6 +68,7 @@ public class GestionarPropietarioInquilinosService implements GestionarPropietar
     }
 
     @Override
+    @Transactional
     public void eliminar(Long id) {
         var inquilino = inquilinoRepository.buscarPorId(id)
             .orElseThrow(InquilinoException::noEncontrado);

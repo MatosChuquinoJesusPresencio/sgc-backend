@@ -14,6 +14,9 @@ import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.ParametroInvalidoException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional(readOnly = true)
 public class GestionarAdminEstructuraService implements GestionarAdminEstructuraUseCase {
 
     private static final String TIPO_TORRE = "TORRE";
@@ -56,6 +59,7 @@ public class GestionarAdminEstructuraService implements GestionarAdminEstructura
     }
 
     @Override
+    @Transactional
     public void crearNodo(CrearNodeCommand cmd) {
         var condominio = cargarCondominio();
         switch (cmd.tipo()) {
@@ -69,6 +73,7 @@ public class GestionarAdminEstructuraService implements GestionarAdminEstructura
     }
 
     @Override
+    @Transactional
     public void eliminarNodo(Long id, String tipo) {
         var condominio = cargarCondominio();
         boolean eliminado = switch (tipo) {

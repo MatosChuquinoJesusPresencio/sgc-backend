@@ -16,6 +16,9 @@ import com.condominios.sgc.domain.shared.exception.LogAccesoVehicularException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.shared.exception.VehiculoException;
 
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional(readOnly = true)
 public class GestionarSeguridadAccesoService implements GestionarSeguridadAccesoUseCase {
 
     private final SecurityServicePort securityService;
@@ -38,6 +41,7 @@ public class GestionarSeguridadAccesoService implements GestionarSeguridadAcceso
     }
 
     @Override
+    @Transactional
     public AdminLogEntryResult registrarEntrada(RegistrarEntradaVehiculoCommand cmd) {
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
@@ -65,6 +69,7 @@ public class GestionarSeguridadAccesoService implements GestionarSeguridadAcceso
     }
 
     @Override
+    @Transactional
     public AdminLogEntryResult registrarSalida(RegistrarSalidaVehiculoCommand cmd) {
         var log = logAccesoRepository.buscarPorId(cmd.idLogAcceso())
             .orElseThrow(LogAccesoVehicularException::noEncontrado);

@@ -23,6 +23,9 @@ import com.condominios.sgc.domain.shared.exception.ApartamentoException;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional(readOnly = true)
 public class GestionarAdminApartamentosService implements GestionarAdminApartamentosUseCase {
 
     private final SecurityServicePort securityService;
@@ -66,6 +69,7 @@ public class GestionarAdminApartamentosService implements GestionarAdminApartame
     }
 
     @Override
+    @Transactional
     public void asignarPropietario(Long apartamentoId, AsignarPropietarioCommand cmd) {
         var condominioId = obtenerCondominioId();
         var apto = apartamentoRepository.buscarPorId(apartamentoId)
@@ -82,6 +86,7 @@ public class GestionarAdminApartamentosService implements GestionarAdminApartame
     }
 
     @Override
+    @Transactional
     public void actualizarOcupantes(Long apartamentoId, ActualizarOcupantesCommand cmd) {
         if (apartamentoRepository.buscarPorId(apartamentoId).isEmpty()) {
             throw ApartamentoException.noEncontrado();

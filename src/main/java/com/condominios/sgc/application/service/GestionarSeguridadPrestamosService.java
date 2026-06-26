@@ -17,6 +17,9 @@ import com.condominios.sgc.domain.shared.exception.LogPrestamoCarritoException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.type.EstadoCarrito;
 
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional(readOnly = true)
 public class GestionarSeguridadPrestamosService implements GestionarSeguridadPrestamosUseCase {
 
     private final SecurityServicePort securityService;
@@ -48,6 +51,7 @@ public class GestionarSeguridadPrestamosService implements GestionarSeguridadPre
     }
 
     @Override
+    @Transactional
     public SecurityActiveCartLoanResult registrarPrestamo(RegistrarPrestamoCarritoCommand cmd) {
         var condominioId = obtenerCondominioId();
 
@@ -73,6 +77,7 @@ public class GestionarSeguridadPrestamosService implements GestionarSeguridadPre
     }
 
     @Override
+    @Transactional
     public void registrarDevolucion(Long id) {
         var prestamo = logPrestamoRepository.buscarPorId(id)
             .orElseThrow(LogPrestamoCarritoException::noEncontrado);
