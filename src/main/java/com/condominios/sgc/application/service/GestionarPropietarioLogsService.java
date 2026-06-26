@@ -56,7 +56,7 @@ public class GestionarPropietarioLogsService implements GestionarPropietarioLogs
         combined.addAll(carritoPage.getContent().stream().map(this::toResult).toList());
 
         combined.sort(Comparator.<AdminLogEntryResult, String>comparing(
-            r -> r.fechaEntrada() != null ? r.fechaEntrada() : r.fechaPrestamo(),
+            r -> String.valueOf(r.fechaEntrada() != null ? r.fechaEntrada() : r.fechaPrestamo()),
             Comparator.nullsLast(Comparator.reverseOrder())));
 
         int total = combined.size();

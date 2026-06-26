@@ -90,8 +90,8 @@ public class GestionarSeguridadAccesoService implements GestionarSeguridadAcceso
             m.getId(), "VEHICULAR",
             m.getPlaca().valor(), m.getOcupante().name(), m.getDatosInquilino(),
             m.getMetodo().name(),
-            m.getFechaEntrada() != null ? m.getFechaEntrada().toString() : null,
-            m.getFechaSalida() != null ? m.getFechaSalida().toString() : null,
+            m.getFechaEntrada(),
+            m.getFechaSalida(),
             null, null, null, null, null, null,
             m.getIdCondominio());
     }
