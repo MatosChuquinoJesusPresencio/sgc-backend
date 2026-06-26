@@ -84,7 +84,7 @@ public class GestionarPropietarioLogsService implements GestionarPropietarioLogs
             m.getSolicitante().name(), m.getNombreSolicitante(), m.getDniSolicitante(),
             m.getPenalizacion(),
             m.getFechaPrestamo(),
-            m.getFechaDevolucion() != null ? m.getFechaDevolucion().toString() : null,
+            m.getFechaDevolucion(),
             m.getIdCondominio());
     }
 }
