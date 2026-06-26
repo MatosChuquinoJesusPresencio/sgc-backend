@@ -1,6 +1,5 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.ApartamentoEntity;
@@ -9,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ApartamentoJpaRepository extends JpaRepository<ApartamentoEntity, Long> {
-    List<ApartamentoEntity> findByIdPropietario(Long idPropietario);
+    Optional<ApartamentoEntity> findByIdPropietario(Long idPropietario);
 
     @Query("""
         SELECT a FROM ApartamentoEntity a

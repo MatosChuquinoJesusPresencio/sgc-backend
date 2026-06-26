@@ -42,7 +42,7 @@ public class GestionarPropietarioDashboardService implements GestionarPropietari
         if (aptos.isEmpty()) {
             return new PropietarioDashboardResult(null, null, null, null, 0, 0, 0);
         }
-        var apto = aptos.get(0);
+        var apto = aptos.get();
         var condominio = condominioRepository.buscarPorId(usuario.getIdCondominio()).orElse(null);
 
         String torreNombre = null;

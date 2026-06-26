@@ -74,7 +74,7 @@ public interface UsuarioJpaRepository extends JpaRepository<UsuarioEntity, Long>
     @Query("SELECT COUNT(u) FROM UsuarioEntity u WHERE u.idCondominio = :idCondominio AND u.rol = :rol")
     long countByIdCondominioAndRol(@Param("idCondominio") Long idCondominio, @Param("rol") String rol);
 
-    @Query(value = "SELECT * FROM usuario u WHERE u.idCondominio = :idCondominio "
+    @Query(value = "SELECT * FROM usuario u WHERE u.condominio_id = :idCondominio "
          + "AND (cast(:search as text) IS NULL OR unaccent(LOWER(u.nombres)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%'))) "
          + "OR unaccent(LOWER(u.apellidos)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%'))) "
          + "OR unaccent(LOWER(u.correo)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%')))) "
@@ -88,7 +88,7 @@ public interface UsuarioJpaRepository extends JpaRepository<UsuarioEntity, Long>
                                             @Param("activo") Boolean activo,
                                             Pageable pageable);
 
-    @Query(value = "SELECT count(*) FROM usuario u WHERE u.idCondominio = :idCondominio "
+    @Query(value = "SELECT count(*) FROM usuario u WHERE u.condominio_id = :idCondominio "
          + "AND (cast(:search as text) IS NULL OR unaccent(LOWER(u.nombres)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%'))) "
          + "OR unaccent(LOWER(u.apellidos)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%'))) "
          + "OR unaccent(LOWER(u.correo)) LIKE unaccent(LOWER(CONCAT('%', cast(:search as text), '%')))) "

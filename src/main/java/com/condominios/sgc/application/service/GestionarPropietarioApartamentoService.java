@@ -41,9 +41,9 @@ public class GestionarPropietarioApartamentoService implements GestionarPropieta
     public PropietarioApartamentoDetailResult obtenerDetalle() {
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
-        var aptos = apartamentoRepository.buscarPorPropietario(usuario.getId());
-        if (aptos.isEmpty()) throw ApartamentoException.noEncontrado();
-        var apto = aptos.get(0);
+        var apt = apartamentoRepository.buscarPorPropietario(usuario.getId());
+        if (apt.isEmpty()) throw ApartamentoException.noEncontrado();
+        var apto = apt.get();
 
         var condominio = condominioRepository.buscarPorId(usuario.getIdCondominio()).orElse(null);
         String torreNombre = null;

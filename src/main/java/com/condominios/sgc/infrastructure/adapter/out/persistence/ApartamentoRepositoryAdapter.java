@@ -1,6 +1,5 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
@@ -37,11 +36,9 @@ public class ApartamentoRepositoryAdapter implements ApartamentoRepositoryPort {
 
     @Transactional(readOnly = true)
     @Override
-    public List<ApartamentoModel> buscarPorPropietario(Long idPropietario) {
+    public Optional<ApartamentoModel> buscarPorPropietario(Long idPropietario) {
         return repository.findByIdPropietario(idPropietario)
-                .stream()
-                .map(ApartamentoMapper::toModel)
-                .toList();
+                .map(ApartamentoMapper::toModel);
     }
 
     @Transactional(readOnly = true)

@@ -36,9 +36,9 @@ public class GestionarPropietarioInquilinosService implements GestionarPropietar
     private Long obtenerIdApartamento() {
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
-        var aptos = apartamentoRepository.buscarPorPropietario(usuario.getId());
-        if (aptos.isEmpty()) throw ApartamentoException.noEncontrado();
-        return aptos.get(0).getId();
+        var apt = apartamentoRepository.buscarPorPropietario(usuario.getId());
+        if (apt.isEmpty()) throw ApartamentoException.noEncontrado();
+        return apt.get().getId();
     }
 
     @Override

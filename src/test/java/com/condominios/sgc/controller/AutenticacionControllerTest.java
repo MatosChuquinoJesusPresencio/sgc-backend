@@ -1,7 +1,9 @@
 package com.condominios.sgc.controller;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import com.condominios.sgc.config.ControllerTestBase;
+import com.condominios.sgc.config.JwtTestUtil;
 
 class AutenticacionControllerTest extends ControllerTestBase {
 
@@ -216,5 +219,64 @@ class AutenticacionControllerTest extends ControllerTestBase {
                                 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.usuario.rol").value("AGENTE_SEGURIDAD"));
+    }
+
+    @Test
+    void logout_withValidToken_returns200AndClearsCookies() throws Exception {
+        var token = JwtTestUtil.accessToken(1L, "super@test.com", "SUPER_ADMINISTRADOR");
+        mockMvc.perform(post("/api/auth/logout")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(cookie().maxAge("access_token", 0))
+                .andExpect(cookie().maxAge("refresh_token", 0));
+    }
+
+    @Test
+    void logout_withoutToken_returns401() throws Exception {
+        mockMvc.perform(post("/api/auth/logout"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void me_withValidToken_returnsCurrentUser() throws Exception {
+        var token = JwtTestUtil.accessToken(1L, "super@test.com", "SUPER_ADMINISTRADOR");
+        mockMvc.perform(get("/api/auth/me")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.correo").value("super@test.com"))
+                .andExpect(jsonPath("$.rol").value("SUPER_ADMINISTRADOR"));
+    }
+
+    @Test
+    void me_withoutToken_returns401() throws Exception {
+        mockMvc.perform(get("/api/auth/me"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void changePassword_withoutToken_returns401() throws Exception {
+        mockMvc.perform(put("/api/auth/change-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "contrasenaActual": "123456",
+                                    "nuevaContrasena": "NewPassword1"
+                                }
+                                """))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void email_withoutToken_returns401() throws Exception {
+        mockMvc.perform(put("/api/auth/email")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "nuevoCorreo": "nuevo@test.com",
+                                    "contrasena": "123456"
+                                }
+                                """))
+                .andExpect(status().isUnauthorized());
     }
 }

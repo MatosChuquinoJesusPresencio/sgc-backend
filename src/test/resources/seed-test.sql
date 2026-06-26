@@ -1,6 +1,9 @@
 -- Seed data for controller tests
 -- Password "123456" BCrypt hash
 
+-- Register unaccent alias for H2 (pass-through, test data has no accents)
+CREATE ALIAS IF NOT EXISTS unaccent AS 'String unaccent(String s) { return s; }';
+
 SET REFERENTIAL_INTEGRITY FALSE;
 TRUNCATE TABLE log_prestamo_carrito;
 TRUNCATE TABLE log_acceso_vehicular;
