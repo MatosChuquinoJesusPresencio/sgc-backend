@@ -1,6 +1,6 @@
 package com.condominios.sgc.application.dto.result;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public record CondominioSimpleResult(
     Long id,
@@ -9,6 +9,6 @@ public record CondominioSimpleResult(
     String nombrePais,
     String nombreCiudad,
     String nombreAdministrador,
-    LocalDateTime fechaCreacion
+    Instant fechaCreacion
 ) {
 }

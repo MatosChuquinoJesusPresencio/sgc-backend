@@ -27,8 +27,11 @@ import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.RegistrarPr
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.RegistrarSalidaVehiculoRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityActiveCartLoanResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityDashboardResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityParkingSlotResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityVehicleVerificationResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.mapper.SeguridadMapper;
+import java.util.List;
+
 import jakarta.validation.Valid;
 
 @RestController
@@ -68,7 +71,7 @@ public class SecurityController {
     }
 
     @GetMapping("/parking-slots")
-    public ResponseEntity<?> listarSlots() {
+    public ResponseEntity<List<SecurityParkingSlotResponse>> listarSlots() {
         var resultados = estacionamientosUseCase.listarSlots();
         return ResponseEntity.ok(mapper.toParkingSlotResponses(resultados));
     }
@@ -80,7 +83,7 @@ public class SecurityController {
     }
 
     @GetMapping("/asset-loans/active-carts")
-    public ResponseEntity<?> listarPrestamosActivos() {
+    public ResponseEntity<List<SecurityActiveCartLoanResponse>> listarPrestamosActivos() {
         var resultados = prestamosUseCase.listarActivos();
         return ResponseEntity.ok(mapper.toActiveCartLoanResponses(resultados));
     }

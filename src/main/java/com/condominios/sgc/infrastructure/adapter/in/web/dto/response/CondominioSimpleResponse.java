@@ -1,6 +1,6 @@
 package com.condominios.sgc.infrastructure.adapter.in.web.dto.response;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public record CondominioSimpleResponse(
     Long id,
@@ -9,6 +9,6 @@ public record CondominioSimpleResponse(
     String nombrePais,
     String nombreCiudad,
     String nombreAdministrador,
-    LocalDateTime fechaCreacion
+    Instant fechaCreacion
 ) {
 }

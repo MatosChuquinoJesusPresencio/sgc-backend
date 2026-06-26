@@ -1,7 +1,6 @@
 package com.condominios.sgc.application.service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+
 import java.util.List;
 
 import com.condominios.sgc.application.dto.command.ActualizarAdministradorCommand;
@@ -152,12 +151,9 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
                     .map(p -> p.nombre()).orElse(null);
                 String nombreCiudad = ciudadRepositoryPort.buscarPorId(c.getIdCiudad())
                     .map(cd -> cd.nombre()).orElse(null);
-                LocalDateTime fecha = c.getFechaCreacion() != null
-                    ? LocalDateTime.ofInstant(c.getFechaCreacion(), ZoneId.systemDefault())
-                    : null;
                 return new CondominioSimpleResult(
                     c.getId(), c.getNombre(), c.getDireccion(),
-                    nombrePais, nombreCiudad, null, fecha
+                    nombrePais, nombreCiudad, null, c.getFechaCreacion()
                 );
             })
             .toList();

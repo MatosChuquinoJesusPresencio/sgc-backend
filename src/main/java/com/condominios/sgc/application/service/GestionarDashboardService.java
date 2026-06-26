@@ -1,7 +1,5 @@
 package com.condominios.sgc.application.service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 import com.condominios.sgc.application.dto.result.AdministradorResult;
@@ -78,12 +76,9 @@ public class GestionarDashboardService implements GestionarDashboardUseCase {
                     .map(cd -> cd.nombre()).orElse(null);
                 String nombreAdmin = usuarioRepository.buscarPorCondominioId(c.getId())
                     .map(u -> u.getNombres() + " " + u.getApellidos()).orElse(null);
-                LocalDateTime fecha = c.getFechaCreacion() != null
-                    ? LocalDateTime.ofInstant(c.getFechaCreacion(), ZoneId.systemDefault())
-                    : null;
                 return new CondominioSimpleResult(
                     c.getId(), c.getNombre(), c.getDireccion(),
-                    nombrePais, nombreCiudad, nombreAdmin, fecha
+                    nombrePais, nombreCiudad, nombreAdmin, c.getFechaCreacion()
                 );
             })
             .toList();

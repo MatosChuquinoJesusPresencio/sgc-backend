@@ -26,8 +26,11 @@ import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.CrearPropie
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioApartamentoDetailResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioInquilinoResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioVehiculoResponse;
+import com.condominios.sgc.application.dto.result.PropietarioDashboardResult;
 import com.condominios.sgc.infrastructure.adapter.in.web.mapper.AdminCondominioMapper;
 import com.condominios.sgc.infrastructure.adapter.in.web.mapper.PropietarioMapper;
+
+import java.util.List;
 
 import jakarta.validation.Valid;
 
@@ -62,7 +65,7 @@ public class PropietarioController {
     }
 
     @GetMapping("/dashboard/summary")
-    public ResponseEntity<?> obtenerResumen() {
+    public ResponseEntity<PropietarioDashboardResult> obtenerResumen() {
         var resultado = dashboardUseCase.obtenerResumen();
         return ResponseEntity.ok(resultado);
     }
@@ -74,7 +77,7 @@ public class PropietarioController {
     }
 
     @GetMapping("/tenants")
-    public ResponseEntity<?> listarInquilinos() {
+    public ResponseEntity<List<PropietarioInquilinoResponse>> listarInquilinos() {
         var resultados = inquilinosUseCase.listar();
         return ResponseEntity.ok(mapper.toInquilinoResponses(resultados));
     }
@@ -96,7 +99,7 @@ public class PropietarioController {
     }
 
     @GetMapping("/vehicles")
-    public ResponseEntity<?> listarVehiculos() {
+    public ResponseEntity<List<PropietarioVehiculoResponse>> listarVehiculos() {
         var resultados = vehiculosUseCase.listar();
         return ResponseEntity.ok(mapper.toVehiculoResponses(resultados));
     }

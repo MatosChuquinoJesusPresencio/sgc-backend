@@ -41,6 +41,9 @@ import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminApart
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminAssetResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminLogEntryResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminUserResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminCondominioInfoResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminDashboardMetricsResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminStructureResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PaginaResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.mapper.AdminCondominioMapper;
 
@@ -80,19 +83,19 @@ public class AdminCondominioController {
     }
 
     @GetMapping("/dashboard/metrics")
-    public ResponseEntity<?> obtenerMetricas() {
+    public ResponseEntity<AdminDashboardMetricsResponse> obtenerMetricas() {
         var resultado = gestionarAdminDashboard.obtenerMetricas();
         return ResponseEntity.ok(mapper.toDashboardMetricsResponse(resultado));
     }
 
     @GetMapping("/condominium/my-info")
-    public ResponseEntity<?> obtenerMiCondominio() {
+    public ResponseEntity<AdminCondominioInfoResponse> obtenerMiCondominio() {
         var resultado = gestionarAdminCondominio.obtenerMiCondominio();
         return ResponseEntity.ok(mapper.toCondominioInfoResponse(resultado));
     }
 
     @PutMapping("/condominium/my-info")
-    public ResponseEntity<?> actualizarMiCondominio(
+    public ResponseEntity<AdminCondominioInfoResponse> actualizarMiCondominio(
             @Valid @RequestBody ActualizarMiCondominioRequest request) {
         var cmd = new ActualizarMiCondominioCommand(request.nombre(), request.direccion());
         var resultado = gestionarAdminCondominio.actualizarMiCondominio(cmd);
@@ -100,7 +103,7 @@ public class AdminCondominioController {
     }
 
     @GetMapping("/structure")
-    public ResponseEntity<?> obtenerEstructura() {
+    public ResponseEntity<AdminStructureResponse> obtenerEstructura() {
         var resultado = gestionarAdminEstructura.obtenerEstructura();
         return ResponseEntity.ok(mapper.toStructureResponse(resultado));
     }
@@ -124,7 +127,7 @@ public class AdminCondominioController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<?> listarUsuarios(
+    public ResponseEntity<PaginaResponse<AdminUserResponse>> listarUsuarios(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String rol,
             @RequestParam(required = false) Boolean activo,
