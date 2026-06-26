@@ -129,7 +129,7 @@ public class AutenticacionController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/email")
-    public ResponseEntity<Void> email(
+    public ResponseEntity<Void> actualizarCorreo(
             @Valid @RequestBody ActualizarCorreoRequest request) {
         actualizarCorreo.actualizarCorreo(request.nuevoCorreo(), request.contrasena());
         return ResponseEntity.ok().build();

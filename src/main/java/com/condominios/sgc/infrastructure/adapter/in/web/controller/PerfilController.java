@@ -18,6 +18,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/profile")
+@PreAuthorize("isAuthenticated()")
 public class PerfilController {
 
     private final ObtenerPerfilUseCase obtenerPerfil;
@@ -32,14 +33,12 @@ public class PerfilController {
         this.mapper = mapper;
     }
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<PerfilResponse> obtenerPerfil() {
         var resultado = obtenerPerfil.obtenerPerfil();
         return ResponseEntity.ok(mapper.toPerfilResponse(resultado));
     }
 
-    @PreAuthorize("isAuthenticated()")
     @PutMapping
     public ResponseEntity<Void> actualizarPerfil(
             @Valid @RequestBody ActualizarPerfilRequest request) {
