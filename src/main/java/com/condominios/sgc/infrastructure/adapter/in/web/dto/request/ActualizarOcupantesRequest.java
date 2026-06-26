@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record ActualizarOcupantesRequest(
-    @NotNull @Valid List<InquilinoEntry> inquilinos
+    @NotNull  List<@Valid InquilinoEntry> inquilinos
 ) {
     public record InquilinoEntry(
         @NotBlank String nombres,
