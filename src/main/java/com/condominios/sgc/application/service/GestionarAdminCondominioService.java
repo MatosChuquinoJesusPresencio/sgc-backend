@@ -10,6 +10,7 @@ import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
+import org.springframework.transaction.annotation.Transactional;
 
 public class GestionarAdminCondominioService implements GestionarAdminCondominioUseCase {
 
@@ -45,6 +46,7 @@ public class GestionarAdminCondominioService implements GestionarAdminCondominio
         return toResult(condominio);
     }
 
+    @Transactional
     @Override
     public AdminCondominioInfoResult actualizarMiCondominio(ActualizarMiCondominioCommand cmd) {
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
