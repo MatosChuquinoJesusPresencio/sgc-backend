@@ -85,7 +85,7 @@ public class GestionarAdminLogsService implements GestionarAdminLogsUseCase {
             m.getId(), "VEHICULAR",
             m.getPlaca().valor(), m.getOcupante().name(), m.getDatosInquilino(),
             m.getMetodo().name(),
-            toString(m.getFechaEntrada()),
+            m.getFechaEntrada(),
             toString(m.getFechaSalida()),
             null, null, null, null, null, null,
             m.getIdCondominio());
