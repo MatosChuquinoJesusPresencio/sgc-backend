@@ -1,8 +1,10 @@
 package com.condominios.sgc.infrastructure.adapter.in.web.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
+
 public record RegistrarEntradaVehiculoRequest(
-    String placa,
-    String metodo,
+    @NotBlank String placa,
+    @NotBlank String metodo,
     String ocupante,
     String datosInquilino
 ) {

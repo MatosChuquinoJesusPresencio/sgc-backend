@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,7 +80,7 @@ public class CondominioRepositoryAdapter implements CondominioRepositoryPort {
 
     @Override
     public List<CondominioModel> buscarRecientes(int limite) {
-        var pageable = PageRequest.of(0, limite, Sort.by(Sort.Direction.DESC, CondominioEntity::getFechaCreacion));
+        var pageable = PageRequest.of(0, limite);
         return repository.buscarRecientes(pageable)
             .stream()
             .map(CondominioMapper::toModelLigero)

@@ -12,8 +12,6 @@ import com.condominios.sgc.application.port.out.CiudadRepositoryPort;
 import com.condominios.sgc.application.port.out.CondominioRepositoryPort;
 import com.condominios.sgc.application.port.out.PaisRepositoryPort;
 import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
-import com.condominios.sgc.domain.model.CiudadModel;
-import com.condominios.sgc.domain.model.PaisModel;
 
 public class GestionarDashboardService implements GestionarDashboardUseCase {
 
@@ -75,9 +73,9 @@ public class GestionarDashboardService implements GestionarDashboardUseCase {
             .stream()
             .map(c -> {
                 String nombrePais = paisRepositoryPort.buscarPorId(c.getIdPais())
-                    .map(PaisModel::nombre).orElse(null);
+                    .map(p -> p.nombre()).orElse(null);
                 String nombreCiudad = ciudadRepositoryPort.buscarPorId(c.getIdCiudad())
-                    .map(CiudadModel::nombre).orElse(null);
+                    .map(cd -> cd.nombre()).orElse(null);
                 String nombreAdmin = usuarioRepository.buscarPorCondominioId(c.getId())
                     .map(u -> u.getNombres() + " " + u.getApellidos()).orElse(null);
                 LocalDateTime fecha = c.getFechaCreacion() != null

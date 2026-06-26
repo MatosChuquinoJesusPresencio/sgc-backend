@@ -18,8 +18,6 @@ import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.service.CorreoServicePort;
 import com.condominios.sgc.application.port.out.service.HashServicePort;
 import com.condominios.sgc.application.port.out.service.SecurityServicePort;
-import com.condominios.sgc.domain.model.CiudadModel;
-import com.condominios.sgc.domain.model.PaisModel;
 import com.condominios.sgc.domain.model.UsuarioModel;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
@@ -144,9 +142,9 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
             .stream()
             .map(c -> {
                 String nombrePais = paisRepositoryPort.buscarPorId(c.getIdPais())
-                    .map(PaisModel::nombre).orElse(null);
+                    .map(p -> p.nombre()).orElse(null);
                 String nombreCiudad = ciudadRepositoryPort.buscarPorId(c.getIdCiudad())
-                    .map(CiudadModel::nombre).orElse(null);
+                    .map(cd -> cd.nombre()).orElse(null);
                 LocalDateTime fecha = c.getFechaCreacion() != null
                     ? LocalDateTime.ofInstant(c.getFechaCreacion(), ZoneId.systemDefault())
                     : null;

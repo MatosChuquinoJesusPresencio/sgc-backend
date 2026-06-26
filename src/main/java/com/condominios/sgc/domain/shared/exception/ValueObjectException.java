@@ -17,6 +17,11 @@ public class ValueObjectException extends DominioException {
         return new ValueObjectException("teléfono no puede estar vacío");
     }
 
+    public static ValueObjectException telefonoInvalido() {
+        return new ValueObjectException(
+                "teléfono debe contener entre 7 y 15 dígitos y puede iniciar con '+'");
+    }
+
     public static ValueObjectException placaRequerida() {
         return new ValueObjectException("placa no puede estar vacía");
     }
