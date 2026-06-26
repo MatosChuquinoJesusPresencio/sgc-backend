@@ -55,6 +55,7 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
         return toResult(vehiculoRepository.guardar(modelo));
     }
 
+    @Transactional
     @Override
     public void eliminar(Long id) {
         var vehiculo = vehiculoRepository.buscarPorId(id)
