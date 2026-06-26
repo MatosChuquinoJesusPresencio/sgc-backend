@@ -11,7 +11,7 @@ public record AdminLogEntryResult(
     String datosInquilino,
     String metodo,
     Instant fechaEntrada,
-    String fechaSalida,
+    Instant fechaSalida,
     String solicitante,
     String nombreSolicitante,
     String dniSolicitante,
