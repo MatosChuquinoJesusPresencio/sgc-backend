@@ -72,7 +72,7 @@ public class GestionarPropietarioLogsService implements GestionarPropietarioLogs
             m.getPlaca().valor(), m.getOcupante().name(), m.getDatosInquilino(),
             m.getMetodo().name(),
             m.getFechaEntrada(),
-            m.getFechaSalida() != null ? m.getFechaSalida().toString() : null,
+            m.getFechaSalida(),
             null, null, null, null, null, null,
             m.getIdCondominio());
     }
