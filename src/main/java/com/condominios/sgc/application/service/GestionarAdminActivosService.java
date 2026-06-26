@@ -79,6 +79,7 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
         throw new IllegalArgumentException("Tipo de activo no válido: " + cmd.tipo());
     }
 
+    @Transactional
     @Override
     public AdminAssetResult actualizarStatus(Long id, ActualizarStatusAssetCommand cmd) {
         var condominioId = obtenerCondominioId();
