@@ -113,7 +113,7 @@ public class SuperAdminController {
     @PutMapping("/administrators/{id}/assign-condo")
     public ResponseEntity<Void> asignarCondominio(
             @PathVariable Long id,
-            @RequestBody AsignarCondominioRequest request) {
+            @Valid @RequestBody AsignarCondominioRequest request) {
         gestionarAdministrador.asignarCondominio(id, request.idCondominio());
         return ResponseEntity.ok().build();
     }

@@ -29,6 +29,7 @@ import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityAc
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityDashboardResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityVehicleVerificationResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.mapper.SeguridadMapper;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/security")
@@ -86,7 +87,7 @@ public class SecurityController {
 
     @PostMapping("/asset-loans")
     public ResponseEntity<SecurityActiveCartLoanResponse> registrarPrestamo(
-            @RequestBody RegistrarPrestamoCarritoRequest request) {
+            @Valid @RequestBody RegistrarPrestamoCarritoRequest request) {
         var cmd = new RegistrarPrestamoCarritoCommand(
             request.codigoCarrito(), request.numeroApartamento(),
             request.nombreSolicitante(), request.dniSolicitante());
@@ -102,7 +103,7 @@ public class SecurityController {
 
     @PostMapping("/access-logs/entry")
     public ResponseEntity<AdminLogEntryResponse> registrarEntrada(
-            @RequestBody RegistrarEntradaVehiculoRequest request) {
+            @Valid @RequestBody RegistrarEntradaVehiculoRequest request) {
         var cmd = new RegistrarEntradaVehiculoCommand(
             request.placa(),
             MetodoEntrada.valueOf(request.metodo()),
@@ -114,7 +115,7 @@ public class SecurityController {
 
     @PutMapping("/access-logs/exit")
     public ResponseEntity<AdminLogEntryResponse> registrarSalida(
-            @RequestBody RegistrarSalidaVehiculoRequest request) {
+            @Valid @RequestBody RegistrarSalidaVehiculoRequest request) {
         var cmd = new RegistrarSalidaVehiculoCommand(request.idLogAcceso());
         var resultado = accesoUseCase.registrarSalida(cmd);
         return ResponseEntity.ok(adminMapper.toLogEntryResponse(resultado));
