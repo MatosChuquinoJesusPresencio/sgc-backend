@@ -71,14 +71,14 @@ public class LogAccesoVehicularRepositoryAdapter implements LogAccesoVehicularRe
                         p.getOcupante(),
                         p.getDatosInquilino(),
                         p.getMetodo(),
-                        p.getFechaEntrada() != null ? p.getFechaEntrada().toString() : null,
-                        p.getFechaSalida() != null ? p.getFechaSalida().toString() : null,
+                        p.getFechaEntrada(),
+                        p.getFechaSalida(),
                         p.getSolicitante(),
                         p.getNombreSolicitante(),
                         p.getDniSolicitante(),
                         p.getPenalizacion(),
-                        p.getFechaPrestamo() != null ? p.getFechaPrestamo().toString() : null,
-                        p.getFechaDevolucion() != null ? p.getFechaDevolucion().toString() : null,
+                        p.getFechaPrestamo(),
+                        p.getFechaDevolucion(),
                         p.getCondominioId()
                 )
         );
