@@ -16,7 +16,7 @@ public record AdminLogEntryResult(
     String nombreSolicitante,
     String dniSolicitante,
     BigDecimal penalizacion,
-    String fechaPrestamo,
+    Instant fechaPrestamo,
     String fechaDevolucion,
     Long idCondominio
 ) {
