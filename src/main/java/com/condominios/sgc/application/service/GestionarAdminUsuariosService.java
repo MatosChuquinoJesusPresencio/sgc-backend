@@ -58,6 +58,7 @@ public class GestionarAdminUsuariosService implements GestionarAdminUsuariosUseC
         return toResult(usuarioRepository.guardar(usuario));
     }
 
+    @Transactional
     @Override
     public AdminUserResult actualizar(Long id, ActualizarAdminUserCommand cmd) {
         var condominioId = obtenerCondominioId();
