@@ -39,21 +39,21 @@ public interface LogAccesoVehicularJpaRepository extends JpaRepository<LogAcceso
     @Query(value = """
         SELECT 
             id,
-            'VEHICULO' AS tipoLog,
+            'VEHICULO' AS tipo_log,
             placa,
             ocupante,
-            datos_inquilino AS datosInquilino,
+            datos_inquilino,
             metodo,
-            fecha_entrada AS fechaEntrada,
-            fecha_salida AS fechaSalida,
+            fecha_entrada,
+            fecha_salida,
             NULL AS solicitante,
-            NULL AS nombreSolicitante,
-            NULL AS dniSolicitante,
+            NULL AS nombre_solicitante,
+            NULL AS dni_solicitante,
             NULL AS penalizacion,
-            NULL AS fechaPrestamo,
-            NULL AS fechaDevolucion,
-            condominio_id AS condominioId,
-            fecha_entrada AS fechaOrden
+            NULL AS fecha_prestamo,
+            NULL AS fecha_devolucion,
+            condominio_id,
+            fecha_entrada AS fecha_orden
         FROM log_acceso_vehicular
         WHERE condominio_id = :condominioId
         
@@ -61,25 +61,25 @@ public interface LogAccesoVehicularJpaRepository extends JpaRepository<LogAcceso
         
         SELECT 
             id,
-            'CARRITO' AS tipoLog,
+            'CARRITO' AS tipo_log,
             NULL AS placa,
             NULL AS ocupante,
-            NULL AS datosInquilino,
+            NULL AS datos_inquilino,
             NULL AS metodo,
-            NULL AS fechaEntrada,
-            NULL AS fechaSalida,
+            NULL AS fecha_entrada,
+            NULL AS fecha_salida,
             solicitante,
-            nombre_solicitante AS nombreSolicitante,
-            dni_solicitante AS dniSolicitante,
+            nombre_solicitante,
+            dni_solicitante,
             penalizacion,
-            fecha_prestamo AS fechaPrestamo,
-            fecha_devolucion AS fechaDevolucion,
-            condominio_id AS condominioId,
-            fecha_prestamo AS fechaOrden
+            fecha_prestamo,
+            fecha_devolucion,
+            condominio_id,
+            fecha_prestamo AS fecha_orden
         FROM log_prestamo_carrito
         WHERE condominio_id = :condominioId
         
-        ORDER BY fechaOrden DESC
+        ORDER BY fecha_orden DESC
     """, countQuery = """
         SELECT sum(total) FROM (
             SELECT count(id) as total FROM log_acceso_vehicular WHERE condominio_id = :condominioId
