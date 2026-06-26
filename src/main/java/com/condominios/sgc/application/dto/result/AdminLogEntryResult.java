@@ -1,6 +1,7 @@
 package com.condominios.sgc.application.dto.result;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 public record AdminLogEntryResult(
     Long id,
@@ -9,14 +10,14 @@ public record AdminLogEntryResult(
     String ocupante,
     String datosInquilino,
     String metodo,
-    String fechaEntrada,
-    String fechaSalida,
+    Instant fechaEntrada,
+    Instant fechaSalida,
     String solicitante,
     String nombreSolicitante,
     String dniSolicitante,
     BigDecimal penalizacion,
-    String fechaPrestamo,
-    String fechaDevolucion,
+    Instant fechaPrestamo,
+    Instant fechaDevolucion,
     Long idCondominio
 ) {
 }

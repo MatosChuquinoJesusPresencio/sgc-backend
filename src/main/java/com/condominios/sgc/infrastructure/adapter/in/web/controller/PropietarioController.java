@@ -119,13 +119,14 @@ public class PropietarioController {
 
     @GetMapping("/logs")
     public ResponseEntity<PaginaResponse<AdminLogEntryResponse>> listarLogs(
+            @RequestParam String type,
             @RequestParam(required = false) String fechaInicio,
             @RequestParam(required = false) String fechaFin,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         var inicio = fechaInicio != null ? java.time.Instant.parse(fechaInicio) : null;
         var fin = fechaFin != null ? java.time.Instant.parse(fechaFin) : null;
-        var resultado = logsUseCase.listar(inicio, fin, new PaginaQuery(page, size));
+        var resultado = logsUseCase.listar(type, inicio, fin, new PaginaQuery(page, size));
         return ResponseEntity.ok(adminMapper.toLogEntryPaginaResponse(resultado));
     }
 }

@@ -1,8 +1,6 @@
 package com.condominios.sgc.application.service;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import com.condominios.sgc.application.dto.query.PaginaQuery;
@@ -18,6 +16,9 @@ import com.condominios.sgc.domain.model.LogPrestamoCarritoModel;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional(readOnly = true)
 public class GestionarPropietarioLogsService implements GestionarPropietarioLogsUseCase {
 
     private final SecurityServicePort securityService;
@@ -37,32 +38,25 @@ public class GestionarPropietarioLogsService implements GestionarPropietarioLogs
     }
 
     @Override
-    public PaginaResult<AdminLogEntryResult> listar(Instant fechaInicio, Instant fechaFin, PaginaQuery pagina) {
+    public PaginaResult<AdminLogEntryResult> listar(String type, Instant fechaInicio, Instant fechaFin, PaginaQuery pagina) {
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
         var condominioId = usuario.getIdCondominio();
         if (condominioId == null) throw CondominioException.noEncontrado();
         var userId = usuario.getId();
 
-        var todo = new PaginaQuery(0, Integer.MAX_VALUE);
-        var vehicularPage = logAccesoRepository.buscarPorCondominio(
-            condominioId, userId, fechaInicio, fechaFin, todo);
-        var carritoPage = logCarritoRepository.buscarPorCondominio(
-            condominioId, userId, fechaInicio, fechaFin, todo);
+        if ("CARRITO".equalsIgnoreCase(type)) {
+            var result = logCarritoRepository.buscarPorCondominio(condominioId, userId, fechaInicio, fechaFin, pagina);
+            var items = result.items().stream().map(this::toResult).toList();
+            return new PaginaResult<>(items, result.total(), result.pagina(), result.tamano());
+        }
+        if ("VEHICULAR".equalsIgnoreCase(type)) {
+            var result = logAccesoRepository.buscarPorCondominio(condominioId, userId, fechaInicio, fechaFin, pagina);
+            var items = result.items().stream().map(this::toResult).toList();
+            return new PaginaResult<>(items, result.total(), result.pagina(), result.tamano());
+        }
 
-        var combined = new ArrayList<AdminLogEntryResult>();
-        combined.addAll(vehicularPage.items().stream().map(this::toResult).toList());
-        combined.addAll(carritoPage.items().stream().map(this::toResult).toList());
-
-        combined.sort(Comparator.<AdminLogEntryResult, String>comparing(
-            r -> r.fechaEntrada() != null ? r.fechaEntrada() : r.fechaPrestamo(),
-            Comparator.nullsLast(Comparator.reverseOrder())));
-
-        int total = combined.size();
-        int from = pagina.pagina() * pagina.tamano();
-        int to = Math.min(from + pagina.tamano(), total);
-        var items = from < total ? combined.subList(from, to) : List.<AdminLogEntryResult>of();
-        return new PaginaResult<>(items, total, pagina.pagina(), pagina.tamano());
+        return new PaginaResult<>(List.of(), 0, pagina.pagina(), pagina.tamano());
     }
 
     private AdminLogEntryResult toResult(LogAccesoVehicularModel m) {
@@ -70,8 +64,8 @@ public class GestionarPropietarioLogsService implements GestionarPropietarioLogs
             m.getId(), "VEHICULAR",
             m.getPlaca().valor(), m.getOcupante().name(), m.getDatosInquilino(),
             m.getMetodo().name(),
-            m.getFechaEntrada() != null ? m.getFechaEntrada().toString() : null,
-            m.getFechaSalida() != null ? m.getFechaSalida().toString() : null,
+            m.getFechaEntrada(),
+            m.getFechaSalida(),
             null, null, null, null, null, null,
             m.getIdCondominio());
     }
@@ -82,8 +76,8 @@ public class GestionarPropietarioLogsService implements GestionarPropietarioLogs
             null, null, null, null, null, null,
             m.getSolicitante().name(), m.getNombreSolicitante(), m.getDniSolicitante(),
             m.getPenalizacion(),
-            m.getFechaPrestamo() != null ? m.getFechaPrestamo().toString() : null,
-            m.getFechaDevolucion() != null ? m.getFechaDevolucion().toString() : null,
+            m.getFechaPrestamo(),
+            m.getFechaDevolucion(),
             m.getIdCondominio());
     }
 }

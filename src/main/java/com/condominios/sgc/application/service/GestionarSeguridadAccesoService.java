@@ -93,11 +93,14 @@ public class GestionarSeguridadAccesoService implements GestionarSeguridadAcceso
 
     private AdminLogEntryResult toResult(LogAccesoVehicularModel m) {
         return new AdminLogEntryResult(
-            m.getId(), "VEHICULAR",
-            m.getPlaca().valor(), m.getOcupante().name(), m.getDatosInquilino(),
+            m.getId(),
+            "VEHICULAR",
+            m.getPlaca().valor(),
+            m.getOcupante().name(),
+            m.getDatosInquilino(),
             m.getMetodo().name(),
-            m.getFechaEntrada() != null ? m.getFechaEntrada().toString() : null,
-            m.getFechaSalida() != null ? m.getFechaSalida().toString() : null,
+            m.getFechaEntrada() != null ? m.getFechaEntrada() : null,
+            m.getFechaSalida() != null ? m.getFechaSalida() : null,
             null, null, null, null, null, null,
             m.getIdCondominio());
     }

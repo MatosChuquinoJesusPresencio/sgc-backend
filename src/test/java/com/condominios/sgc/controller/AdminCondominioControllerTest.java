@@ -98,7 +98,7 @@ class AdminCondominioControllerTest extends ControllerTestBase {
     @Order(1)
     @Test
     void listarLogs_returns200() throws Exception {
-        mockMvc.perform(get("/api/admin/logs")
+        mockMvc.perform(get("/api/admin/logs?type=VEHICULAR")
                         .header("Authorization", "Bearer " + TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items").isArray());

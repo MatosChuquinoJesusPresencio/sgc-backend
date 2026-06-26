@@ -1,5 +1,7 @@
 package com.condominios.sgc.infrastructure.adapter.in.web.mapper;
 
+import java.time.Instant;
+
 import org.springframework.stereotype.Component;
 
 import com.condominios.sgc.application.dto.result.AdminApartamentoDetailResult;
@@ -124,10 +126,14 @@ public class AdminCondominioMapper {
         return new AdminLogEntryResponse(
             r.id(), r.tipo(),
             r.placa(), r.ocupante(), r.datosInquilino(), r.metodo(),
-            r.fechaEntrada(), r.fechaSalida(),
+            fmt(r.fechaEntrada()), fmt(r.fechaSalida()),
             r.solicitante(), r.nombreSolicitante(), r.dniSolicitante(),
-            r.penalizacion(), r.fechaPrestamo(), r.fechaDevolucion(),
+            r.penalizacion(), fmt(r.fechaPrestamo()), fmt(r.fechaDevolucion()),
             r.idCondominio());
+    }
+
+    private static String fmt(Instant i) {
+        return i != null ? i.toString() : null;
     }
 
     public PaginaResponse<AdminLogEntryResponse> toLogEntryPaginaResponse(PaginaResult<AdminLogEntryResult> pagina) {

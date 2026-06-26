@@ -215,7 +215,7 @@ public class AdminCondominioController {
 
     @GetMapping("/logs")
     public ResponseEntity<PaginaResponse<AdminLogEntryResponse>> listarLogs(
-            @RequestParam(required = false) String type,
+            @RequestParam String type,
             @RequestParam(required = false) Long userId,
             @RequestParam(required = false) String fechaInicio,
             @RequestParam(required = false) String fechaFin,

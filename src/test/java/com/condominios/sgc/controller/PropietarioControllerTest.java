@@ -59,7 +59,7 @@ class PropietarioControllerTest extends ControllerTestBase {
     @Order(1)
     @Test
     void listarLogs_returns200() throws Exception {
-        mockMvc.perform(get("/api/homeowner/logs")
+        mockMvc.perform(get("/api/homeowner/logs?type=VEHICULAR")
                         .header("Authorization", "Bearer " + TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items").isArray());

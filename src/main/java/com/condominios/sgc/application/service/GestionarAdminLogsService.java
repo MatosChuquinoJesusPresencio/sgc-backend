@@ -1,11 +1,6 @@
 package com.condominios.sgc.application.service;
 
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import com.condominios.sgc.application.dto.query.PaginaQuery;
@@ -21,9 +16,10 @@ import com.condominios.sgc.domain.model.LogPrestamoCarritoModel;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 
-public class GestionarAdminLogsService implements GestionarAdminLogsUseCase {
+import org.springframework.transaction.annotation.Transactional;
 
-    private static final DateTimeFormatter FMT = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+@Transactional(readOnly = true)
+public class GestionarAdminLogsService implements GestionarAdminLogsUseCase {
 
     private final SecurityServicePort securityService;
     private final UsuarioRepositoryPort usuarioRepository;
@@ -67,23 +63,7 @@ public class GestionarAdminLogsService implements GestionarAdminLogsUseCase {
             return new PaginaResult<>(items, result.total(), result.pagina(), result.tamano());
         }
 
-        var todo = new PaginaQuery(0, Integer.MAX_VALUE);
-        var vehicularPage = logAccesoRepository.buscarPorCondominio(condominioId, userId, fechaInicio, fechaFin, todo);
-        var carritoPage = logCarritoRepository.buscarPorCondominio(condominioId, userId, fechaInicio, fechaFin, todo);
-
-        var combined = new ArrayList<AdminLogEntryResult>();
-        combined.addAll(vehicularPage.items().stream().map(this::toResult).toList());
-        combined.addAll(carritoPage.items().stream().map(this::toResult).toList());
-
-        combined.sort(Comparator.<AdminLogEntryResult, String>comparing(
-            r -> r.fechaEntrada() != null ? r.fechaEntrada() : r.fechaPrestamo(),
-            Comparator.nullsLast(Comparator.reverseOrder())));
-
-        int total = combined.size();
-        int from = pagina.pagina() * pagina.tamano();
-        int to = Math.min(from + pagina.tamano(), total);
-        var items = from < total ? combined.subList(from, to) : List.<AdminLogEntryResult>of();
-        return new PaginaResult<>(items, total, pagina.pagina(), pagina.tamano());
+        return new PaginaResult<>(List.of(), 0, pagina.pagina(), pagina.tamano());
     }
 
     private AdminLogEntryResult toResult(LogAccesoVehicularModel m) {
@@ -91,8 +71,8 @@ public class GestionarAdminLogsService implements GestionarAdminLogsUseCase {
             m.getId(), "VEHICULAR",
             m.getPlaca().valor(), m.getOcupante().name(), m.getDatosInquilino(),
             m.getMetodo().name(),
-            toString(m.getFechaEntrada()),
-            toString(m.getFechaSalida()),
+            m.getFechaEntrada(),
+            m.getFechaSalida(),
             null, null, null, null, null, null,
             m.getIdCondominio());
     }
@@ -103,14 +83,8 @@ public class GestionarAdminLogsService implements GestionarAdminLogsUseCase {
             null, null, null, null, null, null,
             m.getSolicitante().name(), m.getNombreSolicitante(), m.getDniSolicitante(),
             m.getPenalizacion(),
-            toString(m.getFechaPrestamo()),
-            toString(m.getFechaDevolucion()),
+            m.getFechaPrestamo(),
+            m.getFechaDevolucion(),
             m.getIdCondominio());
-    }
-
-    private static String toString(Instant instant) {
-        return instant != null
-            ? ZonedDateTime.ofInstant(instant, ZoneId.systemDefault()).format(FMT)
-            : null;
     }
 }
