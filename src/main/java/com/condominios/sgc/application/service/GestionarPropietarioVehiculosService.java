@@ -12,6 +12,7 @@ import com.condominios.sgc.domain.model.VehiculoModel;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.shared.exception.VehiculoException;
 import com.condominios.sgc.domain.type.TipoVehiculo;
+import org.springframework.transaction.annotation.Transactional;
 
 public class GestionarPropietarioVehiculosService implements GestionarPropietarioVehiculosUseCase {
 
@@ -42,6 +43,7 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
             .toList();
     }
 
+    @Transactional
     @Override
     public PropietarioVehiculoResult crear(CrearPropietarioVehiculoCommand cmd) {
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
