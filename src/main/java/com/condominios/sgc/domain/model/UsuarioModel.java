@@ -1,120 +1,115 @@
 package com.condominios.sgc.domain.model;
 
+import com.condominios.sgc.domain.type.Rol;
+import com.condominios.sgc.domain.shared.exception.UsuarioException;
+import com.condominios.sgc.domain.shared.valueobject.Correo;
+import com.condominios.sgc.domain.shared.valueobject.NombreCompleto;
+import com.condominios.sgc.domain.shared.valueobject.Telefono;
+
 import static com.condominios.sgc.domain.util.ValidacionUtil.*;
 
-import com.condominios.sgc.domain.auxiliar.Rol;
-import com.condominios.sgc.domain.exception.UsuarioException;
+import java.time.Instant;
 
 public class UsuarioModel {
     private Long id;
-    private String nombres;
-    private String apellidos;
-    private String correo;
-    private String telefono;
+    private NombreCompleto nombreCompleto;
+    private Correo correo;
+    private Telefono telefono;
     private Rol rol;
     private Boolean activo;
-    private Long condominioId;
-    private String correoPendiente;
-    private Boolean correoVerificado;
     private String contrasena;
+    private Correo correoPendiente;
+    private Boolean correoVerificado;
+    private Long idCondominio;
+    private Instant fechaCreacion;
 
-    public UsuarioModel(
-        Long id,
-        String nombres,
-        String apellidos,
-        String correo,
-        String telefono,
-        Rol rol,
-        Boolean activo,
-        Long condominioId,
-        String correoPendiente,
-        Boolean correoVerificado, 
-        String contrasena
-    ) {
+    public UsuarioModel(Long id, NombreCompleto nombreCompleto, Correo correo,
+            Telefono telefono, Rol rol, Boolean activo, String contrasena,
+            Correo correoPendiente, Boolean correoVerificado, Long idCondominio,
+            Instant fechaCreacion) {
         this.id = id;
-        asignarDatos(nombres, apellidos, telefono, rol, condominioId);
-        this.correo = requerirCorreoElectronicoValido(correo, UsuarioException::correoInvalido);
-        this.activo = requerirNoNulo(activo, UsuarioException::activoObligatorio);
+        this.nombreCompleto = nombreCompleto;
+        this.correo = correo;
+        this.telefono = telefono;
+        this.rol = rol;
+        this.activo = activo;
+        this.contrasena = contrasena;
         this.correoPendiente = correoPendiente;
         this.correoVerificado = correoVerificado;
-        this.contrasena = requerirNoVacio(contrasena, UsuarioException::contrasenaObligatoria);
+        this.idCondominio = idCondominio;
+        this.fechaCreacion = fechaCreacion;
     }
 
-    public UsuarioModel(
-        String nombres,
-        String apellidos,
-        String correo,
-        String telefono,
-        Rol rol,
-        Long condominioId,
-        String contrasena
-    ) {
-        this(null, 
-            nombres,
-            apellidos,
-            correo, telefono,
-            rol, true, 
-            condominioId,
-            null,
-            true,
-            contrasena
-        );
+    public UsuarioModel(String nombres, String apellidos, String correo,
+            String telefono, Rol rol, String contrasena) {
+        this.id = null;
+        this.nombreCompleto = new NombreCompleto(nombres, apellidos);
+        this.correo = new Correo(correo);
+        this.telefono = new Telefono(telefono);
+        this.rol = noNulo(rol, UsuarioException::rolRequerido);
+        this.activo = true;
+        this.contrasena = requerido(contrasena, UsuarioException::contrasenaRequerida);
+        this.correoPendiente = null;
+        this.correoVerificado = true;
+        this.idCondominio = null;
+        this.fechaCreacion = Instant.now();
     }
 
     public Long getId() { return id; }
-    public String getNombres() { return nombres; }
-    public String getApellidos() { return apellidos; }
-    public String getCorreo() { return correo; }
-    public String getTelefono() { return telefono; }
+    public NombreCompleto getNombreCompleto() { return nombreCompleto; }
+    public String getNombres() { return nombreCompleto.nombres(); }
+    public String getApellidos() { return nombreCompleto.apellidos(); }
+    public Correo getCorreo() { return correo; }
+    public Telefono getTelefono() { return telefono; }
     public Rol getRol() { return rol; }
-    public Boolean isActivo() { return activo; }
-    public Long getCondominioId() { return condominioId; }
-    public String getCorreoPendiente() { return correoPendiente; }
-    public Boolean isCorreoVerificado() { return correoVerificado; }
+    public Boolean getActivo() { return activo; }
     public String getContrasena() { return contrasena; }
+    public Correo getCorreoPendiente() { return correoPendiente; }
+    public Boolean getCorreoVerificado() { return correoVerificado; }
+    public Long getIdCondominio() { return idCondominio; }
+    public Instant getFechaCreacion() { return fechaCreacion; }
 
     public void cambiarCorreo(String nuevoCorreo) {
-        this.correoPendiente = nuevoCorreo;
+        var nuevo = new Correo(nuevoCorreo);
+        distinto(this.correo, nuevo, UsuarioException::correoIgualAlActual);
+        this.correoPendiente = nuevo;
         this.correoVerificado = false;
     }
 
-    public void confirmarCambioCorreo() {
+    public void confirmarCorreo() {
+        noNulo(this.correoPendiente, UsuarioException::sinCorreoPendiente);
         this.correo = this.correoPendiente;
         this.correoPendiente = null;
         this.correoVerificado = true;
     }
 
-    public void actualizarContrasena(String nuevaContrasena) {
-        this.contrasena = nuevaContrasena;
+    public void actualizar(String nombres, String apellidos,
+            String telefono) {
+        this.nombreCompleto = new NombreCompleto(nombres, apellidos);
+        this.telefono = new Telefono(telefono);
     }
 
-    public void actualizar(
-        String nuevoNombres,
-        String nuevoApellidos,
-        String nuevoTelefono,
-        Rol nuevoRol,
-        Long condominioId
-    ) {
-        asignarDatos(nuevoNombres, nuevoApellidos, nuevoTelefono, nuevoRol, condominioId);
+    public void cambiarRol(Rol rol) {
+        this.rol = noNulo(rol, UsuarioException::rolRequerido);
     }
 
-    private void asignarDatos(String nombres, String apellidos, String telefono, Rol rol, Long condominioId) {
-        this.nombres = requerirNoVacio(nombres, UsuarioException::nombresObligatorios);
-        this.apellidos = requerirNoVacio(apellidos, UsuarioException::apellidosObligatorios);
-        this.telefono = requerirNoVacio(telefono, UsuarioException::telefonoObligatorio);
-        this.rol = requerirNoNulo(rol, UsuarioException::rolObligatorio);
-        this.condominioId = condominioId;
+    public void desactivar() {
+        this.activo = false;
     }
 
-    public void cambiarActivo(boolean nuevoActivo) {
-        this.activo = nuevoActivo;
+    public void activar() {
+        this.activo = true;
     }
 
-    public void asignarCondominio(Long condominioId) {
-        this.condominioId = requerirNoNulo(condominioId, UsuarioException::condominioIdObligatorio);
+    public void asignarCondominio(Long idCondominio) {
+        this.idCondominio = noNulo(idCondominio, UsuarioException::condominioRequerido);
     }
 
     public void desasignarCondominio() {
-        this.condominioId = null;
+        this.idCondominio = null;
+    }
+
+    public void cambiarContrasena(String contrasena) {
+        this.contrasena = requerido(contrasena, UsuarioException::contrasenaRequerida);
     }
 }

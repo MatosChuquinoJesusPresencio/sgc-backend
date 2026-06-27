@@ -1,9 +1,10 @@
 package com.condominios.sgc.domain.model;
 
+import com.condominios.sgc.domain.shared.exception.EstacionamientoException;
+
 import static com.condominios.sgc.domain.util.ValidacionUtil.*;
 
-import com.condominios.sgc.domain.auxiliar.TipoVehiculo;
-import com.condominios.sgc.domain.exception.EstacionamientoException;
+import com.condominios.sgc.domain.type.TipoVehiculo;
 
 public class EstacionamientoModel {
     private Long id;
@@ -12,41 +13,30 @@ public class EstacionamientoModel {
     private Integer capacidadMaxima;
     private Integer cantidadActual;
     private Boolean disponible;
-    private Long apartamentoId;
-    private Long condominioId;
+    private Long idApartamento;
+    private Long idCondominio;
 
-    public EstacionamientoModel(
-        Long id,
-        Integer numero,
-        TipoVehiculo tipoVehiculo,
-        Integer capacidadMaxima,
-        Integer cantidadActual,
-        Boolean disponible,
-        Long condominioId,
-        Long apartamentoId
-    ) {
-        this(numero, capacidadMaxima, cantidadActual, disponible, condominioId);
+    public EstacionamientoModel(Long id, Integer numero, TipoVehiculo tipoVehiculo, Integer capacidadMaxima,
+            Integer cantidadActual, Boolean disponible, Long idApartamento, Long idCondominio) {
         this.id = id;
-        this.apartamentoId = requerirNoNulo(apartamentoId, EstacionamientoException::apartamentoIdObligatorio);
-        this.tipoVehiculo = requerirNoNulo(tipoVehiculo, EstacionamientoException::tipoVehiculoInvalido);
+        this.numero = numero;
+        this.tipoVehiculo = tipoVehiculo;
+        this.capacidadMaxima = capacidadMaxima;
+        this.cantidadActual = cantidadActual;
+        this.disponible = disponible;
+        this.idApartamento = idApartamento;
+        this.idCondominio = idCondominio;
     }
 
-    public EstacionamientoModel(
-        Integer numero, 
-        Integer capacidadMaxima, 
-        Integer cantidadActual, 
-        Boolean disponible, 
-        Long condominioId
-    ) {
-        validarYAsignarDatos(numero, capacidadMaxima, cantidadActual, disponible, condominioId);
-    }
-
-    private void validarYAsignarDatos(Integer numero, Integer capacidadMaxima, Integer cantidadActual, Boolean disponible, Long condominioId) {
-        this.numero = requerirNoNulo(numero, EstacionamientoException::numeroObligatorio);
-        this.capacidadMaxima = requerirPositivo(capacidadMaxima, EstacionamientoException::capacidadMaximaInvalida);
-        this.cantidadActual = requerirPositivo(cantidadActual, EstacionamientoException::cantidadActualInvalida);
-        this.disponible = requerirNoNulo(disponible, EstacionamientoException::estadoDisponibleObligatorio);
-        this.condominioId = requerirNoNulo(condominioId, EstacionamientoException::condominioIdObligatorio);
+    public EstacionamientoModel(Integer numero, Long idCondominio) {
+        this.id = null;
+        this.numero = positivo(numero, EstacionamientoException::numeroRequerido);
+        this.tipoVehiculo = null;
+        this.capacidadMaxima = null;
+        this.cantidadActual = 0;
+        this.disponible = true;
+        this.idApartamento = null;
+        this.idCondominio = noNulo(idCondominio, EstacionamientoException::condominioRequerido);
     }
 
     public Long getId() { return id; }
@@ -54,36 +44,49 @@ public class EstacionamientoModel {
     public TipoVehiculo getTipoVehiculo() { return tipoVehiculo; }
     public Integer getCapacidadMaxima() { return capacidadMaxima; }
     public Integer getCantidadActual() { return cantidadActual; }
-    public Boolean isDisponible() { return disponible; }
-    public Long getApartamentoId() { return apartamentoId; }
-    public Long getCondominioId() { return condominioId; }
+    public Boolean getDisponible() { return disponible; }
+    public Long getIdApartamento() { return idApartamento; }
+    public Long getIdCondominio() { return idCondominio; }
 
     public void configurar(TipoVehiculo tipoVehiculo, Integer capacidadMaxima) {
-        this.tipoVehiculo = requerirNoNulo(tipoVehiculo, EstacionamientoException::tipoVehiculoInvalido);
-        this.capacidadMaxima = requerirPositivo(capacidadMaxima, EstacionamientoException::capacidadMaximaInvalida);
+        this.tipoVehiculo = noNulo(tipoVehiculo, EstacionamientoException::tipoVehiculoRequerido);
+        this.capacidadMaxima = positivo(capacidadMaxima, EstacionamientoException::capacidadRequerida);
     }
 
-    public void asignarAApartamento(Long apartamentoId) {
-        this.apartamentoId = requerirNoNulo(apartamentoId, EstacionamientoException::apartamentoIdObligatorio);
+    public void reiniciar() {
+        this.tipoVehiculo = null;
+        this.capacidadMaxima = null;
+    }
+
+    public void asignarApartamento(Long idApartamento) {
+        this.idApartamento = noNulo(idApartamento, EstacionamientoException::apartamentoRequerido);
+    }
+
+    public void desasignarApartamento() {
+        this.idApartamento = null;
     }
 
     public void incrementarOcupacion() {
+        if (!hayEspacio())
+            throw EstacionamientoException.sinEspacio();
         this.cantidadActual++;
-        if (capacidadMaxima != null && cantidadActual >= capacidadMaxima) {
+        if (this.capacidadMaxima != null && this.cantidadActual >= this.capacidadMaxima) {
             this.disponible = false;
         }
     }
 
     public void decrementarOcupacion() {
-        if (cantidadActual > 0) this.cantidadActual--;
-        this.disponible = true;
+        if (this.cantidadActual > 0) {
+            this.cantidadActual--;
+        }
+        this.disponible = this.capacidadMaxima == null || this.cantidadActual < this.capacidadMaxima;
     }
 
     public boolean hayEspacio() {
-        return capacidadMaxima == null || cantidadActual < capacidadMaxima;
+        return this.capacidadMaxima == null || this.cantidadActual < this.capacidadMaxima;
     }
 
-    public void actualizarDatos(Integer numero) {
-        validarYAsignarDatos(numero, this.capacidadMaxima, this.cantidadActual, this.disponible, this.condominioId);
+    public void actualizarNumero(Integer numero) {
+        this.numero = positivo(numero, EstacionamientoException::numeroRequerido);
     }
 }

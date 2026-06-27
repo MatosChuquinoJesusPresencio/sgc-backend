@@ -7,13 +7,18 @@ import org.springframework.security.oauth2.server.resource.web.DefaultBearerToke
 
 public class CookieBearerTokenResolver implements BearerTokenResolver {
 
+    private final String accessCookieName;
     private final DefaultBearerTokenResolver defaultResolver = new DefaultBearerTokenResolver();
+
+    public CookieBearerTokenResolver(String accessCookieName) {
+        this.accessCookieName = accessCookieName;
+    }
 
     @Override
     public String resolve(HttpServletRequest request) {
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
-                if ("access_token".equals(cookie.getName())) {
+                if (accessCookieName.equals(cookie.getName())) {
                     String value = cookie.getValue();
                     if (value != null && !value.isBlank()) {
                         return value;

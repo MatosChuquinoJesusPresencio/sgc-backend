@@ -1,57 +1,72 @@
 {"properties": [
   {
-    "name": "cors.allowed-origins",
-    "type": "java.lang.String",
-    "description": "Los origenes permitidos para CORS"
-  },
-  {
     "name": "app.base-url",
     "type": "java.lang.String",
-    "description": "La URL base de la aplicacion"
+    "description": "URL base del frontend, usada para construir enlaces en correos (verificacion, recuperacion de contrasena)"
   },
   {
-    "name": "spring.mail.from",
+    "name": "cors.allowed-origins",
     "type": "java.lang.String",
-    "description": "La direccion de correo electronico remitente"
+    "description": "Origenes permitidos para CORS. Formato: lista separada por comas"
   },
   {
     "name": "resend.api-key",
     "type": "java.lang.String",
-    "description": "La clave de la API de Resend"
+    "description": "API key del servicio Resend para envio de correos transaccionales"
   },
   {
     "name": "resend.from",
     "type": "java.lang.String",
-    "description": "La direccion de correo electronico remitente"
-  },
-  {
-    "name": "jwt.refresh-token-expiration",
-    "type": "java.lang.String",
-    "description": "La duracion de vida del token de refresco"
-  },
-  {
-    "name": "jwt.access-token-expiration",
-    "type": "java.lang.String",
-    "description": "La duracion de vida del token de acceso"
+    "description": "Direccion remitente para los correos enviados via Resend. Ej: SGC <no-reply@condominios.site>"
   },
   {
     "name": "jwt.secret",
     "type": "java.lang.String",
-    "description": "La clave secreta para la generacion de tokens JWT"
+    "description": "Clave secreta en Base64 para firmar y verificar tokens JWT (HS256)"
   },
   {
-    "name": "jwt.password-reset-token-expiration",
-    "type": "java.lang.String",
-    "description": "La duracion de vida del token de reseteo de contraseña"
+    "name": "jwt.access-token-expiration",
+    "type": "java.lang.Long",
+    "description": "Duracion del token de acceso en milisegundos. Default: 1800000 (30 min)"
   },
   {
-    "name": "jwt.email-verification-token-expiration",
-    "type": "java.lang.String",
-    "description": "La duracion de vida del token de verificacion de correo electronico"
+    "name": "jwt.refresh-token-expiration",
+    "type": "java.lang.Long",
+    "description": "Duracion del token de refresco en milisegundos. Default: 604800000 (7 dias)"
   },
   {
     "name": "jwt.remember-me-refresh-expiration",
+    "type": "java.lang.Long",
+    "description": "Duracion del token de refresco con Remember Me en milisegundos. Default: 2592000000 (30 dias)"
+  },
+  {
+    "name": "jwt.reset-password-token-expiration",
+    "type": "java.lang.Long",
+    "description": "Duracion del token para restablecer contrasena en milisegundos. Default: 900000 (15 min)"
+  },
+  {
+    "name": "jwt.verify-email-token-expiration",
+    "type": "java.lang.Long",
+    "description": "Duracion del token para verificar correo electronico en milisegundos. Default: 900000 (15 min)"
+  },
+  {
+    "name": "cookie.access-token-name",
     "type": "java.lang.String",
-    "description": "La duracion de vida de la cookie de refresco del recuerdame"
+    "description": "Nombre de la cookie donde se almacena el access token JWT. Default: access_token"
+  },
+  {
+    "name": "cookie.refresh-token-name",
+    "type": "java.lang.String",
+    "description": "Nombre de la cookie donde se almacena el refresh token JWT. Default: refresh_token"
+  },
+  {
+    "name": "cookie.path",
+    "type": "java.lang.String",
+    "description": "Path base de las cookies JWT. Default: /"
+  },
+  {
+    "name": "cookie.secure",
+    "type": "java.lang.Boolean",
+    "description": "Indica si las cookies JWT deben tener la flag Secure. Default: true"
   }
 ]}
