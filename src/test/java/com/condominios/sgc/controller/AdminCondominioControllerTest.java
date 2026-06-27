@@ -29,7 +29,8 @@ class AdminCondominioControllerTest extends ControllerTestBase {
         mockMvc.perform(get("/api/admin/condominium/my-info")
                         .header("Authorization", "Bearer " + TOKEN))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nombre").isString());
+                .andExpect(jsonPath("$.nombre").isString())
+                .andExpect(jsonPath("$.configuracion.maxAutos").isNumber());
     }
 
     @Order(1)
@@ -146,6 +147,68 @@ class AdminCondominioControllerTest extends ControllerTestBase {
                                 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nombre").value("Residencial Test"));
+    }
+
+    @Order(1)
+    @Test
+    void actualizarConfiguracion_returns200() throws Exception {
+        mockMvc.perform(put("/api/admin/condominium/configuracion")
+                        .header("Authorization", "Bearer " + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "maxAutos": 5,
+                                    "maxMotos": 3,
+                                    "penalizacionPorMin": 0.75,
+                                    "maxTiempoPrestamoMin": 60,
+                                    "maxEstacionamientos": 3,
+                                    "maxCarritos": 1,
+                                    "maxVehiculos": 4,
+                                    "maxInquilinos": 6
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.maxAutos").value(5))
+                .andExpect(jsonPath("$.maxMotos").value(3))
+                .andExpect(jsonPath("$.penalizacionPorMin").value(0.75))
+                .andExpect(jsonPath("$.maxTiempoPrestamoMin").value(60))
+                .andExpect(jsonPath("$.maxEstacionamientos").value(3))
+                .andExpect(jsonPath("$.maxCarritos").value(1))
+                .andExpect(jsonPath("$.maxVehiculos").value(4))
+                .andExpect(jsonPath("$.maxInquilinos").value(6));
+        // Restore defaults
+        mockMvc.perform(put("/api/admin/condominium/configuracion")
+                        .header("Authorization", "Bearer " + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "maxAutos": 2,
+                                    "maxMotos": 4,
+                                    "penalizacionPorMin": 1.0,
+                                    "maxTiempoPrestamoMin": 30,
+                                    "maxEstacionamientos": 2,
+                                    "maxCarritos": 2,
+                                    "maxVehiculos": 2,
+                                    "maxInquilinos": 2
+                                }
+                                """))
+                .andExpect(status().isOk());
+    }
+
+    @Order(1)
+    @Test
+    void obtenerConfiguracion_returns200() throws Exception {
+        mockMvc.perform(get("/api/admin/condominium/configuracion")
+                        .header("Authorization", "Bearer " + TOKEN))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.maxAutos").isNumber())
+                .andExpect(jsonPath("$.maxMotos").isNumber())
+                .andExpect(jsonPath("$.penalizacionPorMin").isNumber())
+                .andExpect(jsonPath("$.maxTiempoPrestamoMin").isNumber())
+                .andExpect(jsonPath("$.maxEstacionamientos").isNumber())
+                .andExpect(jsonPath("$.maxCarritos").isNumber())
+                .andExpect(jsonPath("$.maxVehiculos").isNumber())
+                .andExpect(jsonPath("$.maxInquilinos").isNumber());
     }
 
     @Order(2)

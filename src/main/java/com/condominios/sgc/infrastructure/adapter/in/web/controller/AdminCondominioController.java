@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.condominios.sgc.application.dto.command.ActualizarAdminUserCommand;
+import com.condominios.sgc.application.dto.command.ActualizarConfiguracionCommand;
 import com.condominios.sgc.application.dto.command.ActualizarMiCondominioCommand;
 import com.condominios.sgc.application.dto.command.ActualizarOcupantesCommand;
 import com.condominios.sgc.application.dto.command.ActualizarStatusAssetCommand;
@@ -31,6 +32,7 @@ import com.condominios.sgc.application.port.in.GestionarAdminLogsUseCase;
 import com.condominios.sgc.application.port.in.GestionarAdminUsuariosUseCase;
 import com.condominios.sgc.domain.type.TipoDocumento;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.ActualizarAdminUserRequest;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.ActualizarConfiguracionRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.ActualizarMiCondominioRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.ActualizarOcupantesRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.ActualizarStatusAssetRequest;
@@ -44,6 +46,7 @@ import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminAsset
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminLogEntryResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminUserResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminCondominioInfoResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminConfiguracionResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminDashboardMetricsResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminStructureResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PaginaResponse;
@@ -102,6 +105,23 @@ public class AdminCondominioController {
         var cmd = new ActualizarMiCondominioCommand(request.nombre(), request.direccion());
         var resultado = gestionarAdminCondominio.actualizarMiCondominio(cmd);
         return ResponseEntity.ok(mapper.toCondominioInfoResponse(resultado));
+    }
+
+    @GetMapping("/condominium/configuracion")
+    public ResponseEntity<AdminConfiguracionResponse> obtenerConfiguracion() {
+        var resultado = gestionarAdminCondominio.obtenerConfiguracion();
+        return ResponseEntity.ok(mapper.toConfiguracionResponse(resultado));
+    }
+
+    @PutMapping("/condominium/configuracion")
+    public ResponseEntity<AdminConfiguracionResponse> actualizarConfiguracion(
+            @Valid @RequestBody ActualizarConfiguracionRequest request) {
+        var cmd = new ActualizarConfiguracionCommand(
+            request.maxAutos(), request.maxMotos(), request.penalizacionPorMin(),
+            request.maxTiempoPrestamoMin(), request.maxEstacionamientos(),
+            request.maxCarritos(), request.maxVehiculos(), request.maxInquilinos());
+        var resultado = gestionarAdminCondominio.actualizarConfiguracion(cmd);
+        return ResponseEntity.ok(mapper.toConfiguracionResponse(resultado.configuracion()));
     }
 
     @GetMapping("/structure")

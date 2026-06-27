@@ -8,6 +8,7 @@ import com.condominios.sgc.application.dto.result.AdminApartamentoDetailResult;
 import com.condominios.sgc.application.dto.result.AdminApartamentoResult;
 import com.condominios.sgc.application.dto.result.AdminAssetResult;
 import com.condominios.sgc.application.dto.result.AdminCondominioInfoResult;
+import com.condominios.sgc.application.dto.result.AdminConfiguracionResult;
 import com.condominios.sgc.application.dto.result.AdminDashboardMetricsResult;
 import com.condominios.sgc.application.dto.result.AdminInquilinoResult;
 import com.condominios.sgc.application.dto.result.AdminLogEntryResult;
@@ -20,6 +21,7 @@ import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminApart
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminApartamentoResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminAssetResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminCondominioInfoResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminConfiguracionResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminDashboardMetricsResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminInquilinoResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminLogEntryResponse;
@@ -44,7 +46,12 @@ public class AdminCondominioMapper {
         return new AdminCondominioInfoResponse(
             r.id(), r.nombre(), r.idPais(), r.nombrePais(),
             r.idCiudad(), r.nombreCiudad(), r.direccion(),
-            r.activo(),
+            r.activo(), toConfiguracionResponse(r.configuracion())
+        );
+    }
+
+    public AdminConfiguracionResponse toConfiguracionResponse(AdminConfiguracionResult r) {
+        return new AdminConfiguracionResponse(
             r.maxAutos(), r.maxMotos(), r.penalizacionPorMin(),
             r.maxTiempoPrestamoMin(), r.maxEstacionamientos(),
             r.maxCarritos(), r.maxVehiculos(), r.maxInquilinos()
