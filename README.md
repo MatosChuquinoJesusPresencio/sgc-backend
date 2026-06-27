@@ -56,7 +56,7 @@ com.condominios.sgc/
     │   │   ├── controller/            Controladores Spring MVC
     │   │   ├── dto/request/           DTOs de petición
     │   │   ├── dto/response/          DTOs de respuesta
-    │   │   ├── handler/               (reservado para handlers)
+│   │               ├── handler/               GlobalExceptionHandler (400/401/403/409/500)
     │   │   └── mapper/                Mappers result → response
     │   └── out/persistence/           Adaptadores secundarios (JPA)
     │       ├── entity/                Entidades JPA
@@ -152,7 +152,7 @@ rol en el claim `rol`.
 | POST   | `/api/auth/refresh`                | Refrescar token de acceso         |
 | POST   | `/api/auth/forgot-password`        | Solicitar restablecimiento        |
 | POST   | `/api/auth/reset-password`         | Restablecer contraseña            |
-| POST   | `/api/auth/verify-email`           | Verificar correo electrónico      |
+| GET    | `/api/auth/verify-email?token=`    | Verificar correo electrónico      |
 | GET    | `/docs/swagger-ui.html`            | Swagger UI                        |
 | GET    | `/docs/api-docs`                   | OpenAPI spec                      |
 
@@ -179,7 +179,7 @@ rol en el claim `rol`.
 | PUT    | `/api/super-admin/administrators/{id}`                     | Actualizar administrador             |
 | PATCH  | `/api/super-admin/administrators/{id}`                     | Activar/desactivar administrador     |
 | DELETE | `/api/super-admin/administrators/{id}`                     | Eliminar administrador               |
-| PUT    | `/api/super-admin/administrators/{id}/assign-condo`        | Asignar condominio a administrador   |
+| PUT    | `/api/super-admin/administrators/{id}/assign-condo`        | Asignar, reasignar o desasignar condominio a admin |
 | GET    | `/api/super-admin/administrators/available`                | Admins sin condominio asignado       |
 | GET    | `/api/super-admin/condominiums`                            | Listar condominios                   |
 | POST   | `/api/super-admin/condominiums`                            | Crear condominio                     |
@@ -188,6 +188,7 @@ rol en el claim `rol`.
 | DELETE | `/api/super-admin/condominiums/{id}`                       | Eliminar condominio                  |
 | GET    | `/api/super-admin/condominiums/unassigned`                 | Condominios sin admin                |
 | GET    | `/api/super-admin/users`                                   | Listar todos los usuarios            |
+| PATCH  | `/api/super-admin/users/{id}/status`                       | Activar/desactivar cualquier usuario |
 | POST   | `/api/super-admin/users/{id}/invalidate-session`           | Invalidar sesión de usuario          |
 | PUT    | `/api/super-admin/users/{id}/force-password`               | Forzar cambio de contraseña          |
 | GET    | `/api/catalogs/countries`                                  | Listar países                        |
@@ -198,14 +199,17 @@ rol en el claim `rol`.
 | Método | Ruta                                           | Descripción                           |
 |--------|------------------------------------------------|---------------------------------------|
 | GET    | `/api/admin/dashboard/metrics`                 | Métricas del dashboard del condominio |
-| GET    | `/api/admin/condominium/my-info`               | Información del propio condominio     |
-| PUT    | `/api/admin/condominium/my-info`               | Actualizar info del condominio        |
+| GET    | `/api/admin/condominium/my-info`               | Información del propio condominio (con configuración anidada) |
+| PUT    | `/api/admin/condominium/my-info`               | Actualizar nombre y dirección          |
+| GET    | `/api/admin/condominium/configuracion`         | Ver configuración (límites y penalización) |
+| PUT    | `/api/admin/condominium/configuracion`         | Editar configuración                   |
 | GET    | `/api/admin/structure`                         | Estructura (torres, pisos, aptos)     |
 | POST   | `/api/admin/structure/nodes`                   | Crear nodo (torre/piso/apto)          |
 | DELETE | `/api/admin/structure/nodes/{id}`              | Eliminar nodo                         |
 | GET    | `/api/admin/users`                             | Usuarios del condominio               |
 | POST   | `/api/admin/users`                             | Crear usuario del condominio          |
 | PUT    | `/api/admin/users/{id}`                        | Actualizar usuario                    |
+| PATCH  | `/api/admin/users/{id}/status`                 | Activar/desactivar usuario             |
 | GET    | `/api/admin/apartments`                        | Listar apartamentos                   |
 | PUT    | `/api/admin/apartments/{id}/assign-owner`      | Asignar propietario a apartamento     |
 | PUT    | `/api/admin/apartments/{id}/occupants`         | Actualizar ocupantes                  |
@@ -364,9 +368,9 @@ com.condominios.sgc/
 └── infrastructure/
     ├── adapter/
     │   ├── in/web/
-    │   │   ├── controller/    8 controladores REST
-    │   │   ├── dto/request/   12 DTOs de petición
-    │   │   ├── dto/response/  14 DTOs de respuesta
+│   │   ├── controller/    8 controladores REST
+│   │   ├── dto/request/   15 DTOs de petición
+│   │   ├── dto/response/  15 DTOs de respuesta
     │   │   ├── handler/       (vacío, reservado)
     │   │   └── mapper/        4 mappers (SuperAdmin, AdminCondominio,
     │   │                       Propietario, Seguridad)

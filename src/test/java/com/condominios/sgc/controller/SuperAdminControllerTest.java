@@ -332,6 +332,13 @@ class SuperAdminControllerTest extends ControllerTestBase {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(assignBody))
                 .andExpect(status().isOk());
+
+        // Desasignar (mismo endpoint, sin idCondominio)
+        mockMvc.perform(put("/api/super-admin/administrators/" + adminId + "/assign-condo")
+                        .header("Authorization", "Bearer " + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isOk());
     }
 
     @Order(2)
