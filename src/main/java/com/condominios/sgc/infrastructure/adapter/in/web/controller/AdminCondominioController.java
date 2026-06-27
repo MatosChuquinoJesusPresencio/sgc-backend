@@ -5,6 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +38,7 @@ import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.AsignarProp
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.CrearAdminUserRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.CrearAssetRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.CrearNodeRequest;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.EstadoActivoRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminApartamentoDetailResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminAssetResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminLogEntryResponse;
@@ -155,6 +157,14 @@ public class AdminCondominioController {
             request.nombres(), request.apellidos(), request.telefono());
         var resultado = gestionarAdminUsuarios.actualizar(id, cmd);
         return ResponseEntity.ok(mapper.toUserResponse(resultado));
+    }
+
+    @PatchMapping("/users/{id}/status")
+    public ResponseEntity<Void> activarDesactivarUsuario(
+            @PathVariable Long id,
+            @Valid @RequestBody EstadoActivoRequest request) {
+        gestionarAdminUsuarios.activarDesactivar(id, request.activo());
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/apartments")

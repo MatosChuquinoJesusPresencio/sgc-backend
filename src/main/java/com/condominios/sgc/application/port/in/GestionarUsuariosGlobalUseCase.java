@@ -9,4 +9,5 @@ public interface GestionarUsuariosGlobalUseCase {
     PaginaResult<UsuarioGlobalResult> listar(String search, String rol, Boolean activo, PaginaQuery query);
     void invalidarSesion(Long id);
     void forzarCambioContrasena(Long id, ForzarCambioContrasenaCommand cmd);
+    void activarDesactivar(Long id, Boolean activo);
 }

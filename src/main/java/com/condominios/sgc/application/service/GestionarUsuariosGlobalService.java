@@ -68,4 +68,18 @@ public class GestionarUsuariosGlobalService implements GestionarUsuariosGlobalUs
         usuario.cambiarContrasena(hashService.hashear(cmd.nuevaContrasena()));
         usuarioRepository.guardar(usuario);
     }
+
+    @Override
+    @Transactional
+    public void activarDesactivar(Long id, Boolean activo) {
+        var usuario = usuarioRepository.buscarPorId(id)
+            .orElseThrow(UsuarioException::noEncontrado);
+        if (Boolean.TRUE.equals(activo)) {
+            usuario.activar();
+        } else {
+            usuario.desactivar();
+            usuario.desasignarCondominio();
+        }
+        usuarioRepository.guardar(usuario);
+    }
 }

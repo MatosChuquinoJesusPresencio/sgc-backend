@@ -3,6 +3,7 @@ package com.condominios.sgc.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -334,5 +335,48 @@ class AdminCondominioControllerTest extends ControllerTestBase {
                                 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").isNumber());
+    }
+
+    @Order(2)
+    @Test
+    void activarDesactivarUsuario_returns200() throws Exception {
+        mockMvc.perform(patch("/api/admin/users/3/status")
+                        .header("Authorization", "Bearer " + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"activo": false}
+                                """))
+                .andExpect(status().isOk());
+        mockMvc.perform(patch("/api/admin/users/3/status")
+                        .header("Authorization", "Bearer " + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"activo": true}
+                                """))
+                .andExpect(status().isOk());
+    }
+
+    @Order(2)
+    @Test
+    void activarDesactivarUsuario_unauthorized_returns401() throws Exception {
+        mockMvc.perform(patch("/api/admin/users/3/status")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"activo": false}
+                                """))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Order(2)
+    @Test
+    void activarDesactivarUsuario_forbidden_returns403() throws Exception {
+        var agentToken = JwtTestUtil.accessToken(4L, "agente@test.com", "AGENTE_SEGURIDAD");
+        mockMvc.perform(patch("/api/admin/users/3/status")
+                        .header("Authorization", "Bearer " + agentToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"activo": false}
+                                """))
+                .andExpect(status().isForbidden());
     }
 }

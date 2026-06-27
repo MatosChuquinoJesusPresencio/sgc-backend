@@ -216,4 +216,12 @@ public class SuperAdminController {
             new ForzarCambioContrasenaCommand(request.nuevaContrasena()));
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping("/users/{id}/status")
+    public ResponseEntity<Void> activarDesactivarUsuario(
+            @PathVariable Long id,
+            @Valid @RequestBody EstadoActivoRequest request) {
+        gestionarUsuariosGlobal.activarDesactivar(id, request.activo());
+        return ResponseEntity.ok().build();
+    }
 }

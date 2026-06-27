@@ -349,4 +349,47 @@ class SuperAdminControllerTest extends ControllerTestBase {
                         .header("Authorization", "Bearer " + TOKEN))
                 .andExpect(status().isBadRequest());
     }
+
+    @Order(2)
+    @Test
+    void activarDesactivarUsuario_returns200() throws Exception {
+        mockMvc.perform(patch("/api/super-admin/users/3/status")
+                        .header("Authorization", "Bearer " + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"activo": false}
+                                """))
+                .andExpect(status().isOk());
+        mockMvc.perform(patch("/api/super-admin/users/3/status")
+                        .header("Authorization", "Bearer " + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"activo": true}
+                                """))
+                .andExpect(status().isOk());
+    }
+
+    @Order(2)
+    @Test
+    void activarDesactivarUsuario_unauthorized_returns401() throws Exception {
+        mockMvc.perform(patch("/api/super-admin/users/3/status")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"activo": false}
+                                """))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Order(2)
+    @Test
+    void activarDesactivarUsuario_forbidden_returns403() throws Exception {
+        var adminToken = JwtTestUtil.accessToken(2L, "admin@test.com", "ADMINISTRADOR_CONDOMINIO");
+        mockMvc.perform(patch("/api/super-admin/users/3/status")
+                        .header("Authorization", "Bearer " + adminToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"activo": false}
+                                """))
+                .andExpect(status().isForbidden());
+    }
 }

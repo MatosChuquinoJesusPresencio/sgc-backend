@@ -14,6 +14,8 @@ import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.type.Rol;
 
+import org.springframework.transaction.annotation.Transactional;
+
 public class GestionarAdminUsuariosService implements GestionarAdminUsuariosUseCase {
 
     private final SecurityServicePort securityService;
@@ -74,6 +76,22 @@ public class GestionarAdminUsuariosService implements GestionarAdminUsuariosUseC
             throw CondominioException.noEncontrado();
         }
         return condominioId;
+    }
+
+    @Override
+    @Transactional
+    public void activarDesactivar(Long id, Boolean activo) {
+        var condominioId = obtenerCondominioId();
+        var usuario = usuarioRepository.buscarPorId(id)
+            .orElseThrow(UsuarioException::noEncontrado);
+        if (!condominioId.equals(usuario.getIdCondominio()))
+            throw UsuarioException.noEncontrado();
+        if (Boolean.TRUE.equals(activo)) {
+            usuario.activar();
+        } else {
+            usuario.desactivar();
+        }
+        usuarioRepository.guardar(usuario);
     }
 
     private AdminUserResult toResult(UsuarioModel u) {

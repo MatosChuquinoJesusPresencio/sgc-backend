@@ -10,4 +10,5 @@ public interface GestionarAdminUsuariosUseCase {
     PaginaResult<AdminUserResult> listar(String search, String rol, Boolean activo, PaginaQuery query);
     AdminUserResult crear(CrearAdminUserCommand cmd);
     AdminUserResult actualizar(Long id, ActualizarAdminUserCommand cmd);
+    void activarDesactivar(Long id, Boolean activo);
 }
