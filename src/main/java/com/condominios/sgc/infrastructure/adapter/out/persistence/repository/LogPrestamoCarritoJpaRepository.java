@@ -12,13 +12,17 @@ import org.springframework.data.repository.query.Param;
 
 public interface LogPrestamoCarritoJpaRepository extends JpaRepository<LogPrestamoCarritoEntity, Long> {
 
-    @Query("""
+    @Query(value = """
         SELECT l FROM LogPrestamoCarritoEntity l
         WHERE l.idCondominio = :cid
         AND (:userId IS NULL OR l.idPropietario = :userId OR l.idInquilino = :userId)
-        AND (:fechaInicio IS NULL OR l.fechaPrestamo >= :fechaInicio)
-        AND (:fechaFin IS NULL OR l.fechaPrestamo <= :fechaFin)
+        AND (l.fechaPrestamo >= COALESCE(:fechaInicio, l.fechaPrestamo))
+        AND (l.fechaPrestamo <= COALESCE(:fechaFin, l.fechaPrestamo))
         ORDER BY l.fechaPrestamo DESC
+        """,
+        countQuery = """
+        SELECT COUNT(l) FROM LogPrestamoCarritoEntity l
+        WHERE l.idCondominio = :cid
         """)
     Page<LogPrestamoCarritoEntity> findByFilters(
             @Param("cid") Long cid,

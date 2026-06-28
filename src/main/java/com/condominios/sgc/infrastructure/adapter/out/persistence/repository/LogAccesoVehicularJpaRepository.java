@@ -12,14 +12,18 @@ import org.springframework.data.repository.query.Param;
 
 public interface LogAccesoVehicularJpaRepository extends JpaRepository<LogAccesoVehicularEntity, Long> {
 
-    @Query("""
+    @Query(value = """
         SELECT l FROM LogAccesoVehicularEntity l
         WHERE l.idCondominio = :cid
         AND (:userId IS NULL OR l.idVehiculo IN
             (SELECT v.id FROM VehiculoEntity v WHERE v.idPropietario = :userId OR v.idInquilino = :userId))
-        AND (:fechaInicio IS NULL OR l.fechaEntrada >= :fechaInicio)
-        AND (:fechaFin IS NULL OR l.fechaEntrada <= :fechaFin)
+        AND (l.fechaEntrada >= COALESCE(:fechaInicio, l.fechaEntrada))
+        AND (l.fechaEntrada <= COALESCE(:fechaFin, l.fechaEntrada))
         ORDER BY l.fechaEntrada DESC
+        """,
+        countQuery = """
+        SELECT COUNT(l) FROM LogAccesoVehicularEntity l
+        WHERE l.idCondominio = :cid
         """)
     Page<LogAccesoVehicularEntity> findByFilters(
             @Param("cid") Long cid,
