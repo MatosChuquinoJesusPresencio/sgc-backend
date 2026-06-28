@@ -1,7 +1,7 @@
 # SGC — Sistema de Gestión de Condominios
 
 Backend REST API para la administración integral de condominios, edificios y
-conjuntos residenciales. Implementa cuatro roles con operaciones específicas:
+conjuntos residenciales. Implementa 4 roles con operaciones específicas:
 Super Administrador, Administrador de Condominio, Propietario y Agente de
 Seguridad.
 
