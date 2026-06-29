@@ -70,7 +70,7 @@ public class JwtUtil {
 
     public Jws<Claims> validateToken(String token) {
         if (token == null || token.isBlank())
-            throw new JwtException("Token vacio");
+            throw new JwtException("Token vacío");
 
         try {
             return Jwts.parser()
@@ -78,7 +78,7 @@ public class JwtUtil {
                 .build()
                 .parseSignedClaims(token);
         } catch (JwtException e) {
-            throw new JwtException("Token invalido");
+            throw new JwtException("Token inválido");
         }
     }
 

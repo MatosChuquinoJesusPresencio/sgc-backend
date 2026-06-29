@@ -6,7 +6,7 @@ public class ApartamentoException extends DominioException {
     }
 
     public static ApartamentoException numeroRequerido() {
-        return new ApartamentoException("numero debe ser positivo");
+        return new ApartamentoException("número debe ser positivo");
     }
 
     public static ApartamentoException metrajeRequerido() {

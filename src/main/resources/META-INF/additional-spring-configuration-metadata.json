@@ -2,22 +2,22 @@
   {
     "name": "app.base-url",
     "type": "java.lang.String",
-    "description": "URL base del frontend, usada para construir enlaces en correos (verificacion, recuperacion de contrasena)"
+    "description": "URL base del frontend, usada para construir enlaces en correos (verificación, recuperación de contraseña)"
   },
   {
     "name": "cors.allowed-origins",
     "type": "java.lang.String",
-    "description": "Origenes permitidos para CORS. Formato: lista separada por comas"
+    "description": "Orígenes permitidos para CORS. Formato: lista separada por comas"
   },
   {
     "name": "resend.api-key",
     "type": "java.lang.String",
-    "description": "API key del servicio Resend para envio de correos transaccionales"
+    "description": "API key del servicio Resend para envío de correos transaccionales"
   },
   {
     "name": "resend.from",
     "type": "java.lang.String",
-    "description": "Direccion remitente para los correos enviados via Resend. Ej: SGC <no-reply@condominios.site>"
+    "description": "Dirección remitente para los correos enviados via Resend. Ej: SGC <no-reply@condominios.site>"
   },
   {
     "name": "jwt.secret",
@@ -27,27 +27,27 @@
   {
     "name": "jwt.access-token-expiration",
     "type": "java.lang.Long",
-    "description": "Duracion del token de acceso en milisegundos. Default: 1800000 (30 min)"
+    "description": "Duración del token de acceso en milisegundos. Default: 1800000 (30 min)"
   },
   {
     "name": "jwt.refresh-token-expiration",
     "type": "java.lang.Long",
-    "description": "Duracion del token de refresco en milisegundos. Default: 604800000 (7 dias)"
+    "description": "Duración del token de refresco en milisegundos. Default: 604800000 (7 días)"
   },
   {
     "name": "jwt.remember-me-refresh-expiration",
     "type": "java.lang.Long",
-    "description": "Duracion del token de refresco con Remember Me en milisegundos. Default: 2592000000 (30 dias)"
+    "description": "Duración del token de refresco con Remember Me en milisegundos. Default: 2592000000 (30 días)"
   },
   {
     "name": "jwt.reset-password-token-expiration",
     "type": "java.lang.Long",
-    "description": "Duracion del token para restablecer contrasena en milisegundos. Default: 900000 (15 min)"
+    "description": "Duración del token para restablecer contraseña en milisegundos. Default: 900000 (15 min)"
   },
   {
     "name": "jwt.verify-email-token-expiration",
     "type": "java.lang.Long",
-    "description": "Duracion del token para verificar correo electronico en milisegundos. Default: 900000 (15 min)"
+    "description": "Duración del token para verificar correo electrónico en milisegundos. Default: 900000 (15 min)"
   },
   {
     "name": "cookie.access-token-name",

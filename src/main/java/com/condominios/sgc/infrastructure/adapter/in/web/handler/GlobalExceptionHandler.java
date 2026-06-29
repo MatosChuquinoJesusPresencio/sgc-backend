@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Map<String, Object>> handleAccessDenied(AccessDeniedException ex) {
-        return error(HttpStatus.FORBIDDEN, "no tienes permiso para realizar esta accion");
+        return error(HttpStatus.FORBIDDEN, "no tienes permiso para realizar esta acción");
     }
 
     @ExceptionHandler(ValueObjectException.class)
@@ -51,13 +51,13 @@ public class GlobalExceptionHandler {
         String mensaje = ex.getBindingResult().getFieldErrors().stream()
             .map(e -> e.getField() + ": " + e.getDefaultMessage())
             .reduce((a, b) -> a + "; " + b)
-            .orElse("error de validacion");
+            .orElse("error de validación");
         return error(HttpStatus.BAD_REQUEST, mensaje);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<Map<String, Object>> handleMissingParam(MissingServletRequestParameterException ex) {
-        return error(HttpStatus.BAD_REQUEST, "parametro requerido: " + ex.getParameterName());
+        return error(HttpStatus.BAD_REQUEST, "parámetro requerido: " + ex.getParameterName());
     }
 
     @ExceptionHandler(DominioException.class)

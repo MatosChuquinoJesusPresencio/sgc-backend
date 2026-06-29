@@ -42,7 +42,7 @@ public class VehiculoException extends DominioException {
     }
 
     public static VehiculoException limiteAlcanzado() {
-        return new VehiculoException("límite de vehiculos alcanzado");
+        return new VehiculoException("límite de vehículos alcanzado");
     }
 
     public static VehiculoException condominioRequerido() {

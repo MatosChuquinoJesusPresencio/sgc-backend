@@ -15,7 +15,7 @@ class SaludControllerTest extends ControllerTestBase {
     void inicio_returnsWelcomeMessage() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.mensaje", is("Bienvenido a la API del Sistema de Gestion de Condominios")));
+                .andExpect(jsonPath("$.mensaje", is("Bienvenido a la API del Sistema de Gestión de Condominios")));
     }
 
     @Test

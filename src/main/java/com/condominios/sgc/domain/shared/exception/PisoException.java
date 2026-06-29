@@ -6,7 +6,7 @@ public class PisoException extends DominioException {
     }
 
     public static PisoException numeroRequerido() {
-        return new PisoException("numero debe ser positivo");
+        return new PisoException("número debe ser positivo");
     }
 
     public static PisoException torreRequerida() {

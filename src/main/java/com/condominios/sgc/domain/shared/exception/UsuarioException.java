@@ -22,7 +22,7 @@ public class UsuarioException extends DominioException {
     }
 
     public static UsuarioException contrasenaRequerida() {
-        return new UsuarioException("contrasena no puede estar vacía");
+        return new UsuarioException("contraseña no puede estar vacía");
     }
 
     public static UsuarioException rolRequerido() {

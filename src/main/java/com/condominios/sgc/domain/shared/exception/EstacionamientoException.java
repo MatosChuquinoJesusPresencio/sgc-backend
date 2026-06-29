@@ -6,7 +6,7 @@ public class EstacionamientoException extends DominioException {
     }
 
     public static EstacionamientoException numeroRequerido() {
-        return new EstacionamientoException("numero debe ser un valor positivo");
+        return new EstacionamientoException("número debe ser un valor positivo");
     }
 
     public static EstacionamientoException tipoVehiculoRequerido() {

@@ -75,7 +75,7 @@ public class AppConfig {
                     .header("alg", header.getAlgorithm())
                     .build();
             } catch (JwtException e) {
-                throw new JwtException("Token invalido: " + e.getMessage());
+                throw new JwtException("Token inválido: " + e.getMessage());
             }
         };
     }

@@ -17,7 +17,7 @@ public class OpenApiConfig {
         return new OpenAPI()
             .info(new Info()
                 .title("SGC API")
-                .description("API del Sistema de Gestion de Condominios")
+                .description("API del Sistema de Gestión de Condominios")
                 .version("0.7.2"))
             .addSecurityItem(new SecurityRequirement().addList("bearer-jwt"))
             .components(new Components()

@@ -34,7 +34,7 @@ public class LogPrestamoCarritoException extends DominioException {
     }
 
     public static LogPrestamoCarritoException penalizacionRequerida() {
-        return new LogPrestamoCarritoException("penalizacion no puede ser nula");
+        return new LogPrestamoCarritoException("penalización no puede ser nula");
     }
 
     public static LogPrestamoCarritoException devolucionYaRegistrada() {
