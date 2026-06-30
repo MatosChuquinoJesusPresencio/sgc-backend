@@ -16,4 +16,8 @@ public class TorreException extends DominioException {
     public static TorreException noEncontrado() {
         return new TorreException("torre no encontrada");
     }
+
+    public static TorreException duplicada(String nombre) {
+        return new TorreException("Ya existe una torre con el nombre: " + nombre);
+    }
 }
