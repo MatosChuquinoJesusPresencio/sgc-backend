@@ -32,4 +32,8 @@ public final class TorreMapper {
         }
         return e;
     }
+
+    public static void applyToEntity(TorreModel m, TorreEntity e) {
+        e.setNombre(m.getNombre());
+    }
 }

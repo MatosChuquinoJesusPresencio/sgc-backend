@@ -2,6 +2,7 @@ package com.condominios.sgc.infrastructure.adapter.out.persistence;
 
 import com.condominios.sgc.application.port.out.TorreRepositoryPort;
 import com.condominios.sgc.domain.model.TorreModel;
+import com.condominios.sgc.domain.shared.exception.TorreException;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.TorreMapper;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.TorreJpaRepository;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,12 @@ public class TorreRepositoryAdapter implements TorreRepositoryPort {
 
     @Override
     public TorreModel guardar(TorreModel modelo) {
+        if (modelo.getId() != null) {
+            var entity = repository.findById(modelo.getId())
+                .orElseThrow(TorreException::noEncontrado);
+            TorreMapper.applyToEntity(modelo, entity);
+            return TorreMapper.toModel(repository.save(entity));
+        }
         return TorreMapper.toModel(repository.save(TorreMapper.toEntity(modelo)));
     }
 

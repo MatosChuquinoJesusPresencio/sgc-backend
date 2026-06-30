@@ -36,4 +36,15 @@ public final class ConfiguracionMapper {
         e.setMaxInquilinosPorApartamento(m.getMaxInquilinosPorApartamento());
         return e;
     }
+
+    public static void applyToEntity(ConfiguracionModel m, ConfiguracionEntity e) {
+        e.setMaxAutos(m.getMaxAutos());
+        e.setMaxMotos(m.getMaxMotos());
+        e.setPenalizacionPorMin(m.getPenalizacionPorMin());
+        e.setMaxTiempoPrestamoMin(m.getMaxTiempoPrestamoMin());
+        e.setMaxEstacionamientosPorApartamento(m.getMaxEstacionamientosPorApartamento());
+        e.setMaxCarritosPorApartamento(m.getMaxCarritosPorApartamento());
+        e.setMaxVehiculosPorPropietario(m.getMaxVehiculosPorPropietario());
+        e.setMaxInquilinosPorApartamento(m.getMaxInquilinosPorApartamento());
+    }
 }

@@ -2,6 +2,7 @@ package com.condominios.sgc.infrastructure.adapter.out.persistence;
 
 import com.condominios.sgc.application.port.out.PisoRepositoryPort;
 import com.condominios.sgc.domain.model.PisoModel;
+import com.condominios.sgc.domain.shared.exception.PisoException;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.PisoMapper;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.PisoJpaRepository;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,12 @@ public class PisoRepositoryAdapter implements PisoRepositoryPort {
 
     @Override
     public PisoModel guardar(PisoModel modelo) {
+        if (modelo.getId() != null) {
+            var entity = repository.findById(modelo.getId())
+                .orElseThrow(PisoException::noEncontrado);
+            PisoMapper.applyToEntity(modelo, entity);
+            return PisoMapper.toModel(repository.save(entity));
+        }
         return PisoMapper.toModel(repository.save(PisoMapper.toEntity(modelo)));
     }
 

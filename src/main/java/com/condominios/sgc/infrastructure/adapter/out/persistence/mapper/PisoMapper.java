@@ -32,4 +32,8 @@ public final class PisoMapper {
         }
         return e;
     }
+
+    public static void applyToEntity(PisoModel m, PisoEntity e) {
+        e.setNumero(m.getNumero());
+    }
 }

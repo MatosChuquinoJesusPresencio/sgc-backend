@@ -28,4 +28,11 @@ public final class ApartamentoMapper {
         e.setIdPropietario(m.getIdPropietario());
         return e;
     }
+
+    public static void applyToEntity(ApartamentoModel m, ApartamentoEntity e) {
+        e.setNumero(m.getNumero());
+        e.setDerechoEstacionamiento(m.getDerechoEstacionamiento());
+        e.setMetraje(m.getMetraje());
+        e.setIdPropietario(m.getIdPropietario());
+    }
 }

@@ -12,6 +12,7 @@ import com.condominios.sgc.application.dto.result.AdminInquilinoResult;
 import com.condominios.sgc.application.dto.result.PaginaResult;
 import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.domain.model.ApartamentoModel;
+import com.condominios.sgc.domain.shared.exception.ApartamentoException;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.mapper.ApartamentoMapper;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.ApartamentoJpaRepository;
 import com.condominios.sgc.infrastructure.adapter.out.persistence.repository.InquilinoJpaRepository;
@@ -39,6 +40,12 @@ public class ApartamentoRepositoryAdapter implements ApartamentoRepositoryPort {
 
     @Override
     public ApartamentoModel guardar(ApartamentoModel modelo) {
+        if (modelo.getId() != null) {
+            var entity = repository.findById(modelo.getId())
+                .orElseThrow(ApartamentoException::noEncontrado);
+            ApartamentoMapper.applyToEntity(modelo, entity);
+            return ApartamentoMapper.toModel(repository.save(entity));
+        }
         return ApartamentoMapper.toModel(repository.save(ApartamentoMapper.toEntity(modelo)));
     }
 
