@@ -38,6 +38,9 @@ public class PisoModel {
     }
 
     public ApartamentoModel agregarApartamento(Integer numero, BigDecimal metraje) {
+        if (apartamentos.stream().anyMatch(a -> a.getNumero().equals(numero))) {
+            throw ApartamentoException.duplicado(numero);
+        }
         var apartamento = new ApartamentoModel(numero, metraje);
         apartamentos.add(apartamento);
         return apartamento;
