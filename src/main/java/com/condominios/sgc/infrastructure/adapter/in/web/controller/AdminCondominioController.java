@@ -118,8 +118,8 @@ public class AdminCondominioController {
             @Valid @RequestBody ActualizarConfiguracionRequest request) {
         var cmd = new ActualizarConfiguracionCommand(
             request.maxAutos(), request.maxMotos(), request.penalizacionPorMin(),
-            request.maxTiempoPrestamoMin(), request.maxEstacionamientos(),
-            request.maxCarritos(), request.maxVehiculos(), request.maxInquilinos());
+            request.maxTiempoPrestamoMin(), request.maxEstacionamientosPorDepto(),
+            request.maxCarritosPorDepto(), request.maxVehiculosPorDepto(), request.maxInquilinosPorDepto());
         var resultado = gestionarAdminCondominio.actualizarConfiguracion(cmd);
         return ResponseEntity.ok(mapper.toConfiguracionResponse(resultado.configuracion()));
     }

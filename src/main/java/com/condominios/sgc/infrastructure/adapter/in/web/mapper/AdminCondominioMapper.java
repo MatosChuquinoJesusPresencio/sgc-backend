@@ -53,8 +53,8 @@ public class AdminCondominioMapper {
     public AdminConfiguracionResponse toConfiguracionResponse(AdminConfiguracionResult r) {
         return new AdminConfiguracionResponse(
             r.maxAutos(), r.maxMotos(), r.penalizacionPorMin(),
-            r.maxTiempoPrestamoMin(), r.maxEstacionamientos(),
-            r.maxCarritos(), r.maxVehiculos(), r.maxInquilinos()
+            r.maxTiempoPrestamoMin(), r.maxEstacionamientosPorDepto(),
+            r.maxCarritosPorDepto(), r.maxVehiculosPorDepto(), r.maxInquilinosPorDepto()
         );
     }
 

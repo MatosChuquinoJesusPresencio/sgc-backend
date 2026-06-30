@@ -92,8 +92,8 @@ public class GestionarAdminCondominioService implements GestionarAdminCondominio
             .orElseThrow(CondominioException::noEncontrado);
         condominio.getConfiguracion().actualizar(
             cmd.maxAutos(), cmd.maxMotos(), cmd.penalizacionPorMin(),
-            cmd.maxTiempoPrestamoMin(), cmd.maxEstacionamientos(),
-            cmd.maxCarritos(), cmd.maxVehiculos(), cmd.maxInquilinos()
+            cmd.maxTiempoPrestamoMin(), cmd.maxEstacionamientosPorDepto(),
+            cmd.maxCarritosPorDepto(), cmd.maxVehiculosPorDepto(), cmd.maxInquilinosPorDepto()
         );
         return toResult(condominioRepository.guardar(condominio));
     }
