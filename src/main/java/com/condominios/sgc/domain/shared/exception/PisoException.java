@@ -16,4 +16,8 @@ public class PisoException extends DominioException {
     public static PisoException noEncontrado() {
         return new PisoException("piso no encontrado");
     }
+
+    public static PisoException duplicado(Integer numero) {
+        return new PisoException("Ya existe el piso número " + numero + " en esta torre");
+    }
 }

@@ -161,10 +161,10 @@ class AdminCondominioControllerTest extends ControllerTestBase {
                                     "maxMotos": 3,
                                     "penalizacionPorMin": 0.75,
                                     "maxTiempoPrestamoMin": 60,
-                                    "maxEstacionamientos": 3,
-                                    "maxCarritos": 1,
-                                    "maxVehiculos": 4,
-                                    "maxInquilinos": 6
+                                    "maxEstacionamientosPorDepto": 3,
+                                    "maxCarritosPorDepto": 1,
+                                    "maxVehiculosPorDepto": 4,
+                                    "maxInquilinosPorDepto": 6
                                 }
                                 """))
                 .andExpect(status().isOk())
@@ -172,10 +172,10 @@ class AdminCondominioControllerTest extends ControllerTestBase {
                 .andExpect(jsonPath("$.maxMotos").value(3))
                 .andExpect(jsonPath("$.penalizacionPorMin").value(0.75))
                 .andExpect(jsonPath("$.maxTiempoPrestamoMin").value(60))
-                .andExpect(jsonPath("$.maxEstacionamientos").value(3))
-                .andExpect(jsonPath("$.maxCarritos").value(1))
-                .andExpect(jsonPath("$.maxVehiculos").value(4))
-                .andExpect(jsonPath("$.maxInquilinos").value(6));
+                .andExpect(jsonPath("$.maxEstacionamientosPorDepto").value(3))
+                .andExpect(jsonPath("$.maxCarritosPorDepto").value(1))
+                .andExpect(jsonPath("$.maxVehiculosPorDepto").value(4))
+                .andExpect(jsonPath("$.maxInquilinosPorDepto").value(6));
         // Restore defaults
         mockMvc.perform(put("/api/admin/condominium/configuracion")
                         .header("Authorization", "Bearer " + TOKEN)
@@ -186,10 +186,10 @@ class AdminCondominioControllerTest extends ControllerTestBase {
                                     "maxMotos": 4,
                                     "penalizacionPorMin": 1.0,
                                     "maxTiempoPrestamoMin": 30,
-                                    "maxEstacionamientos": 2,
-                                    "maxCarritos": 2,
-                                    "maxVehiculos": 2,
-                                    "maxInquilinos": 2
+                                    "maxEstacionamientosPorDepto": 2,
+                                    "maxCarritosPorDepto": 2,
+                                    "maxVehiculosPorDepto": 2,
+                                    "maxInquilinosPorDepto": 2
                                 }
                                 """))
                 .andExpect(status().isOk());
@@ -205,10 +205,10 @@ class AdminCondominioControllerTest extends ControllerTestBase {
                 .andExpect(jsonPath("$.maxMotos").isNumber())
                 .andExpect(jsonPath("$.penalizacionPorMin").isNumber())
                 .andExpect(jsonPath("$.maxTiempoPrestamoMin").isNumber())
-                .andExpect(jsonPath("$.maxEstacionamientos").isNumber())
-                .andExpect(jsonPath("$.maxCarritos").isNumber())
-                .andExpect(jsonPath("$.maxVehiculos").isNumber())
-                .andExpect(jsonPath("$.maxInquilinos").isNumber());
+                .andExpect(jsonPath("$.maxEstacionamientosPorDepto").isNumber())
+                .andExpect(jsonPath("$.maxCarritosPorDepto").isNumber())
+                .andExpect(jsonPath("$.maxVehiculosPorDepto").isNumber())
+                .andExpect(jsonPath("$.maxInquilinosPorDepto").isNumber());
     }
 
     @Order(2)

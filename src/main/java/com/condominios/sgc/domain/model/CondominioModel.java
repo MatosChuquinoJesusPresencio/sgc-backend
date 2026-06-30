@@ -79,6 +79,9 @@ public class CondominioModel {
     }
 
     public TorreModel agregarTorre(String nombre) {
+        if (torres.stream().anyMatch(t -> t.getNombre().equals(nombre))) {
+            throw TorreException.duplicada(nombre);
+        }
         var torre = new TorreModel(nombre);
         torres.add(torre);
         return torre;

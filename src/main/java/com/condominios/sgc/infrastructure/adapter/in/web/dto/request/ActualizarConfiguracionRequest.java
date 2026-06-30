@@ -10,9 +10,9 @@ public record ActualizarConfiguracionRequest(
     @NotNull @Positive Integer maxMotos,
     @NotNull @Positive BigDecimal penalizacionPorMin,
     @NotNull @Positive Integer maxTiempoPrestamoMin,
-    @NotNull @Positive Integer maxEstacionamientos,
-    @NotNull @Positive Integer maxCarritos,
-    @NotNull @Positive Integer maxVehiculos,
-    @NotNull @Positive Integer maxInquilinos
+    @NotNull @Positive Integer maxEstacionamientosPorDepto,
+    @NotNull @Positive Integer maxCarritosPorDepto,
+    @NotNull @Positive Integer maxVehiculosPorDepto,
+    @NotNull @Positive Integer maxInquilinosPorDepto
 ) {
 }

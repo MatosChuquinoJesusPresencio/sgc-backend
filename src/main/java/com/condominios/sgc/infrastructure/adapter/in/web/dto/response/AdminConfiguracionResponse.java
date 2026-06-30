@@ -7,9 +7,9 @@ public record AdminConfiguracionResponse(
     Integer maxMotos,
     BigDecimal penalizacionPorMin,
     Integer maxTiempoPrestamoMin,
-    Integer maxEstacionamientos,
-    Integer maxCarritos,
-    Integer maxVehiculos,
-    Integer maxInquilinos
+    Integer maxEstacionamientosPorDepto,
+    Integer maxCarritosPorDepto,
+    Integer maxVehiculosPorDepto,
+    Integer maxInquilinosPorDepto
 ) {
 }
