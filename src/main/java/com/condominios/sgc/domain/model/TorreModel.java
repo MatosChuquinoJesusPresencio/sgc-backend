@@ -38,6 +38,9 @@ public class TorreModel {
 
     public PisoModel agregarPiso(Integer numero) {
         positivo(numero, PisoException::numeroRequerido);
+        if (pisos.stream().anyMatch(p -> p.getNumero().equals(numero))) {
+            throw PisoException.duplicado(numero);
+        }
         var piso = new PisoModel(numero);
         pisos.add(piso);
         return piso;
