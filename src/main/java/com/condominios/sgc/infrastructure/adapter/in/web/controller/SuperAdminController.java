@@ -91,7 +91,7 @@ public class SuperAdminController {
             @PathVariable Long id,
             @Valid @RequestBody ActualizarAdministradorRequest request) {
         var cmd = new ActualizarAdministradorCommand(
-            request.nombres(), request.apellidos(), request.telefono());
+            request.nombres(), request.apellidos(), request.telefono(), request.rol());
         var resultado = gestionarAdministrador.actualizar(id, cmd);
         return ResponseEntity.ok(mapper.toAdministradorResponse(resultado));
     }

@@ -83,6 +83,9 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
         var usuario = usuarioRepository.buscarPorId(id)
             .orElseThrow(UsuarioException::noEncontrado);
         usuario.actualizar(cmd.nombres(), cmd.apellidos(), cmd.telefono());
+        if (cmd.rol() != null) {
+            usuario.cambiarRol(Rol.valueOf(cmd.rol()));
+        }
         return toResult(usuarioRepository.guardar(usuario));
     }
 

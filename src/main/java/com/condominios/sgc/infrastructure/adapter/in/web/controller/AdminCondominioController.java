@@ -176,7 +176,7 @@ public class AdminCondominioController {
             @PathVariable Long id,
             @Valid @RequestBody ActualizarAdminUserRequest request) {
         var cmd = new ActualizarAdminUserCommand(
-            request.nombres(), request.apellidos(), request.telefono());
+            request.nombres(), request.apellidos(), request.telefono(), request.rol());
         var resultado = gestionarAdminUsuarios.actualizar(id, cmd);
         return ResponseEntity.ok(mapper.toUserResponse(resultado));
     }

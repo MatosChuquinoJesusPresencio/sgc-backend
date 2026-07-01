@@ -65,6 +65,11 @@ public class GestionarAdminUsuariosService implements GestionarAdminUsuariosUseC
             throw UsuarioException.noEncontrado();
         }
         usuario.actualizar(cmd.nombres(), cmd.apellidos(), cmd.telefono());
+        if (cmd.rol() != null) {
+            var rolDestino = Rol.valueOf(cmd.rol());
+            Rol.ADMINISTRADOR_CONDOMINIO.validarPuedeAsignarRol(rolDestino);
+            usuario.cambiarRol(rolDestino);
+        }
         return toResult(usuarioRepository.guardar(usuario));
     }
 
