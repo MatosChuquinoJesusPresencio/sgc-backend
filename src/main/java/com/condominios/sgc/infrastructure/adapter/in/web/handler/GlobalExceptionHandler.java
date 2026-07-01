@@ -15,6 +15,7 @@ import com.condominios.sgc.domain.shared.exception.AutenticacionException;
 import com.condominios.sgc.domain.shared.exception.DominioException;
 import com.condominios.sgc.domain.shared.exception.TokenException;
 import com.condominios.sgc.domain.shared.exception.ValueObjectException;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
@@ -73,6 +74,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
     public ResponseEntity<Map<String, Object>> handleOptimisticLock(ObjectOptimisticLockingFailureException ex) {
         return error(HttpStatus.CONFLICT, "conflicto de concurrencia, intente nuevamente");
+    }
+
+    @ExceptionHandler(RequestNotPermitted.class)
+    public ResponseEntity<Map<String, Object>> handleRateLimit(RequestNotPermitted ex) {
+        return error(HttpStatus.TOO_MANY_REQUESTS, "demasiadas solicitudes, intente más tarde");
     }
 
     @ExceptionHandler(Exception.class)
