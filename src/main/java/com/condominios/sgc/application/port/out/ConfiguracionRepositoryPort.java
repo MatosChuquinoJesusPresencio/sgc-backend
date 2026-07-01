@@ -6,5 +6,6 @@ import com.condominios.sgc.domain.model.ConfiguracionModel;
 
 public interface ConfiguracionRepositoryPort {
     Optional<ConfiguracionModel> buscarPorId(Long id);
+    Optional<ConfiguracionModel> buscarPorCondominioId(Long idCondominio);
     ConfiguracionModel guardar(ConfiguracionModel modelo);
 }

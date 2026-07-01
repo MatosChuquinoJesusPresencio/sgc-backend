@@ -63,6 +63,12 @@ public class ApartamentoRepositoryAdapter implements ApartamentoRepositoryPort {
 
     @Transactional(readOnly = true)
     @Override
+    public boolean existePorIdYCondominio(Long id, Long idCondominio) {
+        return repository.existsByIdAndCondominioId(id, idCondominio);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public Optional<ApartamentoModel> buscarPorNumeroYCondominio(Integer numero, Long idCondominio) {
         return repository.findByNumeroAndCondominioId(numero, idCondominio)
                 .map(ApartamentoMapper::toModel);

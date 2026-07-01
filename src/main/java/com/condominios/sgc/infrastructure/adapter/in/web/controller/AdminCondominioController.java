@@ -18,6 +18,7 @@ import com.condominios.sgc.application.dto.command.ActualizarConfiguracionComman
 import com.condominios.sgc.application.dto.command.ActualizarMiCondominioCommand;
 import com.condominios.sgc.application.dto.command.ActualizarOcupantesCommand;
 import com.condominios.sgc.application.dto.command.ActualizarStatusAssetCommand;
+import com.condominios.sgc.application.dto.command.AsignarParkingCommand;
 import com.condominios.sgc.application.dto.command.AsignarPropietarioCommand;
 import com.condominios.sgc.application.dto.command.CrearAdminUserCommand;
 import com.condominios.sgc.application.dto.command.CrearAssetCommand;
@@ -36,6 +37,7 @@ import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.ActualizarC
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.ActualizarMiCondominioRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.ActualizarOcupantesRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.ActualizarStatusAssetRequest;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.AsignarParkingRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.AsignarPropietarioRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.CrearAdminUserRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.CrearAssetRequest;
@@ -232,6 +234,15 @@ public class AdminCondominioController {
             @Valid @RequestBody CrearAssetRequest request) {
         var cmd = new CrearAssetCommand(request.tipo(), request.codigo(), request.numero());
         var resultado = gestionarAdminActivos.crear(cmd);
+        return ResponseEntity.ok(mapper.toAssetResponse(resultado));
+    }
+
+    @PutMapping("/assets/{id}/assign-apartment")
+    public ResponseEntity<AdminAssetResponse> asignarApartamento(
+            @PathVariable Long id,
+            @Valid @RequestBody AsignarParkingRequest request) {
+        var resultado = gestionarAdminActivos.asignarApartamento(id,
+            new AsignarParkingCommand(request.idApartamento()));
         return ResponseEntity.ok(mapper.toAssetResponse(resultado));
     }
 

@@ -23,6 +23,11 @@ public class ConfiguracionRepositoryAdapter implements ConfiguracionRepositoryPo
     }
 
     @Override
+    public Optional<ConfiguracionModel> buscarPorCondominioId(Long idCondominio) {
+        return repository.findByCondominioId(idCondominio).map(ConfiguracionMapper::toModel);
+    }
+
+    @Override
     public ConfiguracionModel guardar(ConfiguracionModel modelo) {
         if (modelo.getId() != null) {
             var entity = repository.findById(modelo.getId())

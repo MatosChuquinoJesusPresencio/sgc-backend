@@ -8,4 +8,5 @@ import com.condominios.sgc.infrastructure.adapter.out.persistence.entity.Estacio
 
 public interface EstacionamientoJpaRepository extends JpaRepository<EstacionamientoEntity, Long> {
     Page<EstacionamientoEntity> findByIdCondominio(Long idCondominio, Pageable pageable);
+    long countByIdApartamento(Long idApartamento);
 }

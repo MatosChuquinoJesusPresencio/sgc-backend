@@ -12,6 +12,16 @@ public interface ApartamentoJpaRepository extends JpaRepository<ApartamentoEntit
     Optional<ApartamentoEntity> findByIdPropietario(Long idPropietario);
 
     @Query("""
+        SELECT COUNT(a) > 0 FROM ApartamentoEntity a
+        JOIN a.piso p
+        JOIN p.torre t
+        WHERE a.id = :id AND t.condominio.id = :condominioId
+        """)
+    boolean existsByIdAndCondominioId(
+            @Param("id") Long id,
+            @Param("condominioId") Long condominioId);
+
+    @Query("""
         SELECT a FROM ApartamentoEntity a
         JOIN a.piso p
         JOIN p.torre t

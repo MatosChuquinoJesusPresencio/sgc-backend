@@ -13,5 +13,6 @@ public interface ApartamentoRepositoryPort {
     void eliminarPorId(Long id);
     Optional<ApartamentoModel> buscarPorPropietario(Long idPropietario);
     Optional<ApartamentoModel> buscarPorNumeroYCondominio(Integer numero, Long idCondominio);
+    boolean existePorIdYCondominio(Long id, Long idCondominio);
     PaginaResult<AdminApartamentoDetailResult> buscarEnCondominio(Long condominioId, PaginaQuery pagina);
 }

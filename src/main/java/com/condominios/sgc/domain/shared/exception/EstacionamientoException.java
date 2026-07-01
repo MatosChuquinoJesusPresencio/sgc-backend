@@ -32,4 +32,9 @@ public class EstacionamientoException extends DominioException {
     public static EstacionamientoException noEncontrado() {
         return new EstacionamientoException("estacionamiento no encontrado");
     }
+
+    public static EstacionamientoException limiteAlcanzado() {
+        return new EstacionamientoException(
+            "el apartamento ya tiene el máximo de estacionamientos asignados");
+    }
 }

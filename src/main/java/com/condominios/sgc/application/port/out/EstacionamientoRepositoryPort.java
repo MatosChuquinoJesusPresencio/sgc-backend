@@ -10,5 +10,6 @@ public interface EstacionamientoRepositoryPort {
     Optional<EstacionamientoModel> buscarPorId(Long id);
     EstacionamientoModel guardar(EstacionamientoModel modelo);
     void eliminarPorId(Long id);
+    long contarPorApartamento(Long idApartamento);
     PaginaResult<EstacionamientoModel> buscarPorCondominio(Long idCondominio, PaginaQuery paginacion);
 }

@@ -27,6 +27,7 @@ import com.condominios.sgc.application.port.in.GestionarUsuariosGlobalUseCase;
 import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.CarritoRepositoryPort;
 import com.condominios.sgc.application.port.out.CiudadRepositoryPort;
+import com.condominios.sgc.application.port.out.ConfiguracionRepositoryPort;
 import com.condominios.sgc.application.port.out.EstacionamientoRepositoryPort;
 import com.condominios.sgc.application.port.out.LogAccesoVehicularRepositoryPort;
 import com.condominios.sgc.application.port.out.LogPrestamoCarritoRepositoryPort;
@@ -195,9 +196,12 @@ public class AutenticacionConfig {
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
             CarritoRepositoryPort carritoRepository,
-            EstacionamientoRepositoryPort estacionamientoRepository) {
+            EstacionamientoRepositoryPort estacionamientoRepository,
+            ApartamentoRepositoryPort apartamentoRepository,
+            ConfiguracionRepositoryPort configuracionRepository) {
         return new GestionarAdminActivosService(
-            securityService, usuarioRepository, carritoRepository, estacionamientoRepository);
+            securityService, usuarioRepository, carritoRepository, estacionamientoRepository,
+            apartamentoRepository, configuracionRepository);
     }
 
     @Bean

@@ -32,6 +32,11 @@ public class EstacionamientoRepositoryAdapter implements EstacionamientoReposito
     }
 
     @Override
+    public long contarPorApartamento(Long idApartamento) {
+        return repository.countByIdApartamento(idApartamento);
+    }
+
+    @Override
     public void eliminarPorId(Long id) {
         repository.deleteById(id);
     }

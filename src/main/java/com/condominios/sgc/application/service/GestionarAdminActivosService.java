@@ -3,17 +3,21 @@ package com.condominios.sgc.application.service;
 import java.util.List;
 
 import com.condominios.sgc.application.dto.command.ActualizarStatusAssetCommand;
+import com.condominios.sgc.application.dto.command.AsignarParkingCommand;
 import com.condominios.sgc.application.dto.command.CrearAssetCommand;
 import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.AdminAssetResult;
 import com.condominios.sgc.application.dto.result.PaginaResult;
 import com.condominios.sgc.application.port.in.GestionarAdminActivosUseCase;
+import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.CarritoRepositoryPort;
+import com.condominios.sgc.application.port.out.ConfiguracionRepositoryPort;
 import com.condominios.sgc.application.port.out.EstacionamientoRepositoryPort;
 import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.domain.model.CarritoModel;
 import com.condominios.sgc.domain.model.EstacionamientoModel;
+import com.condominios.sgc.domain.shared.exception.ApartamentoException;
 import com.condominios.sgc.domain.shared.exception.CarritoException;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.EstacionamientoException;
@@ -31,16 +35,22 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
     private final UsuarioRepositoryPort usuarioRepository;
     private final CarritoRepositoryPort carritoRepository;
     private final EstacionamientoRepositoryPort estacionamientoRepository;
+    private final ApartamentoRepositoryPort apartamentoRepository;
+    private final ConfiguracionRepositoryPort configuracionRepository;
 
     public GestionarAdminActivosService(
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
             CarritoRepositoryPort carritoRepository,
-            EstacionamientoRepositoryPort estacionamientoRepository) {
+            EstacionamientoRepositoryPort estacionamientoRepository,
+            ApartamentoRepositoryPort apartamentoRepository,
+            ConfiguracionRepositoryPort configuracionRepository) {
         this.securityService = securityService;
         this.usuarioRepository = usuarioRepository;
         this.carritoRepository = carritoRepository;
         this.estacionamientoRepository = estacionamientoRepository;
+        this.apartamentoRepository = apartamentoRepository;
+        this.configuracionRepository = configuracionRepository;
     }
 
     private Long obtenerCondominioId() {
@@ -117,6 +127,35 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
             return toResult(estacionamientoRepository.guardar(estacionamiento));
         }
         throw new ParametroInvalidoException("Tipo de activo no válido: " + cmd.tipo());
+    }
+
+    @Override
+    @Transactional
+    public AdminAssetResult asignarApartamento(Long id, AsignarParkingCommand cmd) {
+        var condominioId = obtenerCondominioId();
+
+        var estacionamiento = estacionamientoRepository.buscarPorId(id)
+            .orElseThrow(EstacionamientoException::noEncontrado);
+        if (!condominioId.equals(estacionamiento.getIdCondominio())) {
+            throw CondominioException.noEncontrado();
+        }
+
+        if (cmd.idApartamento() != null) {
+            if (!apartamentoRepository.existePorIdYCondominio(cmd.idApartamento(), condominioId)) {
+                throw ApartamentoException.noEncontrado();
+            }
+            var config = configuracionRepository.buscarPorCondominioId(condominioId)
+                .orElseThrow(CondominioException::noEncontrado);
+            var actuales = (int) estacionamientoRepository.contarPorApartamento(cmd.idApartamento());
+            if (!config.puedeAsignarEstacionamiento(actuales)) {
+                throw EstacionamientoException.limiteAlcanzado();
+            }
+            estacionamiento.asignarApartamento(cmd.idApartamento());
+        } else {
+            estacionamiento.desasignarApartamento();
+        }
+
+        return toResult(estacionamientoRepository.guardar(estacionamiento));
     }
 
     private AdminAssetResult toResult(CarritoModel m) {
