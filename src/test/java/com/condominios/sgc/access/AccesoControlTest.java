@@ -112,30 +112,31 @@ class AccesoControlTest extends ControllerTestBase {
     }
 
     @Test
-    void superAdmin_accessingAdminEndpoint_returns403() throws Exception {
+    void superAdmin_accessingAdminEndpoint_isAllowed() throws Exception {
         var token = JwtTestUtil.accessToken(1L, "super@test.com", "SUPER_ADMINISTRADOR");
 
         mockMvc.perform(get("/api/admin/dashboard/metrics")
                         .header("Authorization", "Bearer " + token))
-                .andExpect(status().isForbidden());
+                .andExpect(result -> org.assertj.core.api.Assertions.assertThat(
+                        result.getResponse().getStatus()).isNotEqualTo(403));
     }
 
     @Test
-    void superAdmin_accessingPropietarioEndpoint_returns403() throws Exception {
+    void superAdmin_accessingPropietarioEndpoint_isAllowed() throws Exception {
         var token = JwtTestUtil.accessToken(1L, "super@test.com", "SUPER_ADMINISTRADOR");
 
         mockMvc.perform(get("/api/homeowner/dashboard/summary")
                         .header("Authorization", "Bearer " + token))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
     }
 
     @Test
-    void superAdmin_accessingSecurityEndpoint_returns403() throws Exception {
+    void superAdmin_accessingSecurityEndpoint_isAllowed() throws Exception {
         var token = JwtTestUtil.accessToken(1L, "super@test.com", "SUPER_ADMINISTRADOR");
 
         mockMvc.perform(get("/api/security/dashboard/status")
                         .header("Authorization", "Bearer " + token))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
     }
 
     @Test

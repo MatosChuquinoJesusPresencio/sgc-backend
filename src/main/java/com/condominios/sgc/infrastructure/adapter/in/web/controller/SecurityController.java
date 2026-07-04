@@ -36,7 +36,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/security")
-@PreAuthorize("hasRole('AGENTE_SEGURIDAD')")
+@PreAuthorize("hasAnyRole('AGENTE_SEGURIDAD', 'SUPER_ADMINISTRADOR')")
 public class SecurityController {
 
     private final GestionarSeguridadDashboardUseCase dashboardUseCase;

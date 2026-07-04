@@ -36,7 +36,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/homeowner")
-@PreAuthorize("hasRole('PROPIETARIO')")
+@PreAuthorize("hasAnyRole('PROPIETARIO', 'SUPER_ADMINISTRADOR')")
 public class PropietarioController {
 
     private final GestionarPropietarioDashboardUseCase dashboardUseCase;

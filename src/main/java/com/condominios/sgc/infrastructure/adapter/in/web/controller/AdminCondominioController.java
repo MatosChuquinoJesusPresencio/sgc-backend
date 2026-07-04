@@ -58,7 +58,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/admin")
-@PreAuthorize("hasRole('ADMINISTRADOR_CONDOMINIO')")
+@PreAuthorize("hasAnyRole('ADMINISTRADOR_CONDOMINIO', 'SUPER_ADMINISTRADOR')")
 public class AdminCondominioController {
 
     private final GestionarAdminDashboardUseCase gestionarAdminDashboard;
