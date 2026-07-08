@@ -25,8 +25,12 @@ public class CondominioException extends DominioException {
         return new CondominioException("condominio no encontrado");
     }
 
+    public static CondominioException idCondominioInvalido() {
+        return new CondominioException("id de condominio invalido");
+    }
+
     public static CondominioException condominioInactivo() {
-        return new CondominioException("el condominio está desactivado");
+        return new CondominioException("condominio está desactivado");
     }
 
     public static CondominioException nombreYaExiste(String nombre) {

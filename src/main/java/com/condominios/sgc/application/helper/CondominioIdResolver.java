@@ -21,7 +21,7 @@ public class CondominioIdResolver {
             .orElseThrow(UsuarioException::noEncontrado);
         if (usuario.getRol() == Rol.SUPER_ADMINISTRADOR) {
             if (condominioIdOverride == null) {
-                throw CondominioException.noEncontrado();
+                throw CondominioException.idCondominioInvalido();
             }
             return condominioIdOverride;
         }
