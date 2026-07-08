@@ -179,7 +179,7 @@ rol en el claim `rol`.
 | PUT    | `/api/super-admin/administrators/{id}`                     | Actualizar administrador             |
 | PATCH  | `/api/super-admin/administrators/{id}`                     | Activar/desactivar administrador     |
 | DELETE | `/api/super-admin/administrators/{id}`                     | Eliminar administrador               |
-| PUT    | `/api/super-admin/administrators/{id}/assign-condo`        | Asignar, reasignar o desasignar condominio a admin |
+| PUT    | `/api/super-admin/administrators/{id}/assign-condo`        | Asignar/reasignar/desasignar condominio a un `ADMINISTRADOR_CONDOMINIO`. Falla si el condominio ya tiene un admin asignado (validación 1-por-condominio). Para asignar condominio a `PROPIETARIO`/`AGENTE_SEGURIDAD`, usa `POST /api/admin/users?condominioId=X` |
 | GET    | `/api/super-admin/administrators/available`                | Admins sin condominio asignado       |
 | GET    | `/api/super-admin/condominiums`                            | Listar condominios                   |
 | POST   | `/api/super-admin/condominiums`                            | Crear condominio                     |
@@ -195,6 +195,8 @@ rol en el claim `rol`.
 | GET    | `/api/catalogs/countries/{countryId}/cities`               | Listar ciudades por país             |
 
 ### Administrador de Condominio
+
+> **Nota:** El `SUPER_ADMINISTRADOR` también puede usar estos endpoints agregando `?condominioId=X`. Es la forma recomendada para crear `PROPIETARIO`/`AGENTE_SEGURIDAD` directamente, sin pasar por `assign-condo`.
 
 | Método | Ruta                                           | Descripción                           |
 |--------|------------------------------------------------|---------------------------------------|
@@ -212,6 +214,7 @@ rol en el claim `rol`.
 | PATCH  | `/api/admin/users/{id}/status`                 | Activar/desactivar usuario             |
 | GET    | `/api/admin/apartments`                        | Listar apartamentos                   |
 | PUT    | `/api/admin/apartments/{id}/assign-owner`      | Asignar propietario a apartamento     |
+| PUT    | `/api/admin/apartments/{id}/assign-apartment`  | Asignar estacionamiento/carrito a apartamento |
 | PUT    | `/api/admin/apartments/{id}/occupants`         | Actualizar ocupantes                  |
 | GET    | `/api/admin/assets`                            | Listar activos (carritos/estacionamientos) |
 | POST   | `/api/admin/assets`                            | Crear activo                          |
