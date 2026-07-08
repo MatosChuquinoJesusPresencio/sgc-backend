@@ -7,5 +7,5 @@ import com.condominios.sgc.application.dto.result.AdminLogEntryResult;
 import com.condominios.sgc.application.dto.result.PaginaResult;
 
 public interface GestionarAdminLogsUseCase {
-    PaginaResult<AdminLogEntryResult> listar(String type, Long userId, Instant fechaInicio, Instant fechaFin, PaginaQuery pagina);
+    PaginaResult<AdminLogEntryResult> listar(Long condominioIdOverride, String type, Long userId, Instant fechaInicio, Instant fechaFin, PaginaQuery pagina);
 }

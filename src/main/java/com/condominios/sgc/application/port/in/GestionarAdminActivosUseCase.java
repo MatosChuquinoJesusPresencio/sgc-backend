@@ -8,8 +8,8 @@ import com.condominios.sgc.application.dto.result.AdminAssetResult;
 import com.condominios.sgc.application.dto.result.PaginaResult;
 
 public interface GestionarAdminActivosUseCase {
-    PaginaResult<AdminAssetResult> listar(String type, PaginaQuery pagina);
-    AdminAssetResult crear(CrearAssetCommand cmd);
-    AdminAssetResult actualizarStatus(Long id, ActualizarStatusAssetCommand cmd);
-    AdminAssetResult asignarApartamento(Long id, AsignarParkingCommand cmd);
+    PaginaResult<AdminAssetResult> listar(Long condominioIdOverride, String type, PaginaQuery pagina);
+    AdminAssetResult crear(Long condominioIdOverride, CrearAssetCommand cmd);
+    AdminAssetResult actualizarStatus(Long condominioIdOverride, Long id, ActualizarStatusAssetCommand cmd);
+    AdminAssetResult asignarApartamento(Long condominioIdOverride, Long id, AsignarParkingCommand cmd);
 }

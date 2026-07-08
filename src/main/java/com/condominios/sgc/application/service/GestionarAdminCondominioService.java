@@ -4,47 +4,37 @@ import com.condominios.sgc.application.dto.command.ActualizarConfiguracionComman
 import com.condominios.sgc.application.dto.command.ActualizarMiCondominioCommand;
 import com.condominios.sgc.application.dto.result.AdminCondominioInfoResult;
 import com.condominios.sgc.application.dto.result.AdminConfiguracionResult;
+import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarAdminCondominioUseCase;
 import com.condominios.sgc.application.port.out.CiudadRepositoryPort;
 import com.condominios.sgc.application.port.out.CondominioRepositoryPort;
 import com.condominios.sgc.application.port.out.PaisRepositoryPort;
-import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
-import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
-import com.condominios.sgc.domain.shared.exception.UsuarioException;
 
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 public class GestionarAdminCondominioService implements GestionarAdminCondominioUseCase {
 
-    private final SecurityServicePort securityService;
-    private final UsuarioRepositoryPort usuarioRepository;
     private final CondominioRepositoryPort condominioRepository;
     private final PaisRepositoryPort paisRepository;
     private final CiudadRepositoryPort ciudadRepository;
+    private final CondominioIdResolver condominioIdResolver;
 
     public GestionarAdminCondominioService(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
             CondominioRepositoryPort condominioRepository,
             PaisRepositoryPort paisRepository,
-            CiudadRepositoryPort ciudadRepository) {
-        this.securityService = securityService;
-        this.usuarioRepository = usuarioRepository;
+            CiudadRepositoryPort ciudadRepository,
+            CondominioIdResolver condominioIdResolver) {
         this.condominioRepository = condominioRepository;
         this.paisRepository = paisRepository;
         this.ciudadRepository = ciudadRepository;
+        this.condominioIdResolver = condominioIdResolver;
     }
 
     @Override
-    public AdminCondominioInfoResult obtenerMiCondominio() {
-        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
-            .orElseThrow(UsuarioException::noEncontrado);
-        var condominioId = usuario.getIdCondominio();
-        if (condominioId == null) {
-            throw CondominioException.noEncontrado();
-        }
+    public AdminCondominioInfoResult obtenerMiCondominio(Long condominioIdOverride) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
         var condominio = condominioRepository.buscarPorId(condominioId)
             .orElseThrow(CondominioException::noEncontrado);
         return toResult(condominio);
@@ -52,13 +42,8 @@ public class GestionarAdminCondominioService implements GestionarAdminCondominio
 
     @Override
     @Transactional
-    public AdminCondominioInfoResult actualizarMiCondominio(ActualizarMiCondominioCommand cmd) {
-        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
-            .orElseThrow(UsuarioException::noEncontrado);
-        var condominioId = usuario.getIdCondominio();
-        if (condominioId == null) {
-            throw CondominioException.noEncontrado();
-        }
+    public AdminCondominioInfoResult actualizarMiCondominio(Long condominioIdOverride, ActualizarMiCondominioCommand cmd) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
         var condominio = condominioRepository.buscarPorId(condominioId)
             .orElseThrow(CondominioException::noEncontrado);
         condominio.actualizar(cmd.nombre(), condominio.getIdPais(),
@@ -67,13 +52,8 @@ public class GestionarAdminCondominioService implements GestionarAdminCondominio
     }
 
     @Override
-    public AdminConfiguracionResult obtenerConfiguracion() {
-        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
-            .orElseThrow(UsuarioException::noEncontrado);
-        var condominioId = usuario.getIdCondominio();
-        if (condominioId == null) {
-            throw CondominioException.noEncontrado();
-        }
+    public AdminConfiguracionResult obtenerConfiguracion(Long condominioIdOverride) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
         var condominio = condominioRepository.buscarPorId(condominioId)
             .orElseThrow(CondominioException::noEncontrado);
         return toConfigResult(condominio.getConfiguracion());
@@ -81,13 +61,8 @@ public class GestionarAdminCondominioService implements GestionarAdminCondominio
 
     @Override
     @Transactional
-    public AdminCondominioInfoResult actualizarConfiguracion(ActualizarConfiguracionCommand cmd) {
-        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
-            .orElseThrow(UsuarioException::noEncontrado);
-        var condominioId = usuario.getIdCondominio();
-        if (condominioId == null) {
-            throw CondominioException.noEncontrado();
-        }
+    public AdminCondominioInfoResult actualizarConfiguracion(Long condominioIdOverride, ActualizarConfiguracionCommand cmd) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
         var condominio = condominioRepository.buscarPorId(condominioId)
             .orElseThrow(CondominioException::noEncontrado);
         condominio.getConfiguracion().actualizar(

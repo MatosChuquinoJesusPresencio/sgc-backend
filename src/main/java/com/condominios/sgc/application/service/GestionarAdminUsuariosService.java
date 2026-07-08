@@ -5,12 +5,11 @@ import com.condominios.sgc.application.dto.command.CrearAdminUserCommand;
 import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.AdminUserResult;
 import com.condominios.sgc.application.dto.result.PaginaResult;
+import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarAdminUsuariosUseCase;
 import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.service.HashServicePort;
-import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.domain.model.UsuarioModel;
-import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.type.Rol;
 
@@ -18,29 +17,29 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class GestionarAdminUsuariosService implements GestionarAdminUsuariosUseCase {
 
-    private final SecurityServicePort securityService;
     private final UsuarioRepositoryPort usuarioRepository;
     private final HashServicePort hashService;
+    private final CondominioIdResolver condominioIdResolver;
 
     public GestionarAdminUsuariosService(
-            SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
-            HashServicePort hashService) {
-        this.securityService = securityService;
+            HashServicePort hashService,
+            CondominioIdResolver condominioIdResolver) {
         this.usuarioRepository = usuarioRepository;
         this.hashService = hashService;
+        this.condominioIdResolver = condominioIdResolver;
     }
 
     @Override
-    public PaginaResult<AdminUserResult> listar(String search, String rol, Boolean activo, PaginaQuery query) {
-        var condominioId = obtenerCondominioId();
+    public PaginaResult<AdminUserResult> listar(Long condominioIdOverride, String search, String rol, Boolean activo, PaginaQuery query) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
         var pagina = usuarioRepository.buscarPorCondominio(condominioId, search, rol, activo, query);
         var items = pagina.items().stream().map(this::toResult).toList();
         return new PaginaResult<>(items, pagina.total(), pagina.pagina(), pagina.tamano());
     }
 
     @Override
-    public AdminUserResult crear(CrearAdminUserCommand cmd) {
+    public AdminUserResult crear(Long condominioIdOverride, CrearAdminUserCommand cmd) {
         var rolDestino = Rol.valueOf(cmd.rol());
         Rol.ADMINISTRADOR_CONDOMINIO.validarPuedeAsignarRol(rolDestino);
 
@@ -48,7 +47,7 @@ public class GestionarAdminUsuariosService implements GestionarAdminUsuariosUseC
             throw UsuarioException.correoYaRegistrado();
         }
 
-        var condominioId = obtenerCondominioId();
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
         var usuario = new UsuarioModel(
             cmd.nombres(), cmd.apellidos(), cmd.correo(),
             cmd.telefono(), rolDestino, hashService.hashear(cmd.contrasena()));
@@ -57,8 +56,8 @@ public class GestionarAdminUsuariosService implements GestionarAdminUsuariosUseC
     }
 
     @Override
-    public AdminUserResult actualizar(Long id, ActualizarAdminUserCommand cmd) {
-        var condominioId = obtenerCondominioId();
+    public AdminUserResult actualizar(Long condominioIdOverride, Long id, ActualizarAdminUserCommand cmd) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
         var usuario = usuarioRepository.buscarPorId(id)
             .orElseThrow(UsuarioException::noEncontrado);
         if (!condominioId.equals(usuario.getIdCondominio())) {
@@ -73,20 +72,10 @@ public class GestionarAdminUsuariosService implements GestionarAdminUsuariosUseC
         return toResult(usuarioRepository.guardar(usuario));
     }
 
-    private Long obtenerCondominioId() {
-        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
-            .orElseThrow(UsuarioException::noEncontrado);
-        var condominioId = usuario.getIdCondominio();
-        if (condominioId == null) {
-            throw CondominioException.noEncontrado();
-        }
-        return condominioId;
-    }
-
     @Override
     @Transactional
-    public void activarDesactivar(Long id, Boolean activo) {
-        var condominioId = obtenerCondominioId();
+    public void activarDesactivar(Long condominioIdOverride, Long id, Boolean activo) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
         var usuario = usuarioRepository.buscarPorId(id)
             .orElseThrow(UsuarioException::noEncontrado);
         if (!condominioId.equals(usuario.getIdCondominio()))

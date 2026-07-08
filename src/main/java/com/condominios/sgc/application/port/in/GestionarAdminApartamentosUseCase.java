@@ -7,7 +7,7 @@ import com.condominios.sgc.application.dto.result.AdminApartamentoDetailResult;
 import com.condominios.sgc.application.dto.result.PaginaResult;
 
 public interface GestionarAdminApartamentosUseCase {
-    PaginaResult<AdminApartamentoDetailResult> listar(PaginaQuery pagina);
-    void asignarPropietario(Long apartamentoId, AsignarPropietarioCommand cmd);
-    void actualizarOcupantes(Long apartamentoId, ActualizarOcupantesCommand cmd);
+    PaginaResult<AdminApartamentoDetailResult> listar(Long condominioIdOverride, PaginaQuery pagina);
+    void asignarPropietario(Long condominioIdOverride, Long apartamentoId, AsignarPropietarioCommand cmd);
+    void actualizarOcupantes(Long condominioIdOverride, Long apartamentoId, ActualizarOcupantesCommand cmd);
 }

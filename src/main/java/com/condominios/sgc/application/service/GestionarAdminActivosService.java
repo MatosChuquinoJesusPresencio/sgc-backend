@@ -8,13 +8,12 @@ import com.condominios.sgc.application.dto.command.CrearAssetCommand;
 import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.AdminAssetResult;
 import com.condominios.sgc.application.dto.result.PaginaResult;
+import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarAdminActivosUseCase;
 import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.CarritoRepositoryPort;
 import com.condominios.sgc.application.port.out.ConfiguracionRepositoryPort;
 import com.condominios.sgc.application.port.out.EstacionamientoRepositoryPort;
-import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
-import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.domain.model.CarritoModel;
 import com.condominios.sgc.domain.model.EstacionamientoModel;
 import com.condominios.sgc.domain.shared.exception.ApartamentoException;
@@ -22,7 +21,6 @@ import com.condominios.sgc.domain.shared.exception.CarritoException;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.EstacionamientoException;
 import com.condominios.sgc.domain.shared.exception.ParametroInvalidoException;
-import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.type.EstadoCarrito;
 import com.condominios.sgc.domain.type.TipoVehiculo;
 
@@ -31,41 +29,28 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class GestionarAdminActivosService implements GestionarAdminActivosUseCase {
 
-    private final SecurityServicePort securityService;
-    private final UsuarioRepositoryPort usuarioRepository;
     private final CarritoRepositoryPort carritoRepository;
     private final EstacionamientoRepositoryPort estacionamientoRepository;
     private final ApartamentoRepositoryPort apartamentoRepository;
     private final ConfiguracionRepositoryPort configuracionRepository;
+    private final CondominioIdResolver condominioIdResolver;
 
     public GestionarAdminActivosService(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
             CarritoRepositoryPort carritoRepository,
             EstacionamientoRepositoryPort estacionamientoRepository,
             ApartamentoRepositoryPort apartamentoRepository,
-            ConfiguracionRepositoryPort configuracionRepository) {
-        this.securityService = securityService;
-        this.usuarioRepository = usuarioRepository;
+            ConfiguracionRepositoryPort configuracionRepository,
+            CondominioIdResolver condominioIdResolver) {
         this.carritoRepository = carritoRepository;
         this.estacionamientoRepository = estacionamientoRepository;
         this.apartamentoRepository = apartamentoRepository;
         this.configuracionRepository = configuracionRepository;
-    }
-
-    private Long obtenerCondominioId() {
-        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
-            .orElseThrow(UsuarioException::noEncontrado);
-        var condominioId = usuario.getIdCondominio();
-        if (condominioId == null) {
-            throw CondominioException.noEncontrado();
-        }
-        return condominioId;
+        this.condominioIdResolver = condominioIdResolver;
     }
 
     @Override
-    public PaginaResult<AdminAssetResult> listar(String type, PaginaQuery pagina) {
-        var condominioId = obtenerCondominioId();
+    public PaginaResult<AdminAssetResult> listar(Long condominioIdOverride, String type, PaginaQuery pagina) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
 
         if ("CARRITO".equalsIgnoreCase(type)) {
             var result = carritoRepository.buscarPorCondominio(condominioId, pagina);
@@ -84,8 +69,8 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
 
     @Override
     @Transactional
-    public AdminAssetResult crear(CrearAssetCommand cmd) {
-        var condominioId = obtenerCondominioId();
+    public AdminAssetResult crear(Long condominioIdOverride, CrearAssetCommand cmd) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
 
         if ("CARRITO".equalsIgnoreCase(cmd.tipo())) {
             var modelo = new CarritoModel(cmd.codigo(), condominioId);
@@ -99,8 +84,8 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
 
     @Override
     @Transactional
-    public AdminAssetResult actualizarStatus(Long id, ActualizarStatusAssetCommand cmd) {
-        var condominioId = obtenerCondominioId();
+    public AdminAssetResult actualizarStatus(Long condominioIdOverride, Long id, ActualizarStatusAssetCommand cmd) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
 
         if ("CARRITO".equalsIgnoreCase(cmd.tipo())) {
             var carrito = carritoRepository.buscarPorId(id)
@@ -131,8 +116,8 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
 
     @Override
     @Transactional
-    public AdminAssetResult asignarApartamento(Long id, AsignarParkingCommand cmd) {
-        var condominioId = obtenerCondominioId();
+    public AdminAssetResult asignarApartamento(Long condominioIdOverride, Long id, AsignarParkingCommand cmd) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
 
         var estacionamiento = estacionamientoRepository.buscarPorId(id)
             .orElseThrow(EstacionamientoException::noEncontrado);

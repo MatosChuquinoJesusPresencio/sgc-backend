@@ -90,118 +90,133 @@ public class AdminCondominioController {
     }
 
     @GetMapping("/dashboard/metrics")
-    public ResponseEntity<AdminDashboardMetricsResponse> obtenerMetricas() {
-        var resultado = gestionarAdminDashboard.obtenerMetricas();
+    public ResponseEntity<AdminDashboardMetricsResponse> obtenerMetricas(
+            @RequestParam(required = false) Long condominioId) {
+        var resultado = gestionarAdminDashboard.obtenerMetricas(condominioId);
         return ResponseEntity.ok(mapper.toDashboardMetricsResponse(resultado));
     }
 
     @GetMapping("/condominium/my-info")
-    public ResponseEntity<AdminCondominioInfoResponse> obtenerMiCondominio() {
-        var resultado = gestionarAdminCondominio.obtenerMiCondominio();
+    public ResponseEntity<AdminCondominioInfoResponse> obtenerMiCondominio(
+            @RequestParam(required = false) Long condominioId) {
+        var resultado = gestionarAdminCondominio.obtenerMiCondominio(condominioId);
         return ResponseEntity.ok(mapper.toCondominioInfoResponse(resultado));
     }
 
     @PutMapping("/condominium/my-info")
     public ResponseEntity<AdminCondominioInfoResponse> actualizarMiCondominio(
+            @RequestParam(required = false) Long condominioId,
             @Valid @RequestBody ActualizarMiCondominioRequest request) {
         var cmd = new ActualizarMiCondominioCommand(request.nombre(), request.direccion());
-        var resultado = gestionarAdminCondominio.actualizarMiCondominio(cmd);
+        var resultado = gestionarAdminCondominio.actualizarMiCondominio(condominioId, cmd);
         return ResponseEntity.ok(mapper.toCondominioInfoResponse(resultado));
     }
 
     @GetMapping("/condominium/configuracion")
-    public ResponseEntity<AdminConfiguracionResponse> obtenerConfiguracion() {
-        var resultado = gestionarAdminCondominio.obtenerConfiguracion();
+    public ResponseEntity<AdminConfiguracionResponse> obtenerConfiguracion(
+            @RequestParam(required = false) Long condominioId) {
+        var resultado = gestionarAdminCondominio.obtenerConfiguracion(condominioId);
         return ResponseEntity.ok(mapper.toConfiguracionResponse(resultado));
     }
 
     @PutMapping("/condominium/configuracion")
     public ResponseEntity<AdminConfiguracionResponse> actualizarConfiguracion(
+            @RequestParam(required = false) Long condominioId,
             @Valid @RequestBody ActualizarConfiguracionRequest request) {
         var cmd = new ActualizarConfiguracionCommand(
             request.maxAutos(), request.maxMotos(), request.penalizacionPorMin(),
             request.maxTiempoPrestamoMin(), request.maxEstacionamientosPorDepto(),
             request.maxCarritosPorDepto(), request.maxVehiculosPorDepto(), request.maxInquilinosPorDepto());
-        var resultado = gestionarAdminCondominio.actualizarConfiguracion(cmd);
+        var resultado = gestionarAdminCondominio.actualizarConfiguracion(condominioId, cmd);
         return ResponseEntity.ok(mapper.toConfiguracionResponse(resultado.configuracion()));
     }
 
     @GetMapping("/structure")
-    public ResponseEntity<AdminStructureResponse> obtenerEstructura() {
-        var resultado = gestionarAdminEstructura.obtenerEstructura();
+    public ResponseEntity<AdminStructureResponse> obtenerEstructura(
+            @RequestParam(required = false) Long condominioId) {
+        var resultado = gestionarAdminEstructura.obtenerEstructura(condominioId);
         return ResponseEntity.ok(mapper.toStructureResponse(resultado));
     }
 
     @PostMapping("/structure/nodes")
-    public ResponseEntity<Void> crearNodo(@Valid @RequestBody CrearNodeRequest request) {
+    public ResponseEntity<Void> crearNodo(
+            @RequestParam(required = false) Long condominioId,
+            @Valid @RequestBody CrearNodeRequest request) {
         var cmd = new CrearNodeCommand(
             request.tipo(), request.nombre(), request.nombreTorre(),
             request.numero(), request.numeroPiso(), request.numeroApartamento(),
             request.metraje());
-        gestionarAdminEstructura.crearNodo(cmd);
+        gestionarAdminEstructura.crearNodo(condominioId, cmd);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/structure/nodes/{id}")
     public ResponseEntity<Void> eliminarNodo(
             @PathVariable Long id,
-            @RequestParam(defaultValue = "TORRE") String type) {
-        gestionarAdminEstructura.eliminarNodo(id, type);
+            @RequestParam(defaultValue = "TORRE") String type,
+            @RequestParam(required = false) Long condominioId) {
+        gestionarAdminEstructura.eliminarNodo(condominioId, id, type);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/users")
     public ResponseEntity<PaginaResponse<AdminUserResponse>> listarUsuarios(
+            @RequestParam(required = false) Long condominioId,
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String rol,
             @RequestParam(required = false) Boolean activo,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        var resultado = gestionarAdminUsuarios.listar(search, rol, activo, new PaginaQuery(page, size));
+        var resultado = gestionarAdminUsuarios.listar(condominioId, search, rol, activo, new PaginaQuery(page, size));
         return ResponseEntity.ok(mapper.toUserPaginaResponse(resultado));
     }
 
     @PostMapping("/users")
     public ResponseEntity<AdminUserResponse> crearUsuario(
+            @RequestParam(required = false) Long condominioId,
             @Valid @RequestBody CrearAdminUserRequest request) {
         var cmd = new CrearAdminUserCommand(
             request.nombres(), request.apellidos(), request.correo(),
             request.telefono(), request.contrasena(), request.rol());
-        var resultado = gestionarAdminUsuarios.crear(cmd);
+        var resultado = gestionarAdminUsuarios.crear(condominioId, cmd);
         return ResponseEntity.ok(mapper.toUserResponse(resultado));
     }
 
     @PutMapping("/users/{id}")
     public ResponseEntity<AdminUserResponse> actualizarUsuario(
             @PathVariable Long id,
+            @RequestParam(required = false) Long condominioId,
             @Valid @RequestBody ActualizarAdminUserRequest request) {
         var cmd = new ActualizarAdminUserCommand(
             request.nombres(), request.apellidos(), request.telefono(), request.rol());
-        var resultado = gestionarAdminUsuarios.actualizar(id, cmd);
+        var resultado = gestionarAdminUsuarios.actualizar(condominioId, id, cmd);
         return ResponseEntity.ok(mapper.toUserResponse(resultado));
     }
 
     @PatchMapping("/users/{id}/status")
     public ResponseEntity<Void> activarDesactivarUsuario(
             @PathVariable Long id,
+            @RequestParam(required = false) Long condominioId,
             @Valid @RequestBody EstadoActivoRequest request) {
-        gestionarAdminUsuarios.activarDesactivar(id, request.activo());
+        gestionarAdminUsuarios.activarDesactivar(condominioId, id, request.activo());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/apartments")
     public ResponseEntity<PaginaResponse<AdminApartamentoDetailResponse>> listarApartamentos(
+            @RequestParam(required = false) Long condominioId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        var resultado = gestionarAdminApartamentos.listar(new PaginaQuery(page, size));
+        var resultado = gestionarAdminApartamentos.listar(condominioId, new PaginaQuery(page, size));
         return ResponseEntity.ok(mapper.toApartamentoDetailPaginaResponse(resultado));
     }
 
     @PutMapping("/apartments/{id}/assign-owner")
     public ResponseEntity<Void> asignarPropietario(
             @PathVariable Long id,
+            @RequestParam(required = false) Long condominioId,
             @Valid @RequestBody AsignarPropietarioRequest request) {
-        gestionarAdminApartamentos.asignarPropietario(id,
+        gestionarAdminApartamentos.asignarPropietario(condominioId, id,
             new AsignarPropietarioCommand(request.idPropietario()));
         return ResponseEntity.ok().build();
     }
@@ -209,39 +224,43 @@ public class AdminCondominioController {
     @PutMapping("/apartments/{id}/occupants")
     public ResponseEntity<Void> actualizarOcupantes(
             @PathVariable Long id,
+            @RequestParam(required = false) Long condominioId,
             @Valid @RequestBody ActualizarOcupantesRequest request) {
         var entries = request.inquilinos().stream()
             .map(e -> new ActualizarOcupantesCommand.InquilinoEntry(
                 e.nombres(), e.apellidos(),
                 TipoDocumento.valueOf(e.tipoDocumento()), e.numeroDocumento()))
             .toList();
-        gestionarAdminApartamentos.actualizarOcupantes(id,
+        gestionarAdminApartamentos.actualizarOcupantes(condominioId, id,
             new ActualizarOcupantesCommand(entries));
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/assets")
     public ResponseEntity<PaginaResponse<AdminAssetResponse>> listarActivos(
+            @RequestParam(required = false) Long condominioId,
             @RequestParam String type,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        var resultado = gestionarAdminActivos.listar(type, new PaginaQuery(page, size));
+        var resultado = gestionarAdminActivos.listar(condominioId, type, new PaginaQuery(page, size));
         return ResponseEntity.ok(mapper.toAssetPaginaResponse(resultado));
     }
 
     @PostMapping("/assets")
     public ResponseEntity<AdminAssetResponse> crearActivo(
+            @RequestParam(required = false) Long condominioId,
             @Valid @RequestBody CrearAssetRequest request) {
         var cmd = new CrearAssetCommand(request.tipo(), request.codigo(), request.numero());
-        var resultado = gestionarAdminActivos.crear(cmd);
+        var resultado = gestionarAdminActivos.crear(condominioId, cmd);
         return ResponseEntity.ok(mapper.toAssetResponse(resultado));
     }
 
     @PutMapping("/assets/{id}/assign-apartment")
     public ResponseEntity<AdminAssetResponse> asignarApartamento(
             @PathVariable Long id,
+            @RequestParam(required = false) Long condominioId,
             @Valid @RequestBody AsignarParkingRequest request) {
-        var resultado = gestionarAdminActivos.asignarApartamento(id,
+        var resultado = gestionarAdminActivos.asignarApartamento(condominioId, id,
             new AsignarParkingCommand(request.idApartamento()));
         return ResponseEntity.ok(mapper.toAssetResponse(resultado));
     }
@@ -249,16 +268,18 @@ public class AdminCondominioController {
     @PutMapping("/assets/{id}/status")
     public ResponseEntity<AdminAssetResponse> actualizarStatusActivo(
             @PathVariable Long id,
+            @RequestParam(required = false) Long condominioId,
             @Valid @RequestBody ActualizarStatusAssetRequest request) {
         var cmd = new ActualizarStatusAssetCommand(
             request.tipo(), request.estado(), request.disponible(),
             request.tipoVehiculo(), request.capacidadMaxima());
-        var resultado = gestionarAdminActivos.actualizarStatus(id, cmd);
+        var resultado = gestionarAdminActivos.actualizarStatus(condominioId, id, cmd);
         return ResponseEntity.ok(mapper.toAssetResponse(resultado));
     }
 
     @GetMapping("/logs")
     public ResponseEntity<PaginaResponse<AdminLogEntryResponse>> listarLogs(
+            @RequestParam(required = false) Long condominioId,
             @RequestParam String type,
             @RequestParam(required = false) Long userId,
             @RequestParam(required = false) String fechaInicio,
@@ -267,7 +288,7 @@ public class AdminCondominioController {
             @RequestParam(defaultValue = "20") int size) {
         var inicio = fechaInicio != null ? java.time.Instant.parse(fechaInicio) : null;
         var fin = fechaFin != null ? java.time.Instant.parse(fechaFin) : null;
-        var resultado = gestionarAdminLogs.listar(type, userId, inicio, fin, new PaginaQuery(page, size));
+        var resultado = gestionarAdminLogs.listar(condominioId, type, userId, inicio, fin, new PaginaQuery(page, size));
         return ResponseEntity.ok(mapper.toLogEntryPaginaResponse(resultado));
     }
 }

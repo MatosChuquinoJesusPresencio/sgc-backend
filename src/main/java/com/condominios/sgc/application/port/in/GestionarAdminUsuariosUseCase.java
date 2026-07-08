@@ -7,8 +7,8 @@ import com.condominios.sgc.application.dto.result.AdminUserResult;
 import com.condominios.sgc.application.dto.result.PaginaResult;
 
 public interface GestionarAdminUsuariosUseCase {
-    PaginaResult<AdminUserResult> listar(String search, String rol, Boolean activo, PaginaQuery query);
-    AdminUserResult crear(CrearAdminUserCommand cmd);
-    AdminUserResult actualizar(Long id, ActualizarAdminUserCommand cmd);
-    void activarDesactivar(Long id, Boolean activo);
+    PaginaResult<AdminUserResult> listar(Long condominioIdOverride, String search, String rol, Boolean activo, PaginaQuery query);
+    AdminUserResult crear(Long condominioIdOverride, CrearAdminUserCommand cmd);
+    AdminUserResult actualizar(Long condominioIdOverride, Long id, ActualizarAdminUserCommand cmd);
+    void activarDesactivar(Long condominioIdOverride, Long id, Boolean activo);
 }

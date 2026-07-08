@@ -5,15 +5,14 @@ import com.condominios.sgc.application.dto.command.AsignarPropietarioCommand;
 import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.AdminApartamentoDetailResult;
 import com.condominios.sgc.application.dto.result.PaginaResult;
+import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarAdminApartamentosUseCase;
 import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.InquilinoRepositoryPort;
 import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.VehiculoRepositoryPort;
-import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.domain.model.InquilinoModel;
 import com.condominios.sgc.domain.shared.exception.ApartamentoException;
-import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -21,36 +20,35 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class GestionarAdminApartamentosService implements GestionarAdminApartamentosUseCase {
 
-    private final SecurityServicePort securityService;
-    private final UsuarioRepositoryPort usuarioRepository;
     private final ApartamentoRepositoryPort apartamentoRepository;
     private final InquilinoRepositoryPort inquilinoRepository;
     private final VehiculoRepositoryPort vehiculoRepository;
-
+    private final UsuarioRepositoryPort usuarioRepository;
+    private final CondominioIdResolver condominioIdResolver;
 
     public GestionarAdminApartamentosService(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
             ApartamentoRepositoryPort apartamentoRepository,
             InquilinoRepositoryPort inquilinoRepository,
-            VehiculoRepositoryPort vehiculoRepository) {
-        this.securityService = securityService;
-        this.usuarioRepository = usuarioRepository;
+            VehiculoRepositoryPort vehiculoRepository,
+            UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver) {
         this.apartamentoRepository = apartamentoRepository;
         this.inquilinoRepository = inquilinoRepository;
         this.vehiculoRepository = vehiculoRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.condominioIdResolver = condominioIdResolver;
     }
 
     @Override
-    public PaginaResult<AdminApartamentoDetailResult> listar(PaginaQuery pagina) {
-        var condominioId = obtenerCondominioId();
+    public PaginaResult<AdminApartamentoDetailResult> listar(Long condominioIdOverride, PaginaQuery pagina) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
         return apartamentoRepository.buscarEnCondominio(condominioId, pagina);
     }
 
     @Override
     @Transactional
-    public void asignarPropietario(Long apartamentoId, AsignarPropietarioCommand cmd) {
-        var condominioId = obtenerCondominioId();
+    public void asignarPropietario(Long condominioIdOverride, Long apartamentoId, AsignarPropietarioCommand cmd) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
         var apto = apartamentoRepository.buscarPorId(apartamentoId)
             .orElseThrow(ApartamentoException::noEncontrado);
         if (apto.getIdPropietario() != null)
@@ -66,8 +64,9 @@ public class GestionarAdminApartamentosService implements GestionarAdminApartame
 
     @Override
     @Transactional
-    public void actualizarOcupantes(Long apartamentoId, ActualizarOcupantesCommand cmd) {
-        if (apartamentoRepository.buscarPorId(apartamentoId).isEmpty()) {
+    public void actualizarOcupantes(Long condominioIdOverride, Long apartamentoId, ActualizarOcupantesCommand cmd) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
+        if (!apartamentoRepository.existePorIdYCondominio(apartamentoId, condominioId)) {
             throw ApartamentoException.noEncontrado();
         }
         for (var i : inquilinoRepository.buscarPorApartamento(apartamentoId)) {
@@ -81,15 +80,5 @@ public class GestionarAdminApartamentosService implements GestionarAdminApartame
                 apartamentoId);
             inquilinoRepository.guardar(inquilino);
         }
-    }
-
-    private Long obtenerCondominioId() {
-        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
-            .orElseThrow(UsuarioException::noEncontrado);
-        var condominioId = usuario.getIdCondominio();
-        if (condominioId == null) {
-            throw CondominioException.noEncontrado();
-        }
-        return condominioId;
     }
 }

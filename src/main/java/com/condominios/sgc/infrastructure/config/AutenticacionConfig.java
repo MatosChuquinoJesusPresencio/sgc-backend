@@ -3,6 +3,7 @@ package com.condominios.sgc.infrastructure.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.CatalogoUseCase;
 import com.condominios.sgc.application.port.in.GestionarAdminActivosUseCase;
 import com.condominios.sgc.application.port.in.GestionarAdminApartamentosUseCase;
@@ -89,6 +90,13 @@ public class AutenticacionConfig {
     }
 
     @Bean
+    public CondominioIdResolver condominioIdResolver(
+            SecurityServicePort securityService,
+            UsuarioRepositoryPort usuarioRepository) {
+        return new CondominioIdResolver(securityService, usuarioRepository);
+    }
+
+    @Bean
     public GestionarAdministradorService gestionarAdministradorService(
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
@@ -140,78 +148,72 @@ public class AutenticacionConfig {
 
     @Bean
     public GestionarAdminApartamentosUseCase gestionarAdminApartamentosUseCase(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
             ApartamentoRepositoryPort apartamentoRepository,
             InquilinoRepositoryPort inquilinoRepository,
-            VehiculoRepositoryPort vehiculoRepository) {
+            VehiculoRepositoryPort vehiculoRepository,
+            UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver) {
         return new GestionarAdminApartamentosService(
-            securityService, usuarioRepository,
-            apartamentoRepository, inquilinoRepository, vehiculoRepository);
+            apartamentoRepository, inquilinoRepository, vehiculoRepository,
+            usuarioRepository, condominioIdResolver);
     }
 
     @Bean
     public GestionarAdminUsuariosUseCase gestionarAdminUsuariosUseCase(
-            SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
-            HashServicePort hashService) {
-        return new GestionarAdminUsuariosService(securityService, usuarioRepository, hashService);
+            HashServicePort hashService,
+            CondominioIdResolver condominioIdResolver) {
+        return new GestionarAdminUsuariosService(usuarioRepository, hashService, condominioIdResolver);
     }
 
     @Bean
     public GestionarAdminEstructuraUseCase gestionarAdminEstructuraUseCase(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
-            CondominioRepositoryPort condominioRepository) {
+            CondominioRepositoryPort condominioRepository,
+            CondominioIdResolver condominioIdResolver) {
         return new GestionarAdminEstructuraService(
-            securityService, usuarioRepository, condominioRepository);
+            condominioRepository, condominioIdResolver);
     }
 
     @Bean
     public GestionarAdminDashboardUseCase gestionarAdminDashboardUseCase(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
             CondominioRepositoryPort condominioRepository,
+            UsuarioRepositoryPort usuarioRepository,
             VehiculoRepositoryPort vehiculoRepository,
-            CarritoRepositoryPort carritoRepository) {
+            CarritoRepositoryPort carritoRepository,
+            CondominioIdResolver condominioIdResolver) {
         return new GestionarAdminDashboardService(
-            securityService, usuarioRepository, condominioRepository,
-            vehiculoRepository, carritoRepository);
+            condominioRepository, usuarioRepository, vehiculoRepository, carritoRepository, condominioIdResolver);
     }
 
     @Bean
     public GestionarAdminCondominioUseCase gestionarAdminCondominioUseCase(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
             CondominioRepositoryPort condominioRepository,
             PaisRepositoryPort paisRepository,
-            CiudadRepositoryPort ciudadRepository) {
+            CiudadRepositoryPort ciudadRepository,
+            CondominioIdResolver condominioIdResolver) {
         return new GestionarAdminCondominioService(
-            securityService, usuarioRepository, condominioRepository,
-            paisRepository, ciudadRepository);
+            condominioRepository, paisRepository, ciudadRepository, condominioIdResolver);
     }
 
     @Bean
     public GestionarAdminActivosUseCase gestionarAdminActivosUseCase(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
             CarritoRepositoryPort carritoRepository,
             EstacionamientoRepositoryPort estacionamientoRepository,
             ApartamentoRepositoryPort apartamentoRepository,
-            ConfiguracionRepositoryPort configuracionRepository) {
+            ConfiguracionRepositoryPort configuracionRepository,
+            CondominioIdResolver condominioIdResolver) {
         return new GestionarAdminActivosService(
-            securityService, usuarioRepository, carritoRepository, estacionamientoRepository,
-            apartamentoRepository, configuracionRepository);
+            carritoRepository, estacionamientoRepository, apartamentoRepository,
+            configuracionRepository, condominioIdResolver);
     }
 
     @Bean
     public GestionarAdminLogsUseCase gestionarAdminLogsUseCase(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
             LogAccesoVehicularRepositoryPort logAccesoRepository,
-            LogPrestamoCarritoRepositoryPort logCarritoRepository) {
+            LogPrestamoCarritoRepositoryPort logCarritoRepository,
+            CondominioIdResolver condominioIdResolver) {
         return new GestionarAdminLogsService(
-            securityService, usuarioRepository, logAccesoRepository, logCarritoRepository);
+            logAccesoRepository, logCarritoRepository, condominioIdResolver);
     }
 
     @Bean

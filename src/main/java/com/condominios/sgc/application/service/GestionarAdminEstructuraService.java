@@ -5,14 +5,12 @@ import com.condominios.sgc.application.dto.result.AdminApartamentoResult;
 import com.condominios.sgc.application.dto.result.AdminPisoResult;
 import com.condominios.sgc.application.dto.result.AdminStructureResult;
 import com.condominios.sgc.application.dto.result.AdminTorreResult;
+import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarAdminEstructuraUseCase;
 import com.condominios.sgc.application.port.out.CondominioRepositoryPort;
-import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
-import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.domain.model.CondominioModel;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.ParametroInvalidoException;
-import com.condominios.sgc.domain.shared.exception.UsuarioException;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,22 +21,19 @@ public class GestionarAdminEstructuraService implements GestionarAdminEstructura
     private static final String TIPO_PISO = "PISO";
     private static final String TIPO_APARTAMENTO = "APARTAMENTO";
 
-    private final SecurityServicePort securityService;
-    private final UsuarioRepositoryPort usuarioRepository;
     private final CondominioRepositoryPort condominioRepository;
+    private final CondominioIdResolver condominioIdResolver;
 
     public GestionarAdminEstructuraService(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
-            CondominioRepositoryPort condominioRepository) {
-        this.securityService = securityService;
-        this.usuarioRepository = usuarioRepository;
+            CondominioRepositoryPort condominioRepository,
+            CondominioIdResolver condominioIdResolver) {
         this.condominioRepository = condominioRepository;
+        this.condominioIdResolver = condominioIdResolver;
     }
 
     @Override
-    public AdminStructureResult obtenerEstructura() {
-        var condominio = cargarCondominio();
+    public AdminStructureResult obtenerEstructura(Long condominioIdOverride) {
+        var condominio = cargarCondominio(condominioIdOverride);
         var torres = condominio.getTorres().stream()
             .map(t -> new AdminTorreResult(
                 t.getId(), t.getNombre(),
@@ -60,8 +55,8 @@ public class GestionarAdminEstructuraService implements GestionarAdminEstructura
 
     @Override
     @Transactional
-    public void crearNodo(CrearNodeCommand cmd) {
-        var condominio = cargarCondominio();
+    public void crearNodo(Long condominioIdOverride, CrearNodeCommand cmd) {
+        var condominio = cargarCondominio(condominioIdOverride);
         switch (cmd.tipo()) {
             case TIPO_TORRE -> condominio.agregarTorre(cmd.nombre());
             case TIPO_PISO -> condominio.agregarPiso(cmd.nombreTorre(), cmd.numero());
@@ -74,8 +69,8 @@ public class GestionarAdminEstructuraService implements GestionarAdminEstructura
 
     @Override
     @Transactional
-    public void eliminarNodo(Long id, String tipo) {
-        var condominio = cargarCondominio();
+    public void eliminarNodo(Long condominioIdOverride, Long id, String tipo) {
+        var condominio = cargarCondominio(condominioIdOverride);
         boolean eliminado = switch (tipo) {
             case TIPO_TORRE -> condominio.eliminarTorre(id);
             case TIPO_PISO -> condominio.eliminarPiso(id);
@@ -89,13 +84,8 @@ public class GestionarAdminEstructuraService implements GestionarAdminEstructura
         condominioRepository.guardar(condominio);
     }
 
-    private CondominioModel cargarCondominio() {
-        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
-            .orElseThrow(UsuarioException::noEncontrado);
-        var condominioId = usuario.getIdCondominio();
-        if (condominioId == null) {
-            throw CondominioException.noEncontrado();
-        }
+    private CondominioModel cargarCondominio(Long condominioIdOverride) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
         return condominioRepository.buscarPorId(condominioId)
             .orElseThrow(CondominioException::noEncontrado);
     }
