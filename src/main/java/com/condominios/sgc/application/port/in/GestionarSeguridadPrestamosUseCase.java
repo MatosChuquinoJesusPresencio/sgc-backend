@@ -6,7 +6,7 @@ import com.condominios.sgc.application.dto.command.RegistrarPrestamoCarritoComma
 import com.condominios.sgc.application.dto.result.SecurityActiveCartLoanResult;
 
 public interface GestionarSeguridadPrestamosUseCase {
-    List<SecurityActiveCartLoanResult> listarActivos();
-    SecurityActiveCartLoanResult registrarPrestamo(RegistrarPrestamoCarritoCommand cmd);
+    List<SecurityActiveCartLoanResult> listarActivos(Long condominioIdOverride);
+    SecurityActiveCartLoanResult registrarPrestamo(Long condominioIdOverride, RegistrarPrestamoCarritoCommand cmd);
     void registrarDevolucion(Long id);
 }

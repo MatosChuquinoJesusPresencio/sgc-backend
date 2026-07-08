@@ -5,6 +5,6 @@ import com.condominios.sgc.application.dto.command.RegistrarSalidaVehiculoComman
 import com.condominios.sgc.application.dto.result.AdminLogEntryResult;
 
 public interface GestionarSeguridadAccesoUseCase {
-    AdminLogEntryResult registrarEntrada(RegistrarEntradaVehiculoCommand cmd);
+    AdminLogEntryResult registrarEntrada(Long condominioIdOverride, RegistrarEntradaVehiculoCommand cmd);
     AdminLogEntryResult registrarSalida(RegistrarSalidaVehiculoCommand cmd);
 }

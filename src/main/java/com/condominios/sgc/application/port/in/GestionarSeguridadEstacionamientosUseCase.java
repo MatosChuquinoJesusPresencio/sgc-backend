@@ -5,5 +5,5 @@ import java.util.List;
 import com.condominios.sgc.application.dto.result.SecurityParkingSlotResult;
 
 public interface GestionarSeguridadEstacionamientosUseCase {
-    List<SecurityParkingSlotResult> listarSlots();
+    List<SecurityParkingSlotResult> listarSlots(Long condominioIdOverride);
 }

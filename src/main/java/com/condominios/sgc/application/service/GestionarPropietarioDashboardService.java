@@ -1,6 +1,7 @@
 package com.condominios.sgc.application.service;
 
 import com.condominios.sgc.application.dto.result.PropietarioDashboardResult;
+import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarPropietarioDashboardUseCase;
 import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.CondominioRepositoryPort;
@@ -14,6 +15,7 @@ public class GestionarPropietarioDashboardService implements GestionarPropietari
 
     private final SecurityServicePort securityService;
     private final UsuarioRepositoryPort usuarioRepository;
+    private final CondominioIdResolver condominioIdResolver;
     private final ApartamentoRepositoryPort apartamentoRepository;
     private final CondominioRepositoryPort condominioRepository;
     private final InquilinoRepositoryPort inquilinoRepository;
@@ -22,12 +24,14 @@ public class GestionarPropietarioDashboardService implements GestionarPropietari
     public GestionarPropietarioDashboardService(
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             ApartamentoRepositoryPort apartamentoRepository,
             CondominioRepositoryPort condominioRepository,
             InquilinoRepositoryPort inquilinoRepository,
             VehiculoRepositoryPort vehiculoRepository) {
         this.securityService = securityService;
         this.usuarioRepository = usuarioRepository;
+        this.condominioIdResolver = condominioIdResolver;
         this.apartamentoRepository = apartamentoRepository;
         this.condominioRepository = condominioRepository;
         this.inquilinoRepository = inquilinoRepository;
@@ -35,7 +39,7 @@ public class GestionarPropietarioDashboardService implements GestionarPropietari
     }
 
     @Override
-    public PropietarioDashboardResult obtenerResumen() {
+    public PropietarioDashboardResult obtenerResumen(Long condominioIdOverride) {
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
         var aptos = apartamentoRepository.buscarPorPropietario(usuario.getId());
@@ -43,7 +47,8 @@ public class GestionarPropietarioDashboardService implements GestionarPropietari
             return new PropietarioDashboardResult(null, null, null, null, 0, 0, 0);
         }
         var apto = aptos.get();
-        var condominio = condominioRepository.buscarPorId(usuario.getIdCondominio()).orElse(null);
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
+        var condominio = condominioRepository.buscarPorId(condominioId).orElse(null);
 
         String torreNombre = null;
         Integer pisoNumero = null;

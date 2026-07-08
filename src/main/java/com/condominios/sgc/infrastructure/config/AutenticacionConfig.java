@@ -220,26 +220,28 @@ public class AutenticacionConfig {
     public GestionarPropietarioDashboardUseCase gestionarPropietarioDashboardUseCase(
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             ApartamentoRepositoryPort apartamentoRepository,
             CondominioRepositoryPort condominioRepository,
             InquilinoRepositoryPort inquilinoRepository,
             VehiculoRepositoryPort vehiculoRepository) {
         return new GestionarPropietarioDashboardService(
-            securityService, usuarioRepository, apartamentoRepository,
-            condominioRepository, inquilinoRepository, vehiculoRepository);
+            securityService, usuarioRepository, condominioIdResolver,
+            apartamentoRepository, condominioRepository, inquilinoRepository, vehiculoRepository);
     }
 
     @Bean
     public GestionarPropietarioApartamentoUseCase gestionarPropietarioApartamentoUseCase(
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             ApartamentoRepositoryPort apartamentoRepository,
             CondominioRepositoryPort condominioRepository,
             InquilinoRepositoryPort inquilinoRepository,
             VehiculoRepositoryPort vehiculoRepository) {
         return new GestionarPropietarioApartamentoService(
-            securityService, usuarioRepository, apartamentoRepository,
-            condominioRepository, inquilinoRepository, vehiculoRepository);
+            securityService, usuarioRepository, condominioIdResolver,
+            apartamentoRepository, condominioRepository, inquilinoRepository, vehiculoRepository);
     }
 
     @Bean
@@ -257,40 +259,41 @@ public class AutenticacionConfig {
     public GestionarPropietarioVehiculosUseCase gestionarPropietarioVehiculosUseCase(
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             VehiculoRepositoryPort vehiculoRepository) {
         return new GestionarPropietarioVehiculosService(
-            securityService, usuarioRepository, vehiculoRepository);
+            securityService, usuarioRepository, condominioIdResolver, vehiculoRepository);
     }
 
     @Bean
     public GestionarPropietarioLogsUseCase gestionarPropietarioLogsUseCase(
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             LogAccesoVehicularRepositoryPort logAccesoRepository,
             LogPrestamoCarritoRepositoryPort logCarritoRepository) {
         return new GestionarPropietarioLogsService(
-            securityService, usuarioRepository, logAccesoRepository, logCarritoRepository);
+            securityService, usuarioRepository, condominioIdResolver,
+            logAccesoRepository, logCarritoRepository);
     }
 
     @Bean
     public GestionarSeguridadDashboardUseCase gestionarSeguridadDashboardUseCase(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             EstacionamientoRepositoryPort estacionamientoRepository,
             LogPrestamoCarritoRepositoryPort logPrestamoRepository,
             LogAccesoVehicularRepositoryPort logAccesoRepository) {
         return new GestionarSeguridadDashboardService(
-            securityService, usuarioRepository, estacionamientoRepository,
+            condominioIdResolver, estacionamientoRepository,
             logPrestamoRepository, logAccesoRepository);
     }
 
     @Bean
     public GestionarSeguridadEstacionamientosUseCase gestionarSeguridadEstacionamientosUseCase(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             EstacionamientoRepositoryPort estacionamientoRepository) {
         return new GestionarSeguridadEstacionamientosService(
-            securityService, usuarioRepository, estacionamientoRepository);
+            condominioIdResolver, estacionamientoRepository);
     }
 
     @Bean
@@ -303,25 +306,23 @@ public class AutenticacionConfig {
 
     @Bean
     public GestionarSeguridadPrestamosUseCase gestionarSeguridadPrestamosUseCase(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             CarritoRepositoryPort carritoRepository,
             ApartamentoRepositoryPort apartamentoRepository,
             LogPrestamoCarritoRepositoryPort logPrestamoRepository) {
         return new GestionarSeguridadPrestamosService(
-            securityService, usuarioRepository, carritoRepository,
+            condominioIdResolver, carritoRepository,
             apartamentoRepository, logPrestamoRepository);
     }
 
     @Bean
     public GestionarSeguridadAccesoUseCase gestionarSeguridadAccesoUseCase(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             VehiculoRepositoryPort vehiculoRepository,
             EstacionamientoRepositoryPort estacionamientoRepository,
             LogAccesoVehicularRepositoryPort logAccesoRepository) {
         return new GestionarSeguridadAccesoService(
-            securityService, usuarioRepository, vehiculoRepository,
+            condominioIdResolver, vehiculoRepository,
             estacionamientoRepository, logAccesoRepository);
     }
 }

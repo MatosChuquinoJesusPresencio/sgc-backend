@@ -4,37 +4,31 @@ import com.condominios.sgc.application.dto.command.RegistrarEntradaVehiculoComma
 import com.condominios.sgc.application.dto.command.RegistrarSalidaVehiculoCommand;
 import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.AdminLogEntryResult;
+import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarSeguridadAccesoUseCase;
 import com.condominios.sgc.application.port.out.EstacionamientoRepositoryPort;
 import com.condominios.sgc.application.port.out.LogAccesoVehicularRepositoryPort;
-import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.VehiculoRepositoryPort;
-import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.domain.model.LogAccesoVehicularModel;
 import com.condominios.sgc.domain.shared.exception.EstacionamientoException;
 import com.condominios.sgc.domain.shared.exception.LogAccesoVehicularException;
-import com.condominios.sgc.domain.shared.exception.UsuarioException;
-import com.condominios.sgc.domain.shared.exception.VehiculoException;
 
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 public class GestionarSeguridadAccesoService implements GestionarSeguridadAccesoUseCase {
 
-    private final SecurityServicePort securityService;
-    private final UsuarioRepositoryPort usuarioRepository;
+    private final CondominioIdResolver condominioIdResolver;
     private final VehiculoRepositoryPort vehiculoRepository;
     private final EstacionamientoRepositoryPort estacionamientoRepository;
     private final LogAccesoVehicularRepositoryPort logAccesoRepository;
 
     public GestionarSeguridadAccesoService(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             VehiculoRepositoryPort vehiculoRepository,
             EstacionamientoRepositoryPort estacionamientoRepository,
             LogAccesoVehicularRepositoryPort logAccesoRepository) {
-        this.securityService = securityService;
-        this.usuarioRepository = usuarioRepository;
+        this.condominioIdResolver = condominioIdResolver;
         this.vehiculoRepository = vehiculoRepository;
         this.estacionamientoRepository = estacionamientoRepository;
         this.logAccesoRepository = logAccesoRepository;
@@ -42,13 +36,11 @@ public class GestionarSeguridadAccesoService implements GestionarSeguridadAcceso
 
     @Override
     @Transactional
-    public AdminLogEntryResult registrarEntrada(RegistrarEntradaVehiculoCommand cmd) {
-        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
-            .orElseThrow(UsuarioException::noEncontrado);
-        var condominioId = usuario.getIdCondominio();
+    public AdminLogEntryResult registrarEntrada(Long condominioIdOverride, RegistrarEntradaVehiculoCommand cmd) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
 
         var vehiculo = vehiculoRepository.buscarPorPlaca(cmd.placa())
-            .orElseThrow(VehiculoException::noEncontrado);
+            .orElseThrow(com.condominios.sgc.domain.shared.exception.VehiculoException::noEncontrado);
 
         var estacionamientos = estacionamientoRepository.buscarPorCondominio(condominioId, new PaginaQuery(0, Integer.MAX_VALUE));
         var slot = estacionamientos.items().stream()

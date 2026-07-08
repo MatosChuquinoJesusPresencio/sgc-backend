@@ -3,40 +3,33 @@ package com.condominios.sgc.application.service;
 import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.SecurityDashboardResult;
 import com.condominios.sgc.application.dto.result.SecurityDashboardResult.SecurityRecentLogEntry;
+import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarSeguridadDashboardUseCase;
 import com.condominios.sgc.application.port.out.EstacionamientoRepositoryPort;
 import com.condominios.sgc.application.port.out.LogAccesoVehicularRepositoryPort;
 import com.condominios.sgc.application.port.out.LogPrestamoCarritoRepositoryPort;
-import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
-import com.condominios.sgc.application.port.out.service.SecurityServicePort;
-import com.condominios.sgc.domain.shared.exception.UsuarioException;
 
 public class GestionarSeguridadDashboardService implements GestionarSeguridadDashboardUseCase {
 
-    private final SecurityServicePort securityService;
-    private final UsuarioRepositoryPort usuarioRepository;
+    private final CondominioIdResolver condominioIdResolver;
     private final EstacionamientoRepositoryPort estacionamientoRepository;
     private final LogPrestamoCarritoRepositoryPort logPrestamoRepository;
     private final LogAccesoVehicularRepositoryPort logAccesoRepository;
 
     public GestionarSeguridadDashboardService(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             EstacionamientoRepositoryPort estacionamientoRepository,
             LogPrestamoCarritoRepositoryPort logPrestamoRepository,
             LogAccesoVehicularRepositoryPort logAccesoRepository) {
-        this.securityService = securityService;
-        this.usuarioRepository = usuarioRepository;
+        this.condominioIdResolver = condominioIdResolver;
         this.estacionamientoRepository = estacionamientoRepository;
         this.logPrestamoRepository = logPrestamoRepository;
         this.logAccesoRepository = logAccesoRepository;
     }
 
     @Override
-    public SecurityDashboardResult obtenerStatus() {
-        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
-            .orElseThrow(UsuarioException::noEncontrado);
-        var condominioId = usuario.getIdCondominio();
+    public SecurityDashboardResult obtenerStatus(Long condominioIdOverride) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
 
         var estacionamientos = estacionamientoRepository.buscarPorCondominio(condominioId, new PaginaQuery(0, Integer.MAX_VALUE));
         int total = (int) estacionamientos.total();

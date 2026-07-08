@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.condominios.sgc.application.dto.command.RegistrarEntradaVehiculoCommand;
@@ -65,14 +66,16 @@ public class SecurityController {
     }
 
     @GetMapping("/dashboard/status")
-    public ResponseEntity<SecurityDashboardResponse> obtenerStatus() {
-        var resultado = dashboardUseCase.obtenerStatus();
+    public ResponseEntity<SecurityDashboardResponse> obtenerStatus(
+            @RequestParam(required = false) Long condominioId) {
+        var resultado = dashboardUseCase.obtenerStatus(condominioId);
         return ResponseEntity.ok(mapper.toDashboardResponse(resultado));
     }
 
     @GetMapping("/parking-slots")
-    public ResponseEntity<List<SecurityParkingSlotResponse>> listarSlots() {
-        var resultados = estacionamientosUseCase.listarSlots();
+    public ResponseEntity<List<SecurityParkingSlotResponse>> listarSlots(
+            @RequestParam(required = false) Long condominioId) {
+        var resultados = estacionamientosUseCase.listarSlots(condominioId);
         return ResponseEntity.ok(mapper.toParkingSlotResponses(resultados));
     }
 
@@ -83,18 +86,20 @@ public class SecurityController {
     }
 
     @GetMapping("/asset-loans/active-carts")
-    public ResponseEntity<List<SecurityActiveCartLoanResponse>> listarPrestamosActivos() {
-        var resultados = prestamosUseCase.listarActivos();
+    public ResponseEntity<List<SecurityActiveCartLoanResponse>> listarPrestamosActivos(
+            @RequestParam(required = false) Long condominioId) {
+        var resultados = prestamosUseCase.listarActivos(condominioId);
         return ResponseEntity.ok(mapper.toActiveCartLoanResponses(resultados));
     }
 
     @PostMapping("/asset-loans")
     public ResponseEntity<SecurityActiveCartLoanResponse> registrarPrestamo(
+            @RequestParam(required = false) Long condominioId,
             @Valid @RequestBody RegistrarPrestamoCarritoRequest request) {
         var cmd = new RegistrarPrestamoCarritoCommand(
             request.codigoCarrito(), request.numeroApartamento(),
             request.nombreSolicitante(), request.dniSolicitante());
-        var resultado = prestamosUseCase.registrarPrestamo(cmd);
+        var resultado = prestamosUseCase.registrarPrestamo(condominioId, cmd);
         return ResponseEntity.ok(mapper.toActiveCartLoanResponse(resultado));
     }
 
@@ -106,13 +111,14 @@ public class SecurityController {
 
     @PostMapping("/access-logs/entry")
     public ResponseEntity<AdminLogEntryResponse> registrarEntrada(
+            @RequestParam(required = false) Long condominioId,
             @Valid @RequestBody RegistrarEntradaVehiculoRequest request) {
         var cmd = new RegistrarEntradaVehiculoCommand(
             request.placa(),
             MetodoEntrada.valueOf(request.metodo()),
             request.ocupante() != null ? TipoHabitante.valueOf(request.ocupante()) : null,
             request.datosInquilino());
-        var resultado = accesoUseCase.registrarEntrada(cmd);
+        var resultado = accesoUseCase.registrarEntrada(condominioId, cmd);
         return ResponseEntity.ok(adminMapper.toLogEntryResponse(resultado));
     }
 

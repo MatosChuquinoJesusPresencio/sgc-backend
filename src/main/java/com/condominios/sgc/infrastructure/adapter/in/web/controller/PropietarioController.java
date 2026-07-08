@@ -65,14 +65,16 @@ public class PropietarioController {
     }
 
     @GetMapping("/dashboard/summary")
-    public ResponseEntity<PropietarioDashboardResult> obtenerResumen() {
-        var resultado = dashboardUseCase.obtenerResumen();
+    public ResponseEntity<PropietarioDashboardResult> obtenerResumen(
+            @RequestParam(required = false) Long condominioId) {
+        var resultado = dashboardUseCase.obtenerResumen(condominioId);
         return ResponseEntity.ok(resultado);
     }
 
     @GetMapping("/apartment/details")
-    public ResponseEntity<PropietarioApartamentoDetailResponse> obtenerDetalleApartamento() {
-        var resultado = apartamentoUseCase.obtenerDetalle();
+    public ResponseEntity<PropietarioApartamentoDetailResponse> obtenerDetalleApartamento(
+            @RequestParam(required = false) Long condominioId) {
+        var resultado = apartamentoUseCase.obtenerDetalle(condominioId);
         return ResponseEntity.ok(mapper.toApartamentoDetailResponse(resultado));
     }
 
@@ -106,11 +108,12 @@ public class PropietarioController {
 
     @PostMapping("/vehicles")
     public ResponseEntity<PropietarioVehiculoResponse> crearVehiculo(
+            @RequestParam(required = false) Long condominioId,
             @Valid @RequestBody CrearPropietarioVehiculoRequest request) {
         var cmd = new CrearPropietarioVehiculoCommand(
             request.marca(), request.color(), request.modelo(),
             request.placa(), request.tipo());
-        var resultado = vehiculosUseCase.crear(cmd);
+        var resultado = vehiculosUseCase.crear(condominioId, cmd);
         return ResponseEntity.ok(mapper.toVehiculoResponse(resultado));
     }
 
@@ -122,6 +125,7 @@ public class PropietarioController {
 
     @GetMapping("/logs")
     public ResponseEntity<PaginaResponse<AdminLogEntryResponse>> listarLogs(
+            @RequestParam(required = false) Long condominioId,
             @RequestParam String type,
             @RequestParam(required = false) String fechaInicio,
             @RequestParam(required = false) String fechaFin,
@@ -129,7 +133,7 @@ public class PropietarioController {
             @RequestParam(defaultValue = "20") int size) {
         var inicio = fechaInicio != null ? java.time.Instant.parse(fechaInicio) : null;
         var fin = fechaFin != null ? java.time.Instant.parse(fechaFin) : null;
-        var resultado = logsUseCase.listar(type, inicio, fin, new PaginaQuery(page, size));
+        var resultado = logsUseCase.listar(condominioId, type, inicio, fin, new PaginaQuery(page, size));
         return ResponseEntity.ok(adminMapper.toLogEntryPaginaResponse(resultado));
     }
 }

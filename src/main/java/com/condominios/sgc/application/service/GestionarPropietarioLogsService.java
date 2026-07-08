@@ -6,6 +6,7 @@ import java.util.List;
 import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.AdminLogEntryResult;
 import com.condominios.sgc.application.dto.result.PaginaResult;
+import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarPropietarioLogsUseCase;
 import com.condominios.sgc.application.port.out.LogAccesoVehicularRepositoryPort;
 import com.condominios.sgc.application.port.out.LogPrestamoCarritoRepositoryPort;
@@ -13,7 +14,6 @@ import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.domain.model.LogAccesoVehicularModel;
 import com.condominios.sgc.domain.model.LogPrestamoCarritoModel;
-import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -23,26 +23,28 @@ public class GestionarPropietarioLogsService implements GestionarPropietarioLogs
 
     private final SecurityServicePort securityService;
     private final UsuarioRepositoryPort usuarioRepository;
+    private final CondominioIdResolver condominioIdResolver;
     private final LogAccesoVehicularRepositoryPort logAccesoRepository;
     private final LogPrestamoCarritoRepositoryPort logCarritoRepository;
 
     public GestionarPropietarioLogsService(
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             LogAccesoVehicularRepositoryPort logAccesoRepository,
             LogPrestamoCarritoRepositoryPort logCarritoRepository) {
         this.securityService = securityService;
         this.usuarioRepository = usuarioRepository;
+        this.condominioIdResolver = condominioIdResolver;
         this.logAccesoRepository = logAccesoRepository;
         this.logCarritoRepository = logCarritoRepository;
     }
 
     @Override
-    public PaginaResult<AdminLogEntryResult> listar(String type, Instant fechaInicio, Instant fechaFin, PaginaQuery pagina) {
+    public PaginaResult<AdminLogEntryResult> listar(Long condominioIdOverride, String type, Instant fechaInicio, Instant fechaFin, PaginaQuery pagina) {
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
-        var condominioId = usuario.getIdCondominio();
-        if (condominioId == null) throw CondominioException.noEncontrado();
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
         var userId = usuario.getId();
 
         if ("CARRITO".equalsIgnoreCase(type)) {

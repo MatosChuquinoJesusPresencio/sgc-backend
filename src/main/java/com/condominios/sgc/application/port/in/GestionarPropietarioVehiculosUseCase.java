@@ -7,6 +7,6 @@ import com.condominios.sgc.application.dto.result.PropietarioVehiculoResult;
 
 public interface GestionarPropietarioVehiculosUseCase {
     List<PropietarioVehiculoResult> listar();
-    PropietarioVehiculoResult crear(CrearPropietarioVehiculoCommand cmd);
+    PropietarioVehiculoResult crear(Long condominioIdOverride, CrearPropietarioVehiculoCommand cmd);
     void eliminar(Long id);
 }

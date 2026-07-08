@@ -4,17 +4,15 @@ import java.util.List;
 
 import com.condominios.sgc.application.dto.command.RegistrarPrestamoCarritoCommand;
 import com.condominios.sgc.application.dto.result.SecurityActiveCartLoanResult;
+import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarSeguridadPrestamosUseCase;
 import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.CarritoRepositoryPort;
 import com.condominios.sgc.application.port.out.LogPrestamoCarritoRepositoryPort;
-import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
-import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.domain.model.LogPrestamoCarritoModel;
 import com.condominios.sgc.domain.shared.exception.ApartamentoException;
 import com.condominios.sgc.domain.shared.exception.CarritoException;
 import com.condominios.sgc.domain.shared.exception.LogPrestamoCarritoException;
-import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.type.EstadoCarrito;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -22,28 +20,25 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class GestionarSeguridadPrestamosService implements GestionarSeguridadPrestamosUseCase {
 
-    private final SecurityServicePort securityService;
-    private final UsuarioRepositoryPort usuarioRepository;
+    private final CondominioIdResolver condominioIdResolver;
     private final CarritoRepositoryPort carritoRepository;
     private final ApartamentoRepositoryPort apartamentoRepository;
     private final LogPrestamoCarritoRepositoryPort logPrestamoRepository;
 
     public GestionarSeguridadPrestamosService(
-            SecurityServicePort securityService,
-            UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             CarritoRepositoryPort carritoRepository,
             ApartamentoRepositoryPort apartamentoRepository,
             LogPrestamoCarritoRepositoryPort logPrestamoRepository) {
-        this.securityService = securityService;
-        this.usuarioRepository = usuarioRepository;
+        this.condominioIdResolver = condominioIdResolver;
         this.carritoRepository = carritoRepository;
         this.apartamentoRepository = apartamentoRepository;
         this.logPrestamoRepository = logPrestamoRepository;
     }
 
     @Override
-    public List<SecurityActiveCartLoanResult> listarActivos() {
-        var condominioId = obtenerCondominioId();
+    public List<SecurityActiveCartLoanResult> listarActivos(Long condominioIdOverride) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
         return logPrestamoRepository.buscarActivosPorCondominio(condominioId)
             .stream()
             .map(this::toResult)
@@ -52,8 +47,8 @@ public class GestionarSeguridadPrestamosService implements GestionarSeguridadPre
 
     @Override
     @Transactional
-    public SecurityActiveCartLoanResult registrarPrestamo(RegistrarPrestamoCarritoCommand cmd) {
-        var condominioId = obtenerCondominioId();
+    public SecurityActiveCartLoanResult registrarPrestamo(Long condominioIdOverride, RegistrarPrestamoCarritoCommand cmd) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
 
         var carrito = carritoRepository.buscarPorCodigo(cmd.codigoCarrito())
             .orElseThrow(CarritoException::noEncontrado);
@@ -88,12 +83,6 @@ public class GestionarSeguridadPrestamosService implements GestionarSeguridadPre
             .orElseThrow(CarritoException::noEncontrado);
         carrito.actualizarEstado(EstadoCarrito.DISPONIBLE);
         carritoRepository.guardar(carrito);
-    }
-
-    private Long obtenerCondominioId() {
-        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
-            .orElseThrow(UsuarioException::noEncontrado);
-        return usuario.getIdCondominio();
     }
 
     private SecurityActiveCartLoanResult toResult(LogPrestamoCarritoModel m) {

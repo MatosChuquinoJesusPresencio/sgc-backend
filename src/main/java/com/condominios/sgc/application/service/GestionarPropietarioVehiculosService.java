@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.condominios.sgc.application.dto.command.CrearPropietarioVehiculoCommand;
 import com.condominios.sgc.application.dto.result.PropietarioVehiculoResult;
+import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarPropietarioVehiculosUseCase;
 import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.VehiculoRepositoryPort;
@@ -20,14 +21,17 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
 
     private final SecurityServicePort securityService;
     private final UsuarioRepositoryPort usuarioRepository;
+    private final CondominioIdResolver condominioIdResolver;
     private final VehiculoRepositoryPort vehiculoRepository;
 
     public GestionarPropietarioVehiculosService(
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             VehiculoRepositoryPort vehiculoRepository) {
         this.securityService = securityService;
         this.usuarioRepository = usuarioRepository;
+        this.condominioIdResolver = condominioIdResolver;
         this.vehiculoRepository = vehiculoRepository;
     }
 
@@ -47,13 +51,14 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
 
     @Override
     @Transactional
-    public PropietarioVehiculoResult crear(CrearPropietarioVehiculoCommand cmd) {
+    public PropietarioVehiculoResult crear(Long condominioIdOverride, CrearPropietarioVehiculoCommand cmd) {
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
         var modelo = new VehiculoModel(
             cmd.marca(), cmd.color(), cmd.modelo(), cmd.placa(),
             TipoVehiculo.valueOf(cmd.tipo()),
-            usuario.getIdCondominio(), usuario.getId(), null);
+            condominioId, usuario.getId(), null);
         return toResult(vehiculoRepository.guardar(modelo));
     }
 

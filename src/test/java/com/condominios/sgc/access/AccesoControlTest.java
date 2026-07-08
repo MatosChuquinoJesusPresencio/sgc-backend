@@ -135,6 +135,7 @@ class AccesoControlTest extends ControllerTestBase {
         var token = JwtTestUtil.accessToken(1L, "super@test.com", "SUPER_ADMINISTRADOR");
 
         mockMvc.perform(get("/api/security/dashboard/status")
+                        .param("condominioId", "1")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
     }

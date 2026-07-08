@@ -3,6 +3,7 @@ package com.condominios.sgc.application.service;
 import com.condominios.sgc.application.dto.result.PropietarioApartamentoDetailResult;
 import com.condominios.sgc.application.dto.result.PropietarioInquilinoResult;
 import com.condominios.sgc.application.dto.result.PropietarioVehiculoResult;
+import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarPropietarioApartamentoUseCase;
 import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.CondominioRepositoryPort;
@@ -17,6 +18,7 @@ public class GestionarPropietarioApartamentoService implements GestionarPropieta
 
     private final SecurityServicePort securityService;
     private final UsuarioRepositoryPort usuarioRepository;
+    private final CondominioIdResolver condominioIdResolver;
     private final ApartamentoRepositoryPort apartamentoRepository;
     private final CondominioRepositoryPort condominioRepository;
     private final InquilinoRepositoryPort inquilinoRepository;
@@ -25,12 +27,14 @@ public class GestionarPropietarioApartamentoService implements GestionarPropieta
     public GestionarPropietarioApartamentoService(
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             ApartamentoRepositoryPort apartamentoRepository,
             CondominioRepositoryPort condominioRepository,
             InquilinoRepositoryPort inquilinoRepository,
             VehiculoRepositoryPort vehiculoRepository) {
         this.securityService = securityService;
         this.usuarioRepository = usuarioRepository;
+        this.condominioIdResolver = condominioIdResolver;
         this.apartamentoRepository = apartamentoRepository;
         this.condominioRepository = condominioRepository;
         this.inquilinoRepository = inquilinoRepository;
@@ -38,14 +42,15 @@ public class GestionarPropietarioApartamentoService implements GestionarPropieta
     }
 
     @Override
-    public PropietarioApartamentoDetailResult obtenerDetalle() {
+    public PropietarioApartamentoDetailResult obtenerDetalle(Long condominioIdOverride) {
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
         var apt = apartamentoRepository.buscarPorPropietario(usuario.getId());
         if (apt.isEmpty()) throw ApartamentoException.noEncontrado();
         var apto = apt.get();
 
-        var condominio = condominioRepository.buscarPorId(usuario.getIdCondominio()).orElse(null);
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
+        var condominio = condominioRepository.buscarPorId(condominioId).orElse(null);
         String torreNombre = null;
         Integer pisoNumero = null;
         if (condominio != null) {
