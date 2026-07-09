@@ -51,6 +51,15 @@ public class VehiculoRepositoryAdapter implements VehiculoRepositoryPort {
 
     @Transactional(readOnly = true)
     @Override
+    public List<VehiculoModel> buscarPorInquilino(Long idInquilino) {
+        return repository.findByIdInquilino(idInquilino)
+                .stream()
+                .map(VehiculoMapper::toModel)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public Optional<VehiculoModel> buscarPorPlaca(String placa) {
         return repository.findByPlaca(placa).map(VehiculoMapper::toModel);
     }

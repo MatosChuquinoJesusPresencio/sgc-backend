@@ -14,6 +14,8 @@ public interface VehiculoJpaRepository extends JpaRepository<VehiculoEntity, Lon
 
     List<VehiculoEntity> findByIdPropietario(Long idPropietario);
 
+    List<VehiculoEntity> findByIdInquilino(Long idInquilino);
+
     Optional<VehiculoEntity> findByPlaca(String placa);
 
     void deleteByIdInquilino(Long idInquilino);

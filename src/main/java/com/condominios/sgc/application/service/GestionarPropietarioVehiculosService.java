@@ -1,6 +1,7 @@
 package com.condominios.sgc.application.service;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.condominios.sgc.application.dto.command.CrearPropietarioVehiculoCommand;
 import com.condominios.sgc.application.dto.result.PropietarioVehiculoResult;
@@ -8,6 +9,7 @@ import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarPropietarioVehiculosUseCase;
 import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.EstacionamientoRepositoryPort;
+import com.condominios.sgc.application.port.out.InquilinoRepositoryPort;
 import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.VehiculoRepositoryPort;
 import com.condominios.sgc.application.port.out.service.SecurityServicePort;
@@ -29,6 +31,7 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
     private final VehiculoRepositoryPort vehiculoRepository;
     private final ApartamentoRepositoryPort apartamentoRepository;
     private final EstacionamientoRepositoryPort estacionamientoRepository;
+    private final InquilinoRepositoryPort inquilinoRepository;
 
     public GestionarPropietarioVehiculosService(
             SecurityServicePort securityService,
@@ -36,13 +39,15 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
             CondominioIdResolver condominioIdResolver,
             VehiculoRepositoryPort vehiculoRepository,
             ApartamentoRepositoryPort apartamentoRepository,
-            EstacionamientoRepositoryPort estacionamientoRepository) {
+            EstacionamientoRepositoryPort estacionamientoRepository,
+            InquilinoRepositoryPort inquilinoRepository) {
         this.securityService = securityService;
         this.usuarioRepository = usuarioRepository;
         this.condominioIdResolver = condominioIdResolver;
         this.vehiculoRepository = vehiculoRepository;
         this.apartamentoRepository = apartamentoRepository;
         this.estacionamientoRepository = estacionamientoRepository;
+        this.inquilinoRepository = inquilinoRepository;
     }
 
     private Long obtenerIdPropietario() {
@@ -53,8 +58,16 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
 
     @Override
     public List<PropietarioVehiculoResult> listar() {
-        return vehiculoRepository.buscarPorPropietario(obtenerIdPropietario())
-            .stream()
+        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
+            .orElseThrow(UsuarioException::noEncontrado);
+        var propios = vehiculoRepository.buscarPorPropietario(usuario.getId());
+        var inquilinosVehiculos = apartamentoRepository.buscarPorPropietario(usuario.getId())
+            .map(apt -> inquilinoRepository.buscarPorApartamento(apt.getId())
+                .stream()
+                .flatMap(i -> vehiculoRepository.buscarPorInquilino(i.getId()).stream())
+                .toList())
+            .orElse(List.of());
+        return Stream.concat(propios.stream(), inquilinosVehiculos.stream())
             .map(this::toResult)
             .toList();
     }
@@ -80,11 +93,16 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
             .orElseThrow(UsuarioException::noEncontrado);
         var vehiculo = vehiculoRepository.buscarPorId(vehiculoId)
             .orElseThrow(VehiculoException::noEncontrado);
-        if (!usuario.getId().equals(vehiculo.getIdPropietario())) {
-            throw VehiculoException.noEncontrado();
-        }
         var apt = apartamentoRepository.buscarPorPropietario(usuario.getId())
             .orElseThrow(ApartamentoException::noEncontrado);
+        boolean esPropio = usuario.getId().equals(vehiculo.getIdPropietario());
+        boolean esDeInquilino = vehiculo.getIdInquilino() != null
+            && inquilinoRepository.buscarPorId(vehiculo.getIdInquilino())
+                .map(i -> i.getIdApartamento().equals(apt.getId()))
+                .orElse(false);
+        if (!esPropio && !esDeInquilino) {
+            throw VehiculoException.noEncontrado();
+        }
 
         if (idEstacionamiento != null) {
             var estacionamiento = estacionamientoRepository.buscarPorId(idEstacionamiento)

@@ -264,10 +264,11 @@ public class AutenticacionConfig {
             CondominioIdResolver condominioIdResolver,
             VehiculoRepositoryPort vehiculoRepository,
             ApartamentoRepositoryPort apartamentoRepository,
-            EstacionamientoRepositoryPort estacionamientoRepository) {
+            EstacionamientoRepositoryPort estacionamientoRepository,
+            InquilinoRepositoryPort inquilinoRepository) {
         return new GestionarPropietarioVehiculosService(
             securityService, usuarioRepository, condominioIdResolver, vehiculoRepository,
-            apartamentoRepository, estacionamientoRepository);
+            apartamentoRepository, estacionamientoRepository, inquilinoRepository);
     }
 
     @Bean
