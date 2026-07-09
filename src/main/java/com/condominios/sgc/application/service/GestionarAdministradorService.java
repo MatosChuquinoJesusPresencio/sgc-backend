@@ -126,7 +126,8 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
                 }
                 usuario.desasignarCondominio();
             }
-            if (usuarioRepository.buscarPorCondominioId(idCondominio).isPresent())
+            if (usuario.getRol() == Rol.ADMINISTRADOR_CONDOMINIO && 
+                usuarioRepository.buscarPorCondominioId(idCondominio).isPresent())
                 throw CondominioException.yaTieneAdministradorAsignado();
             var condominio = condominioRepository.buscarPorId(idCondominio)
                 .orElseThrow(CondominioException::noEncontrado);
