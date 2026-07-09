@@ -125,6 +125,13 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
             throw CondominioException.noEncontrado();
         }
 
+        if (estacionamiento.getIdApartamento() != null
+                && estacionamiento.getCantidadActual() > 0
+                && (cmd.idApartamento() == null
+                    || !cmd.idApartamento().equals(estacionamiento.getIdApartamento()))) {
+            throw EstacionamientoException.ocupado();
+        }
+
         if (cmd.idApartamento() != null) {
             if (!apartamentoRepository.existePorIdYCondominio(cmd.idApartamento(), condominioId)) {
                 throw ApartamentoException.noEncontrado();
