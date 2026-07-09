@@ -68,7 +68,7 @@ INSERT INTO configuracion (
     max_vehiculos_por_propietario, max_inquilinos_por_apartamento
 ) VALUES
     (1, 4, 2, 0.50, 120, 2, 1, 3, 4),
-    (2, 4,  2, 0.25,  90, 1, 1, 2, 2);
+    (2, 4, 2, 0.25,  90, 1, 1, 2, 2);
 
 -- 6. USUARIOS -----------------------------------------------------------------
 -- Contraseña por defecto: 123456

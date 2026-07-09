@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +24,7 @@ import com.condominios.sgc.application.port.in.GestionarPropietarioVehiculosUseC
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminLogEntryResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PaginaResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioEstacionamientoResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.AsignarParkingVehiculoRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.CrearPropietarioInquilinoRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.CrearPropietarioVehiculoRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioApartamentoDetailResponse;
@@ -119,6 +121,15 @@ public class PropietarioController {
             request.marca(), request.color(), request.modelo(),
             request.placa(), request.tipo());
         var resultado = vehiculosUseCase.crear(condominioId, cmd);
+        return ResponseEntity.ok(mapper.toVehiculoResponse(resultado));
+    }
+
+    @PutMapping("/vehicles/{id}/parking")
+    public ResponseEntity<PropietarioVehiculoResponse> asignarEstacionamiento(
+            @PathVariable Long id,
+            @RequestParam(required = false) Long condominioId,
+            @Valid @RequestBody AsignarParkingVehiculoRequest request) {
+        var resultado = vehiculosUseCase.asignarEstacionamiento(condominioId, id, request.idEstacionamiento());
         return ResponseEntity.ok(mapper.toVehiculoResponse(resultado));
     }
 

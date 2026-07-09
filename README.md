@@ -233,6 +233,7 @@ rol en el claim `rol`.
 | DELETE | `/api/homeowner/tenants/{id}`          | Eliminar inquilino               |
 | GET    | `/api/homeowner/vehicles`              | Listar vehículos                 |
 | POST   | `/api/homeowner/vehicles`              | Registrar vehículo               |
+| PUT    | `/api/homeowner/vehicles/{id}/parking`  | Asignar/reasignar/desasignar estacionamiento al vehículo |
 | DELETE | `/api/homeowner/vehicles/{id}`         | Eliminar vehículo                |
 | GET    | `/api/homeowner/parking-spots`         | Estacionamientos asignados al apartamento |
 | GET    | `/api/homeowner/logs`                  | Logs de actividad (propietario)  |
