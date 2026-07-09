@@ -19,6 +19,7 @@ import com.condominios.sgc.domain.shared.exception.EstacionamientoException;
 import com.condominios.sgc.domain.shared.exception.InquilinoException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.shared.exception.VehiculoException;
+import com.condominios.sgc.domain.type.Rol;
 import com.condominios.sgc.domain.type.TipoVehiculo;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -53,9 +54,16 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
 
 
     @Override
-    public List<PropietarioVehiculoResult> listar() {
+    public List<PropietarioVehiculoResult> listar(Long condominioIdOverride) {
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
+        if (usuario.getRol() == Rol.SUPER_ADMINISTRADOR) {
+            var condominioId = condominioIdResolver.resolver(condominioIdOverride);
+            return vehiculoRepository.buscarPorCondominio(condominioId)
+                .stream()
+                .map(this::toResult)
+                .toList();
+        }
         var propios = vehiculoRepository.buscarPorPropietario(usuario.getId());
         var inquilinosVehiculos = apartamentoRepository.buscarPorPropietario(usuario.getId())
             .map(apt -> inquilinoRepository.buscarPorApartamento(apt.getId())
@@ -127,23 +135,30 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
 
     @Override
     @Transactional
-    public void eliminar(Long id) {
+    public void eliminar(Long condominioIdOverride, Long id) {
         var vehiculo = vehiculoRepository.buscarPorId(id)
             .orElseThrow(VehiculoException::noEncontrado);
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
-        var esPropio = usuario.getId().equals(vehiculo.getIdPropietario());
-        var esDeInquilino = false;
-        if (vehiculo.getIdInquilino() != null) {
-            var apt = apartamentoRepository.buscarPorPropietario(usuario.getId())
-                .orElse(null);
-            esDeInquilino = apt != null
-                && inquilinoRepository.buscarPorId(vehiculo.getIdInquilino())
-                    .map(i -> i.getIdApartamento().equals(apt.getId()))
-                    .orElse(false);
-        }
-        if (!esPropio && !esDeInquilino) {
-            throw VehiculoException.noEncontrado();
+        if (usuario.getRol() == Rol.SUPER_ADMINISTRADOR) {
+            var condominioId = condominioIdResolver.resolver(condominioIdOverride);
+            if (!condominioId.equals(vehiculo.getIdCondominio())) {
+                throw VehiculoException.noEncontrado();
+            }
+        } else {
+            var esPropio = usuario.getId().equals(vehiculo.getIdPropietario());
+            var esDeInquilino = false;
+            if (vehiculo.getIdInquilino() != null) {
+                var apt = apartamentoRepository.buscarPorPropietario(usuario.getId())
+                    .orElse(null);
+                esDeInquilino = apt != null
+                    && inquilinoRepository.buscarPorId(vehiculo.getIdInquilino())
+                        .map(i -> i.getIdApartamento().equals(apt.getId()))
+                        .orElse(false);
+            }
+            if (!esPropio && !esDeInquilino) {
+                throw VehiculoException.noEncontrado();
+            }
         }
         vehiculoRepository.eliminarPorId(id);
     }

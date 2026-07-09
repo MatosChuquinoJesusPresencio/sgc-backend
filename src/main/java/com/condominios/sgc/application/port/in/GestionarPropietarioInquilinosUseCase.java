@@ -6,7 +6,7 @@ import com.condominios.sgc.application.dto.command.CrearPropietarioInquilinoComm
 import com.condominios.sgc.application.dto.result.PropietarioInquilinoResult;
 
 public interface GestionarPropietarioInquilinosUseCase {
-    List<PropietarioInquilinoResult> listar();
-    PropietarioInquilinoResult crear(CrearPropietarioInquilinoCommand cmd);
-    void eliminar(Long id);
+    List<PropietarioInquilinoResult> listar(Long condominioIdOverride, Long apartamentoIdOverride);
+    PropietarioInquilinoResult crear(Long condominioIdOverride, CrearPropietarioInquilinoCommand cmd);
+    void eliminar(Long condominioIdOverride, Long id);
 }

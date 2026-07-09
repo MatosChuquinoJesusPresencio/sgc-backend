@@ -250,11 +250,13 @@ public class AutenticacionConfig {
     public GestionarPropietarioInquilinosUseCase gestionarPropietarioInquilinosUseCase(
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             ApartamentoRepositoryPort apartamentoRepository,
             InquilinoRepositoryPort inquilinoRepository,
             VehiculoRepositoryPort vehiculoRepository) {
         return new GestionarPropietarioInquilinosService(
-            securityService, usuarioRepository, apartamentoRepository, inquilinoRepository, vehiculoRepository);
+            securityService, usuarioRepository, condominioIdResolver,
+            apartamentoRepository, inquilinoRepository, vehiculoRepository);
     }
 
     @Bean

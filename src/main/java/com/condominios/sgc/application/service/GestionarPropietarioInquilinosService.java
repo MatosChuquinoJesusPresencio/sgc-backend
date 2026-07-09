@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.condominios.sgc.application.dto.command.CrearPropietarioInquilinoCommand;
 import com.condominios.sgc.application.dto.result.PropietarioInquilinoResult;
+import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarPropietarioInquilinosUseCase;
 import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.InquilinoRepositoryPort;
@@ -14,6 +15,7 @@ import com.condominios.sgc.domain.model.InquilinoModel;
 import com.condominios.sgc.domain.shared.exception.ApartamentoException;
 import com.condominios.sgc.domain.shared.exception.InquilinoException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
+import com.condominios.sgc.domain.type.Rol;
 import com.condominios.sgc.domain.type.TipoDocumento;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,7 @@ public class GestionarPropietarioInquilinosService implements GestionarPropietar
 
     private final SecurityServicePort securityService;
     private final UsuarioRepositoryPort usuarioRepository;
+    private final CondominioIdResolver condominioIdResolver;
     private final ApartamentoRepositoryPort apartamentoRepository;
     private final InquilinoRepositoryPort inquilinoRepository;
     private final VehiculoRepositoryPort vehiculoRepository;
@@ -30,27 +33,36 @@ public class GestionarPropietarioInquilinosService implements GestionarPropietar
     public GestionarPropietarioInquilinosService(
             SecurityServicePort securityService,
             UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
             ApartamentoRepositoryPort apartamentoRepository,
             InquilinoRepositoryPort inquilinoRepository,
             VehiculoRepositoryPort vehiculoRepository) {
         this.securityService = securityService;
         this.usuarioRepository = usuarioRepository;
+        this.condominioIdResolver = condominioIdResolver;
         this.apartamentoRepository = apartamentoRepository;
         this.inquilinoRepository = inquilinoRepository;
         this.vehiculoRepository = vehiculoRepository;
     }
 
-    private Long obtenerIdApartamento() {
+    private Long resolverIdApartamento(Long condominioIdOverride, Long apartamentoIdOverride) {
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
-        var apt = apartamentoRepository.buscarPorPropietario(usuario.getId());
-        if (apt.isEmpty()) throw ApartamentoException.noEncontrado();
-        return apt.get().getId();
+        if (usuario.getRol() == Rol.SUPER_ADMINISTRADOR) {
+            condominioIdResolver.resolver(condominioIdOverride);
+            if (apartamentoIdOverride == null) {
+                throw ApartamentoException.noEncontrado();
+            }
+            return apartamentoIdOverride;
+        }
+        var apt = apartamentoRepository.buscarPorPropietario(usuario.getId())
+            .orElseThrow(ApartamentoException::noEncontrado);
+        return apt.getId();
     }
 
     @Override
-    public List<PropietarioInquilinoResult> listar() {
-        return inquilinoRepository.buscarPorApartamento(obtenerIdApartamento())
+    public List<PropietarioInquilinoResult> listar(Long condominioIdOverride, Long apartamentoIdOverride) {
+        return inquilinoRepository.buscarPorApartamento(resolverIdApartamento(condominioIdOverride, apartamentoIdOverride))
             .stream()
             .map(this::toResult)
             .toList();
@@ -58,8 +70,8 @@ public class GestionarPropietarioInquilinosService implements GestionarPropietar
 
     @Override
     @Transactional
-    public PropietarioInquilinoResult crear(CrearPropietarioInquilinoCommand cmd) {
-        var idApartamento = obtenerIdApartamento();
+    public PropietarioInquilinoResult crear(Long condominioIdOverride, CrearPropietarioInquilinoCommand cmd) {
+        var idApartamento = resolverIdApartamento(condominioIdOverride, cmd.apartamentoId());
         var modelo = new InquilinoModel(
             cmd.nombres(), cmd.apellidos(),
             TipoDocumento.valueOf(cmd.tipoDocumento()), cmd.numeroDocumento(),
@@ -69,11 +81,18 @@ public class GestionarPropietarioInquilinosService implements GestionarPropietar
 
     @Override
     @Transactional
-    public void eliminar(Long id) {
+    public void eliminar(Long condominioIdOverride, Long id) {
         var inquilino = inquilinoRepository.buscarPorId(id)
             .orElseThrow(InquilinoException::noEncontrado);
-        if (!inquilino.getIdApartamento().equals(obtenerIdApartamento())) {
-            throw InquilinoException.noEncontrado();
+        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
+            .orElseThrow(UsuarioException::noEncontrado);
+        if (usuario.getRol() != Rol.SUPER_ADMINISTRADOR) {
+            condominioIdResolver.resolver(condominioIdOverride);
+            if (!inquilino.getIdApartamento().equals(
+                apartamentoRepository.buscarPorPropietario(usuario.getId())
+                    .orElseThrow(ApartamentoException::noEncontrado).getId())) {
+                throw InquilinoException.noEncontrado();
+            }
         }
         vehiculoRepository.eliminarPorInquilino(id);
         inquilinoRepository.eliminarPorId(id);

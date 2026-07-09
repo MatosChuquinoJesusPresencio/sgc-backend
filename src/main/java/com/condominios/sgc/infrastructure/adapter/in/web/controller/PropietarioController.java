@@ -86,30 +86,37 @@ public class PropietarioController {
     }
 
     @GetMapping("/tenants")
-    public ResponseEntity<List<PropietarioInquilinoResponse>> listarInquilinos() {
-        var resultados = inquilinosUseCase.listar();
+    public ResponseEntity<List<PropietarioInquilinoResponse>> listarInquilinos(
+            @RequestParam(required = false) Long condominioId,
+            @RequestParam(required = false) Long apartamentoId) {
+        var resultados = inquilinosUseCase.listar(condominioId, apartamentoId);
         return ResponseEntity.ok(mapper.toInquilinoResponses(resultados));
     }
 
     @PostMapping("/tenants")
     public ResponseEntity<PropietarioInquilinoResponse> crearInquilino(
+            @RequestParam(required = false) Long condominioId,
             @Valid @RequestBody CrearPropietarioInquilinoRequest request) {
         var cmd = new CrearPropietarioInquilinoCommand(
             request.nombres(), request.apellidos(),
-            request.tipoDocumento(), request.numeroDocumento());
-        var resultado = inquilinosUseCase.crear(cmd);
+            request.tipoDocumento(), request.numeroDocumento(),
+            request.apartamentoId());
+        var resultado = inquilinosUseCase.crear(condominioId, cmd);
         return ResponseEntity.ok(mapper.toInquilinoResponse(resultado));
     }
 
     @DeleteMapping("/tenants/{id}")
-    public ResponseEntity<Void> eliminarInquilino(@PathVariable Long id) {
-        inquilinosUseCase.eliminar(id);
+    public ResponseEntity<Void> eliminarInquilino(
+            @PathVariable Long id,
+            @RequestParam(required = false) Long condominioId) {
+        inquilinosUseCase.eliminar(condominioId, id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/vehicles")
-    public ResponseEntity<List<PropietarioVehiculoResponse>> listarVehiculos() {
-        var resultados = vehiculosUseCase.listar();
+    public ResponseEntity<List<PropietarioVehiculoResponse>> listarVehiculos(
+            @RequestParam(required = false) Long condominioId) {
+        var resultados = vehiculosUseCase.listar(condominioId);
         return ResponseEntity.ok(mapper.toVehiculoResponses(resultados));
     }
 
@@ -134,8 +141,10 @@ public class PropietarioController {
     }
 
     @DeleteMapping("/vehicles/{id}")
-    public ResponseEntity<Void> eliminarVehiculo(@PathVariable Long id) {
-        vehiculosUseCase.eliminar(id);
+    public ResponseEntity<Void> eliminarVehiculo(
+            @PathVariable Long id,
+            @RequestParam(required = false) Long condominioId) {
+        vehiculosUseCase.eliminar(condominioId, id);
         return ResponseEntity.noContent().build();
     }
 

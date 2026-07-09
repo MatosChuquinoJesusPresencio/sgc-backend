@@ -4,6 +4,7 @@ public record CrearPropietarioInquilinoCommand(
     String nombres,
     String apellidos,
     String tipoDocumento,
-    String numeroDocumento
+    String numeroDocumento,
+    Long apartamentoId
 ) {
 }
