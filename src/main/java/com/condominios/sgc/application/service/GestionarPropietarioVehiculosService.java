@@ -16,6 +16,7 @@ import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.domain.model.VehiculoModel;
 import com.condominios.sgc.domain.shared.exception.ApartamentoException;
 import com.condominios.sgc.domain.shared.exception.EstacionamientoException;
+import com.condominios.sgc.domain.shared.exception.InquilinoException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.shared.exception.VehiculoException;
 import com.condominios.sgc.domain.type.TipoVehiculo;
@@ -50,11 +51,6 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
         this.inquilinoRepository = inquilinoRepository;
     }
 
-    private Long obtenerIdPropietario() {
-        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
-            .orElseThrow(UsuarioException::noEncontrado);
-        return usuario.getId();
-    }
 
     @Override
     public List<PropietarioVehiculoResult> listar() {
@@ -78,10 +74,21 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
         var condominioId = condominioIdResolver.resolver(condominioIdOverride);
+        if (cmd.inquilinoId() != null) {
+            var inquilino = inquilinoRepository.buscarPorId(cmd.inquilinoId())
+                .orElseThrow(InquilinoException::noEncontrado);
+            var apt = apartamentoRepository.buscarPorPropietario(usuario.getId())
+                .orElseThrow(ApartamentoException::noEncontrado);
+            if (!apt.getId().equals(inquilino.getIdApartamento())) {
+                throw InquilinoException.noEncontrado();
+            }
+        }
         var modelo = new VehiculoModel(
             cmd.marca(), cmd.color(), cmd.modelo(), cmd.placa(),
             TipoVehiculo.valueOf(cmd.tipo()),
-            condominioId, usuario.getId(), null);
+            condominioId,
+            cmd.inquilinoId() != null ? null : usuario.getId(),
+            cmd.inquilinoId());
         return toResult(vehiculoRepository.guardar(modelo));
     }
 
@@ -123,8 +130,19 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
     public void eliminar(Long id) {
         var vehiculo = vehiculoRepository.buscarPorId(id)
             .orElseThrow(VehiculoException::noEncontrado);
-        var idPropietario = obtenerIdPropietario();
-        if (!idPropietario.equals(vehiculo.getIdPropietario())) {
+        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
+            .orElseThrow(UsuarioException::noEncontrado);
+        var esPropio = usuario.getId().equals(vehiculo.getIdPropietario());
+        var esDeInquilino = false;
+        if (vehiculo.getIdInquilino() != null) {
+            var apt = apartamentoRepository.buscarPorPropietario(usuario.getId())
+                .orElse(null);
+            esDeInquilino = apt != null
+                && inquilinoRepository.buscarPorId(vehiculo.getIdInquilino())
+                    .map(i -> i.getIdApartamento().equals(apt.getId()))
+                    .orElse(false);
+        }
+        if (!esPropio && !esDeInquilino) {
             throw VehiculoException.noEncontrado();
         }
         vehiculoRepository.eliminarPorId(id);

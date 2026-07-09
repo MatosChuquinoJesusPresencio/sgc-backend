@@ -119,7 +119,7 @@ public class PropietarioController {
             @Valid @RequestBody CrearPropietarioVehiculoRequest request) {
         var cmd = new CrearPropietarioVehiculoCommand(
             request.marca(), request.color(), request.modelo(),
-            request.placa(), request.tipo());
+            request.placa(), request.tipo(), request.inquilinoId());
         var resultado = vehiculosUseCase.crear(condominioId, cmd);
         return ResponseEntity.ok(mapper.toVehiculoResponse(resultado));
     }

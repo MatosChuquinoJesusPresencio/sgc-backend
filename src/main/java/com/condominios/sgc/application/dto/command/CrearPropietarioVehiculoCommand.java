@@ -5,6 +5,7 @@ public record CrearPropietarioVehiculoCommand(
     String color,
     String modelo,
     String placa,
-    String tipo
+    String tipo,
+    Long inquilinoId
 ) {
 }
