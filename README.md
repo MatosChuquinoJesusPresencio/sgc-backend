@@ -218,6 +218,7 @@ rol en el claim `rol`.
 | PUT    | `/api/admin/apartments/{id}/occupants`         | Actualizar ocupantes                  |
 | GET    | `/api/admin/assets`                            | Listar activos (carritos/estacionamientos) |
 | POST   | `/api/admin/assets`                            | Crear activo                          |
+| DELETE | `/api/admin/assets/{id}`                       | Eliminar activo (CARRITO/ESTACIONAMIENTO) |
 | PUT    | `/api/admin/assets/{id}/status`                | Actualizar estado de activo           |
 | GET    | `/api/admin/logs`                              | Logs de actividad (filtros)           |
 

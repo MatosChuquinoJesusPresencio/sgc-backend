@@ -37,4 +37,8 @@ public class EstacionamientoException extends DominioException {
         return new EstacionamientoException(
             "el apartamento ya tiene el máximo de estacionamientos asignados");
     }
+
+    public static EstacionamientoException ocupado() {
+        return new EstacionamientoException("no se puede eliminar un estacionamiento con vehículos dentro");
+    }
 }

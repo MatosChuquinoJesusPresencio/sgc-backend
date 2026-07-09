@@ -265,6 +265,15 @@ public class AdminCondominioController {
         return ResponseEntity.ok(mapper.toAssetResponse(resultado));
     }
 
+    @DeleteMapping("/assets/{id}")
+    public ResponseEntity<Void> eliminarActivo(
+            @PathVariable Long id,
+            @RequestParam(required = false) Long condominioId,
+            @RequestParam String type) {
+        gestionarAdminActivos.eliminar(condominioId, id, type);
+        return ResponseEntity.noContent().build();
+    }
+
     @PutMapping("/assets/{id}/status")
     public ResponseEntity<AdminAssetResponse> actualizarStatusActivo(
             @PathVariable Long id,

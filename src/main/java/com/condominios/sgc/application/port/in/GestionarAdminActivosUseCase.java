@@ -12,4 +12,5 @@ public interface GestionarAdminActivosUseCase {
     AdminAssetResult crear(Long condominioIdOverride, CrearAssetCommand cmd);
     AdminAssetResult actualizarStatus(Long condominioIdOverride, Long id, ActualizarStatusAssetCommand cmd);
     AdminAssetResult asignarApartamento(Long condominioIdOverride, Long id, AsignarParkingCommand cmd);
+    void eliminar(Long condominioIdOverride, Long id, String type);
 }

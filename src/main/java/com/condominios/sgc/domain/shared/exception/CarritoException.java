@@ -24,4 +24,8 @@ public class CarritoException extends DominioException {
     public static CarritoException noEncontrado() {
         return new CarritoException("carrito no encontrado");
     }
+
+    public static CarritoException enUso() {
+        return new CarritoException("no se puede eliminar un carrito que está en uso");
+    }
 }

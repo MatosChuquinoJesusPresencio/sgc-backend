@@ -143,6 +143,36 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
         return toResult(estacionamientoRepository.guardar(estacionamiento));
     }
 
+    @Override
+    @Transactional
+    public void eliminar(Long condominioIdOverride, Long id, String type) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
+
+        if ("CARRITO".equalsIgnoreCase(type)) {
+            var carrito = carritoRepository.buscarPorId(id)
+                .orElseThrow(CarritoException::noEncontrado);
+            if (!carrito.getIdCondominio().equals(condominioId)) {
+                throw CondominioException.noEncontrado();
+            }
+            if (carrito.getEstado() == EstadoCarrito.EN_USO) {
+                throw CarritoException.enUso();
+            }
+            carritoRepository.eliminarPorId(id);
+        } else if ("ESTACIONAMIENTO".equalsIgnoreCase(type)) {
+            var estacionamiento = estacionamientoRepository.buscarPorId(id)
+                .orElseThrow(EstacionamientoException::noEncontrado);
+            if (!estacionamiento.getIdCondominio().equals(condominioId)) {
+                throw CondominioException.noEncontrado();
+            }
+            if (estacionamiento.getCantidadActual() > 0) {
+                throw EstacionamientoException.ocupado();
+            }
+            estacionamientoRepository.eliminarPorId(id);
+        } else {
+            throw new ParametroInvalidoException("Tipo de activo no válido: " + type);
+        }
+    }
+
     private AdminAssetResult toResult(CarritoModel m) {
         return new AdminAssetResult(
             m.getId(), "CARRITO", m.getCodigo(), m.getEstado().name(),
