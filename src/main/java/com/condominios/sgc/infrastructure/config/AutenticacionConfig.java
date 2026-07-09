@@ -15,6 +15,7 @@ import com.condominios.sgc.application.port.in.GestionarAdminUsuariosUseCase;
 import com.condominios.sgc.application.port.in.GestionarCondominioUseCase;
 import com.condominios.sgc.application.port.in.GestionarPropietarioApartamentoUseCase;
 import com.condominios.sgc.application.port.in.GestionarPropietarioDashboardUseCase;
+import com.condominios.sgc.application.port.in.GestionarPropietarioEstacionamientosUseCase;
 import com.condominios.sgc.application.port.in.GestionarPropietarioInquilinosUseCase;
 import com.condominios.sgc.application.port.in.GestionarPropietarioLogsUseCase;
 import com.condominios.sgc.application.port.in.GestionarPropietarioVehiculosUseCase;
@@ -57,6 +58,7 @@ import com.condominios.sgc.application.service.GestionarDashboardService;
 import com.condominios.sgc.application.service.GestionarPropietarioApartamentoService;
 import com.condominios.sgc.application.service.GestionarPropietarioDashboardService;
 import com.condominios.sgc.application.service.GestionarPropietarioInquilinosService;
+import com.condominios.sgc.application.service.GestionarPropietarioEstacionamientosService;
 import com.condominios.sgc.application.service.GestionarPropietarioLogsService;
 import com.condominios.sgc.application.service.GestionarPropietarioVehiculosService;
 import com.condominios.sgc.application.service.GestionarSeguridadAccesoService;
@@ -275,6 +277,18 @@ public class AutenticacionConfig {
         return new GestionarPropietarioLogsService(
             securityService, usuarioRepository, condominioIdResolver,
             logAccesoRepository, logCarritoRepository);
+    }
+
+    @Bean
+    public GestionarPropietarioEstacionamientosUseCase gestionarPropietarioEstacionamientosUseCase(
+            SecurityServicePort securityService,
+            UsuarioRepositoryPort usuarioRepository,
+            CondominioIdResolver condominioIdResolver,
+            ApartamentoRepositoryPort apartamentoRepository,
+            EstacionamientoRepositoryPort estacionamientoRepository) {
+        return new GestionarPropietarioEstacionamientosService(
+            securityService, usuarioRepository, condominioIdResolver,
+            apartamentoRepository, estacionamientoRepository);
     }
 
     @Bean

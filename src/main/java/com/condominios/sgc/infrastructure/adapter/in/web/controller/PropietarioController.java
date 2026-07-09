@@ -16,11 +16,13 @@ import com.condominios.sgc.application.dto.command.CrearPropietarioVehiculoComma
 import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.port.in.GestionarPropietarioApartamentoUseCase;
 import com.condominios.sgc.application.port.in.GestionarPropietarioDashboardUseCase;
+import com.condominios.sgc.application.port.in.GestionarPropietarioEstacionamientosUseCase;
 import com.condominios.sgc.application.port.in.GestionarPropietarioInquilinosUseCase;
 import com.condominios.sgc.application.port.in.GestionarPropietarioLogsUseCase;
 import com.condominios.sgc.application.port.in.GestionarPropietarioVehiculosUseCase;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminLogEntryResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PaginaResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioEstacionamientoResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.CrearPropietarioInquilinoRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.CrearPropietarioVehiculoRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioApartamentoDetailResponse;
@@ -44,6 +46,7 @@ public class PropietarioController {
     private final GestionarPropietarioVehiculosUseCase vehiculosUseCase;
     private final GestionarPropietarioLogsUseCase logsUseCase;
     private final GestionarPropietarioApartamentoUseCase apartamentoUseCase;
+    private final GestionarPropietarioEstacionamientosUseCase estacionamientosUseCase;
     private final PropietarioMapper mapper;
     private final AdminCondominioMapper adminMapper;
 
@@ -53,6 +56,7 @@ public class PropietarioController {
             GestionarPropietarioVehiculosUseCase vehiculosUseCase,
             GestionarPropietarioLogsUseCase logsUseCase,
             GestionarPropietarioApartamentoUseCase apartamentoUseCase,
+            GestionarPropietarioEstacionamientosUseCase estacionamientosUseCase,
             PropietarioMapper mapper,
             AdminCondominioMapper adminMapper) {
         this.dashboardUseCase = dashboardUseCase;
@@ -60,6 +64,7 @@ public class PropietarioController {
         this.vehiculosUseCase = vehiculosUseCase;
         this.logsUseCase = logsUseCase;
         this.apartamentoUseCase = apartamentoUseCase;
+        this.estacionamientosUseCase = estacionamientosUseCase;
         this.mapper = mapper;
         this.adminMapper = adminMapper;
     }
@@ -121,6 +126,13 @@ public class PropietarioController {
     public ResponseEntity<Void> eliminarVehiculo(@PathVariable Long id) {
         vehiculosUseCase.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/parking-spots")
+    public ResponseEntity<List<PropietarioEstacionamientoResponse>> listarEstacionamientos(
+            @RequestParam(required = false) Long condominioId) {
+        var resultados = estacionamientosUseCase.listar(condominioId);
+        return ResponseEntity.ok(mapper.toEstacionamientoResponses(resultados));
     }
 
     @GetMapping("/logs")

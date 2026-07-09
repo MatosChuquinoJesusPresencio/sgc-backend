@@ -6,9 +6,11 @@ import org.springframework.stereotype.Component;
 
 import com.condominios.sgc.application.dto.result.PropietarioApartamentoDetailResult;
 import com.condominios.sgc.application.dto.result.PropietarioDashboardResult;
+import com.condominios.sgc.application.dto.result.PropietarioEstacionamientoResult;
 import com.condominios.sgc.application.dto.result.PropietarioInquilinoResult;
 import com.condominios.sgc.application.dto.result.PropietarioVehiculoResult;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioApartamentoDetailResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioEstacionamientoResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioInquilinoResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioVehiculoResponse;
 
@@ -42,6 +44,16 @@ public class PropietarioMapper {
 
     public List<PropietarioVehiculoResponse> toVehiculoResponses(List<PropietarioVehiculoResult> results) {
         return results.stream().map(this::toVehiculoResponse).toList();
+    }
+
+    public PropietarioEstacionamientoResponse toEstacionamientoResponse(PropietarioEstacionamientoResult r) {
+        return new PropietarioEstacionamientoResponse(
+            r.id(), r.numero(), r.tipoVehiculo(),
+            r.capacidadMaxima(), r.cantidadActual(), r.disponible());
+    }
+
+    public List<PropietarioEstacionamientoResponse> toEstacionamientoResponses(List<PropietarioEstacionamientoResult> results) {
+        return results.stream().map(this::toEstacionamientoResponse).toList();
     }
 
     public PropietarioApartamentoDetailResponse toApartamentoDetailResponse(PropietarioApartamentoDetailResult r) {

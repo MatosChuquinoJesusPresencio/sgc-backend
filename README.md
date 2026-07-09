@@ -234,6 +234,7 @@ rol en el claim `rol`.
 | GET    | `/api/homeowner/vehicles`              | Listar vehículos                 |
 | POST   | `/api/homeowner/vehicles`              | Registrar vehículo               |
 | DELETE | `/api/homeowner/vehicles/{id}`         | Eliminar vehículo                |
+| GET    | `/api/homeowner/parking-spots`         | Estacionamientos asignados al apartamento |
 | GET    | `/api/homeowner/logs`                  | Logs de actividad (propietario)  |
 
 ### Agente de Seguridad

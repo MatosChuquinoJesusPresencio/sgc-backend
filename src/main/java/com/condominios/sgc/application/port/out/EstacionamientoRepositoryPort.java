@@ -1,5 +1,6 @@
 package com.condominios.sgc.application.port.out;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.condominios.sgc.application.dto.query.PaginaQuery;
@@ -10,6 +11,7 @@ public interface EstacionamientoRepositoryPort {
     Optional<EstacionamientoModel> buscarPorId(Long id);
     EstacionamientoModel guardar(EstacionamientoModel modelo);
     void eliminarPorId(Long id);
+    List<EstacionamientoModel> buscarPorApartamento(Long idApartamento);
     long contarPorApartamento(Long idApartamento);
     PaginaResult<EstacionamientoModel> buscarPorCondominio(Long idCondominio, PaginaQuery paginacion);
 }

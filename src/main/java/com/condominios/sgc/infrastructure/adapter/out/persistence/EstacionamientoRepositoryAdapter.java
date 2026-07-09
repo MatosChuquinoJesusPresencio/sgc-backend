@@ -1,5 +1,6 @@
 package com.condominios.sgc.infrastructure.adapter.out.persistence;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +30,14 @@ public class EstacionamientoRepositoryAdapter implements EstacionamientoReposito
     @Override
     public EstacionamientoModel guardar(EstacionamientoModel modelo) {
         return EstacionamientoMapper.toModel(repository.save(EstacionamientoMapper.toEntity(modelo)));
+    }
+
+    @Override
+    public List<EstacionamientoModel> buscarPorApartamento(Long idApartamento) {
+        return repository.findByIdApartamento(idApartamento)
+            .stream()
+            .map(EstacionamientoMapper::toModel)
+            .toList();
     }
 
     @Override
