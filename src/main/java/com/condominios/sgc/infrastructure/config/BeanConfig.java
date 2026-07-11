@@ -70,7 +70,7 @@ import com.condominios.sgc.application.service.GestionarUsuariosGlobalService;
 import com.condominios.sgc.application.service.PerfilService;
 
 @Configuration
-public class AutenticacionConfig {
+public class BeanConfig {
 
     @Bean
     public AutenticacionService autenticacionService(
