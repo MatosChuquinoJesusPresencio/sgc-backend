@@ -40,4 +40,8 @@ public class AutenticacionException extends DominioException {
     public static AutenticacionException usuarioNoAutenticado() {
         return new AutenticacionException("no hay un usuario autenticado en la sesión actual");
     }
+
+    public static AutenticacionException errorEnviarCorreo() {
+        return new AutenticacionException("error al enviar el correo");
+    }
 }

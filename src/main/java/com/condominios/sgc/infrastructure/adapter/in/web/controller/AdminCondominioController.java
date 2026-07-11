@@ -31,6 +31,7 @@ import com.condominios.sgc.application.port.in.GestionarAdminDashboardUseCase;
 import com.condominios.sgc.application.port.in.GestionarAdminEstructuraUseCase;
 import com.condominios.sgc.application.port.in.GestionarAdminLogsUseCase;
 import com.condominios.sgc.application.port.in.GestionarAdminUsuariosUseCase;
+import com.condominios.sgc.application.port.in.GestionarPropietarioVehiculosUseCase;
 import com.condominios.sgc.domain.type.TipoDocumento;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.ActualizarAdminUserRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.ActualizarConfiguracionRequest;
@@ -52,9 +53,12 @@ import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminConfi
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminDashboardMetricsResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminStructureResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PaginaResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioVehiculoResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.mapper.AdminCondominioMapper;
+import com.condominios.sgc.infrastructure.adapter.in.web.mapper.PropietarioMapper;
 
 import jakarta.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -68,7 +72,9 @@ public class AdminCondominioController {
     private final GestionarAdminApartamentosUseCase gestionarAdminApartamentos;
     private final GestionarAdminActivosUseCase gestionarAdminActivos;
     private final GestionarAdminLogsUseCase gestionarAdminLogs;
+    private final GestionarPropietarioVehiculosUseCase gestionarPropietarioVehiculos;
     private final AdminCondominioMapper mapper;
+    private final PropietarioMapper propietarioMapper;
 
     public AdminCondominioController(
             GestionarAdminDashboardUseCase gestionarAdminDashboard,
@@ -78,7 +84,9 @@ public class AdminCondominioController {
             GestionarAdminApartamentosUseCase gestionarAdminApartamentos,
             GestionarAdminActivosUseCase gestionarAdminActivos,
             GestionarAdminLogsUseCase gestionarAdminLogs,
-            AdminCondominioMapper mapper) {
+            GestionarPropietarioVehiculosUseCase gestionarPropietarioVehiculos,
+            AdminCondominioMapper mapper,
+            PropietarioMapper propietarioMapper) {
         this.gestionarAdminDashboard = gestionarAdminDashboard;
         this.gestionarAdminCondominio = gestionarAdminCondominio;
         this.gestionarAdminEstructura = gestionarAdminEstructura;
@@ -86,7 +94,9 @@ public class AdminCondominioController {
         this.gestionarAdminApartamentos = gestionarAdminApartamentos;
         this.gestionarAdminActivos = gestionarAdminActivos;
         this.gestionarAdminLogs = gestionarAdminLogs;
+        this.gestionarPropietarioVehiculos = gestionarPropietarioVehiculos;
         this.mapper = mapper;
+        this.propietarioMapper = propietarioMapper;
     }
 
     @GetMapping("/dashboard/metrics")
@@ -286,6 +296,14 @@ public class AdminCondominioController {
         return ResponseEntity.ok(mapper.toAssetResponse(resultado));
     }
 
+    @PutMapping("/assets/unassign-vehicle")
+    public ResponseEntity<Void> desasignarVehiculo(
+            @RequestParam(required = false) Long condominioId,
+            @RequestParam Long vehiculoId) {
+        gestionarAdminActivos.desasignarVehiculo(condominioId, vehiculoId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/logs")
     public ResponseEntity<PaginaResponse<AdminLogEntryResponse>> listarLogs(
             @RequestParam(required = false) Long condominioId,
@@ -299,5 +317,12 @@ public class AdminCondominioController {
         var fin = fechaFin != null ? java.time.Instant.parse(fechaFin) : null;
         var resultado = gestionarAdminLogs.listar(condominioId, type, userId, inicio, fin, new PaginaQuery(page, size));
         return ResponseEntity.ok(mapper.toLogEntryPaginaResponse(resultado));
+    }
+
+    @GetMapping("/vehicles")
+    public ResponseEntity<List<PropietarioVehiculoResponse>> listarVehiculos(
+            @RequestParam(required = false) Long condominioId) {
+        var resultados = gestionarPropietarioVehiculos.listar(condominioId);
+        return ResponseEntity.ok(propietarioMapper.toVehiculoResponses(resultados));
     }
 }

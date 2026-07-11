@@ -32,4 +32,6 @@ public interface LogPrestamoCarritoJpaRepository extends JpaRepository<LogPresta
             Pageable pageable);
 
     List<LogPrestamoCarritoEntity> findByIdCondominioAndFechaDevolucionIsNullOrderByFechaPrestamoDesc(Long idCondominio);
+
+    List<LogPrestamoCarritoEntity> findAllByIdCondominioOrderByFechaPrestamoDesc(Long idCondominio);
 }

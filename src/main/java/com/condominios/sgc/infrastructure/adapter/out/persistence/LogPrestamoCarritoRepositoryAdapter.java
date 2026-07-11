@@ -58,4 +58,12 @@ public class LogPrestamoCarritoRepositoryAdapter implements LogPrestamoCarritoRe
                 .map(LogPrestamoCarritoMapper::toModel)
                 .toList();
     }
+
+    @Override
+    public List<LogPrestamoCarritoModel> listarTodosPorCondominio(Long idCondominio) {
+        return repository.findAllByIdCondominioOrderByFechaPrestamoDesc(idCondominio)
+                .stream()
+                .map(LogPrestamoCarritoMapper::toModel)
+                .toList();
+    }
 }

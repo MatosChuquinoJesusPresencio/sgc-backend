@@ -160,6 +160,14 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
                 throw VehiculoException.noEncontrado();
             }
         }
+        if (vehiculo.getIdEstacionamiento() != null) {
+            var estacionamiento = estacionamientoRepository.buscarPorId(vehiculo.getIdEstacionamiento())
+                .orElse(null);
+            if (estacionamiento != null) {
+                estacionamiento.decrementarOcupacion();
+                estacionamientoRepository.guardar(estacionamiento);
+            }
+        }
         vehiculoRepository.eliminarPorId(id);
     }
 

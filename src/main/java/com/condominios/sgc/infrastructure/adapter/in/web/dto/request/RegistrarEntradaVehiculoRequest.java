@@ -6,6 +6,7 @@ public record RegistrarEntradaVehiculoRequest(
     @NotBlank String placa,
     @NotBlank String metodo,
     String ocupante,
-    String datosInquilino
+    String datosInquilino,
+    Long idEstacionamiento
 ) {
 }

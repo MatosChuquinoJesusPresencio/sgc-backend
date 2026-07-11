@@ -136,7 +136,7 @@ public class AdminCondominioMapper {
             fmt(r.fechaEntrada()), fmt(r.fechaSalida()),
             r.solicitante(), r.nombreSolicitante(), r.dniSolicitante(),
             r.penalizacion(), fmt(r.fechaPrestamo()), fmt(r.fechaDevolucion()),
-            r.idCondominio());
+            r.idCondominio(), r.idVehiculo(), r.idEstacionamiento());
     }
 
     private static String fmt(Instant i) {

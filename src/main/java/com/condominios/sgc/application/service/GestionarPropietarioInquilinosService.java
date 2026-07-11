@@ -3,6 +3,7 @@ package com.condominios.sgc.application.service;
 import java.util.List;
 
 import com.condominios.sgc.application.dto.command.CrearPropietarioInquilinoCommand;
+import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.PropietarioInquilinoResult;
 import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarPropietarioInquilinosUseCase;
@@ -51,7 +52,7 @@ public class GestionarPropietarioInquilinosService implements GestionarPropietar
         if (usuario.getRol() == Rol.SUPER_ADMINISTRADOR) {
             condominioIdResolver.resolver(condominioIdOverride);
             if (apartamentoIdOverride == null) {
-                throw ApartamentoException.noEncontrado();
+                return null;
             }
             return apartamentoIdOverride;
         }
@@ -62,7 +63,18 @@ public class GestionarPropietarioInquilinosService implements GestionarPropietar
 
     @Override
     public List<PropietarioInquilinoResult> listar(Long condominioIdOverride, Long apartamentoIdOverride) {
-        return inquilinoRepository.buscarPorApartamento(resolverIdApartamento(condominioIdOverride, apartamentoIdOverride))
+        var idApartamento = resolverIdApartamento(condominioIdOverride, apartamentoIdOverride);
+        if (idApartamento == null) {
+            var condominioId = condominioIdResolver.resolver(condominioIdOverride);
+            var apartments = apartamentoRepository.buscarEnCondominio(condominioId,
+                new PaginaQuery(0, Integer.MAX_VALUE));
+            return apartments.items().stream()
+                .flatMap(apt -> apt.inquilinos().stream())
+                .map(inq -> new PropietarioInquilinoResult(inq.id(), inq.nombres(), inq.apellidos(),
+                    inq.tipoDocumento(), inq.numeroDocumento()))
+                .toList();
+        }
+        return inquilinoRepository.buscarPorApartamento(idApartamento)
             .stream()
             .map(this::toResult)
             .toList();

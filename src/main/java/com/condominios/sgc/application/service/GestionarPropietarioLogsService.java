@@ -69,7 +69,7 @@ public class GestionarPropietarioLogsService implements GestionarPropietarioLogs
             m.getFechaEntrada(),
             m.getFechaSalida(),
             null, null, null, null, null, null,
-            m.getIdCondominio());
+            m.getIdCondominio(), m.getIdVehiculo(), m.getIdEstacionamiento());
     }
 
     private AdminLogEntryResult toResult(LogPrestamoCarritoModel m) {
@@ -80,6 +80,6 @@ public class GestionarPropietarioLogsService implements GestionarPropietarioLogs
             m.getPenalizacion(),
             m.getFechaPrestamo(),
             m.getFechaDevolucion(),
-            m.getIdCondominio());
+            m.getIdCondominio(), null, null);
     }
 }

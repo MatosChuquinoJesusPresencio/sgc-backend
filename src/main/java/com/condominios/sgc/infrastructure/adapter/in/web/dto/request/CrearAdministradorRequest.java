@@ -8,7 +8,7 @@ public record CrearAdministradorRequest(
     @NotBlank String nombres,
     @NotBlank String apellidos,
     @NotBlank @Email String correo,
-    @NotBlank @Size(min = 7, max = 16) String telefono,
+    @Size(min = 7, max = 16) String telefono,
     @NotBlank String contrasena
 ) {
 }

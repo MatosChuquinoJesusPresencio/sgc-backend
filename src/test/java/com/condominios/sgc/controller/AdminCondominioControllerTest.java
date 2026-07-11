@@ -319,15 +319,15 @@ class AdminCondominioControllerTest extends ControllerTestBase {
 
     @Order(2)
     @Test
-    void asignarPropietario_yaAsignado_returns400() throws Exception {
-        // Apartment 1 already has propietario 3 assigned
+    void asignarPropietario_yaAsignado_returns200() throws Exception {
+        // Apartment 1 already has propietario 3 assigned — reassignment now allowed
         mockMvc.perform(put("/api/admin/apartments/1/assign-owner")
                         .header("Authorization", "Bearer " + TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {"idPropietario": 3}
                                 """))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
 
     @Order(2)

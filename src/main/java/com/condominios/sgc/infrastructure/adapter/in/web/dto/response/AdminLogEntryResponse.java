@@ -17,6 +17,8 @@ public record AdminLogEntryResponse(
     BigDecimal penalizacion,
     String fechaPrestamo,
     String fechaDevolucion,
-    Long idCondominio
+    Long idCondominio,
+    Long idVehiculo,
+    Long idEstacionamiento
 ) {
 }

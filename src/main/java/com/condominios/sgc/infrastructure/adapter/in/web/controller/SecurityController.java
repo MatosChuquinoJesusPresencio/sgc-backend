@@ -27,6 +27,7 @@ import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.RegistrarEn
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.RegistrarPrestamoCarritoRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.RegistrarSalidaVehiculoRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityActiveCartLoanResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityCartLoanFullResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityDashboardResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityParkingSlotResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityVehicleVerificationResponse;
@@ -92,13 +93,21 @@ public class SecurityController {
         return ResponseEntity.ok(mapper.toActiveCartLoanResponses(resultados));
     }
 
+    @GetMapping("/asset-loans/all")
+    public ResponseEntity<List<SecurityCartLoanFullResponse>> listarTodosPrestamos(
+            @RequestParam(required = false) Long condominioId) {
+        var resultados = prestamosUseCase.listarTodos(condominioId);
+        return ResponseEntity.ok(mapper.toCartLoanFullResponses(resultados));
+    }
+
     @PostMapping("/asset-loans")
     public ResponseEntity<SecurityActiveCartLoanResponse> registrarPrestamo(
             @RequestParam(required = false) Long condominioId,
             @Valid @RequestBody RegistrarPrestamoCarritoRequest request) {
         var cmd = new RegistrarPrestamoCarritoCommand(
             request.codigoCarrito(), request.numeroApartamento(),
-            request.nombreSolicitante(), request.dniSolicitante());
+            request.nombreSolicitante(), request.dniSolicitante(),
+            request.solicitante(), request.idPropietario(), request.idInquilino());
         var resultado = prestamosUseCase.registrarPrestamo(condominioId, cmd);
         return ResponseEntity.ok(mapper.toActiveCartLoanResponse(resultado));
     }
@@ -117,7 +126,8 @@ public class SecurityController {
             request.placa(),
             MetodoEntrada.valueOf(request.metodo()),
             request.ocupante() != null ? TipoHabitante.valueOf(request.ocupante()) : null,
-            request.datosInquilino());
+            request.datosInquilino(),
+            request.idEstacionamiento());
         var resultado = accesoUseCase.registrarEntrada(condominioId, cmd);
         return ResponseEntity.ok(adminMapper.toLogEntryResponse(resultado));
     }

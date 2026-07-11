@@ -203,10 +203,11 @@ public class AutenticacionConfig {
             EstacionamientoRepositoryPort estacionamientoRepository,
             ApartamentoRepositoryPort apartamentoRepository,
             ConfiguracionRepositoryPort configuracionRepository,
+            VehiculoRepositoryPort vehiculoRepository,
             CondominioIdResolver condominioIdResolver) {
         return new GestionarAdminActivosService(
             carritoRepository, estacionamientoRepository, apartamentoRepository,
-            configuracionRepository, condominioIdResolver);
+            configuracionRepository, vehiculoRepository, condominioIdResolver);
     }
 
     @Bean

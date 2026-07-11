@@ -7,6 +7,9 @@ public record RegistrarPrestamoCarritoRequest(
     @NotBlank String codigoCarrito,
     @NotNull Integer numeroApartamento,
     @NotBlank String nombreSolicitante,
-    @NotBlank String dniSolicitante
+    @NotBlank String dniSolicitante,
+    String solicitante,
+    Long idPropietario,
+    Long idInquilino
 ) {
 }

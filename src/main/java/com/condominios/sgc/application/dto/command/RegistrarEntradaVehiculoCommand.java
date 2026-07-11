@@ -7,6 +7,7 @@ public record RegistrarEntradaVehiculoCommand(
     String placa,
     MetodoEntrada metodo,
     TipoHabitante ocupante,
-    String datosInquilino
+    String datosInquilino,
+    Long idEstacionamiento
 ) {
 }

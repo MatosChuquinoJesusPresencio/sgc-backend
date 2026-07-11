@@ -15,4 +15,5 @@ public interface LogPrestamoCarritoRepositoryPort {
     void eliminarPorId(Long id);
     PaginaResult<LogPrestamoCarritoModel> buscarPorCondominio(Long idCondominio, Long userId, Instant fechaInicio, Instant fechaFin, PaginaQuery paginacion);
     List<LogPrestamoCarritoModel> buscarActivosPorCondominio(Long idCondominio);
+    List<LogPrestamoCarritoModel> listarTodosPorCondominio(Long idCondominio);
 }

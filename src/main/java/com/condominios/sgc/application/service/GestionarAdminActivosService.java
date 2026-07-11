@@ -14,6 +14,7 @@ import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.CarritoRepositoryPort;
 import com.condominios.sgc.application.port.out.ConfiguracionRepositoryPort;
 import com.condominios.sgc.application.port.out.EstacionamientoRepositoryPort;
+import com.condominios.sgc.application.port.out.VehiculoRepositoryPort;
 import com.condominios.sgc.domain.model.CarritoModel;
 import com.condominios.sgc.domain.model.EstacionamientoModel;
 import com.condominios.sgc.domain.shared.exception.ApartamentoException;
@@ -21,6 +22,7 @@ import com.condominios.sgc.domain.shared.exception.CarritoException;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.EstacionamientoException;
 import com.condominios.sgc.domain.shared.exception.ParametroInvalidoException;
+import com.condominios.sgc.domain.shared.exception.VehiculoException;
 import com.condominios.sgc.domain.type.EstadoCarrito;
 import com.condominios.sgc.domain.type.TipoVehiculo;
 
@@ -33,6 +35,7 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
     private final EstacionamientoRepositoryPort estacionamientoRepository;
     private final ApartamentoRepositoryPort apartamentoRepository;
     private final ConfiguracionRepositoryPort configuracionRepository;
+    private final VehiculoRepositoryPort vehiculoRepository;
     private final CondominioIdResolver condominioIdResolver;
 
     public GestionarAdminActivosService(
@@ -40,11 +43,13 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
             EstacionamientoRepositoryPort estacionamientoRepository,
             ApartamentoRepositoryPort apartamentoRepository,
             ConfiguracionRepositoryPort configuracionRepository,
+            VehiculoRepositoryPort vehiculoRepository,
             CondominioIdResolver condominioIdResolver) {
         this.carritoRepository = carritoRepository;
         this.estacionamientoRepository = estacionamientoRepository;
         this.apartamentoRepository = apartamentoRepository;
         this.configuracionRepository = configuracionRepository;
+        this.vehiculoRepository = vehiculoRepository;
         this.condominioIdResolver = condominioIdResolver;
     }
 
@@ -178,6 +183,27 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
         } else {
             throw new ParametroInvalidoException("Tipo de activo no válido: " + type);
         }
+    }
+
+    @Override
+    @Transactional
+    public void desasignarVehiculo(Long condominioIdOverride, Long vehiculoId) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
+        var vehiculo = vehiculoRepository.buscarPorId(vehiculoId)
+            .orElseThrow(VehiculoException::noEncontrado);
+        if (!condominioId.equals(vehiculo.getIdCondominio())) {
+            throw VehiculoException.noEncontrado();
+        }
+        if (vehiculo.getIdEstacionamiento() != null) {
+            var estacionamiento = estacionamientoRepository.buscarPorId(vehiculo.getIdEstacionamiento())
+                .orElse(null);
+            if (estacionamiento != null) {
+                estacionamiento.decrementarOcupacion();
+                estacionamientoRepository.guardar(estacionamiento);
+            }
+        }
+        vehiculo.desasignarEstacionamiento();
+        vehiculoRepository.guardar(vehiculo);
     }
 
     private AdminAssetResult toResult(CarritoModel m) {

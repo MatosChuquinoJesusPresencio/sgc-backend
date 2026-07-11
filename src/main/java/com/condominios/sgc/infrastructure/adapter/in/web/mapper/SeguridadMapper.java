@@ -6,10 +6,12 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.condominios.sgc.application.dto.result.SecurityActiveCartLoanResult;
+import com.condominios.sgc.application.dto.result.SecurityCartLoanFullResult;
 import com.condominios.sgc.application.dto.result.SecurityDashboardResult;
 import com.condominios.sgc.application.dto.result.SecurityParkingSlotResult;
 import com.condominios.sgc.application.dto.result.SecurityVehicleVerificationResult;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityActiveCartLoanResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityCartLoanFullResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityDashboardResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityDashboardResponse.SecurityRecentLogEntry;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityParkingSlotResponse;
@@ -59,5 +61,14 @@ public class SeguridadMapper {
 
     private static String fmt(Instant i) {
         return i != null ? i.toString() : null;
+    }
+
+    public List<SecurityCartLoanFullResponse> toCartLoanFullResponses(List<SecurityCartLoanFullResult> results) {
+        return results.stream()
+            .map(r -> new SecurityCartLoanFullResponse(
+                r.id(), r.solicitante(), r.nombreSolicitante(), r.dniSolicitante(),
+                r.codigoCarrito(), r.idApartamento(), r.idCarrito(),
+                r.fechaPrestamo(), r.fechaDevolucion(), r.penalizacion()))
+            .toList();
     }
 }

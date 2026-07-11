@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.condominios.sgc.application.dto.command.RegistrarPrestamoCarritoCommand;
 import com.condominios.sgc.application.dto.result.SecurityActiveCartLoanResult;
+import com.condominios.sgc.application.dto.result.SecurityCartLoanFullResult;
 import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarSeguridadPrestamosUseCase;
 import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
@@ -46,11 +47,43 @@ public class GestionarSeguridadPrestamosService implements GestionarSeguridadPre
     }
 
     @Override
+    public List<SecurityCartLoanFullResult> listarTodos(Long condominioIdOverride) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
+        return logPrestamoRepository.listarTodosPorCondominio(condominioId)
+            .stream()
+            .map(m -> {
+                var codigo = carritoRepository.buscarPorId(m.getIdCarrito())
+                    .map(c -> c.getCodigo())
+                    .orElse(null);
+                return new SecurityCartLoanFullResult(
+                    m.getId(),
+                    m.getSolicitante() != null ? m.getSolicitante().name() : null,
+                    m.getNombreSolicitante(),
+                    m.getDniSolicitante(),
+                    codigo,
+                    m.getIdApartamento(),
+                    m.getIdCarrito(),
+                    m.getFechaPrestamo(),
+                    m.getFechaDevolucion(),
+                    m.getPenalizacion()
+                );
+            })
+            .toList();
+    }
+
+    @Override
     @Transactional
     public SecurityActiveCartLoanResult registrarPrestamo(Long condominioIdOverride, RegistrarPrestamoCarritoCommand cmd) {
         var condominioId = condominioIdResolver.resolver(condominioIdOverride);
 
         var carrito = carritoRepository.buscarPorCodigo(cmd.codigoCarrito())
+            .or(() -> {
+                try {
+                    return carritoRepository.buscarPorId(Long.parseLong(cmd.codigoCarrito()));
+                } catch (NumberFormatException e) {
+                    return java.util.Optional.empty();
+                }
+            })
             .orElseThrow(CarritoException::noEncontrado);
         if (!carrito.getIdCondominio().equals(condominioId)) {
             throw CarritoException.noEncontrado();
@@ -64,9 +97,16 @@ public class GestionarSeguridadPrestamosService implements GestionarSeguridadPre
         var apto = apartamentoRepository.buscarPorNumeroYCondominio(cmd.numeroApartamento(), condominioId)
             .orElseThrow(ApartamentoException::noEncontrado);
 
+        Long idProp = null, idInq = null;
+        if ("PROPIETARIO".equalsIgnoreCase(cmd.solicitante())) {
+            idProp = cmd.idPropietario() != null ? cmd.idPropietario() : apto.getIdPropietario();
+        } else {
+            idInq = cmd.idInquilino() != null ? cmd.idInquilino() : null;
+        }
+
         var prestamo = new LogPrestamoCarritoModel(
             cmd.nombreSolicitante(), cmd.dniSolicitante(),
-            apto.getId(), carrito.getId(), null, null, condominioId);
+            apto.getId(), carrito.getId(), idProp, idInq, condominioId);
         var guardado = logPrestamoRepository.guardar(prestamo);
         return toResult(guardado);
     }

@@ -18,6 +18,8 @@ public record AdminLogEntryResult(
     BigDecimal penalizacion,
     Instant fechaPrestamo,
     Instant fechaDevolucion,
-    Long idCondominio
+    Long idCondominio,
+    Long idVehiculo,
+    Long idEstacionamiento
 ) {
 }

@@ -9,6 +9,7 @@ import com.condominios.sgc.application.port.in.GestionarSeguridadAccesoUseCase;
 import com.condominios.sgc.application.port.out.EstacionamientoRepositoryPort;
 import com.condominios.sgc.application.port.out.LogAccesoVehicularRepositoryPort;
 import com.condominios.sgc.application.port.out.VehiculoRepositoryPort;
+import com.condominios.sgc.domain.model.EstacionamientoModel;
 import com.condominios.sgc.domain.model.LogAccesoVehicularModel;
 import com.condominios.sgc.domain.shared.exception.EstacionamientoException;
 import com.condominios.sgc.domain.shared.exception.LogAccesoVehicularException;
@@ -42,11 +43,20 @@ public class GestionarSeguridadAccesoService implements GestionarSeguridadAcceso
         var vehiculo = vehiculoRepository.buscarPorPlaca(cmd.placa())
             .orElseThrow(com.condominios.sgc.domain.shared.exception.VehiculoException::noEncontrado);
 
-        var estacionamientos = estacionamientoRepository.buscarPorCondominio(condominioId, new PaginaQuery(0, Integer.MAX_VALUE));
-        var slot = estacionamientos.items().stream()
-            .filter(e -> e.hayEspacio())
-            .findFirst()
-            .orElseThrow(EstacionamientoException::sinEspacio);
+        EstacionamientoModel slot;
+        if (cmd.idEstacionamiento() != null) {
+            slot = estacionamientoRepository.buscarPorId(cmd.idEstacionamiento())
+                .orElseThrow(() -> EstacionamientoException.noEncontrado());
+            if (!slot.hayEspacio()) {
+                throw EstacionamientoException.sinEspacio();
+            }
+        } else {
+            var estacionamientos = estacionamientoRepository.buscarPorCondominio(condominioId, new PaginaQuery(0, Integer.MAX_VALUE));
+            slot = estacionamientos.items().stream()
+                .filter(e -> e.hayEspacio())
+                .findFirst()
+                .orElseThrow(EstacionamientoException::sinEspacio);
+        }
 
         slot.incrementarOcupacion();
         estacionamientoRepository.guardar(slot);
@@ -94,6 +104,6 @@ public class GestionarSeguridadAccesoService implements GestionarSeguridadAcceso
             m.getFechaEntrada() != null ? m.getFechaEntrada() : null,
             m.getFechaSalida() != null ? m.getFechaSalida() : null,
             null, null, null, null, null, null,
-            m.getIdCondominio());
+            m.getIdCondominio(), m.getIdVehiculo(), m.getIdEstacionamiento());
     }
 }
