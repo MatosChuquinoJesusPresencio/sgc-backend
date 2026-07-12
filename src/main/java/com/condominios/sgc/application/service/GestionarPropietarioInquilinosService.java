@@ -3,6 +3,7 @@ package com.condominios.sgc.application.service;
 import java.util.List;
 
 import com.condominios.sgc.application.dto.command.CrearPropietarioInquilinoCommand;
+import com.condominios.sgc.application.dto.command.EditarPropietarioInquilinoCommand;
 import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.PropietarioInquilinoResult;
 import com.condominios.sgc.application.helper.CondominioIdResolver;
@@ -89,6 +90,26 @@ public class GestionarPropietarioInquilinosService implements GestionarPropietar
             TipoDocumento.valueOf(cmd.tipoDocumento()), cmd.numeroDocumento(),
             idApartamento);
         return toResult(inquilinoRepository.guardar(modelo));
+    }
+
+    @Override
+    @Transactional
+    public PropietarioInquilinoResult editar(Long condominioIdOverride, Long id, EditarPropietarioInquilinoCommand cmd) {
+        var inquilino = inquilinoRepository.buscarPorId(id)
+            .orElseThrow(InquilinoException::noEncontrado);
+        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
+            .orElseThrow(UsuarioException::noEncontrado);
+        if (usuario.getRol() != Rol.SUPER_ADMINISTRADOR) {
+            condominioIdResolver.resolver(condominioIdOverride);
+            if (!inquilino.getIdApartamento().equals(
+                apartamentoRepository.buscarPorPropietario(usuario.getId())
+                    .orElseThrow(ApartamentoException::noEncontrado).getId())) {
+                throw InquilinoException.noEncontrado();
+            }
+        }
+        inquilino.actualizar(cmd.nombres(), cmd.apellidos(),
+            TipoDocumento.valueOf(cmd.tipoDocumento()), cmd.numeroDocumento());
+        return toResult(inquilinoRepository.guardar(inquilino));
     }
 
     @Override

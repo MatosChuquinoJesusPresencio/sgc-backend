@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import com.condominios.sgc.application.dto.command.CrearPropietarioVehiculoCommand;
+import com.condominios.sgc.application.dto.command.EditarPropietarioVehiculoCommand;
 import com.condominios.sgc.application.dto.result.PropietarioVehiculoResult;
 import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarPropietarioVehiculosUseCase;
@@ -98,6 +99,37 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
             cmd.inquilinoId() != null ? null : usuario.getId(),
             cmd.inquilinoId());
         return toResult(vehiculoRepository.guardar(modelo));
+    }
+
+    @Override
+    @Transactional
+    public PropietarioVehiculoResult editar(Long condominioIdOverride, Long id, EditarPropietarioVehiculoCommand cmd) {
+        var vehiculo = vehiculoRepository.buscarPorId(id)
+            .orElseThrow(VehiculoException::noEncontrado);
+        var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
+            .orElseThrow(UsuarioException::noEncontrado);
+        if (usuario.getRol() == Rol.SUPER_ADMINISTRADOR) {
+            var condominioId = condominioIdResolver.resolver(condominioIdOverride);
+            if (!condominioId.equals(vehiculo.getIdCondominio())) {
+                throw VehiculoException.noEncontrado();
+            }
+        } else {
+            var esPropio = usuario.getId().equals(vehiculo.getIdPropietario());
+            var esDeInquilino = false;
+            if (vehiculo.getIdInquilino() != null) {
+                var apt = apartamentoRepository.buscarPorPropietario(usuario.getId())
+                    .orElse(null);
+                esDeInquilino = apt != null
+                    && inquilinoRepository.buscarPorId(vehiculo.getIdInquilino())
+                        .map(i -> i.getIdApartamento().equals(apt.getId()))
+                        .orElse(false);
+            }
+            if (!esPropio && !esDeInquilino) {
+                throw VehiculoException.noEncontrado();
+            }
+        }
+        vehiculo.actualizar(cmd.marca(), cmd.color(), cmd.modelo(), cmd.placa(), vehiculo.getTipo());
+        return toResult(vehiculoRepository.guardar(vehiculo));
     }
 
     @Override

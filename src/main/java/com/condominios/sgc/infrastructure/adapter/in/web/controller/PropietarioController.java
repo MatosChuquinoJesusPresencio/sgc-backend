@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.condominios.sgc.application.dto.command.CrearPropietarioInquilinoCommand;
 import com.condominios.sgc.application.dto.command.CrearPropietarioVehiculoCommand;
+import com.condominios.sgc.application.dto.command.EditarPropietarioInquilinoCommand;
+import com.condominios.sgc.application.dto.command.EditarPropietarioVehiculoCommand;
 import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.port.in.GestionarPropietarioApartamentoUseCase;
 import com.condominios.sgc.application.port.in.GestionarPropietarioDashboardUseCase;
@@ -27,6 +29,8 @@ import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.Propietari
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.AsignarParkingVehiculoRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.CrearPropietarioInquilinoRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.CrearPropietarioVehiculoRequest;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.EditarPropietarioInquilinoRequest;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.EditarPropietarioVehiculoRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioApartamentoDetailResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioInquilinoResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.PropietarioVehiculoResponse;
@@ -105,6 +109,18 @@ public class PropietarioController {
         return ResponseEntity.ok(mapper.toInquilinoResponse(resultado));
     }
 
+    @PutMapping("/tenants/{id}")
+    public ResponseEntity<PropietarioInquilinoResponse> editarInquilino(
+            @PathVariable Long id,
+            @RequestParam(required = false) Long condominioId,
+            @Valid @RequestBody EditarPropietarioInquilinoRequest request) {
+        var cmd = new EditarPropietarioInquilinoCommand(
+            request.nombres(), request.apellidos(),
+            request.tipoDocumento(), request.numeroDocumento());
+        var resultado = inquilinosUseCase.editar(condominioId, id, cmd);
+        return ResponseEntity.ok(mapper.toInquilinoResponse(resultado));
+    }
+
     @DeleteMapping("/tenants/{id}")
     public ResponseEntity<Void> eliminarInquilino(
             @PathVariable Long id,
@@ -128,6 +144,17 @@ public class PropietarioController {
             request.marca(), request.color(), request.modelo(),
             request.placa(), request.tipo(), request.inquilinoId());
         var resultado = vehiculosUseCase.crear(condominioId, cmd);
+        return ResponseEntity.ok(mapper.toVehiculoResponse(resultado));
+    }
+
+    @PutMapping("/vehicles/{id}")
+    public ResponseEntity<PropietarioVehiculoResponse> editarVehiculo(
+            @PathVariable Long id,
+            @RequestParam(required = false) Long condominioId,
+            @Valid @RequestBody EditarPropietarioVehiculoRequest request) {
+        var cmd = new EditarPropietarioVehiculoCommand(
+            request.marca(), request.color(), request.modelo(), request.placa());
+        var resultado = vehiculosUseCase.editar(condominioId, id, cmd);
         return ResponseEntity.ok(mapper.toVehiculoResponse(resultado));
     }
 
