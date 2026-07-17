@@ -204,10 +204,10 @@ INSERT INTO inquilino (nombres, apellidos, tipo_documento, numero_documento, apa
 INSERT INTO estacionamiento (numero, tipo_vehiculo, capacidad_maxima, cantidad_actual, disponible, apartamento_id, condominio_id) VALUES
     (1,  'AUTO', 2, 1, TRUE,  NULL, 1),
     (2,  'AUTO', 2, 0, TRUE,  NULL, 1),
-    (3,  'AUTO', 2, 2, FALSE, NULL, 1),
-    (4,  'MOTO', 4, 1, TRUE,  NULL, 1),
+    (3,  'AUTO', 2, 0, TRUE,  NULL, 1),
+    (4,  'MOTO', 4, 0, TRUE,  NULL, 1),
     (5,  'AUTO', 2, 0, TRUE,  NULL, 1),
-    (6,  'AUTO', 2, 1, TRUE,  NULL, 1),
+    (6,  'AUTO', 2, 0, TRUE,  NULL, 1),
     (7,  'MOTO', 4, 0, TRUE,  NULL, 1),
     (8,  'AUTO', 1, 1, FALSE, NULL, 1);
 
@@ -220,14 +220,12 @@ INSERT INTO estacionamiento (numero, tipo_vehiculo, capacidad_maxima, cantidad_a
 
 -- 12. VEHÍCULOS ---------------------------------------------------------------
 INSERT INTO vehiculo (marca, color, modelo, placa, tipo, propietario_id, inquilino_id, estacionamiento_id, condominio_id) VALUES
-    ('Toyota',   'Blanco',  'Corolla Cross',   'ABC-123', 'AUTO', 4, NULL, 1, 1),  -- Luis F.
-    ('Honda',    'Negro',   'Civic',           'DEF-456', 'AUTO', 5, NULL, 3, 1),  -- Ana M.
-    ('Yamaha',   'Rojo',    'MT-07',           'GHI-789', 'MOTO', 6, NULL, 4, 1),  -- Jorge R.
-    ('Kia',      'Gris',    'Sportage',        'JKL-012', 'AUTO', 7, NULL, 6, 1),  -- Rosa C.
-    ('Nissan',   'Azul',    'Versa',           'MNO-345', 'AUTO', 8, NULL, 8, 1),  -- Miguel A.
-    ('Suzuki',   'Plateado', 'Swift',          'PQR-678', 'AUTO', NULL, 3, NULL, 1),-- Elena (inquilina)
-    ('Hyundai',  'Blanco',  'Tucson',          'STU-901', 'AUTO', 9, NULL, 1, 2),  -- Diana P.
-    ('Mazda',    'Negro',   'CX-5',            'VWX-234', 'AUTO', 10, NULL, NULL, 2); -- Ricardo O.
+    ('Toyota',   'Blanco',  'Corolla Cross',   'ABC-123', 'AUTO', 4, NULL, 1, 1),  -- Luis F. — dentro (slot 1)
+    ('Honda',    'Negro',   'Civic',           'DEF-456', 'AUTO', 5, NULL, NULL, 1), -- Ana M. — ya salió
+    ('Yamaha',   'Rojo',    'MT-07',           'GHI-789', 'MOTO', 6, NULL, NULL, 1), -- Jorge R. — ya salió
+    ('Nissan',   'Azul',    'Versa',           'MNO-345', 'AUTO', 8, NULL, 8, 1),  -- Miguel A. — dentro (slot 8)
+    ('Hyundai',  'Blanco',  'Tucson',          'STU-901', 'AUTO', 9, NULL, 1, 2),  -- Diana P. — dentro (slot 1, San Martín)
+    ('Mazda',    'Negro',   'CX-5',            'VWX-234', 'AUTO', 10, NULL, NULL, 2); -- Ricardo O. — salió, sin slot
 
 -- 13. CARRITOS ----------------------------------------------------------------
 INSERT INTO carrito (codigo, estado, condominio_id) VALUES
@@ -243,8 +241,6 @@ INSERT INTO log_acceso_vehicular (placa, ocupante, datos_inquilino, metodo, fech
     ('ABC-123', 'PROPIETARIO', NULL,               'OCR',  NOW() - INTERVAL '2 hours',   NULL,                    1, 1, 1),
     ('DEF-456', 'PROPIETARIO', NULL,               'MANUAL', NOW() - INTERVAL '5 hours', NOW() - INTERVAL '3 hours', 2, 3, 1),
     ('GHI-789', 'PROPIETARIO', NULL,               'OCR',  NOW() - INTERVAL '1 day',     NOW() - INTERVAL '20 hours', 3, 4, 1),
-    ('PQR-678', 'INQUILINO',   'Elena García Ruiz','MANUAL', NOW() - INTERVAL '12 hours', NULL,                    6, NULL, 1),
-    ('JKL-012', 'PROPIETARIO', NULL,               'OCR',  NOW() - INTERVAL '2 days',    NOW() - INTERVAL '1 day', 4, 6, 1),
     ('STU-901', 'PROPIETARIO', NULL,               'OCR',  NOW() - INTERVAL '3 hours',   NULL,                     7, 1, 2),
     ('VWX-234', 'PROPIETARIO', NULL,               'MANUAL', NOW() - INTERVAL '1 day',   NOW() - INTERVAL '10 hours', 8, NULL, 2);
 
@@ -253,25 +249,3 @@ INSERT INTO log_prestamo_carrito (solicitante, nombre_solicitante, dni_solicitan
     ('PROPIETARIO', 'Luis Fernández Torres',  '12345678', 0,    NOW() - INTERVAL '1 day',   NOW() - INTERVAL '20 hours', 1, 2, NULL, 4, 1),
     ('INQUILINO',   'Sofía Fernández Castro','71234567', 0,    NOW() - INTERVAL '2 days',  NOW() - INTERVAL '1 day',   1, 1, 1, NULL, 1),
     ('PROPIETARIO', 'Diana Peralta Salas',   '23456789', 0,    NOW() - INTERVAL '6 hours', NULL,                       17, 6, NULL, 9, 2);
-
--- 16. TOKENS (ninguno activo en seed) -----------------------------------------
--- No se insertan tokens; se generan al iniciar sesión.
-
--- =============================================================================
--- Resumen de datos creados:
---   Monedas:       2
---   Países:        1
---   Ciudades:      1
---   Condominios:   2
---   Configs:       2
---   Usuarios:     13 (1 super admin, 2 admins, 7 propietarios, 3 agentes)
---   Torres:        3
---   Pisos:        12
---   Apartamentos: 38
---   Inquilinos:    4
---   Estacionamientos: 12
---   Vehículos:     8
---   Carritos:      6
---   Logs acceso:   7
---   Logs préstamo: 3
--- =============================================================================
