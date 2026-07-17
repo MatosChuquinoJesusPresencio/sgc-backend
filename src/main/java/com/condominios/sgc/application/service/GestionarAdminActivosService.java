@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.condominios.sgc.application.dto.command.ActualizarStatusAssetCommand;
 import com.condominios.sgc.application.dto.command.AsignarParkingCommand;
+import com.condominios.sgc.application.dto.command.AsignarPropietarioCommand;
 import com.condominios.sgc.application.dto.command.CrearAssetCommand;
 import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.AdminAssetResult;
@@ -14,6 +15,7 @@ import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.CarritoRepositoryPort;
 import com.condominios.sgc.application.port.out.ConfiguracionRepositoryPort;
 import com.condominios.sgc.application.port.out.EstacionamientoRepositoryPort;
+import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.VehiculoRepositoryPort;
 import com.condominios.sgc.domain.model.CarritoModel;
 import com.condominios.sgc.domain.model.EstacionamientoModel;
@@ -22,6 +24,7 @@ import com.condominios.sgc.domain.shared.exception.CarritoException;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.EstacionamientoException;
 import com.condominios.sgc.domain.shared.exception.ParametroInvalidoException;
+import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.shared.exception.VehiculoException;
 import com.condominios.sgc.domain.type.EstadoCarrito;
 import com.condominios.sgc.domain.type.TipoVehiculo;
@@ -36,6 +39,7 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
     private final ApartamentoRepositoryPort apartamentoRepository;
     private final ConfiguracionRepositoryPort configuracionRepository;
     private final VehiculoRepositoryPort vehiculoRepository;
+    private final UsuarioRepositoryPort usuarioRepository;
     private final CondominioIdResolver condominioIdResolver;
 
     public GestionarAdminActivosService(
@@ -44,12 +48,14 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
             ApartamentoRepositoryPort apartamentoRepository,
             ConfiguracionRepositoryPort configuracionRepository,
             VehiculoRepositoryPort vehiculoRepository,
+            UsuarioRepositoryPort usuarioRepository,
             CondominioIdResolver condominioIdResolver) {
         this.carritoRepository = carritoRepository;
         this.estacionamientoRepository = estacionamientoRepository;
         this.apartamentoRepository = apartamentoRepository;
         this.configuracionRepository = configuracionRepository;
         this.vehiculoRepository = vehiculoRepository;
+        this.usuarioRepository = usuarioRepository;
         this.condominioIdResolver = condominioIdResolver;
     }
 
@@ -152,6 +158,43 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
             estacionamiento.desasignarApartamento();
         }
 
+        return toResult(estacionamientoRepository.guardar(estacionamiento));
+    }
+
+    @Override
+    @Transactional
+    public AdminAssetResult asignarPropietario(Long condominioIdOverride, Long id, AsignarPropietarioCommand cmd) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
+
+        var estacionamiento = estacionamientoRepository.buscarPorId(id)
+            .orElseThrow(EstacionamientoException::noEncontrado);
+        if (!condominioId.equals(estacionamiento.getIdCondominio())) {
+            throw CondominioException.noEncontrado();
+        }
+
+        var propietario = usuarioRepository.buscarPorId(cmd.idPropietario())
+            .orElseThrow(UsuarioException::noEncontrado);
+        if (!condominioId.equals(propietario.getIdCondominio())) {
+            throw UsuarioException.noEncontrado();
+        }
+
+        var apto = apartamentoRepository.buscarPorPropietario(cmd.idPropietario())
+            .orElseThrow(ApartamentoException::propietarioSinApartamento);
+
+        if (estacionamiento.getIdApartamento() != null
+                && estacionamiento.getCantidadActual() > 0
+                && !apto.getId().equals(estacionamiento.getIdApartamento())) {
+            throw EstacionamientoException.ocupado();
+        }
+
+        var config = configuracionRepository.buscarPorCondominioId(condominioId)
+            .orElseThrow(CondominioException::noEncontrado);
+        var actuales = (int) estacionamientoRepository.contarPorApartamento(apto.getId());
+        if (!config.puedeAsignarEstacionamiento(actuales)) {
+            throw EstacionamientoException.limiteAlcanzado();
+        }
+
+        estacionamiento.asignarApartamento(apto.getId());
         return toResult(estacionamientoRepository.guardar(estacionamiento));
     }
 

@@ -275,6 +275,16 @@ public class AdminCondominioController {
         return ResponseEntity.ok(mapper.toAssetResponse(resultado));
     }
 
+    @PutMapping("/assets/{id}/assign-owner")
+    public ResponseEntity<AdminAssetResponse> asignarPropietarioActivo(
+            @PathVariable Long id,
+            @RequestParam(required = false) Long condominioId,
+            @Valid @RequestBody AsignarPropietarioRequest request) {
+        var resultado = gestionarAdminActivos.asignarPropietario(condominioId, id,
+            new AsignarPropietarioCommand(request.idPropietario()));
+        return ResponseEntity.ok(mapper.toAssetResponse(resultado));
+    }
+
     @DeleteMapping("/assets/{id}")
     public ResponseEntity<Void> eliminarActivo(
             @PathVariable Long id,

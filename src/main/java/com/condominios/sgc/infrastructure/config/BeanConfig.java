@@ -204,10 +204,11 @@ public class BeanConfig {
             ApartamentoRepositoryPort apartamentoRepository,
             ConfiguracionRepositoryPort configuracionRepository,
             VehiculoRepositoryPort vehiculoRepository,
+            UsuarioRepositoryPort usuarioRepository,
             CondominioIdResolver condominioIdResolver) {
         return new GestionarAdminActivosService(
             carritoRepository, estacionamientoRepository, apartamentoRepository,
-            configuracionRepository, vehiculoRepository, condominioIdResolver);
+            configuracionRepository, vehiculoRepository, usuarioRepository, condominioIdResolver);
     }
 
     @Bean

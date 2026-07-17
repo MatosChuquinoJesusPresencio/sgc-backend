@@ -28,4 +28,8 @@ public class ApartamentoException extends DominioException {
     public static ApartamentoException duplicado(Integer numero) {
         return new ApartamentoException("Ya existe el apartamento número " + numero + " en este piso");
     }
+
+    public static ApartamentoException propietarioSinApartamento() {
+        return new ApartamentoException("el propietario no tiene apartamento asignado");
+    }
 }
