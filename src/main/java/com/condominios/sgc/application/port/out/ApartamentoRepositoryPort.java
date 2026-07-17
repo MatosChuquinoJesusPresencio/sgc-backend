@@ -8,6 +8,14 @@ import com.condominios.sgc.application.dto.result.PaginaResult;
 import com.condominios.sgc.domain.model.ApartamentoModel;
 
 public interface ApartamentoRepositoryPort {
+
+    record ApartamentoTorreInfo(
+        String torreNombre,
+        Integer numeroDepartamento,
+        Boolean derechoEstacionamiento,
+        Long idApartamento
+    ) {}
+
     Optional<ApartamentoModel> buscarPorId(Long id);
     ApartamentoModel guardar(ApartamentoModel modelo);
     void eliminarPorId(Long id);
@@ -15,4 +23,6 @@ public interface ApartamentoRepositoryPort {
     Optional<ApartamentoModel> buscarPorNumeroYCondominio(Integer numero, Long idCondominio);
     boolean existePorIdYCondominio(Long id, Long idCondominio);
     PaginaResult<AdminApartamentoDetailResult> buscarEnCondominio(Long condominioId, PaginaQuery pagina);
+    Optional<ApartamentoTorreInfo> buscarTorreYAptoPorPropietario(Long idPropietario);
+    Optional<ApartamentoTorreInfo> buscarTorreYAptoPorId(Long idApartamento);
 }

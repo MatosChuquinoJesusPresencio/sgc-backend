@@ -21,4 +21,10 @@ public interface VehiculoJpaRepository extends JpaRepository<VehiculoEntity, Lon
     Optional<VehiculoEntity> findByPlaca(String placa);
 
     void deleteByIdInquilino(Long idInquilino);
+
+    @Query("SELECT v FROM VehiculoEntity v WHERE v.idEstacionamiento = :idEstacionamiento")
+    List<VehiculoEntity> buscarPorIdEstacionamiento(@Param("idEstacionamiento") Long idEstacionamiento);
+
+    @Query("SELECT v FROM VehiculoEntity v WHERE v.idCondominio = :idCondominio AND v.idEstacionamiento IS NULL")
+    List<VehiculoEntity> buscarSinEstacionamiento(@Param("idCondominio") Long idCondominio);
 }

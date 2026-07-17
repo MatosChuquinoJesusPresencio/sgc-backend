@@ -77,4 +77,22 @@ public class VehiculoRepositoryAdapter implements VehiculoRepositoryPort {
     public void eliminarPorInquilino(Long idInquilino) {
         repository.deleteByIdInquilino(idInquilino);
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<VehiculoModel> buscarPorIdEstacionamiento(Long idEstacionamiento) {
+        return repository.buscarPorIdEstacionamiento(idEstacionamiento)
+                .stream()
+                .map(VehiculoMapper::toModel)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<VehiculoModel> buscarSinEstacionamiento(Long idCondominio) {
+        return repository.buscarSinEstacionamiento(idCondominio)
+                .stream()
+                .map(VehiculoMapper::toModel)
+                .toList();
+    }
 }

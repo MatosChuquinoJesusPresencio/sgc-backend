@@ -4,10 +4,14 @@ import com.condominios.sgc.application.dto.command.RegistrarEntradaVehiculoComma
 import com.condominios.sgc.application.dto.command.RegistrarSalidaVehiculoCommand;
 import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.dto.result.AdminLogEntryResult;
+import com.condominios.sgc.application.dto.result.PaginaResult;
 import com.condominios.sgc.application.helper.CondominioIdResolver;
 import com.condominios.sgc.application.port.in.GestionarSeguridadAccesoUseCase;
+import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.EstacionamientoRepositoryPort;
+import com.condominios.sgc.application.port.out.InquilinoRepositoryPort;
 import com.condominios.sgc.application.port.out.LogAccesoVehicularRepositoryPort;
+import com.condominios.sgc.application.port.out.UsuarioRepositoryPort;
 import com.condominios.sgc.application.port.out.VehiculoRepositoryPort;
 import com.condominios.sgc.domain.model.EstacionamientoModel;
 import com.condominios.sgc.domain.model.LogAccesoVehicularModel;
@@ -23,16 +27,25 @@ public class GestionarSeguridadAccesoService implements GestionarSeguridadAcceso
     private final VehiculoRepositoryPort vehiculoRepository;
     private final EstacionamientoRepositoryPort estacionamientoRepository;
     private final LogAccesoVehicularRepositoryPort logAccesoRepository;
+    private final UsuarioRepositoryPort usuarioRepository;
+    private final ApartamentoRepositoryPort apartamentoRepository;
+    private final InquilinoRepositoryPort inquilinoRepository;
 
     public GestionarSeguridadAccesoService(
             CondominioIdResolver condominioIdResolver,
             VehiculoRepositoryPort vehiculoRepository,
             EstacionamientoRepositoryPort estacionamientoRepository,
-            LogAccesoVehicularRepositoryPort logAccesoRepository) {
+            LogAccesoVehicularRepositoryPort logAccesoRepository,
+            UsuarioRepositoryPort usuarioRepository,
+            ApartamentoRepositoryPort apartamentoRepository,
+            InquilinoRepositoryPort inquilinoRepository) {
         this.condominioIdResolver = condominioIdResolver;
         this.vehiculoRepository = vehiculoRepository;
         this.estacionamientoRepository = estacionamientoRepository;
         this.logAccesoRepository = logAccesoRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.apartamentoRepository = apartamentoRepository;
+        this.inquilinoRepository = inquilinoRepository;
     }
 
     @Override
@@ -93,17 +106,65 @@ public class GestionarSeguridadAccesoService implements GestionarSeguridadAcceso
         return toResult(log);
     }
 
+    @Override
+    public PaginaResult<AdminLogEntryResult> listarLogs(Long condominioIdOverride, PaginaQuery pagina) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
+        var resultados = logAccesoRepository.buscarPorCondominio(condominioId, null, null, null, pagina);
+        var items = resultados.items().stream()
+            .map(this::toResult)
+            .toList();
+        return new PaginaResult<>(items, resultados.total(), resultados.pagina(), resultados.tamano());
+    }
+
     private AdminLogEntryResult toResult(LogAccesoVehicularModel m) {
+        String nombrePropietario = null, torreNombre = null;
+        Integer numeroDepartamento = null;
+        String marca = null, modelo = null, color = null, tipoVehiculo = null;
+
+        if (m.getIdVehiculo() != null) {
+            var vehiculoOpt = vehiculoRepository.buscarPorId(m.getIdVehiculo());
+            if (vehiculoOpt.isPresent()) {
+                var v = vehiculoOpt.get();
+                marca = v.getMarca();
+                modelo = v.getModelo();
+                color = v.getColor();
+                tipoVehiculo = v.getTipo() != null ? v.getTipo().name() : null;
+
+                if (v.getIdPropietario() != null) {
+                    var usuarioOpt = usuarioRepository.buscarPorId(v.getIdPropietario());
+                    if (usuarioOpt.isPresent()) {
+                        nombrePropietario = usuarioOpt.get().getNombreCompleto().nombres()
+                            + " " + usuarioOpt.get().getNombreCompleto().apellidos();
+                    }
+                    var torreInfo = apartamentoRepository.buscarTorreYAptoPorPropietario(v.getIdPropietario());
+                    if (torreInfo.isPresent()) {
+                        torreNombre = torreInfo.get().torreNombre();
+                        numeroDepartamento = torreInfo.get().numeroDepartamento();
+                    }
+                }
+                if (nombrePropietario == null && v.getIdInquilino() != null) {
+                    var inquilinoOpt = inquilinoRepository.buscarPorId(v.getIdInquilino());
+                    if (inquilinoOpt.isPresent()) {
+                        var inquilino = inquilinoOpt.get();
+                        nombrePropietario = inquilino.getNombreCompleto().nombres()
+                            + " " + inquilino.getNombreCompleto().apellidos();
+                        var torreInfo = apartamentoRepository.buscarTorreYAptoPorId(inquilino.getIdApartamento());
+                        if (torreInfo.isPresent()) {
+                            torreNombre = torreInfo.get().torreNombre();
+                            numeroDepartamento = torreInfo.get().numeroDepartamento();
+                        }
+                    }
+                }
+            }
+        }
+
         return new AdminLogEntryResult(
-            m.getId(),
-            "VEHICULAR",
-            m.getPlaca().valor(),
-            m.getOcupante().name(),
-            m.getDatosInquilino(),
-            m.getMetodo().name(),
-            m.getFechaEntrada() != null ? m.getFechaEntrada() : null,
-            m.getFechaSalida() != null ? m.getFechaSalida() : null,
+            m.getId(), "VEHICULAR", m.getPlaca().valor(),
+            m.getOcupante().name(), m.getDatosInquilino(),
+            m.getMetodo().name(), m.getFechaEntrada(), m.getFechaSalida(),
             null, null, null, null, null, null,
-            m.getIdCondominio(), m.getIdVehiculo(), m.getIdEstacionamiento());
+            m.getIdCondominio(), m.getIdVehiculo(), m.getIdEstacionamiento(),
+            nombrePropietario, torreNombre, numeroDepartamento,
+            marca, modelo, color, tipoVehiculo);
     }
 }

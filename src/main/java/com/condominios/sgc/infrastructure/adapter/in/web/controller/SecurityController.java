@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.condominios.sgc.application.dto.command.RegistrarEntradaVehiculoCommand;
 import com.condominios.sgc.application.dto.command.RegistrarPrestamoCarritoCommand;
 import com.condominios.sgc.application.dto.command.RegistrarSalidaVehiculoCommand;
+import com.condominios.sgc.application.dto.query.PaginaQuery;
 import com.condominios.sgc.application.port.in.GestionarSeguridadAccesoUseCase;
 import com.condominios.sgc.application.port.in.GestionarSeguridadDashboardUseCase;
 import com.condominios.sgc.application.port.in.GestionarSeguridadEstacionamientosUseCase;
@@ -21,16 +22,20 @@ import com.condominios.sgc.application.port.in.GestionarSeguridadPrestamosUseCas
 import com.condominios.sgc.application.port.in.GestionarSeguridadVehiculosUseCase;
 import com.condominios.sgc.domain.type.MetodoEntrada;
 import com.condominios.sgc.domain.type.TipoHabitante;
-import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminLogEntryResponse;
-import com.condominios.sgc.infrastructure.adapter.in.web.mapper.AdminCondominioMapper;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.ActualizarEstadoCarritoRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.RegistrarEntradaVehiculoRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.RegistrarPrestamoCarritoRequest;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.request.RegistrarSalidaVehiculoRequest;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.AdminLogEntryResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityActiveCartLoanResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityApartamentoResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityCartAssetResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityCartLoanFullResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityDashboardResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityParkingSlotResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityUnassignedVehicleResponse;
 import com.condominios.sgc.infrastructure.adapter.in.web.dto.response.SecurityVehicleVerificationResponse;
+import com.condominios.sgc.infrastructure.adapter.in.web.mapper.AdminCondominioMapper;
 import com.condominios.sgc.infrastructure.adapter.in.web.mapper.SeguridadMapper;
 import java.util.List;
 
@@ -86,6 +91,13 @@ public class SecurityController {
         return ResponseEntity.ok(mapper.toVehicleVerificationResponse(resultado));
     }
 
+    @GetMapping("/vehicles/unassigned")
+    public ResponseEntity<List<SecurityUnassignedVehicleResponse>> listarSinEstacionamiento(
+            @RequestParam(required = false) Long condominioId) {
+        var resultados = vehiculosUseCase.listarSinEstacionamiento(condominioId);
+        return ResponseEntity.ok(mapper.toUnassignedVehicleResponses(resultados));
+    }
+
     @GetMapping("/asset-loans/active-carts")
     public ResponseEntity<List<SecurityActiveCartLoanResponse>> listarPrestamosActivos(
             @RequestParam(required = false) Long condominioId) {
@@ -115,6 +127,37 @@ public class SecurityController {
     @PutMapping("/asset-loans/{id}/return")
     public ResponseEntity<Void> registrarDevolucion(@PathVariable Long id) {
         prestamosUseCase.registrarDevolucion(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/access-logs")
+    public ResponseEntity<?> listarAccessLogs(
+            @RequestParam(required = false) Long condominioId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size) {
+        var resultado = accesoUseCase.listarLogs(condominioId, new PaginaQuery(page, size));
+        return ResponseEntity.ok(adminMapper.toLogEntryPaginaResponse(resultado));
+    }
+
+    @GetMapping("/carts")
+    public ResponseEntity<List<SecurityCartAssetResponse>> listarCarritos(
+            @RequestParam(required = false) Long condominioId) {
+        var resultados = prestamosUseCase.listarCarritos(condominioId);
+        return ResponseEntity.ok(mapper.toCartAssetResponses(resultados));
+    }
+
+    @GetMapping("/apartments")
+    public ResponseEntity<List<SecurityApartamentoResponse>> listarApartamentos(
+            @RequestParam(required = false) Long condominioId) {
+        var resultados = prestamosUseCase.listarApartamentos(condominioId);
+        return ResponseEntity.ok(mapper.toApartamentoResponses(resultados));
+    }
+
+    @PutMapping("/carts/{id}/state")
+    public ResponseEntity<Void> actualizarEstadoCarrito(
+            @PathVariable Long id,
+            @Valid @RequestBody ActualizarEstadoCarritoRequest request) {
+        prestamosUseCase.actualizarEstadoCarrito(id, request.estado());
         return ResponseEntity.ok().build();
     }
 

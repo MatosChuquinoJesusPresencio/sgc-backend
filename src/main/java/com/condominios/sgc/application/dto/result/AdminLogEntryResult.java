@@ -20,6 +20,13 @@ public record AdminLogEntryResult(
     Instant fechaDevolucion,
     Long idCondominio,
     Long idVehiculo,
-    Long idEstacionamiento
+    Long idEstacionamiento,
+    String nombrePropietario,
+    String torreNombre,
+    Integer numeroDepartamento,
+    String marca,
+    String modelo,
+    String color,
+    String tipoVehiculo
 ) {
 }

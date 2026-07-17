@@ -56,4 +56,24 @@ public interface ApartamentoJpaRepository extends JpaRepository<ApartamentoEntit
         WHERE t.condominio_id = :cid
         """)
     long countApartamentosByCondominio(@Param("cid") Long condominioId);
+
+    @Query(nativeQuery = true, value = """
+        SELECT t.nombre AS torre_nombre, a.numero,
+               a.derecho_estacionamiento, a.id AS apartamento_id
+        FROM apartamento a
+        JOIN piso p ON p.id = a.piso_id
+        JOIN torre t ON t.id = p.torre_id
+        WHERE a.propietario_id = :propietarioId
+        """)
+    List<Object[]> findTorreYAptoPorPropietario(@Param("propietarioId") Long propietarioId);
+
+    @Query(nativeQuery = true, value = """
+        SELECT t.nombre AS torre_nombre, a.numero,
+               a.derecho_estacionamiento, a.id AS apartamento_id
+        FROM apartamento a
+        JOIN piso p ON p.id = a.piso_id
+        JOIN torre t ON t.id = p.torre_id
+        WHERE a.id = :idApartamento
+        """)
+    List<Object[]> findTorreYAptoPorId(@Param("idApartamento") Long idApartamento);
 }

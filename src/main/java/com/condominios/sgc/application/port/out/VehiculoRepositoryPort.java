@@ -15,4 +15,6 @@ public interface VehiculoRepositoryPort {
     List<VehiculoModel> buscarPorCondominio(Long idCondominio);
     Optional<VehiculoModel> buscarPorPlaca(String placa);
     void eliminarPorInquilino(Long idInquilino);
+    List<VehiculoModel> buscarPorIdEstacionamiento(Long idEstacionamiento);
+    List<VehiculoModel> buscarSinEstacionamiento(Long idCondominio);
 }

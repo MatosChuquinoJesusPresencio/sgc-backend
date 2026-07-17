@@ -18,7 +18,6 @@ import com.condominios.sgc.application.port.out.service.CorreoServicePort;
 import com.condominios.sgc.application.port.out.service.HashServicePort;
 import com.condominios.sgc.application.port.out.service.SecurityServicePort;
 import com.condominios.sgc.domain.model.UsuarioModel;
-import com.condominios.sgc.domain.shared.exception.AutenticacionException;
 import com.condominios.sgc.domain.shared.exception.CondominioException;
 import com.condominios.sgc.domain.shared.exception.UsuarioException;
 import com.condominios.sgc.domain.type.Rol;
@@ -76,7 +75,8 @@ public class GestionarAdministradorService implements GestionarAdministradorUseC
                 cmd.nombres() + " " + cmd.apellidos(),
                 cmd.contrasena());
         } catch (Exception e) {
-            throw AutenticacionException.errorEnviarCorreo();
+            System.err.printf("Error al enviar correo de bienvenida a %s: %s%n",
+                    cmd.correo(), e.getMessage());
         }
         return toResult(usuario);
     }

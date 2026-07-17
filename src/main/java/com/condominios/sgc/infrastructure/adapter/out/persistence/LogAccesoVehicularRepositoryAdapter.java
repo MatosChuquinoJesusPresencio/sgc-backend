@@ -58,4 +58,9 @@ public class LogAccesoVehicularRepositoryAdapter implements LogAccesoVehicularRe
                 .map(LogAccesoVehicularMapper::toModel)
                 .toList();
     }
+
+    @Override
+    public List<Long> buscarIdVehiculosActivosPorEstacionamiento(Long idEstacionamiento) {
+        return repository.findActiveVehicleIdsByEstacionamiento(idEstacionamiento);
+    }
 }

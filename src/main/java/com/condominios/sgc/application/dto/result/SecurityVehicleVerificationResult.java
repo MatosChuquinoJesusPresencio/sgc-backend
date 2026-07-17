@@ -11,6 +11,10 @@ public record SecurityVehicleVerificationResult(
     TipoVehiculo tipo,
     Long idPropietario,
     String nombrePropietario,
-    Long idEstacionamiento
+    Long idEstacionamiento,
+    Long idEstacionamientoApartamento,
+    String torreNombre,
+    Integer numeroDepartamento,
+    Boolean derechoEstacionamiento
 ) {
 }

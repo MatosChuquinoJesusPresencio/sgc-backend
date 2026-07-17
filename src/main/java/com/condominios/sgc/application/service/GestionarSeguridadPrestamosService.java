@@ -3,6 +3,8 @@ package com.condominios.sgc.application.service;
 import java.util.List;
 
 import com.condominios.sgc.application.dto.command.RegistrarPrestamoCarritoCommand;
+import com.condominios.sgc.application.dto.query.PaginaQuery;
+import com.condominios.sgc.application.dto.result.AdminApartamentoDetailResult;
 import com.condominios.sgc.application.dto.result.SecurityActiveCartLoanResult;
 import com.condominios.sgc.application.dto.result.SecurityCartLoanFullResult;
 import com.condominios.sgc.application.helper.CondominioIdResolver;
@@ -10,6 +12,7 @@ import com.condominios.sgc.application.port.in.GestionarSeguridadPrestamosUseCas
 import com.condominios.sgc.application.port.out.ApartamentoRepositoryPort;
 import com.condominios.sgc.application.port.out.CarritoRepositoryPort;
 import com.condominios.sgc.application.port.out.LogPrestamoCarritoRepositoryPort;
+import com.condominios.sgc.domain.model.CarritoModel;
 import com.condominios.sgc.domain.model.LogPrestamoCarritoModel;
 import com.condominios.sgc.domain.shared.exception.ApartamentoException;
 import com.condominios.sgc.domain.shared.exception.CarritoException;
@@ -132,5 +135,28 @@ public class GestionarSeguridadPrestamosService implements GestionarSeguridadPre
         return new SecurityActiveCartLoanResult(
             m.getId(), m.getNombreSolicitante(), m.getDniSolicitante(),
             codigo, m.getFechaPrestamo(), m.getPenalizacion());
+    }
+
+    @Override
+    public List<CarritoModel> listarCarritos(Long condominioIdOverride) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
+        var pagina = carritoRepository.buscarPorCondominio(condominioId, new PaginaQuery(0, 1000));
+        return pagina.items();
+    }
+
+    @Override
+    public List<AdminApartamentoDetailResult> listarApartamentos(Long condominioIdOverride) {
+        var condominioId = condominioIdResolver.resolver(condominioIdOverride);
+        var pagina = apartamentoRepository.buscarEnCondominio(condominioId, new PaginaQuery(0, 1000));
+        return pagina.items();
+    }
+
+    @Override
+    @Transactional
+    public void actualizarEstadoCarrito(Long id, String estado) {
+        var carrito = carritoRepository.buscarPorId(id)
+            .orElseThrow(CarritoException::noEncontrado);
+        carrito.actualizarEstado(EstadoCarrito.valueOf(estado));
+        carritoRepository.guardar(carrito);
     }
 }

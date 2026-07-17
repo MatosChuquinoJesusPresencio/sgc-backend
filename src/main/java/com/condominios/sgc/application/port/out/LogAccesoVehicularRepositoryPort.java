@@ -15,4 +15,5 @@ public interface LogAccesoVehicularRepositoryPort {
     void eliminarPorId(Long id);
     PaginaResult<LogAccesoVehicularModel> buscarPorCondominio(Long idCondominio, Long userId, Instant fechaInicio, Instant fechaFin, PaginaQuery paginacion);
     List<LogAccesoVehicularModel> buscarRecientesPorCondominio(Long idCondominio, int limit);
+    List<Long> buscarIdVehiculosActivosPorEstacionamiento(Long idEstacionamiento);
 }

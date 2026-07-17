@@ -104,6 +104,34 @@ public class ApartamentoRepositoryAdapter implements ApartamentoRepositoryPort {
                                 Collectors.toList())));
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<ApartamentoTorreInfo> buscarTorreYAptoPorPropietario(Long idPropietario) {
+        var rows = repository.findTorreYAptoPorPropietario(idPropietario);
+        if (rows.isEmpty()) return Optional.empty();
+        var row = rows.get(0);
+        var torreNombre = (String) row[0];
+        var numero = (Integer) row[1];
+        var derechoEstacionamiento = row[2] != null ? (Boolean) row[2] : false;
+        var idApartamento = row[3] != null ? ((Number) row[3]).longValue() : null;
+        return Optional.of(new ApartamentoTorreInfo(
+            torreNombre, numero, derechoEstacionamiento, idApartamento));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<ApartamentoTorreInfo> buscarTorreYAptoPorId(Long idApartamento) {
+        var rows = repository.findTorreYAptoPorId(idApartamento);
+        if (rows.isEmpty()) return Optional.empty();
+        var row = rows.get(0);
+        var torreNombre = (String) row[0];
+        var numero = (Integer) row[1];
+        var derechoEstacionamiento = row[2] != null ? (Boolean) row[2] : false;
+        var aptId = row[3] != null ? ((Number) row[3]).longValue() : null;
+        return Optional.of(new ApartamentoTorreInfo(
+            torreNombre, numero, derechoEstacionamiento, aptId));
+    }
+
     private AdminApartamentoDetailResult toDetail(Object[] row, Map<Long, List<AdminInquilinoResult>> inquilinosPorApto) {
         var id = ((Number) row[0]).longValue();
         var numero = (Integer) row[1];

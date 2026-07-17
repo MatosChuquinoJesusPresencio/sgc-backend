@@ -313,17 +313,22 @@ public class BeanConfig {
     @Bean
     public GestionarSeguridadEstacionamientosUseCase gestionarSeguridadEstacionamientosUseCase(
             CondominioIdResolver condominioIdResolver,
-            EstacionamientoRepositoryPort estacionamientoRepository) {
+            EstacionamientoRepositoryPort estacionamientoRepository,
+            VehiculoRepositoryPort vehiculoRepository) {
         return new GestionarSeguridadEstacionamientosService(
-            condominioIdResolver, estacionamientoRepository);
+            condominioIdResolver, estacionamientoRepository, vehiculoRepository);
     }
 
     @Bean
     public GestionarSeguridadVehiculosUseCase gestionarSeguridadVehiculosUseCase(
             VehiculoRepositoryPort vehiculoRepository,
-            UsuarioRepositoryPort usuarioRepository) {
+            UsuarioRepositoryPort usuarioRepository,
+            ApartamentoRepositoryPort apartamentoRepository,
+            InquilinoRepositoryPort inquilinoRepository,
+            EstacionamientoRepositoryPort estacionamientoRepository) {
         return new GestionarSeguridadVehiculosService(
-            vehiculoRepository, usuarioRepository);
+            vehiculoRepository, usuarioRepository, apartamentoRepository,
+            inquilinoRepository, estacionamientoRepository);
     }
 
     @Bean
@@ -342,9 +347,13 @@ public class BeanConfig {
             CondominioIdResolver condominioIdResolver,
             VehiculoRepositoryPort vehiculoRepository,
             EstacionamientoRepositoryPort estacionamientoRepository,
-            LogAccesoVehicularRepositoryPort logAccesoRepository) {
+            LogAccesoVehicularRepositoryPort logAccesoRepository,
+            UsuarioRepositoryPort usuarioRepository,
+            ApartamentoRepositoryPort apartamentoRepository,
+            InquilinoRepositoryPort inquilinoRepository) {
         return new GestionarSeguridadAccesoService(
             condominioIdResolver, vehiculoRepository,
-            estacionamientoRepository, logAccesoRepository);
+            estacionamientoRepository, logAccesoRepository,
+            usuarioRepository, apartamentoRepository, inquilinoRepository);
     }
 }

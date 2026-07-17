@@ -58,7 +58,8 @@ public class GestionarAdminLogsService implements GestionarAdminLogsUseCase {
             m.getFechaEntrada(),
             m.getFechaSalida(),
             null, null, null, null, null, null,
-            m.getIdCondominio(), m.getIdVehiculo(), m.getIdEstacionamiento());
+            m.getIdCondominio(), m.getIdVehiculo(), m.getIdEstacionamiento(),
+            null, null, null, null, null, null, null);
     }
 
     private AdminLogEntryResult toResult(LogPrestamoCarritoModel m) {
@@ -69,6 +70,7 @@ public class GestionarAdminLogsService implements GestionarAdminLogsUseCase {
             m.getPenalizacion(),
             m.getFechaPrestamo(),
             m.getFechaDevolucion(),
-            m.getIdCondominio(), null, null);
+            m.getIdCondominio(), null, null,
+            null, null, null, null, null, null, null);
     }
 }

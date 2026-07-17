@@ -38,4 +38,11 @@ public interface LogAccesoVehicularJpaRepository extends JpaRepository<LogAcceso
         ORDER BY l.fechaEntrada DESC
         """)
     List<LogAccesoVehicularEntity> findRecentByCondominio(@Param("cid") Long cid, Pageable pageable);
+
+    @Query("""
+        SELECT DISTINCT l.idVehiculo FROM LogAccesoVehicularEntity l
+        WHERE l.idEstacionamiento = :slotId
+        AND l.fechaSalida IS NULL
+        """)
+    List<Long> findActiveVehicleIdsByEstacionamiento(@Param("slotId") Long slotId);
 }
