@@ -56,9 +56,11 @@ public class ApartamentoRepositoryAdapter implements ApartamentoRepositoryPort {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<ApartamentoModel> buscarPorPropietario(Long idPropietario) {
+    public List<ApartamentoModel> buscarPorPropietario(Long idPropietario) {
         return repository.findByIdPropietario(idPropietario)
-                .map(ApartamentoMapper::toModel);
+                .stream()
+                .map(ApartamentoMapper::toModel)
+                .toList();
     }
 
     @Transactional(readOnly = true)

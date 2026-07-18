@@ -58,6 +58,7 @@ public class GestionarPropietarioInquilinosService implements GestionarPropietar
             return apartamentoIdOverride;
         }
         var apt = apartamentoRepository.buscarPorPropietario(usuario.getId())
+            .stream().findFirst()
             .orElseThrow(ApartamentoException::noEncontrado);
         return apt.getId();
     }
@@ -103,6 +104,7 @@ public class GestionarPropietarioInquilinosService implements GestionarPropietar
             condominioIdResolver.resolver(condominioIdOverride);
             if (!inquilino.getIdApartamento().equals(
                 apartamentoRepository.buscarPorPropietario(usuario.getId())
+                    .stream().findFirst()
                     .orElseThrow(ApartamentoException::noEncontrado).getId())) {
                 throw InquilinoException.noEncontrado();
             }
@@ -123,6 +125,7 @@ public class GestionarPropietarioInquilinosService implements GestionarPropietar
             condominioIdResolver.resolver(condominioIdOverride);
             if (!inquilino.getIdApartamento().equals(
                 apartamentoRepository.buscarPorPropietario(usuario.getId())
+                    .stream().findFirst()
                     .orElseThrow(ApartamentoException::noEncontrado).getId())) {
                 throw InquilinoException.noEncontrado();
             }

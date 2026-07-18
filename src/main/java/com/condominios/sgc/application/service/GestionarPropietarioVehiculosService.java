@@ -67,6 +67,7 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
         }
         var propios = vehiculoRepository.buscarPorPropietario(usuario.getId());
         var inquilinosVehiculos = apartamentoRepository.buscarPorPropietario(usuario.getId())
+            .stream().findFirst()
             .map(apt -> inquilinoRepository.buscarPorApartamento(apt.getId())
                 .stream()
                 .flatMap(i -> vehiculoRepository.buscarPorInquilino(i.getId()).stream())
@@ -87,6 +88,7 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
             var inquilino = inquilinoRepository.buscarPorId(cmd.inquilinoId())
                 .orElseThrow(InquilinoException::noEncontrado);
             var apt = apartamentoRepository.buscarPorPropietario(usuario.getId())
+                .stream().findFirst()
                 .orElseThrow(ApartamentoException::noEncontrado);
             if (!apt.getId().equals(inquilino.getIdApartamento())) {
                 throw InquilinoException.noEncontrado();
@@ -118,7 +120,7 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
             var esDeInquilino = false;
             if (vehiculo.getIdInquilino() != null) {
                 var apt = apartamentoRepository.buscarPorPropietario(usuario.getId())
-                    .orElse(null);
+                    .stream().findFirst().orElse(null);
                 esDeInquilino = apt != null
                     && inquilinoRepository.buscarPorId(vehiculo.getIdInquilino())
                         .map(i -> i.getIdApartamento().equals(apt.getId()))
@@ -141,6 +143,7 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
         var vehiculo = vehiculoRepository.buscarPorId(vehiculoId)
             .orElseThrow(VehiculoException::noEncontrado);
         var apt = apartamentoRepository.buscarPorPropietario(usuario.getId())
+            .stream().findFirst()
             .orElseThrow(ApartamentoException::noEncontrado);
         boolean esPropio = usuario.getId().equals(vehiculo.getIdPropietario());
         boolean esDeInquilino = vehiculo.getIdInquilino() != null
@@ -182,7 +185,7 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
             var esDeInquilino = false;
             if (vehiculo.getIdInquilino() != null) {
                 var apt = apartamentoRepository.buscarPorPropietario(usuario.getId())
-                    .orElse(null);
+                    .stream().findFirst().orElse(null);
                 esDeInquilino = apt != null
                     && inquilinoRepository.buscarPorId(vehiculo.getIdInquilino())
                         .map(i -> i.getIdApartamento().equals(apt.getId()))

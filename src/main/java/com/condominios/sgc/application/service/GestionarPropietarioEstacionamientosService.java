@@ -41,9 +41,9 @@ public class GestionarPropietarioEstacionamientosService implements GestionarPro
         condominioIdResolver.resolver(condominioIdOverride);
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
-        var apt = apartamentoRepository.buscarPorPropietario(usuario.getId());
-        if (apt.isEmpty()) throw ApartamentoException.noEncontrado();
-        return estacionamientoRepository.buscarPorApartamento(apt.get().getId())
+        var apt = apartamentoRepository.buscarPorPropietario(usuario.getId())
+            .stream().findFirst().orElseThrow(ApartamentoException::noEncontrado);
+        return estacionamientoRepository.buscarPorApartamento(apt.getId())
             .stream()
             .map(e -> new PropietarioEstacionamientoResult(
                 e.getId(),

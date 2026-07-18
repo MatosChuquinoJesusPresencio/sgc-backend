@@ -45,9 +45,8 @@ public class GestionarPropietarioApartamentoService implements GestionarPropieta
     public PropietarioApartamentoDetailResult obtenerDetalle(Long condominioIdOverride) {
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
-        var apt = apartamentoRepository.buscarPorPropietario(usuario.getId());
-        if (apt.isEmpty()) throw ApartamentoException.noEncontrado();
-        var apto = apt.get();
+        var apto = apartamentoRepository.buscarPorPropietario(usuario.getId())
+            .stream().findFirst().orElseThrow(ApartamentoException::noEncontrado);
 
         var condominioId = condominioIdResolver.resolver(condominioIdOverride);
         var condominio = condominioRepository.buscarPorId(condominioId).orElse(null);

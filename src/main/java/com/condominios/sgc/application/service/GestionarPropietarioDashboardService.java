@@ -42,11 +42,12 @@ public class GestionarPropietarioDashboardService implements GestionarPropietari
     public PropietarioDashboardResult obtenerResumen(Long condominioIdOverride) {
         var usuario = usuarioRepository.buscarPorId(securityService.obtenerIdUsuario())
             .orElseThrow(UsuarioException::noEncontrado);
-        var aptos = apartamentoRepository.buscarPorPropietario(usuario.getId());
-        if (aptos.isEmpty()) {
+        var aptoOpt = apartamentoRepository.buscarPorPropietario(usuario.getId())
+            .stream().findFirst();
+        if (aptoOpt.isEmpty()) {
             return new PropietarioDashboardResult(null, null, null, null, 0, 0, 0);
         }
-        var apto = aptos.get();
+        var apto = aptoOpt.get();
         var condominioId = condominioIdResolver.resolver(condominioIdOverride);
         var condominio = condominioRepository.buscarPorId(condominioId).orElse(null);
 

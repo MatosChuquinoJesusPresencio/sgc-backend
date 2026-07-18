@@ -1,5 +1,6 @@
 package com.condominios.sgc.application.port.out;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.condominios.sgc.application.dto.query.PaginaQuery;
@@ -19,7 +20,7 @@ public interface ApartamentoRepositoryPort {
     Optional<ApartamentoModel> buscarPorId(Long id);
     ApartamentoModel guardar(ApartamentoModel modelo);
     void eliminarPorId(Long id);
-    Optional<ApartamentoModel> buscarPorPropietario(Long idPropietario);
+    List<ApartamentoModel> buscarPorPropietario(Long idPropietario);
     Optional<ApartamentoModel> buscarPorNumeroYCondominio(Integer numero, Long idCondominio);
     boolean existePorIdYCondominio(Long id, Long idCondominio);
     PaginaResult<AdminApartamentoDetailResult> buscarEnCondominio(Long condominioId, Long torreId, PaginaQuery pagina);

@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ApartamentoJpaRepository extends JpaRepository<ApartamentoEntity, Long> {
-    Optional<ApartamentoEntity> findByIdPropietario(Long idPropietario);
+    List<ApartamentoEntity> findByIdPropietario(Long idPropietario);
 
     @Query("""
         SELECT COUNT(a) > 0 FROM ApartamentoEntity a

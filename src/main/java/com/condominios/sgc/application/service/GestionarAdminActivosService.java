@@ -179,6 +179,7 @@ public class GestionarAdminActivosService implements GestionarAdminActivosUseCas
         }
 
         var apto = apartamentoRepository.buscarPorPropietario(cmd.idPropietario())
+            .stream().findFirst()
             .orElseThrow(ApartamentoException::propietarioSinApartamento);
 
         if (estacionamiento.getIdApartamento() != null
