@@ -40,9 +40,9 @@ public class GestionarAdminApartamentosService implements GestionarAdminApartame
     }
 
     @Override
-    public PaginaResult<AdminApartamentoDetailResult> listar(Long condominioIdOverride, PaginaQuery pagina) {
+    public PaginaResult<AdminApartamentoDetailResult> listar(Long condominioIdOverride, Long torreId, PaginaQuery pagina) {
         var condominioId = condominioIdResolver.resolver(condominioIdOverride);
-        return apartamentoRepository.buscarEnCondominio(condominioId, pagina);
+        return apartamentoRepository.buscarEnCondominio(condominioId, torreId, pagina);
     }
 
     @Override

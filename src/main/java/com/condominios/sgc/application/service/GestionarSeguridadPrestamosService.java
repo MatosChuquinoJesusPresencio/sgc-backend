@@ -147,7 +147,7 @@ public class GestionarSeguridadPrestamosService implements GestionarSeguridadPre
     @Override
     public List<AdminApartamentoDetailResult> listarApartamentos(Long condominioIdOverride) {
         var condominioId = condominioIdResolver.resolver(condominioIdOverride);
-        var pagina = apartamentoRepository.buscarEnCondominio(condominioId, new PaginaQuery(0, 1000));
+        var pagina = apartamentoRepository.buscarEnCondominio(condominioId, null, new PaginaQuery(0, 1000));
         return pagina.items();
     }
 

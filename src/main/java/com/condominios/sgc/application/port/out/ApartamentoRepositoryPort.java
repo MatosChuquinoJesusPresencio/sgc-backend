@@ -22,7 +22,7 @@ public interface ApartamentoRepositoryPort {
     Optional<ApartamentoModel> buscarPorPropietario(Long idPropietario);
     Optional<ApartamentoModel> buscarPorNumeroYCondominio(Integer numero, Long idCondominio);
     boolean existePorIdYCondominio(Long id, Long idCondominio);
-    PaginaResult<AdminApartamentoDetailResult> buscarEnCondominio(Long condominioId, PaginaQuery pagina);
+    PaginaResult<AdminApartamentoDetailResult> buscarEnCondominio(Long condominioId, Long torreId, PaginaQuery pagina);
     Optional<ApartamentoTorreInfo> buscarTorreYAptoPorPropietario(Long idPropietario);
     Optional<ApartamentoTorreInfo> buscarTorreYAptoPorId(Long idApartamento);
 }

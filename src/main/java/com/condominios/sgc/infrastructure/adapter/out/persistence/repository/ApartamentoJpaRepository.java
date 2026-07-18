@@ -40,11 +40,13 @@ public interface ApartamentoJpaRepository extends JpaRepository<ApartamentoEntit
         JOIN torre t ON t.id = p.torre_id
         LEFT JOIN usuario u ON u.id = a.propietario_id
         WHERE t.condominio_id = :cid
+          AND (:torreId IS NULL OR t.id = :torreId)
         ORDER BY t.nombre, p.numero, a.numero
         LIMIT :limit OFFSET :offset
         """)
     List<Object[]> findApartamentosPage(
             @Param("cid") Long condominioId,
+            @Param("torreId") Long torreId,
             @Param("offset") int offset,
             @Param("limit") int limit);
 
@@ -54,8 +56,11 @@ public interface ApartamentoJpaRepository extends JpaRepository<ApartamentoEntit
         JOIN piso p ON p.id = a.piso_id
         JOIN torre t ON t.id = p.torre_id
         WHERE t.condominio_id = :cid
+          AND (:torreId IS NULL OR t.id = :torreId)
         """)
-    long countApartamentosByCondominio(@Param("cid") Long condominioId);
+    long countApartamentosByCondominio(
+            @Param("cid") Long condominioId,
+            @Param("torreId") Long torreId);
 
     @Query(nativeQuery = true, value = """
         SELECT t.nombre AS torre_nombre, a.numero,

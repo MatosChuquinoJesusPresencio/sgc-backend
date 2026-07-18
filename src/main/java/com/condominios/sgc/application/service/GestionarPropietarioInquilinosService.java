@@ -67,7 +67,7 @@ public class GestionarPropietarioInquilinosService implements GestionarPropietar
         var idApartamento = resolverIdApartamento(condominioIdOverride, apartamentoIdOverride);
         if (idApartamento == null) {
             var condominioId = condominioIdResolver.resolver(condominioIdOverride);
-            var apartments = apartamentoRepository.buscarEnCondominio(condominioId,
+            var apartments = apartamentoRepository.buscarEnCondominio(condominioId, null,
                 new PaginaQuery(0, Integer.MAX_VALUE));
             return apartments.items().stream()
                 .flatMap(apt -> apt.inquilinos().stream())

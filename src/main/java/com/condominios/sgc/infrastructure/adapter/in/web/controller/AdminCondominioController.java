@@ -215,9 +215,10 @@ public class AdminCondominioController {
     @GetMapping("/apartments")
     public ResponseEntity<PaginaResponse<AdminApartamentoDetailResponse>> listarApartamentos(
             @RequestParam(required = false) Long condominioId,
+            @RequestParam(required = false) Long torreId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        var resultado = gestionarAdminApartamentos.listar(condominioId, new PaginaQuery(page, size));
+        var resultado = gestionarAdminApartamentos.listar(condominioId, torreId, new PaginaQuery(page, size));
         return ResponseEntity.ok(mapper.toApartamentoDetailPaginaResponse(resultado));
     }
 

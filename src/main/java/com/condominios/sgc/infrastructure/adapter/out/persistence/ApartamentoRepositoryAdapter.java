@@ -75,14 +75,14 @@ public class ApartamentoRepositoryAdapter implements ApartamentoRepositoryPort {
     }
 
     @Override
-    public PaginaResult<AdminApartamentoDetailResult> buscarEnCondominio(Long condominioId, PaginaQuery pagina) {
-        var total = repository.countApartamentosByCondominio(condominioId);
+    public PaginaResult<AdminApartamentoDetailResult> buscarEnCondominio(Long condominioId, Long torreId, PaginaQuery pagina) {
+        var total = repository.countApartamentosByCondominio(condominioId, torreId);
         if (total == 0) {
             return new PaginaResult<>(List.of(), 0, pagina.pagina(), pagina.tamano());
         }
 
         var offset = pagina.pagina() * pagina.tamano();
-        var rows = repository.findApartamentosPage(condominioId, offset, pagina.tamano());
+        var rows = repository.findApartamentosPage(condominioId, torreId, offset, pagina.tamano());
         var inquilinos = cargarInquilinos(rows);
         var items = rows.stream().map(r -> toDetail(r, inquilinos)).toList();
         return new PaginaResult<>(items, total, pagina.pagina(), pagina.tamano());
