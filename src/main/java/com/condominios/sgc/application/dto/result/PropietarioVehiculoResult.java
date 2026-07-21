@@ -7,6 +7,8 @@ public record PropietarioVehiculoResult(
     String modelo,
     String placa,
     String tipo,
-    Long idEstacionamiento
+    Long idEstacionamiento,
+    String nombreInquilino,
+    boolean esDelPropietario
 ) {
 }

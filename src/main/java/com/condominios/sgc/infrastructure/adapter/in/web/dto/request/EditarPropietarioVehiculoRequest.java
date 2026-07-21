@@ -6,6 +6,7 @@ public record EditarPropietarioVehiculoRequest(
     @NotBlank String marca,
     @NotBlank String color,
     @NotBlank String modelo,
-    @NotBlank String placa
+    @NotBlank String placa,
+    Long inquilinoId
 ) {
 }

@@ -39,7 +39,8 @@ public class PropietarioMapper {
     public PropietarioVehiculoResponse toVehiculoResponse(PropietarioVehiculoResult r) {
         return new PropietarioVehiculoResponse(
             r.id(), r.marca(), r.color(), r.modelo(),
-            r.placa(), r.tipo(), r.idEstacionamiento());
+            r.placa(), r.tipo(), r.idEstacionamiento(),
+            r.nombreInquilino(), r.esDelPropietario());
     }
 
     public List<PropietarioVehiculoResponse> toVehiculoResponses(List<PropietarioVehiculoResult> results) {

@@ -96,4 +96,17 @@ public class VehiculoModel {
     public void desasignarEstacionamiento() {
         this.idEstacionamiento = null;
     }
+
+    public void reasignarSolicitante(Long idPropietario, Long idInquilino) {
+        boolean hayPropietario = idPropietario != null;
+        boolean hayInquilino = idInquilino != null;
+        if (hayInquilino == hayPropietario)
+            throw VehiculoException.solicitanteInvalido();
+
+        if (hayInquilino) {
+            asignarInquilino(idInquilino);
+        } else {
+            asignarPropietario(idPropietario);
+        }
+    }
 }

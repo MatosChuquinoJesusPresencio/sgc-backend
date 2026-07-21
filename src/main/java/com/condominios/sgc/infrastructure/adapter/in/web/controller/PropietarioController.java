@@ -153,7 +153,8 @@ public class PropietarioController {
             @RequestParam(required = false) Long condominioId,
             @Valid @RequestBody EditarPropietarioVehiculoRequest request) {
         var cmd = new EditarPropietarioVehiculoCommand(
-            request.marca(), request.color(), request.modelo(), request.placa());
+            request.marca(), request.color(), request.modelo(), request.placa(),
+            request.inquilinoId());
         var resultado = vehiculosUseCase.editar(condominioId, id, cmd);
         return ResponseEntity.ok(mapper.toVehiculoResponse(resultado));
     }

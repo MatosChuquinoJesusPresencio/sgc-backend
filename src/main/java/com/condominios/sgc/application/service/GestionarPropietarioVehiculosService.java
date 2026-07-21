@@ -131,6 +131,17 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
             }
         }
         vehiculo.actualizar(cmd.marca(), cmd.color(), cmd.modelo(), cmd.placa(), vehiculo.getTipo());
+        if (cmd.inquilinoId() != null) {
+            var inquilino = inquilinoRepository.buscarPorId(cmd.inquilinoId())
+                .orElseThrow(InquilinoException::noEncontrado);
+            var apt = apartamentoRepository.buscarPorPropietario(usuario.getId())
+                .stream().findFirst()
+                .orElseThrow(ApartamentoException::noEncontrado);
+            if (!apt.getId().equals(inquilino.getIdApartamento())) {
+                throw InquilinoException.noEncontrado();
+            }
+            vehiculo.reasignarSolicitante(null, cmd.inquilinoId());
+        }
         return toResult(vehiculoRepository.guardar(vehiculo));
     }
 
@@ -207,8 +218,16 @@ public class GestionarPropietarioVehiculosService implements GestionarPropietari
     }
 
     private PropietarioVehiculoResult toResult(VehiculoModel m) {
+        String nombreInquilino = null;
+        boolean esDelPropietario = m.getIdPropietario() != null;
+        if (m.getIdInquilino() != null) {
+            nombreInquilino = inquilinoRepository.buscarPorId(m.getIdInquilino())
+                .map(i -> i.getNombres() + " " + i.getApellidos())
+                .orElse(null);
+        }
         return new PropietarioVehiculoResult(
             m.getId(), m.getMarca(), m.getColor(), m.getModelo(),
-            m.getPlaca().valor(), m.getTipo().name(), m.getIdEstacionamiento());
+            m.getPlaca().valor(), m.getTipo().name(), m.getIdEstacionamiento(),
+            nombreInquilino, esDelPropietario);
     }
 }

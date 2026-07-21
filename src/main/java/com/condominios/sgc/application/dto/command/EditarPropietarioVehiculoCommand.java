@@ -4,6 +4,7 @@ public record EditarPropietarioVehiculoCommand(
     String marca,
     String color,
     String modelo,
-    String placa
+    String placa,
+    Long inquilinoId
 ) {
 }

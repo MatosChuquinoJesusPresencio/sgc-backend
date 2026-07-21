@@ -79,7 +79,8 @@ public class GestionarPropietarioApartamentoService implements GestionarPropieta
             .stream()
             .map(v -> new PropietarioVehiculoResult(
                 v.getId(), v.getMarca(), v.getColor(), v.getModelo(),
-                v.getPlaca().valor(), v.getTipo().name(), v.getIdEstacionamiento()))
+                v.getPlaca().valor(), v.getTipo().name(), v.getIdEstacionamiento(),
+                null, true))
             .toList();
 
         return new PropietarioApartamentoDetailResult(
